@@ -1,0 +1,50 @@
+using Microsoft.EntityFrameworkCore;
+using ThesisApi.Data;
+using ThesisApi.Interfaces;
+using ThesisApi.Models;
+
+namespace ThesisApi.Repositories
+{
+    public class SimCardRepository : ISimCardRepository
+    {
+        private readonly ApplicationDbContext _context;
+
+        public SimCardRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<SimCard> AddAsync(SimCard simCard)
+        {
+            await _context.SimCards.AddAsync(simCard);
+            await _context.SaveChangesAsync();
+            return simCard;
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var simCard = await _context.SimCards.FindAsync(id);
+            if (simCard != null)
+            {
+                _context.SimCards.Remove(simCard);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<SimCard>> GetAllAsync()
+        {
+            return await _context.SimCards.ToListAsync();
+        }
+
+        public async Task<SimCard?> GetByIdAsync(int id)
+        {
+            return await _context.SimCards.FindAsync(id);
+        }
+
+        public async Task UpdateAsync(SimCard simCard)
+        {
+            _context.SimCards.Update(simCard);
+            await _context.SaveChangesAsync();
+        }
+    }
+}
