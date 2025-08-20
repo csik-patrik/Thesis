@@ -21,14 +21,16 @@ namespace ThesisApi.Repositories
             return simCard;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var simCard = await _context.SimCards.FindAsync(id);
+            var simCard = await _context.SimCards.FirstOrDefaultAsync(x => x.Id == id);
             if (simCard != null)
             {
                 _context.SimCards.Remove(simCard);
                 await _context.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
 
         public async Task<IEnumerable<SimCard>> GetAllAsync()
@@ -38,13 +40,14 @@ namespace ThesisApi.Repositories
 
         public async Task<SimCard?> GetByIdAsync(int id)
         {
-            return await _context.SimCards.FindAsync(id);
+            return await _context.SimCards.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task UpdateAsync(SimCard simCard)
+        public async Task<bool> UpdateAsync(SimCard simCard)
         {
             _context.SimCards.Update(simCard);
             await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

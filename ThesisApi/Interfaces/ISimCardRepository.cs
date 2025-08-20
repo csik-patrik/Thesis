@@ -7,7 +7,7 @@ namespace ThesisApi.Interfaces
         Task<IEnumerable<SimCard>> GetAllAsync();
         Task<SimCard?> GetByIdAsync(int id);
         Task<SimCard> AddAsync(SimCard simCard);
-        Task UpdateAsync(SimCard simCard);
-        Task DeleteAsync(int id);
+        Task<bool> UpdateAsync(SimCard simCard);
+        Task<bool> DeleteAsync(int id);
     }
 }
