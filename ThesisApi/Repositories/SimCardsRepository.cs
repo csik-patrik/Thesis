@@ -5,11 +5,11 @@ using ThesisApi.Models;
 
 namespace ThesisApi.Repositories
 {
-    public class SimCardRepository : ISimCardRepository
+    public class SimCardsRepository : ISimCardRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public SimCardRepository(ApplicationDbContext context)
+        public SimCardsRepository(ApplicationDbContext context)
         {
             _context = context;
         }
