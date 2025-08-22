@@ -32,19 +32,21 @@ namespace ThesisApi.Repositories
             return false;
         }
 
-        public Task<IEnumerable<MobileDevice>> GetAllAsync()
+        public async Task<IEnumerable<MobileDevice>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.MobileDevices.ToListAsync();
         }
 
-        public Task<MobileDevice?> GetByIdAsync(int id)
+        public async Task<MobileDevice?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.MobileDevices.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<bool> UpdateAsync(MobileDevice mobileDevice)
+        public async Task<bool> UpdateAsync(MobileDevice mobileDevice)
         {
-            throw new NotImplementedException();
+            _context.MobileDevices.Update(mobileDevice);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
