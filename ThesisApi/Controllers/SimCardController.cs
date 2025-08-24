@@ -16,14 +16,14 @@ namespace ThesisApi.Controllers
             _simCardRepository = simCardRepository;
         }
 
-        [HttpGet("sim-cards")]
+        [HttpGet(ApiEndpoints.SimCards.GetAll)]
         public async Task<IActionResult> GetAll()
         {
             var simCards = await _simCardRepository.GetAllAsync();
             return Ok(simCards);
         }
 
-        [HttpPost("create")]
+        [HttpPost(ApiEndpoints.SimCards.Create)]
         public async Task<IActionResult> Create([FromBody] CreateSimCardRequest request)
         {
             var simCard = request.MapToSimCard();
@@ -37,7 +37,7 @@ namespace ThesisApi.Controllers
 
         }
 
-        [HttpGet("get/{id:int}")]
+        [HttpGet(ApiEndpoints.SimCards.Get)]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var simCard = await _simCardRepository.GetByIdAsync(id);
@@ -46,7 +46,7 @@ namespace ThesisApi.Controllers
             return Ok(simCard.MapToResponse());
         }
 
-        [HttpDelete("delete/{id:int}")]
+        [HttpDelete(ApiEndpoints.SimCards.Delete)]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _simCardRepository.DeleteAsync(id);
