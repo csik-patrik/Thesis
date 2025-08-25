@@ -27,6 +27,11 @@ function NavBar() {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link to="/mobile-orders" className="nav-link">
+                  Mobile orders
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link to="/sim-cards" className="nav-link">
                   Sim cards
                 </Link>
