@@ -16,14 +16,14 @@ namespace ThesisApi.Controllers
             _mobileDeviceRepository = mobileDeviceRepository;
         }
 
-        [HttpGet("mobile-devices")]
+        [HttpGet(ApiEndpoints.MobileDevices.GetAll)]
         public async Task<IActionResult> GetAll()
         {
             var mobileDevices = await _mobileDeviceRepository.GetAllAsync();
             return Ok(mobileDevices);
         }
 
-        [HttpPost("create")]
+        [HttpPost(ApiEndpoints.MobileDevices.Create)]
         public async Task<IActionResult> Create([FromBody] CreateMobileDeviceRequest request)
         {
             var mobileDevice = request.MapToMobileDevice();
@@ -36,7 +36,7 @@ namespace ThesisApi.Controllers
             return Ok(newMobileDevice.MapToResponse());
         }
 
-        [HttpGet("get/{id:int}")]
+        [HttpGet(ApiEndpoints.MobileDevices.Get)]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var mobileDevice = await _mobileDeviceRepository.GetByIdAsync(id);
@@ -45,7 +45,7 @@ namespace ThesisApi.Controllers
             return Ok(mobileDevice.MapToResponse());
         }
 
-        [HttpDelete("delete/{id:int}")]
+        [HttpDelete(ApiEndpoints.MobileDevices.Delete)]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _mobileDeviceRepository.DeleteAsync(id);
