@@ -20,6 +20,19 @@ namespace ThesisApi
             public const string Get = $"{Base}/{{id:int}}";
 
             public const string Delete = $"{Base}/{{id:int}}";
+        }
+
+        public class MobileOrders
+        {
+            private const string Base = $"{ApiBase}/mobile-orders";
+
+            public const string GetAll = Base;
+
+            public const string Create = Base;
+
+            public const string Get = $"{Base}/{{id:int}}";
+
+            public const string Delete = $"{Base}/{{id:int}}";
 
         }
     }
