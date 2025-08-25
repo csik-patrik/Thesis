@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using ThesisApi.Data;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -5,29 +7,46 @@ namespace ThesisApi.Repositories
 {
     public class MobileOrderRepository : IMobileOrderRepository
     {
-        public Task<MobileOrder> AddAsync(MobileOrder order)
+        private readonly ApplicationDbContext _context;
+        public MobileOrderRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<MobileOrder> AddAsync(MobileOrder order)
         {
-            throw new NotImplementedException();
+            await _context.MobileOrders.AddAsync(order);
+            await _context.SaveChangesAsync();
+            return order;
         }
 
-        public Task<IEnumerable<MobileOrder>> GetAllAsync()
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var order = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == id);
+            if (order != null)
+            {
+                _context.MobileOrders.Remove(order);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
-        public Task<MobileOrder?> GetByIdAsync(int id)
+        public async Task<IEnumerable<MobileOrder>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.MobileOrders.ToListAsync();
         }
 
-        public Task<bool> UpdateAsync(MobileOrder order)
+        public async Task<MobileOrder?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<bool> UpdateAsync(MobileOrder order)
+        {
+            _context.MobileOrders.Update(order);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
