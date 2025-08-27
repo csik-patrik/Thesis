@@ -26,15 +26,51 @@ function NavBar() {
                   Home
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/mobile-orders" className="nav-link">
-                  Mobile orders
-                </Link>
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Mobile devices
+                </a>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link to="/mobile-orders/create" className="dropdown-item">
+                      Create new order
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/mobile-orders" className="dropdown-item">
+                      All Orders
+                    </Link>
+                  </li>
+                </ul>
               </li>
-              <li className="nav-item">
-                <Link to="/sim-cards" className="nav-link">
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
                   Sim cards
-                </Link>
+                </a>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link to="/sim-cards/create" className="dropdown-item">
+                      Create a new sim card
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/sim-cards" className="dropdown-item">
+                      Sim cards
+                    </Link>
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
