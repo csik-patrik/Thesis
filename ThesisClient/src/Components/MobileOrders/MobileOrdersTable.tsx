@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import NavBar from "../NavBar/NavBar";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface MobileOrder {
   id: number;
@@ -16,12 +17,25 @@ interface MobileOrder {
 
 function MobileOrdersTable() {
   const [data, setData] = useState<MobileOrder[]>([]);
+
   useEffect(() => {
     axios
       .get<MobileOrder[]>("http://localhost:5268/api/mobile-orders")
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
   }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:5268/api/mobile-orders/${id}`);
+      setData((prev) => prev.filter((item) => item.id !== id)); // update table
+      toast.success("Mobile order deleted successfully!");
+    } catch (err) {
+      console.error("Error deleting sim card:", err);
+      alert("Failed to delete sim card.");
+    }
+  };
+
   return (
     <>
       <NavBar />
@@ -59,6 +73,12 @@ function MobileOrdersTable() {
                   <td>
                     <button className="btn btn-sm btn-primary me-2">
                       View
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(d.id)}
+                    >
+                      Delete
                     </button>
                   </td>
                 </tr>
