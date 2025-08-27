@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import NavBar from "../NavBar/NavBar";
+import { toast } from "react-toastify";
 
 interface CreateMobileOrderRequest {
   customerName: string;
@@ -40,9 +41,11 @@ function MobileOrdersCreate() {
 
     try {
       await axios.post("http://localhost:5268/api/mobile-orders", formData);
+      toast.success("Mobile order created successfully!");
       navigate("/mobile-orders");
     } catch (err) {
       console.error("Error creating sim card:", err);
+      toast.error("Failed to create mobile order.");
       alert("Failed to create sim card.");
     }
   };
