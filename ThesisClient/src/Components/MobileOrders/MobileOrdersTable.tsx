@@ -7,6 +7,7 @@ interface MobileOrder {
   id: number;
   customerName: string;
   customerUsername: string;
+  deviceType: string;
   deviceCount: number;
   pickupLocation: string;
   status: string;
@@ -36,6 +37,7 @@ function MobileOrdersTable() {
                 <th scope="col">Id</th>
                 <th scope="col">CustomerName</th>
                 <th scope="col">CustomerUsername</th>
+                <th scope="col">Device type</th>
                 <th scope="col">DeviceCount</th>
                 <th scope="col">PickupLocation</th>
                 <th scope="col">Status</th>
@@ -49,6 +51,7 @@ function MobileOrdersTable() {
                   <td scope="row">{d.id}</td>
                   <td>{d.customerName}</td>
                   <td>{d.customerUsername}</td>
+                  <td>{d.deviceType}</td>
                   <td>{d.deviceCount}</td>
                   <td>{d.pickupLocation}</td>
                   <td>{d.status}</td>
