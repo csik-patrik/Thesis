@@ -4,6 +4,7 @@ import SimCardsCreate from "./Components/SimCards/SimCardsCreate.tsx";
 import Home from "./Components/Home/Home.tsx";
 import MobileOrdersTable from "./Components/MobileOrders/MobileOrdersTable.tsx";
 import MobileOrdersCreate from "./Components/MobileOrders/MobileOrdersCreate.tsx";
+import MobileOrderView from "./Components/MobileOrders/MobileOrderView.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -15,7 +16,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/mobile-orders" element={<MobileOrdersTable />}></Route>
+          <Route path="/mobile-orders/" element={<MobileOrdersTable />}></Route>
+          <Route
+            path="/mobile-orders/:id"
+            element={<MobileOrderView />}
+          ></Route>
           <Route
             path="/mobile-orders/create"
             element={<MobileOrdersCreate />}

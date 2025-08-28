@@ -72,9 +72,12 @@ function MobileOrdersTable() {
                   <td>{d.status}</td>
                   <td>{d.createdBy}</td>
                   <td>
-                    <button className="btn btn-sm btn-primary me-2">
+                    <Link
+                      to={`/mobile-orders/${d.id}`}
+                      className="btn btn-info btn-sm me-2"
+                    >
                       View
-                    </button>
+                    </Link>
                     <button
                       className="btn btn-danger btn-sm"
                       onClick={() => handleDelete(d.id)}
