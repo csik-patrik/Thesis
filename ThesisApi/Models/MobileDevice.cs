@@ -16,6 +16,5 @@ namespace ThesisApi.Models
         public required string CreatedBy { get; set; }
         public required DateTime ModifiedAt { get; set; }
         public required string ModifiedBy { get; set; }
-
     }
 }
