@@ -10,10 +10,13 @@ namespace ThesisApi.Helpers
         {
             return new MobileOrder()
             {
+                RequesterName = request.RequesterName,
+                RequesterUsername = request.RequesterUsername,
                 CustomerName = request.CustomerName,
                 CustomerUsername = request.CustomerUsername,
+                CustomersCostCenter = request.CustomersCostCenter,
                 DeviceType = request.DeviceType,
-                DeviceCount = request.DeviceCount,
+                CallControlGroup = request.CallControlGroup,
                 PickupLocation = request.PickupLocation,
                 Status = "New",
                 CreatedAt = DateTime.Now,
@@ -28,10 +31,13 @@ namespace ThesisApi.Helpers
             return new MobileOrderResponse()
             {
                 Id = order.Id,
+                RequesterName = order.RequesterName,
+                RequesterUsername = order.RequesterUsername,
                 CustomerName = order.CustomerName,
                 CustomerUsername = order.CustomerUsername,
+                CustomersCostCenter = order.CustomersCostCenter,
                 DeviceType = order.DeviceType,
-                DeviceCount = order.DeviceCount,
+                CallControlGroup = order.CallControlGroup,
                 PickupLocation = order.PickupLocation,
                 Status = order.Status,
                 CreatedAt = order.CreatedAt,
