@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import NavBar from "../NavBar/NavBar";
 import { toast } from "react-toastify";
 
 interface CreateMobileOrderRequest {
@@ -51,92 +50,89 @@ function MobileOrdersCreate() {
   };
 
   return (
-    <>
-      <NavBar />
-      <div className="d-flex w-100 vh-100 justify-content-center align-items-center bg-light">
-        <div className="w-50 border bg-white shadow px-5 pt-3 pb-5 rounded">
-          <h1>Create a new mobile order</h1>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-2">
-              <label htmlFor="customerName">Customer's name:</label>
-              <input
-                type="text"
-                name="customerName"
-                className="form-control"
-                placeholder="Patrik Csik"
-                value={formData.customerName}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-2">
-              <label htmlFor="customerUsername">Customer's username:</label>
-              <input
-                type="text"
-                name="customerUsername"
-                className="form-control"
-                placeholder="CSP8HTV"
-                value={formData.customerUsername}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-2">
-              <label htmlFor="deviceType">Device type:</label>
-              <select
-                name="deviceType"
-                className="form-control"
-                value={formData.deviceType}
-                onChange={handleChange}
-              >
-                <option value="Standard Smartphone">Standard Smartphone</option>
-                <option value="Enhanced Smartphone">Enhanced Smartphone</option>
-                <option value="Feature Phone">Feature Phone</option>
-              </select>
-            </div>
-            <div className="mb-2">
-              <label htmlFor="deviceCount">Device count:</label>
-              <input
-                type="number"
-                min={1}
-                name="deviceCount"
-                className="form-control"
-                placeholder="1"
-                value={formData.deviceCount}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-2">
-              <label htmlFor="pickupLocation">Pickup location:</label>
-              <select
-                name="pickupLocation"
-                className="form-control"
-                value={formData.pickupLocation}
-                onChange={handleChange}
-              >
-                <option value="HtvP">HtvP</option>
-                <option value="cHub">cHub</option>
-              </select>
-            </div>
-            <div className="mb-2">
-              <label htmlFor="createdBy">Created by:</label>
-              <input
-                type="text"
-                name="createdBy"
-                className="form-control"
-                placeholder="Username"
-                value={formData.createdBy}
-                onChange={handleChange}
-              />
-            </div>
-            <button type="submit" className="btn btn-success">
-              Submit
-            </button>
-            <Link to="/sim-cards" className="btn btn-primary ms-3">
-              Back
-            </Link>
-          </form>
-        </div>
+    <div className="d-flex w-100 vh-100 justify-content-center align-items-center bg-light">
+      <div className="w-50 border bg-white shadow px-5 pt-3 pb-5 rounded">
+        <h1>Create a new mobile order</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-2">
+            <label htmlFor="customerName">Customer's name:</label>
+            <input
+              type="text"
+              name="customerName"
+              className="form-control"
+              placeholder="Patrik Csik"
+              value={formData.customerName}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="mb-2">
+            <label htmlFor="customerUsername">Customer's username:</label>
+            <input
+              type="text"
+              name="customerUsername"
+              className="form-control"
+              placeholder="CSP8HTV"
+              value={formData.customerUsername}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="mb-2">
+            <label htmlFor="deviceType">Device type:</label>
+            <select
+              name="deviceType"
+              className="form-control"
+              value={formData.deviceType}
+              onChange={handleChange}
+            >
+              <option value="Standard Smartphone">Standard Smartphone</option>
+              <option value="Enhanced Smartphone">Enhanced Smartphone</option>
+              <option value="Feature Phone">Feature Phone</option>
+            </select>
+          </div>
+          <div className="mb-2">
+            <label htmlFor="deviceCount">Device count:</label>
+            <input
+              type="number"
+              min={1}
+              name="deviceCount"
+              className="form-control"
+              placeholder="1"
+              value={formData.deviceCount}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="mb-2">
+            <label htmlFor="pickupLocation">Pickup location:</label>
+            <select
+              name="pickupLocation"
+              className="form-control"
+              value={formData.pickupLocation}
+              onChange={handleChange}
+            >
+              <option value="HtvP">HtvP</option>
+              <option value="cHub">cHub</option>
+            </select>
+          </div>
+          <div className="mb-2">
+            <label htmlFor="createdBy">Created by:</label>
+            <input
+              type="text"
+              name="createdBy"
+              className="form-control"
+              placeholder="Username"
+              value={formData.createdBy}
+              onChange={handleChange}
+            />
+          </div>
+          <button type="submit" className="btn btn-success">
+            Submit
+          </button>
+          <Link to="/sim-cards" className="btn btn-primary ms-3">
+            Back
+          </Link>
+        </form>
       </div>
-    </>
+    </div>
   );
 }
 
