@@ -71,12 +71,12 @@ function MobileOrdersTable() {
                 <td>
                   <Link
                     to={`/mobile-orders/${d.id}`}
-                    className="btn btn-info btn-sm me-2"
+                    className="btn btn-primary btn-sm me-2 text-light"
                   >
                     View
                   </Link>
                   <button
-                    className="btn btn-danger btn-sm"
+                    className="btn btn-danger btn-sm text-light"
                     onClick={() => handleDelete(d.id)}
                   >
                     Delete
