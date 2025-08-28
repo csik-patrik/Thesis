@@ -6,10 +6,13 @@ import { toast } from "react-toastify";
 
 interface MobileOrder {
   id: number;
+  requesterName: string;
+  requesterUsername: string;
   customerName: string;
   customerUsername: string;
+  customersCostCenter: string;
   deviceType: string;
-  deviceCount: number;
+  callControlGroup: string;
   pickupLocation: string;
   status: string;
   createdBy: string;
@@ -52,7 +55,6 @@ function MobileOrdersTable() {
                 <th scope="col">CustomerName</th>
                 <th scope="col">CustomerUsername</th>
                 <th scope="col">Device type</th>
-                <th scope="col">DeviceCount</th>
                 <th scope="col">PickupLocation</th>
                 <th scope="col">Status</th>
                 <th scope="col">CreatedBy</th>
@@ -66,7 +68,6 @@ function MobileOrdersTable() {
                   <td>{d.customerName}</td>
                   <td>{d.customerUsername}</td>
                   <td>{d.deviceType}</td>
-                  <td>{d.deviceCount}</td>
                   <td>{d.pickupLocation}</td>
                   <td>{d.status}</td>
                   <td>{d.createdBy}</td>
