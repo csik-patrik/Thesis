@@ -127,7 +127,7 @@ function MobileOrdersCreate() {
           <button type="submit" className="btn btn-success">
             Submit
           </button>
-          <Link to="/sim-cards" className="btn btn-primary ms-3">
+          <Link to="/mobile-orders" className="btn btn-primary ms-3">
             Back
           </Link>
         </form>
