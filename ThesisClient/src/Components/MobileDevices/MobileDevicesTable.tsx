@@ -23,6 +23,18 @@ function MobileDevicesTable() {
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
   }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:5268/api/mobile-devices/${id}`);
+      setData((prev) => prev.filter((item) => item.id !== id)); // update table
+      toast.success("Mobile deleted successfully!");
+    } catch (err) {
+      console.error("Error deleting mobile device:", err);
+      alert("Failed to delete sim card.");
+    }
+  };
+
   return (
     <div className="d-flex flex-column justify-content-center align-items-center bd-light vh-100">
       <h1>Mobile devices</h1>
@@ -55,7 +67,14 @@ function MobileDevicesTable() {
                 <td>{d.iosVersion}</td>
                 <td>{d.batteryStatus}</td>
                 <td>{d.status}</td>
-                <td>actions</td>
+                <td>
+                  <button
+                    className="btn btn-danger btn-sm text-light"
+                    onClick={() => handleDelete(d.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
