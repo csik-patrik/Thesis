@@ -6,6 +6,7 @@ import MobileOrdersCreate from "./Components/MobileOrders/MobileOrdersCreate.tsx
 import MobileOrderView from "./Components/MobileOrders/MobileOrderView.tsx";
 import Home from "./Components/Home/Home.tsx";
 import Layout from "./Components/Layout.tsx";
+import Login from "./Auth/Login.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -18,8 +19,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            <Route path="/login" element={<Login />}></Route>
             <Route
-              path="/mobile-orders/"
+              path="/mobile-orders"
               element={<MobileOrdersTable />}
             ></Route>
             <Route
