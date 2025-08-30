@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ThesisApi.Data;
 using ThesisApi.Services;
 
@@ -22,6 +24,21 @@ builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =
     builder.WithOrigins("http://localhost:5173", "http://localhost:5173").AllowAnyMethod().AllowAnyHeader();
 }));
 
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(x =>
+    {
+        x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            IssuerSigningKey = new SymmetricSecurityKey("qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123"u8.ToArray()),
+            ValidIssuer = "Api",
+            ValidAudience = "Users",
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            ValidateAudience = true
+        };
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,6 +52,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("ApiCorsPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

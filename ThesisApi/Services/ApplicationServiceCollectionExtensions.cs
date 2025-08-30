@@ -10,6 +10,7 @@ namespace ThesisApi.Services
             services.AddScoped<ISimCardRepository, SimCardsRepository>();
             services.AddScoped<IMobileDeviceRepository, MobileDevicesRepository>();
             services.AddScoped<IMobileOrderRepository, MobileOrderRepository>();
+            services.AddSingleton<TokenGenerator>();
             return services;
         }
     }
