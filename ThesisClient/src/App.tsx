@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
+import SimCardEdit from "./Components/SimCards/SimCardEdit.tsx";
 
 function App() {
   return (
@@ -22,18 +23,6 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="/login" element={<Login />}></Route>
-            <Route
-              path="/mobile-orders"
-              element={<MobileOrdersTable />}
-            ></Route>
-            <Route
-              path="/mobile-orders/:id"
-              element={<MobileOrderView />}
-            ></Route>
-            <Route
-              path="/mobile-orders/create"
-              element={<MobileOrdersCreate />}
-            ></Route>
             <Route path="/mobiles" element={<MobileDevicesTable />}></Route>
             <Route
               path="/mobiles/create"
@@ -43,6 +32,19 @@ function App() {
             <Route
               path="/sim-cards/create"
               element={<SimCardsCreate />}
+            ></Route>
+            <Route path="/sim-card/:id" element={<SimCardEdit />}></Route>
+            <Route
+              path="/mobile-orders/create"
+              element={<MobileOrdersCreate />}
+            ></Route>
+            <Route
+              path="/mobile-orders"
+              element={<MobileOrdersTable />}
+            ></Route>
+            <Route
+              path="/mobile-orders/:id"
+              element={<MobileOrderView />}
             ></Route>
           </Route>
         </Routes>

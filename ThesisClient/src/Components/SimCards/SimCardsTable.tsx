@@ -52,7 +52,12 @@ function SimCardsTable() {
                 <td>{d.status}</td>
                 <td>
                   <button className="btn btn-sm btn-primary me-2">View</button>
-                  <button className="btn btn-sm btn-warning me-2">Edit</button>
+                  <Link
+                    to={`/sim-card/${d.id}`}
+                    className="btn btn-warning btn-sm me-2"
+                  >
+                    Edit
+                  </Link>
                   <button className="btn btn-sm btn-danger me-2">Delete</button>
                 </td>
               </tr>
