@@ -16,6 +16,7 @@ namespace ThesisApi.Helpers
                 SerialNumber = request.SerialNumber,
                 IosVersion = request.IosVersion,
                 BatteryStatus = 100,
+                Status = "In inventory",
                 CreatedAt = DateTime.Now,
                 CreatedBy = request.CreatedBy,
                 ModifiedAt = DateTime.Now,
@@ -23,23 +24,24 @@ namespace ThesisApi.Helpers
             };
         }
 
-        public static MobileDeviceResponse MapToResponse(this MobileDevice mobileDevice)
+        public static MobileDeviceResponse MapToResponse(this MobileDevice model)
         {
             return new MobileDeviceResponse()
             {
-                Id = mobileDevice.Id,
-                Hostname = mobileDevice.Hostname,
-                Type = mobileDevice.Type,
-                ImeiNumber = mobileDevice.ImeiNumber,
-                SerialNumber = mobileDevice.SerialNumber,
-                IosVersion = mobileDevice.IosVersion,
-                BatteryStatus = mobileDevice.BatteryStatus,
-                UserId = mobileDevice.UserId,
-                SimCard = mobileDevice.SimCard?.MapToResponse(),
-                CreatedAt = mobileDevice.CreatedAt,
-                CreatedBy = mobileDevice.CreatedBy,
-                ModifiedAt = mobileDevice.ModifiedAt,
-                ModifiedBy = mobileDevice.CreatedBy
+                Id = model.Id,
+                Hostname = model.Hostname,
+                Type = model.Type,
+                ImeiNumber = model.ImeiNumber,
+                SerialNumber = model.SerialNumber,
+                IosVersion = model.IosVersion,
+                BatteryStatus = model.BatteryStatus,
+                UserId = model.UserId,
+                SimCard = model.SimCard?.MapToResponse(),
+                Status = model.Status,
+                CreatedAt = model.CreatedAt,
+                CreatedBy = model.CreatedBy,
+                ModifiedAt = model.ModifiedAt,
+                ModifiedBy = model.CreatedBy
             };
 
         }

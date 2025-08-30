@@ -13,6 +13,7 @@ namespace ThesisApi.Contracts.Responses.MobileDevices
         public int? BatteryStatus { get; init; }
         public string? UserId { get; init; }
         public SimCardResponse? SimCard { get; init; }
+        public required string Status { get; set; }
         public required DateTime CreatedAt { get; init; }
         public required string CreatedBy { get; init; }
         public required DateTime ModifiedAt { get; init; }
