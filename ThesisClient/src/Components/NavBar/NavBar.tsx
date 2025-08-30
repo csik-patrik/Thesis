@@ -62,12 +62,12 @@ function NavBar() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Sim cards
+                  Inventory
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <Link to="/sim-cards/create" className="dropdown-item">
-                      Create a new sim card
+                    <Link to="/mobiles" className="dropdown-item">
+                      Mobiles
                     </Link>
                   </li>
                   <li>

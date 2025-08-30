@@ -7,11 +7,11 @@ namespace ThesisApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class MobileDevicesController : ControllerBase
+    public class MobileDeviceController : ControllerBase
     {
         private readonly IMobileDeviceRepository _mobileDeviceRepository;
 
-        public MobileDevicesController(IMobileDeviceRepository mobileDeviceRepository)
+        public MobileDeviceController(IMobileDeviceRepository mobileDeviceRepository)
         {
             _mobileDeviceRepository = mobileDeviceRepository;
         }
