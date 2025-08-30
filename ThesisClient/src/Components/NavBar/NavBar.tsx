@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import NavItem from "./NavItem";
+import DropDown from "./DropDown";
 
-function NavBar() {
+export default function NavBar() {
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -21,57 +22,15 @@ function NavBar() {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
-              <li className="nav-item">
-                <Link to="/login" className="nav-link">
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/" className="nav-link">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Orders
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link to="/mobile-orders" className="dropdown-item">
-                      Mobile orders
-                    </Link>
-                  </li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Inventory
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link to="/mobiles" className="dropdown-item">
-                      Mobiles
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/sim-cards" className="dropdown-item">
-                      Sim cards
-                    </Link>
-                  </li>
-                </ul>
-              </li>
+              <NavItem title="Login" to="/login" />
+              <NavItem title="Home" to="/" />
+              <DropDown title="Orders">
+                <NavItem title="Mobile orders" to="/mobile-orders"></NavItem>
+              </DropDown>
+              <DropDown title="Inventory">
+                <NavItem title="Mobiles" to="/mobiles"></NavItem>
+                <NavItem title="Sim cards" to="/sim-cards"></NavItem>
+              </DropDown>
             </ul>
           </div>
         </div>
@@ -79,4 +38,3 @@ function NavBar() {
     </>
   );
 }
-export default NavBar;

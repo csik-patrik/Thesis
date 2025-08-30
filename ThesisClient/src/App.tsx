@@ -33,7 +33,7 @@ function App() {
               path="/sim-cards/create"
               element={<SimCardsCreate />}
             ></Route>
-            <Route path="/sim-card/:id" element={<SimCardEdit />}></Route>
+            <Route path="/sim-cards/:id" element={<SimCardEdit />}></Route>
             <Route
               path="/mobile-orders/create"
               element={<MobileOrdersCreate />}
