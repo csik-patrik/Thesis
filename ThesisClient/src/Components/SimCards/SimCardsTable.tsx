@@ -53,7 +53,7 @@ function SimCardsTable() {
                 <td>
                   <button className="btn btn-sm btn-primary me-2">View</button>
                   <Link
-                    to={`/sim-card/${d.id}`}
+                    to={`/sim-cards/${d.id}`}
                     className="btn btn-warning btn-sm me-2"
                   >
                     Edit
