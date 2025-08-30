@@ -7,7 +7,6 @@ using ThesisApi.Interfaces;
 namespace ThesisApi.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("[controller]")]
     public class MobileOrderController : ControllerBase
     {
