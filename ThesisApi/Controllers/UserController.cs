@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using ThesisApi.Contracts.Requests.Users;
+using ThesisApi.Helpers;
 using ThesisApi.Services;
 
 namespace ThesisApi.Controllers
@@ -25,7 +26,7 @@ namespace ThesisApi.Controllers
             if (user == null)
                 return Unauthorized();
 
-            var access_token = _tokenGenerator.GenerateToken(loginRequest.Email);
+            var access_token = _tokenGenerator.GenerateToken(user.MapToTokenRequest());
 
             return Ok(access_token);
 

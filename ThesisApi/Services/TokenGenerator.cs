@@ -1,22 +1,24 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using ThesisApi.Contracts.Requests.Users;
 
 namespace ThesisApi.Services
 {
     public class TokenGenerator
     {
-        public string GenerateToken(string email)
+        public string GenerateToken(GenerateTokenRequest request)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            var key = "qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123"u8.ToArray();
+            var key = "qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123?????????"u8.ToArray();
 
             var claims = new List<Claim>()
             {
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new(JwtRegisteredClaimNames.Sub, email),
-                new(JwtRegisteredClaimNames.Email, email)
+                new(JwtRegisteredClaimNames.Sub, request.Email),
+                new(JwtRegisteredClaimNames.GivenName, request.Username),
+                new(JwtRegisteredClaimNames.Email, request.Email)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor

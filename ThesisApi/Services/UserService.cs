@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
+using ThesisApi.Contracts.Requests.Users;
 using ThesisApi.Data;
 using ThesisApi.Models;
 
