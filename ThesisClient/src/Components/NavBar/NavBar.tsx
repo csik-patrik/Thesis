@@ -39,17 +39,12 @@ function NavBar() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Mobile devices
+                  Orders
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <Link to="/mobile-orders/create" className="dropdown-item">
-                      Create new order
-                    </Link>
-                  </li>
-                  <li>
                     <Link to="/mobile-orders" className="dropdown-item">
-                      All Orders
+                      Mobile orders
                     </Link>
                   </li>
                 </ul>
