@@ -4,6 +4,7 @@ import axios from "axios";
 import Form from "../Form/Form";
 import Input from "../Form/Input";
 import Select from "../Form/Select";
+import { toast } from "react-toastify";
 
 interface CreateSimCardRequest {
   phoneNumber: string;
@@ -45,9 +46,11 @@ function SimCardsCreate() {
 
     try {
       await axios.post("http://localhost:5268/api/sim-cards", formData);
+      toast.success("Sim card created successfully!");
       navigate("/sim-cards");
     } catch (err) {
       console.error("Error creating sim card:", err);
+      toast.error("Failed to create sim card.");
       alert("Failed to create sim card.");
     }
   };

@@ -43,9 +43,9 @@ function MobileOrdersCreate() {
       toast.success("Mobile order created successfully!");
       navigate("/mobile-orders");
     } catch (err) {
-      console.error("Error creating sim card:", err);
+      console.error("Error creating mobile order:", err);
       toast.error("Failed to create mobile order.");
-      alert("Failed to create sim card.");
+      alert("Failed to create mobile order.");
     }
   };
 
