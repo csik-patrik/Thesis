@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Form from "../Form/Form";
+import Input from "../Form/Input";
+import Select from "../Form/Select";
 
 interface CreateSimCardRequest {
   phoneNumber: string;
@@ -50,88 +53,67 @@ function SimCardsCreate() {
   };
 
   return (
-    <div className="d-flex w-100 vh-100 justify-content-center align-items-center bg-light">
-      <div className="w-50 border bg-white shadow px-5 pt-3 pb-5 rounded">
-        <h1>Create a new Sim Card</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-2">
-            <label htmlFor="phoneNumber">Phone number:</label>
-            <input
-              type="text"
-              name="phoneNumber"
-              className="form-control"
-              placeholder="+36208288073"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="department">Department:</label>
-            <input
-              type="text"
-              name="department"
-              className="form-control"
-              placeholder="BD/SLE-EET3"
-              value={formData.department}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="callControlGroup">Call control group:</label>
-            <select
-              name="callControlGroup"
-              className="form-control"
-              value={formData.callControlGroup}
-              onChange={handleChange}
-            >
-              <option value="SPECIAL F">SPECIAL F</option>
-              <option value="MIX 10">MIX 10</option>
-            </select>
-          </div>
-          <div className="mb-2">
-            <label htmlFor="isDataEnabled">Data enabled:</label>
-            <select
-              name="isDataEnabled"
-              className="form-control"
-              value={formData.isDataEnabled ? "true" : "false"}
-              onChange={handleChange}
-            >
-              <option value="true">True</option>
-              <option value="false">False</option>
-            </select>
-          </div>
-          <div className="mb-2">
-            <label htmlFor="type">Type:</label>
-            <select
-              name="type"
-              className="form-control"
-              value={formData.type}
-              onChange={handleChange}
-            >
-              <option value="Voice">Voice</option>
-              <option value="Data">Data</option>
-            </select>
-          </div>
-          <div className="mb-2">
-            <label htmlFor="createdBy">Created by:</label>
-            <input
-              type="text"
-              name="createdBy"
-              className="form-control"
-              placeholder="Username"
-              value={formData.createdBy}
-              onChange={handleChange}
-            />
-          </div>
-          <button type="submit" className="btn btn-success">
-            Submit
-          </button>
-          <Link to="/sim-cards" className="btn btn-primary ms-3">
-            Back
-          </Link>
-        </form>
-      </div>
-    </div>
+    <>
+      <Form title="Create a new Sim Card" handleSubmit={handleSubmit}>
+        <Input
+          title="Phone number:"
+          fieldName="phoneNumber"
+          placeHolder="+36208288073"
+          type="text"
+          value={formData.phoneNumber}
+          handleChange={handleChange}
+        />
+        <Input
+          title="Department:"
+          fieldName="department"
+          placeHolder="BD/SLE-EET3"
+          type="text"
+          value={formData.department}
+          handleChange={handleChange}
+        />
+        <Select
+          title="Call control group:"
+          fieldName="callControlGroup"
+          value={formData.callControlGroup}
+          options={[
+            { label: "SPECIAL F", value: "SPECIAL F" },
+            { label: "MIX 10", value: "MIX 10" },
+          ]}
+          handleChange={handleChange}
+        />
+        <Select
+          title="Data enabled:"
+          fieldName="isDataEnabled"
+          value={formData.isDataEnabled ? "true" : "false"}
+          options={[
+            { label: "True", value: "true" },
+            { label: "False", value: "false" },
+          ]}
+          handleChange={handleChange}
+        />
+        <Select
+          title="Type:"
+          fieldName="type"
+          value={formData.type}
+          options={[
+            { label: "Voice", value: "Voice" },
+            { label: "Data", value: "Data" },
+          ]}
+          handleChange={handleChange}
+        />
+        <Input
+          title="Created by:"
+          fieldName="createdBy"
+          placeHolder="CSP8HTV"
+          type="text"
+          value={formData.createdBy}
+          handleChange={handleChange}
+        />
+      </Form>
+      <Link to="/sim-cards" className="btn btn-primary ms-3">
+        Back
+      </Link>
+    </>
   );
 }
 
