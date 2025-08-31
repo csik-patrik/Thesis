@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface SimCard {
   id: number;
@@ -78,11 +79,12 @@ export default function SimCardsEdit() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5268/api/sim-cards", formData);
+      await axios.put(`http://localhost:5268/api/sim-cards/${id}`, formData);
+      toast.success("Sim card updated successfully!");
       navigate("/sim-cards");
     } catch (err) {
-      console.error("Error creating sim card:", err);
-      alert("Failed to create sim card.");
+      console.error("Failed to update sim card:", err);
+      alert("Failed to update sim card.");
     }
   };
 
@@ -115,7 +117,7 @@ export default function SimCardsEdit() {
               name="department"
               className="form-control"
               placeholder="BD/SLE-EET3"
-              value={simCard.department}
+              value={formData.department}
               onChange={handleChange}
             />
           </div>
@@ -124,7 +126,7 @@ export default function SimCardsEdit() {
             <select
               name="callControlGroup"
               className="form-control"
-              value={simCard.callControlGroup}
+              value={formData.callControlGroup}
               onChange={handleChange}
             >
               <option value="SPECIAL F">SPECIAL F</option>
@@ -136,7 +138,7 @@ export default function SimCardsEdit() {
             <select
               name="isDataEnabled"
               className="form-control"
-              value={simCard.isDataEnabled ? "true" : "false"}
+              value={formData.isDataEnabled ? "true" : "false"}
               onChange={handleChange}
             >
               <option value="true">True</option>
@@ -154,6 +156,18 @@ export default function SimCardsEdit() {
             >
               <option value="Voice">Voice</option>
               <option value="Data">Data</option>
+            </select>
+          </div>
+          <div className="mb-2">
+            <label htmlFor="status">Status:</label>
+            <select
+              name="status"
+              className="form-control"
+              value={formData.status}
+              onChange={handleChange}
+            >
+              <option value="In inventory">In inventory</option>
+              <option value="Suspended">Suspended</option>
             </select>
           </div>
           <div className="mb-2">
