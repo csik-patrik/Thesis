@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ThesisApi.Contracts.Requests.SimCards;
 using ThesisApi.Data;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
@@ -43,11 +44,20 @@ namespace ThesisApi.Repositories
             return await _context.SimCards.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<bool> UpdateAsync(SimCard simCard)
+        public async Task<SimCard?> UpdateAsync(int id, UpdateSimCardRequest request)
         {
-            _context.SimCards.Update(simCard);
+            var simCard = await _context.SimCards.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (simCard == null)
+                return null;
+
+            simCard.Department = request.Department;
+            simCard.CallControlGroup = request.CallControlGroup;
+            simCard.IsDataEnabled = request.IsDataEnabled;
+            simCard.Status = request.Status;
+
             await _context.SaveChangesAsync();
-            return true;
+            return simCard;
         }
     }
 }

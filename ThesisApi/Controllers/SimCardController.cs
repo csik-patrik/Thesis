@@ -46,6 +46,23 @@ namespace ThesisApi.Controllers
             return Ok(simCard.MapToResponse());
         }
 
+        [HttpPut(ApiEndpoints.SimCards.Update)]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSimCardRequest request)
+        {
+            try
+            {
+                var newSimCard = await _simCardRepository.UpdateAsync(id, request);
+
+                if (newSimCard == null)
+                    return NotFound();
+                return Ok(newSimCard.MapToResponse());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete(ApiEndpoints.SimCards.Delete)]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
