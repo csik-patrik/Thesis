@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface SimCard {
   id: number;
@@ -20,6 +21,17 @@ function SimCardsTable() {
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
   }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:5268/api/sim-cards/${id}`);
+      setData((prev) => prev.filter((item) => item.id !== id)); // update table
+      toast.success("Sim card deleted successfully!");
+    } catch (err) {
+      console.error("Error deleting sim card:", err);
+      alert("Failed to delete sim card.");
+    }
+  };
   return (
     <div className="d-flex flex-column justify-content-center align-items-center bd-light vh-100">
       <h1>Sim cards</h1>
@@ -58,7 +70,12 @@ function SimCardsTable() {
                   >
                     Edit
                   </Link>
-                  <button className="btn btn-sm btn-danger me-2">Delete</button>
+                  <button
+                    className="btn btn-sm btn-danger me-2"
+                    onClick={() => handleDelete(d.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
