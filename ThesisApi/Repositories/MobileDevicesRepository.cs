@@ -42,6 +42,12 @@ namespace ThesisApi.Repositories
             return await _context.MobileDevices.FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<IEnumerable<MobileDeviceCategory>> GetMobileDeviceCategoriesAsync()
+        {
+            return await _context.MobileDeviceCategories.ToListAsync();
+
+        }
+
         public async Task<bool> UpdateAsync(MobileDevice mobileDevice)
         {
             _context.MobileDevices.Update(mobileDevice);

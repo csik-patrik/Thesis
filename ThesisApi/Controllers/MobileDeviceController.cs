@@ -54,5 +54,23 @@ namespace ThesisApi.Controllers
                 return NotFound();
             return Ok();
         }
+
+        [HttpGet(ApiEndpoints.MobileDevices.GetAllMobileDeviceCategories)]
+        public async Task<IActionResult> GetAllMobileDeviceCategories()
+        {
+            try
+            {
+                var models = await _mobileDeviceRepository.GetMobileDeviceCategoriesAsync();
+
+                var response = models.Select(x => x.MapToResponse());
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
     }
 }

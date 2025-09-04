@@ -9,5 +9,6 @@ namespace ThesisApi.Interfaces
         Task<MobileDevice> AddAsync(MobileDevice mobileDevice);
         Task<bool> UpdateAsync(MobileDevice mobileDevice);
         Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<MobileDeviceCategory>> GetMobileDeviceCategoriesAsync();
     }
 }

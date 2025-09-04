@@ -43,6 +43,8 @@ namespace ThesisApi
             public const string Get = $"{Base}/{{id:int}}";
 
             public const string Delete = $"{Base}/{{id:int}}";
+            public const string GetAllMobileDeviceCategories = $"{Base}/categories";
+
 
         }
     }

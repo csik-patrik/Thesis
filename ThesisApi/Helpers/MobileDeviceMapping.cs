@@ -43,7 +43,15 @@ namespace ThesisApi.Helpers
                 ModifiedAt = model.ModifiedAt,
                 ModifiedBy = model.CreatedBy
             };
+        }
 
+        public static MobileDeviceCategoryResponse MapToResponse(this MobileDeviceCategory model)
+        {
+            return new MobileDeviceCategoryResponse()
+            {
+                Id = model.Id,
+                Name = model.Name
+            };
         }
     }
 }
