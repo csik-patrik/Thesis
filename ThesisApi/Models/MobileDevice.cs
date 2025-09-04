@@ -4,7 +4,8 @@ namespace ThesisApi.Models
     {
         public int Id { get; set; }
         public required string Hostname { get; set; }
-        public required string Type { get; set; }
+        public int MobileDeviceCategoryId { get; set; }
+        public MobileDeviceCategory MobileDeviceCategory { get; set; } = null!;
         public string? ImeiNumber { get; set; }
         public string? SerialNumber { get; set; }
         public string? IosVersion { get; set; }

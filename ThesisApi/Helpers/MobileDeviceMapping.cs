@@ -11,7 +11,7 @@ namespace ThesisApi.Helpers
             return new MobileDevice()
             {
                 Hostname = request.Hostname,
-                Type = request.Type,
+                MobileDeviceCategoryId = request.MobileDeviceCategoryId,
                 ImeiNumber = request.ImeiNumber,
                 SerialNumber = request.SerialNumber,
                 IosVersion = request.IosVersion,
@@ -30,7 +30,7 @@ namespace ThesisApi.Helpers
             {
                 Id = model.Id,
                 Hostname = model.Hostname,
-                Type = model.Type,
+                Type = model.MobileDeviceCategory.Name,
                 ImeiNumber = model.ImeiNumber,
                 SerialNumber = model.SerialNumber,
                 IosVersion = model.IosVersion,

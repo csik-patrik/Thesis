@@ -11,6 +11,17 @@ namespace ThesisApi.Data
         public DbSet<MobileDevice> MobileDevices { get; set; }
         public DbSet<MobileOrder> MobileOrders { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<MobileDeviceCategory> MobileDeviceCategories { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<MobileDeviceCategory>().HasData(
+                new MobileDeviceCategory { Id = 1, Name = "Standard smartphone" },
+                new MobileDeviceCategory { Id = 2, Name = "Enhanced smartphone" },
+                new MobileDeviceCategory { Id = 3, Name = "Feature phone" }
+            );
+        }
     }
 }
