@@ -1,7 +1,9 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { GetMobileDeviceCategories } from "../../Services/MobileDeviceServices";
+import type { MobileDeviceCategory } from "../../Services/MobileDeviceServices";
 
 interface CreateMobileDeviceRequest {
   hostname: string;
@@ -13,6 +15,20 @@ interface CreateMobileDeviceRequest {
 }
 
 function MobileDeviceCreate() {
+  const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
+    MobileDeviceCategory[]
+  >([]);
+
+  useEffect(() => {
+    GetMobileDeviceCategories()
+      .then((response) => {
+        setMobileDeviceCategories(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+
   const [formData, setFormData] = useState<CreateMobileDeviceRequest>({
     hostname: "",
     type: "",
@@ -66,7 +82,7 @@ function MobileDeviceCreate() {
             />
           </div>
           <div className="mb-2">
-            <label htmlFor="type">Device type:</label>
+            <label htmlFor="type">Category</label>
             <input
               type="text"
               name="type"
