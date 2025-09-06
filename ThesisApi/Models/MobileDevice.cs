@@ -13,7 +13,10 @@ namespace ThesisApi.Models
         public string? UserId { get; set; }
         public int? SimCardId { get; set; }
         public SimCard? SimCard { get; set; }
-        public required string Status { get; set; }
+        public int DeviceStatusId { get; set; }
+        public DeviceStatus DeviceStatus { get; set; } = null!;
+        public int DeviceStatusReasonId { get; set; }
+        public DeviceStatusReason DeviceStatusReason { get; set; } = null!;
         public required DateTime CreatedAt { get; set; }
         public required string CreatedBy { get; set; }
         public required DateTime ModifiedAt { get; set; }
