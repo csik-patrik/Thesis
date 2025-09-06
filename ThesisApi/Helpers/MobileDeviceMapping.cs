@@ -30,7 +30,7 @@ namespace ThesisApi.Helpers
             {
                 Id = model.Id,
                 Hostname = model.Hostname,
-                Type = model.MobileDeviceCategory.Name,
+                MobileDeviceCategory = model.MobileDeviceCategory.Name,
                 ImeiNumber = model.ImeiNumber,
                 SerialNumber = model.SerialNumber,
                 IosVersion = model.IosVersion,

@@ -6,7 +6,7 @@ namespace ThesisApi.Contracts.Responses.MobileDevices
     {
         public int Id { get; init; }
         public required string Hostname { get; init; }
-        public required string Type { get; init; }
+        public required string MobileDeviceCategory { get; init; }
         public string? ImeiNumber { get; init; }
         public string? SerialNumber { get; init; }
         public string? IosVersion { get; init; }

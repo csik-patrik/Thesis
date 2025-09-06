@@ -34,7 +34,9 @@ namespace ThesisApi.Repositories
 
         public async Task<IEnumerable<MobileDevice>> GetAllAsync()
         {
-            return await _context.MobileDevices.ToListAsync();
+            return await _context.MobileDevices
+                .Include(x => x.MobileDeviceCategory)
+                .ToListAsync();
         }
 
         public async Task<MobileDevice?> GetByIdAsync(int id)

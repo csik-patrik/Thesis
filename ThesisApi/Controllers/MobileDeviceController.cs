@@ -20,7 +20,10 @@ namespace ThesisApi.Controllers
         public async Task<IActionResult> GetAll()
         {
             var mobileDevices = await _mobileDeviceRepository.GetAllAsync();
-            return Ok(mobileDevices);
+
+            var response = mobileDevices.Select(x => x.MapToResponse()).ToList();
+
+            return Ok(response);
         }
 
         [HttpPost(ApiEndpoints.MobileDevices.Create)]
