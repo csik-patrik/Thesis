@@ -33,7 +33,10 @@ export default function MobileDeviceCategoryTable() {
     <div className="d-flex flex-column justify-content-center align-items-center bd-light vh-100">
       <h1>Mobile device categories</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
-        <Link className="btn btn-success me-2" to="/mobiles/create">
+        <Link
+          className="btn btn-success me-2"
+          to="/admin/mobile-device-categories/create"
+        >
           Create
         </Link>
         <table className="table table-striped">
