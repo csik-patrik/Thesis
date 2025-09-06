@@ -11,7 +11,8 @@ interface MobileDevice {
   serialNumber: string;
   iosVersion: string;
   batteryStatus: string;
-  status: string;
+  deviceStatus: string;
+  deviceStatusReason: string;
 }
 
 function MobileDevicesTable() {
@@ -47,12 +48,13 @@ function MobileDevicesTable() {
             <tr>
               <th scope="col">Id</th>
               <th scope="col">Hostname</th>
-              <th scope="col">Type</th>
+              <th scope="col">Category</th>
               <th scope="col">Imei number</th>
               <th scope="col">Serial number</th>
               <th scope="col">IOs version</th>
               <th scope="col">Battery status</th>
               <th scope="col">Status</th>
+              <th scope="col">Status reason</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
@@ -66,7 +68,8 @@ function MobileDevicesTable() {
                 <td>{d.serialNumber}</td>
                 <td>{d.iosVersion}</td>
                 <td>{d.batteryStatus}</td>
-                <td>{d.status}</td>
+                <td>{d.deviceStatus}</td>
+                <td>{d.deviceStatusReason}</td>
                 <td>
                   <button
                     className="btn btn-danger btn-sm text-light"
