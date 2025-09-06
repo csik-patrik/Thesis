@@ -36,12 +36,18 @@ namespace ThesisApi.Repositories
         {
             return await _context.MobileDevices
                 .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.DeviceStatus)
+                .Include(x => x.DeviceStatusReason)
                 .ToListAsync();
         }
 
         public async Task<MobileDevice?> GetByIdAsync(int id)
         {
-            return await _context.MobileDevices.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.MobileDevices
+                .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.DeviceStatus)
+                .Include(x => x.DeviceStatusReason)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<MobileDeviceCategory>> GetMobileDeviceCategoriesAsync()
