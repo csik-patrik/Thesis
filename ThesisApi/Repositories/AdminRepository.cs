@@ -61,6 +61,8 @@ namespace ThesisApi.Repositories
 
             _context.MobileDeviceCategories.Remove(model);
 
+            _context.SaveChanges();
+
             return true;
 
         }
