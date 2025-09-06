@@ -7,6 +7,8 @@ namespace ThesisApi.Services
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+
+            services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<ISimCardRepository, SimCardsRepository>();
             services.AddScoped<IMobileDeviceRepository, MobileDevicesRepository>();
             services.AddScoped<IMobileOrderRepository, MobileOrderRepository>();
