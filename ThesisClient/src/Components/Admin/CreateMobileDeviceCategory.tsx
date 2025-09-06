@@ -45,23 +45,21 @@ export default function CreateMobileDeviceCategory() {
   };
 
   return (
-    <>
-      <Form title="Create mobile device category" handleSubmit={handleSubmit}>
-        <Input
-          title="Name:"
-          fieldName="name"
-          placeHolder="Feature phone"
-          type="text"
-          value={formData.name}
-          handleChange={handleChange}
-        />
-        <Link
-          to="/api/admin/mobile-device-categories"
-          className="btn btn-primary me-2"
-        >
-          Back
-        </Link>
-      </Form>
-    </>
+    <Form title="Create mobile device category" handleSubmit={handleSubmit}>
+      <Input
+        title="Name:"
+        fieldName="name"
+        placeHolder="Feature phone"
+        type="text"
+        value={formData.name}
+        handleChange={handleChange}
+      />
+      <Link
+        to="/api/admin/mobile-device-categories"
+        className="btn btn-primary me-2"
+      >
+        Back
+      </Link>
+    </Form>
   );
 }

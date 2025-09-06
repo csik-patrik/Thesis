@@ -69,7 +69,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut(ApiEndpoints.Admin.UpdateMobileDeviceCategory)]
-        public async Task<IActionResult> UpdateMobileDeviceCategory([FromRoute] int id, string name)
+        public async Task<IActionResult> UpdateMobileDeviceCategory([FromRoute] int id, [FromBody] string name)
         {
             try
             {

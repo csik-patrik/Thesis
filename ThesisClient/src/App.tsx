@@ -16,6 +16,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import SimCardsEdit from "./Components/SimCards/SimCardsEdit.tsx";
 import CreateMobileDeviceCategory from "./Components/Admin/CreateMobileDeviceCategory.tsx";
+import EditMobileDeviceCategory from "./Components/Admin/EditMobileDeviceCategory.tsx";
 
 function App() {
   return (
@@ -51,6 +52,10 @@ function App() {
             <Route
               path="/admin/mobile-device-categories"
               element={<MobileDeviceCategoryTable />}
+            ></Route>
+            <Route
+              path="/admin/mobile-device-categories/:id"
+              element={<EditMobileDeviceCategory />}
             ></Route>
             <Route
               path="/admin/mobile-device-categories/create"

@@ -53,6 +53,12 @@ export default function MobileDeviceCategoryTable() {
                 <td scope="row">{d.id}</td>
                 <td>{d.name}</td>
                 <td>
+                  <Link
+                    to={`/admin/mobile-device-categories/${d.id}`}
+                    className="btn btn-warning btn-sm me-2"
+                  >
+                    Edit
+                  </Link>
                   <button
                     className="btn btn-danger btn-sm text-light"
                     onClick={() => handleDelete(d.id)}
