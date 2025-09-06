@@ -49,12 +49,12 @@ namespace ThesisApi
         public class Admin
         {
             private const string Base = $"{ApiBase}/admin";
-
-            public const string GetAllMobileDeviceCategories = $"{Base}/mobile-device-categories";
-            public const string GetMobileDeviceCategoryById = $"{GetAllMobileDeviceCategories}/{{id:int}}";
-            public const string CreateMobileDeviceCategory = $"{GetAllMobileDeviceCategories}/{{name}}";
-            public const string UpdateMobileDeviceCategory = $"{GetAllMobileDeviceCategories}/{{id:int}}";
-            public const string DeleteMobileDeviceCategory = $"{GetAllMobileDeviceCategories}/{{id:int}}";
+            private const string MobileDeviceCategoryBase = $"{Base}/mobile-device-categories";
+            public const string GetAllMobileDeviceCategories = MobileDeviceCategoryBase;
+            public const string GetMobileDeviceCategoryById = $"{MobileDeviceCategoryBase}/{{id:int}}";
+            public const string CreateMobileDeviceCategory = MobileDeviceCategoryBase;
+            public const string UpdateMobileDeviceCategory = $"{MobileDeviceCategoryBase}/{{id:int}}";
+            public const string DeleteMobileDeviceCategory = $"{MobileDeviceCategoryBase}/{{id:int}}";
 
 
         }

@@ -54,7 +54,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost(ApiEndpoints.Admin.CreateMobileDeviceCategory)]
-        public async Task<IActionResult> CreateMobileDeviceCategory([FromRoute] string name)
+        public async Task<IActionResult> CreateMobileDeviceCategory([FromBody] string name)
         {
             try
             {
