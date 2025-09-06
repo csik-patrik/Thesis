@@ -44,6 +44,17 @@ namespace ThesisApi
 
             public const string Delete = $"{Base}/{{id:int}}";
             public const string GetAllMobileDeviceCategories = $"{Base}/categories";
+        }
+
+        public class Admin
+        {
+            private const string Base = $"{ApiBase}/admin";
+
+            public const string GetAllMobileDeviceCategories = $"{Base}/mobile-device-categories";
+            public const string GetMobileDeviceCategoryById = $"{GetAllMobileDeviceCategories}/{{id:int}}";
+            public const string CreateMobileDeviceCategory = $"{GetAllMobileDeviceCategories}/{{name}}";
+            public const string UpdateMobileDeviceCategory = $"{GetAllMobileDeviceCategories}/{{id:int}}";
+            public const string DeleteMobileDeviceCategory = $"{GetAllMobileDeviceCategories}/{{id:int}}";
 
 
         }
