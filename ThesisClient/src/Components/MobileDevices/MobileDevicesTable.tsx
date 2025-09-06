@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 interface MobileDevice {
   id: number;
   hostname: string;
-  type: string;
+  mobileDeviceCategory: string;
   imeiNumber: string;
   serialNumber: string;
   iosVersion: string;
@@ -61,7 +61,7 @@ function MobileDevicesTable() {
               <tr key={d.id}>
                 <td scope="row">{d.id}</td>
                 <td>{d.hostname}</td>
-                <td>{d.type}</td>
+                <td>{d.mobileDeviceCategory}</td>
                 <td>{d.imeiNumber}</td>
                 <td>{d.serialNumber}</td>
                 <td>{d.iosVersion}</td>
