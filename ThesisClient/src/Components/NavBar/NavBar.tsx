@@ -4,7 +4,7 @@ import DropDown from "./DropDown";
 export default function NavBar() {
   return (
     <>
-      <nav className="navbar navbar-expand-lg fixed-top bg-body-tertiary">
+      <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
             Navbar
@@ -30,6 +30,12 @@ export default function NavBar() {
               <DropDown title="Inventory">
                 <NavItem title="Mobiles" to="/mobiles"></NavItem>
                 <NavItem title="Sim cards" to="/sim-cards"></NavItem>
+              </DropDown>
+              <DropDown title="Admin">
+                <NavItem
+                  title="Mobile device categories"
+                  to="/admin/mobile-device-categories"
+                ></NavItem>
               </DropDown>
             </ul>
           </div>
