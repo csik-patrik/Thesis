@@ -17,54 +17,57 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import SimCardsEdit from "./Components/SimCards/SimCardsEdit.tsx";
 import CreateMobileDeviceCategory from "./Components/Admin/CreateMobileDeviceCategory.tsx";
 import EditMobileDeviceCategory from "./Components/Admin/EditMobileDeviceCategory.tsx";
+import { AuthProvider } from "../src/Auth/AuthContext.tsx";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/mobiles" element={<MobileDevicesTable />}></Route>
-            <Route
-              path="/mobiles/create"
-              element={<MobileDeviceCreate />}
-            ></Route>
-            <Route path="/sim-cards" element={<SimCardsTable />}></Route>
-            <Route
-              path="/sim-cards/create"
-              element={<SimCardsCreate />}
-            ></Route>
-            <Route path="/sim-cards/:id" element={<SimCardsEdit />}></Route>
-            <Route
-              path="/mobile-orders/create"
-              element={<MobileOrdersCreate />}
-            ></Route>
-            <Route
-              path="/mobile-orders"
-              element={<MobileOrdersTable />}
-            ></Route>
-            <Route
-              path="/mobile-orders/:id"
-              element={<MobileOrderView />}
-            ></Route>
-            <Route
-              path="/admin/mobile-device-categories"
-              element={<MobileDeviceCategoryTable />}
-            ></Route>
-            <Route
-              path="/admin/mobile-device-categories/:id"
-              element={<EditMobileDeviceCategory />}
-            ></Route>
-            <Route
-              path="/admin/mobile-device-categories/create"
-              element={<CreateMobileDeviceCategory />}
-            ></Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="/login" element={<Login />}></Route>
+              <Route path="/mobiles" element={<MobileDevicesTable />}></Route>
+              <Route
+                path="/mobiles/create"
+                element={<MobileDeviceCreate />}
+              ></Route>
+              <Route path="/sim-cards" element={<SimCardsTable />}></Route>
+              <Route
+                path="/sim-cards/create"
+                element={<SimCardsCreate />}
+              ></Route>
+              <Route path="/sim-cards/:id" element={<SimCardsEdit />}></Route>
+              <Route
+                path="/mobile-orders/create"
+                element={<MobileOrdersCreate />}
+              ></Route>
+              <Route
+                path="/mobile-orders"
+                element={<MobileOrdersTable />}
+              ></Route>
+              <Route
+                path="/mobile-orders/:id"
+                element={<MobileOrderView />}
+              ></Route>
+              <Route
+                path="/admin/mobile-device-categories"
+                element={<MobileDeviceCategoryTable />}
+              ></Route>
+              <Route
+                path="/admin/mobile-device-categories/:id"
+                element={<EditMobileDeviceCategory />}
+              ></Route>
+              <Route
+                path="/admin/mobile-device-categories/create"
+                element={<CreateMobileDeviceCategory />}
+              ></Route>
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        <ToastContainer position="top-right" autoClose={3000} />
+      </AuthProvider>
     </>
   );
 }

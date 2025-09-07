@@ -1,7 +1,10 @@
 import NavItem from "./NavItem";
 import DropDown from "./DropDown";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function NavBar() {
+  const { user, logout } = useAuth();
+  console.log(user);
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -22,8 +25,15 @@ export default function NavBar() {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
-              <NavItem title="Login" to="/login" />
               <NavItem title="Home" to="/" />
+              {user ? (
+                <>
+                  <span>Welcome, {user.email}</span>
+                  <button onClick={logout}>Logout</button>
+                </>
+              ) : (
+                <NavItem title="Login" to="/login" />
+              )}
               <DropDown title="Orders">
                 <NavItem title="Mobile orders" to="/mobile-orders"></NavItem>
               </DropDown>
