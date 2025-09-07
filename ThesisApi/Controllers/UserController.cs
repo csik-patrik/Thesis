@@ -18,7 +18,7 @@ namespace ThesisApi.Controllers
             _userService = userService;
         }
 
-        [HttpPost("/login")]
+        [HttpPost(ApiEndpoints.Users.Login)]
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
             var user = await _userService.GetUserByLoginRequestAsync(loginRequest);

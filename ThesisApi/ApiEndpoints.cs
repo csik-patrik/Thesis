@@ -4,6 +4,12 @@ namespace ThesisApi
     {
         private const string ApiBase = "/api";
 
+        public class Users
+        {
+            private const string Base = $"{ApiBase}/users";
+            public const string Login = $"{Base}/login";
+        }
+
         public class SimCards
         {
             private const string Base = $"{ApiBase}/sim-cards";
