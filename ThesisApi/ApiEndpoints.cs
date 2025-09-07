@@ -62,6 +62,9 @@ namespace ThesisApi
             public const string UpdateMobileDeviceCategory = $"{MobileDeviceCategoryBase}/{{id:int}}";
             public const string DeleteMobileDeviceCategory = $"{MobileDeviceCategoryBase}/{{id:int}}";
 
+            private const string UsersBase = $"{Base}/users";
+            public const string GetUsers = UsersBase;
+
 
         }
     }

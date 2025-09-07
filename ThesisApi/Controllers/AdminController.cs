@@ -102,5 +102,22 @@ namespace ThesisApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpGet(ApiEndpoints.Admin.GetUsers)]
+        public async Task<IActionResult> GetUsers()
+        {
+            try
+            {
+                var users = await _adminRepository.GetUsersAsync();
+
+                var response = users.Select(x => x.MapToResponse()).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

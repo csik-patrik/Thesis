@@ -1,4 +1,5 @@
 using ThesisApi.Contracts.Requests.Users;
+using ThesisApi.Contracts.Responses.Users;
 using ThesisApi.Models;
 
 namespace ThesisApi.Helpers
@@ -13,6 +14,28 @@ namespace ThesisApi.Helpers
                 Email = user.Email,
                 Department = user.Department,
                 CostCenter = user.CostCenter
+            };
+        }
+
+        public static UserRoleResponse MapToResponse(this UserRole userRole)
+        {
+            return new UserRoleResponse()
+            {
+                Id = userRole.Id,
+                Name = userRole.Name
+            };
+        }
+
+        public static UserResponse MapToResponse(this User user)
+        {
+            return new UserResponse()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                Department = user.Password,
+                CostCenter = user.CostCenter,
+                UserRoles = user.UserRoles.Select(x => x.MapToResponse()).ToList()
             };
         }
     }
