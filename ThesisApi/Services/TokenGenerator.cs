@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using ThesisApi.Contracts.Requests.Users;
 
@@ -11,14 +12,19 @@ namespace ThesisApi.Services
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            var key = "qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123?????????"u8.ToArray();
+            var key = Encoding.UTF8.GetBytes("qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123?????????");
+
 
             var claims = new List<Claim>()
             {
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new(JwtRegisteredClaimNames.Sub, request.Email),
                 new(JwtRegisteredClaimNames.GivenName, request.Username),
-                new(JwtRegisteredClaimNames.Email, request.Email)
+                new(JwtRegisteredClaimNames.Email, request.Email),
+
+                new("username", request.Username),
+                new("department", request.Department),
+                new("costCenter", request.CostCenter)
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
