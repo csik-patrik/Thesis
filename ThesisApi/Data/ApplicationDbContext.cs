@@ -13,11 +13,18 @@ namespace ThesisApi.Data
         public DbSet<MobileDevice> MobileDevices { get; set; }
         public DbSet<MobileOrder> MobileOrders { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+
         public DbSet<MobileDeviceCategory> MobileDeviceCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserRole>().HasData(
+                new UserRole { Id = 1, Name = "User" },
+                new UserRole { Id = 2, Name = "Admin" }
+            );
 
             modelBuilder.Entity<DeviceStatus>().HasData(
                 new DeviceStatus { Id = 1, Name = "In Inventory" },

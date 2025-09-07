@@ -30,7 +30,7 @@ export default function MobileDeviceCategoryTable() {
   };
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bd-light vh-100">
+    <div className="d-flex flex-column justify-content-center align-items-center bd-light">
       <h1>Mobile device categories</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
         <Link

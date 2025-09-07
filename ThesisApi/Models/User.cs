@@ -8,5 +8,7 @@ namespace ThesisApi.Models
         public required string Password { get; set; }
         public required string Department { get; set; }
         public required string CostCenter { get; set; }
+
+        public ICollection<UserRole> UserRoles { get; set; } = null!;
     }
 }

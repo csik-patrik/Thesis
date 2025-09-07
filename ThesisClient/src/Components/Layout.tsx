@@ -5,7 +5,7 @@ function Layout() {
   return (
     <>
       <NavBar />
-      <div>
+      <div className="border border-3 justify-content-center">
         <Outlet />
       </div>
     </>
