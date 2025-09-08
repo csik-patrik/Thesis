@@ -71,5 +71,24 @@ namespace ThesisApi.Repositories
         {
             return await _context.Users.Include(x => x.UserRoles).ToListAsync();
         }
+
+        public async Task<User> AddUserAsync(User user)
+        {
+            await _context.Users.AddAsync(user);
+
+            await _context.SaveChangesAsync();
+
+            return user;
+        }
+
+        public async Task<IEnumerable<UserRole>> GetUserRolesAsync()
+        {
+            return await _context.UserRoles.ToListAsync();
+        }
+
+        public async Task<IEnumerable<UserRole>> GetUserRolesByIdAsync(List<int> ids)
+        {
+            return await _context.UserRoles.Where(x => ids.Contains(x.Id)).ToListAsync();
+        }
     }
 }

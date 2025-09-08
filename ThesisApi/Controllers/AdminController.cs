@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using ThesisApi.Contracts.Requests.Users;
 using ThesisApi.Helpers;
 using ThesisApi.Interfaces;
+using ThesisApi.Models;
 
 namespace ThesisApi.Controllers
 {
@@ -118,6 +120,35 @@ namespace ThesisApi.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+        [HttpPost(ApiEndpoints.Admin.CreateUser)]
+        public async Task<IActionResult> CreateUser(CreateUserRequest request)
+        {
+            try
+            {
+                var roles = await _adminRepository.GetUserRolesByIdAsync(request.UserRoleIds);
+                if (!roles.Any())
+                    return BadRequest("User roles are not valid!");
+
+                var user = new User()
+                {
+                    Username = request.Username,
+                    Email = request.Email,
+                    Password = request.Password,
+                    Department = request.Department,
+                    CostCenter = request.CostCenter,
+                    UserRoles = roles.ToList()
+                };
+
+                await _adminRepository.AddUserAsync(user);
+
+                return Ok(user.MapToResponse());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
     }
 }

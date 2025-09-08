@@ -11,6 +11,8 @@ namespace ThesisApi.Interfaces
         Task<bool> DeleteMobileDeviceCategory(int id);
 
         Task<IEnumerable<User>> GetUsersAsync();
-
+        Task<IEnumerable<UserRole>> GetUserRolesAsync();
+        Task<IEnumerable<UserRole>> GetUserRolesByIdAsync(List<int> ids);
+        Task<User> AddUserAsync(User user);
     }
 }
