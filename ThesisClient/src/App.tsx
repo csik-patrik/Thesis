@@ -18,6 +18,7 @@ import SimCardsEdit from "./Components/SimCards/SimCardsEdit.tsx";
 import CreateMobileDeviceCategory from "./Components/Admin/CreateMobileDeviceCategory.tsx";
 import EditMobileDeviceCategory from "./Components/Admin/EditMobileDeviceCategory.tsx";
 import { AuthProvider } from "../src/Auth/AuthContext.tsx";
+import UsersTable from "./Components/Admin/UsersTable.tsx";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
                 path="/admin/mobile-device-categories/create"
                 element={<CreateMobileDeviceCategory />}
               ></Route>
+              <Route path="/admin/users" element={<UsersTable />}></Route>
             </Route>
           </Routes>
         </BrowserRouter>

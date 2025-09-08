@@ -35,9 +35,10 @@ export default function NavBar() {
               </DropDown>
               <DropDown title="Admin">
                 <NavItem
-                  title="Mobile device categories"
+                  title="Mobile categories"
                   to="/admin/mobile-device-categories"
                 />
+                <NavItem title="Users" to="/admin/users" />
               </DropDown>
             </ul>
           )}
