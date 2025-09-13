@@ -19,73 +19,85 @@ interface MobileOrder {
 
 function MobileOrdersTable() {
   const [data, setData] = useState<MobileOrder[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get<MobileOrder[]>("http://localhost:5268/api/mobile-orders")
       .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        toast.error("Failed to fetch mobile orders.");
+        console.log(err);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const handleDelete = async (id: number) => {
     try {
       await axios.delete(`http://localhost:5268/api/mobile-orders/${id}`);
-      setData((prev) => prev.filter((item) => item.id !== id)); // update table
+      setData((prev) => prev.filter((item) => item.id !== id));
       toast.success("Mobile order deleted successfully!");
     } catch (err) {
-      console.error("Error deleting sim card:", err);
-      alert("Failed to delete sim card.");
+      console.error("Error deleting mobile order:", err);
+      toast.error("Failed to delete mobile order.");
     }
   };
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bd-light vh-100">
-      <h1>Mobile orders</h1>
+    <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
+      <h1>Mobile Orders</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
-        <Link className="btn btn-success me-2" to="/mobile-orders/create">
+        <Link className="btn btn-success me-2 mb-3" to="/mobile-orders/create">
           Create
         </Link>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">CustomerName</th>
-              <th scope="col">CustomerUsername</th>
-              <th scope="col">Device type</th>
-              <th scope="col">PickupLocation</th>
-              <th scope="col">Status</th>
-              <th scope="col">CreatedBy</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((d) => (
-              <tr key={d.id}>
-                <td scope="row">{d.id}</td>
-                <td>{d.customerName}</td>
-                <td>{d.customerUsername}</td>
-                <td>{d.deviceType}</td>
-                <td>{d.pickupLocation}</td>
-                <td>{d.status}</td>
-                <td>{d.createdBy}</td>
-                <td>
-                  <Link
-                    to={`/mobile-orders/${d.id}`}
-                    className="btn btn-primary btn-sm me-2 text-light"
-                  >
-                    View
-                  </Link>
-                  <button
-                    className="btn btn-danger btn-sm text-light"
-                    onClick={() => handleDelete(d.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+        {loading ? (
+          <div>Loading...</div>
+        ) : data.length === 0 ? (
+          <div>No mobile orders found.</div>
+        ) : (
+          <table className="table table-striped">
+            <caption className="visually-hidden">List of mobile orders</caption>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Customer Name</th>
+                <th scope="col">Customer Username</th>
+                <th scope="col">Device Type</th>
+                <th scope="col">Pickup Location</th>
+                <th scope="col">Status</th>
+                <th scope="col">Created By</th>
+                <th scope="col">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((d) => (
+                <tr key={d.id}>
+                  <td>{d.id}</td>
+                  <td>{d.customerName}</td>
+                  <td>{d.customerUsername}</td>
+                  <td>{d.deviceType}</td>
+                  <td>{d.pickupLocation}</td>
+                  <td>{d.status}</td>
+                  <td>{d.createdBy}</td>
+                  <td>
+                    <Link
+                      to={`/mobile-orders/${d.id}`}
+                      className="btn btn-primary btn-sm me-2 text-light"
+                    >
+                      View
+                    </Link>
+                    <button
+                      className="btn btn-danger btn-sm text-light"
+                      onClick={() => handleDelete(d.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
