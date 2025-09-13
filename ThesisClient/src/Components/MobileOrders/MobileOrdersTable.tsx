@@ -55,48 +55,52 @@ function MobileOrdersTable() {
         ) : data.length === 0 ? (
           <div>No mobile orders found.</div>
         ) : (
-          <table className="table table-striped">
-            <caption className="visually-hidden">List of mobile orders</caption>
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Customer Name</th>
-                <th scope="col">Customer Username</th>
-                <th scope="col">Device Type</th>
-                <th scope="col">Pickup Location</th>
-                <th scope="col">Status</th>
-                <th scope="col">Created By</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((d) => (
-                <tr key={d.id}>
-                  <td>{d.id}</td>
-                  <td>{d.customerName}</td>
-                  <td>{d.customerUsername}</td>
-                  <td>{d.deviceType}</td>
-                  <td>{d.pickupLocation}</td>
-                  <td>{d.status}</td>
-                  <td>{d.createdBy}</td>
-                  <td>
-                    <Link
-                      to={`/mobile-orders/${d.id}`}
-                      className="btn btn-primary btn-sm me-2 text-light"
-                    >
-                      View
-                    </Link>
-                    <button
-                      className="btn btn-danger btn-sm text-light"
-                      onClick={() => handleDelete(d.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
+          <div className="table-responsive">
+            <table className="table table-striped">
+              <caption className="visually-hidden">
+                List of mobile orders
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Customer Name</th>
+                  <th scope="col">Customer Username</th>
+                  <th scope="col">Device Type</th>
+                  <th scope="col">Pickup Location</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Created By</th>
+                  <th scope="col">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {data.map((d) => (
+                  <tr key={d.id}>
+                    <td>{d.id}</td>
+                    <td>{d.customerName}</td>
+                    <td>{d.customerUsername}</td>
+                    <td>{d.deviceType}</td>
+                    <td>{d.pickupLocation}</td>
+                    <td>{d.status}</td>
+                    <td>{d.createdBy}</td>
+                    <td>
+                      <Link
+                        to={`/mobile-orders/${d.id}`}
+                        className="btn btn-primary btn-sm me-2 text-light"
+                      >
+                        View
+                      </Link>
+                      <button
+                        className="btn btn-danger btn-sm text-light"
+                        onClick={() => handleDelete(d.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>
