@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using ThesisApi.Data;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ThesisApi.Repositories
 {
@@ -75,6 +75,9 @@ namespace ThesisApi.Repositories
 
         public async Task<User> AddUserAsync(User user)
         {
+            var passwordHasher = new PasswordHasher<User>();
+            user.Password = passwordHasher.HashPassword(user, user.Password);
+
             await _context.Users.AddAsync(user);
 
             await _context.SaveChangesAsync();
