@@ -43,6 +43,7 @@ namespace ThesisApi
             private const string Base = $"{ApiBase}/mobile-devices";
 
             public const string GetAll = Base;
+            public const string GetAllForAllocation = $"{Base}/for-allocation";
 
             public const string Create = Base;
 

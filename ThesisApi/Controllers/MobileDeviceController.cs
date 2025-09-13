@@ -26,6 +26,16 @@ namespace ThesisApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet(ApiEndpoints.MobileDevices.GetAllForAllocation)]
+        public async Task<IActionResult> GetAllForAllocation()
+        {
+            var mobileDevices = await _mobileDeviceRepository.GetAllForAllocationAsync();
+
+            var response = mobileDevices.Select(x => x.MapToResponse()).ToList();
+
+            return Ok(response);
+        }
+
         [HttpPost(ApiEndpoints.MobileDevices.Create)]
         public async Task<IActionResult> Create([FromBody] CreateMobileDeviceRequest request)
         {
