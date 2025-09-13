@@ -14,5 +14,6 @@ namespace ThesisApi.Interfaces
         Task<IEnumerable<UserRole>> GetUserRolesAsync();
         Task<IEnumerable<UserRole>> GetUserRolesByIdAsync(List<int> ids);
         Task<User> AddUserAsync(User user);
+        Task<bool> DeleteUserById(int id);
     }
 }

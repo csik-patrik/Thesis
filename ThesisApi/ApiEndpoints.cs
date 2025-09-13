@@ -65,6 +65,7 @@ namespace ThesisApi
             private const string UsersBase = $"{Base}/users";
             public const string GetUsers = UsersBase;
             public const string CreateUser = UsersBase;
+            public const string DeleteUser = $"UsersBase/{{id:int}}";
         }
     }
 }

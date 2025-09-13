@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using ThesisApi.Data;
 using ThesisApi.Interfaces;
@@ -89,6 +90,20 @@ namespace ThesisApi.Repositories
         public async Task<IEnumerable<UserRole>> GetUserRolesByIdAsync(List<int> ids)
         {
             return await _context.UserRoles.Where(x => ids.Contains(x.Id)).ToListAsync();
+        }
+
+        public Task<bool> DeleteUserById(int id)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+
+            if (user == null)
+                return Task.FromResult(false);
+
+            _context.Users.Remove(user);
+
+            _context.SaveChanges();
+
+            return Task.FromResult(true);
         }
     }
 }

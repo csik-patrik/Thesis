@@ -121,6 +121,7 @@ namespace ThesisApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
         [HttpPost(ApiEndpoints.Admin.CreateUser)]
         public async Task<IActionResult> CreateUser(CreateUserRequest request)
         {
@@ -148,7 +149,26 @@ namespace ThesisApi.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
 
+        [HttpDelete(ApiEndpoints.Admin.DeleteUser)]
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _adminRepository.DeleteUserById(id);
+
+                if (!result)
+                {
+                    return NotFound("User not found!");
+                }
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
