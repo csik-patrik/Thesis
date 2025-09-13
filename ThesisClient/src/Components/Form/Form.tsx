@@ -11,7 +11,7 @@ export default function Form({ title, handleSubmit, children }: InputProps) {
         <h1>{title}</h1>
         <form onSubmit={handleSubmit}>
           {children}
-          <button type="submit" className="btn btn-success">
+          <button type="submit" className="btn btn-success m-3">
             Submit
           </button>
         </form>

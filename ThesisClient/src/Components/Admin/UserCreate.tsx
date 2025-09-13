@@ -124,7 +124,7 @@ export default function UserCreate() {
           }))}
           handleChange={handleChange}
         />
-        <Link to="/admin/users" className="btn btn-primary ms-3">
+        <Link to="/admin/users" className="btn btn-primary">
           Back
         </Link>
       </Form>
