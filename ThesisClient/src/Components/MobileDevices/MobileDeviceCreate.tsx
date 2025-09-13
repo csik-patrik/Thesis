@@ -7,7 +7,7 @@ import type { MobileDeviceCategory } from "../../Services/MobileDeviceServices";
 
 interface CreateMobileDeviceRequest {
   hostname: string;
-  type: string;
+  mobileDeviceCategoryId: number;
   imeiNumber: string;
   serialNumber: string;
   iosVersion: string;
@@ -31,7 +31,7 @@ function MobileDeviceCreate() {
 
   const [formData, setFormData] = useState<CreateMobileDeviceRequest>({
     hostname: "",
-    type: "",
+    mobileDeviceCategoryId: 0,
     imeiNumber: "",
     serialNumber: "",
     iosVersion: "",
@@ -44,10 +44,9 @@ function MobileDeviceCreate() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "mobileDeviceCategoryId" ? Number(value) : value,
     }));
   };
 
@@ -56,92 +55,124 @@ function MobileDeviceCreate() {
 
     try {
       await axios.post("http://localhost:5268/api/mobile-devices", formData);
-      toast.success("Mobile created successfully!");
+      toast.success("Mobile device created successfully!");
       navigate("/mobiles");
     } catch (err) {
       console.error("Error creating mobile device:", err);
-      toast.error("Failed to create mobile order.");
-      alert("Failed to create sim card.");
+      toast.error("Failed to create mobile device.");
     }
   };
 
   return (
-    <div className="d-flex w-100 vh-100 justify-content-center align-items-center bg-light">
-      <div className="w-50 border bg-white shadow px-5 pt-3 pb-5 rounded">
-        <h1>Create a new mobile device</h1>
+    <div className="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
+      <div className="col-12 col-md-8 col-lg-6 col-xl-5 border bg-white shadow px-4 py-5 rounded">
+        <h1 className="mb-4 text-center">Create a New Mobile Device</h1>
         <form onSubmit={handleSubmit}>
-          <div className="mb-2">
-            <label htmlFor="hostname">Hostname:</label>
+          <div className="mb-3">
+            <label htmlFor="hostname" className="form-label">
+              Hostname
+            </label>
             <input
               type="text"
               name="hostname"
+              id="hostname"
               className="form-control"
               placeholder="HTV-M-00001"
               value={formData.hostname}
               onChange={handleChange}
+              required
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="type">Category</label>
-            <input
-              type="text"
-              name="type"
-              className="form-control"
-              placeholder="iPhone SE 2 64Gb"
-              value={formData.type}
+          <div className="mb-3">
+            <label htmlFor="mobileDeviceCategoryId" className="form-label">
+              Category
+            </label>
+            <select
+              name="mobileDeviceCategoryId"
+              id="mobileDeviceCategoryId"
+              className="form-select"
+              value={formData.mobileDeviceCategoryId}
               onChange={handleChange}
-            />
+              required
+            >
+              <option value={0} disabled>
+                Select category...
+              </option>
+              {mobileDeviceCategories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="mb-2">
-            <label htmlFor="imeiNumber">Imei number:</label>
+          <div className="mb-3">
+            <label htmlFor="imeiNumber" className="form-label">
+              IMEI Number
+            </label>
             <input
               type="text"
               name="imeiNumber"
+              id="imeiNumber"
               className="form-control"
-              placeholder="3512..."
+              placeholder="3525..."
               value={formData.imeiNumber}
               onChange={handleChange}
+              required
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="serialNumber">Serial number:</label>
+          <div className="mb-3">
+            <label htmlFor="serialNumber" className="form-label">
+              Serial Number
+            </label>
             <input
               type="text"
               name="serialNumber"
+              id="serialNumber"
               className="form-control"
               placeholder="SFZ213"
               value={formData.serialNumber}
               onChange={handleChange}
+              required
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="iosVersion">Ios version::</label>
+          <div className="mb-3">
+            <label htmlFor="iosVersion" className="form-label">
+              iOS Version
+            </label>
             <input
               type="text"
               name="iosVersion"
+              id="iosVersion"
               className="form-control"
               placeholder="18.6.2"
               value={formData.iosVersion}
               onChange={handleChange}
+              required
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="createdBy">Created by:</label>
+          <div className="mb-3">
+            <label htmlFor="createdBy" className="form-label">
+              Created By
+            </label>
             <input
               type="text"
               name="createdBy"
+              id="createdBy"
               className="form-control"
               placeholder="Username"
               value={formData.createdBy}
               onChange={handleChange}
+              required
             />
           </div>
-          <button type="submit" className="btn btn-success">
-            Submit
-          </button>
-          <Link to="/mobiles" className="btn btn-primary ms-3">
-            Back
-          </Link>
+          <div className="d-flex flex-wrap justify-content-between align-items-center mt-4">
+            <button type="submit" className="btn btn-success mb-2 mb-md-0">
+              Submit
+            </button>
+            <Link to="/mobiles" className="btn btn-primary ms-md-3">
+              Back
+            </Link>
+          </div>
         </form>
       </div>
     </div>
