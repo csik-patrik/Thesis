@@ -42,7 +42,7 @@ export default function Users() {
     <div className="d-flex flex-column justify-content-center align-items-center bd-light vh-100">
       <h1>Users</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
-        <Link className="btn btn-success me-2" to="/">
+        <Link className="btn btn-success me-2" to="/admin/users/create">
           Create
         </Link>
         <table className="table table-striped">

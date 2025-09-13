@@ -19,6 +19,7 @@ import CreateMobileDeviceCategory from "./Components/Admin/CreateMobileDeviceCat
 import EditMobileDeviceCategory from "./Components/Admin/EditMobileDeviceCategory.tsx";
 import { AuthProvider } from "../src/Auth/AuthContext.tsx";
 import UsersTable from "./Components/Admin/UsersTable.tsx";
+import UserCreate from "./Components/Admin/UserCreate.tsx";
 
 function App() {
   return (
@@ -65,6 +66,10 @@ function App() {
                 element={<CreateMobileDeviceCategory />}
               ></Route>
               <Route path="/admin/users" element={<UsersTable />}></Route>
+              <Route
+                path="/admin/users/create"
+                element={<UserCreate />}
+              ></Route>
             </Route>
           </Routes>
         </BrowserRouter>
