@@ -170,5 +170,22 @@ namespace ThesisApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpGet(ApiEndpoints.Admin.GetRoles)]
+        public async Task<IActionResult> GetRoles()
+        {
+            try
+            {
+                var roles = await _adminRepository.GetUserRolesAsync();
+
+                var response = roles.Select(x => x.MapToResponse()).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }
