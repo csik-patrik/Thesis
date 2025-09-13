@@ -20,10 +20,30 @@ interface MobileOrder {
   modifiedAt: string;
 }
 
+interface AllocableDevice {
+  id: number;
+  hostname: string;
+  mobileDeviceCategory: string;
+  imeiNumber: string;
+  serialNumber: string;
+  iosVersion: string;
+  batteryStatus: number;
+  deviceStatus: string;
+  deviceStatusReason: string;
+  createdAt: string;
+  createdBy: string;
+  modifiedAt: string;
+  modifiedBy: string;
+}
+
 function MobileOrderView() {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<MobileOrder | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [devices, setDevices] = useState<AllocableDevice[]>([]);
+  const [allocating, setAllocating] = useState<number | null>(null);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -43,6 +63,43 @@ function MobileOrderView() {
     fetchOrder();
   }, [id]);
 
+  useEffect(() => {
+    axios
+      .get<AllocableDevice[]>(
+        "http://localhost:5268/api/mobile-devices/for-allocation"
+      )
+      .then((res) => setDevices(res.data))
+      .catch((err) => {
+        toast.error("Error fetching allocable devices.");
+        console.error("Error fetching allocable devices:", err);
+      });
+  }, []);
+
+  const handleAllocate = async (deviceId: number) => {
+    setAllocating(deviceId);
+    try {
+      await axios.post(
+        `http://localhost:5268/api/mobile-orders/${id}/allocate-device`,
+        {
+          deviceId,
+        }
+      );
+      toast.success("Device allocated successfully!");
+      // Optionally, remove device from list or refresh order/devices
+      setDevices((prev) => prev.filter((d) => d.id !== deviceId));
+    } catch (err) {
+      toast.error("Failed to allocate device.");
+      console.error("Allocation error:", err);
+    } finally {
+      setAllocating(null);
+    }
+  };
+
+  // Filter devices by hostname
+  const filteredDevices = devices.filter((device) =>
+    device.hostname.toLowerCase().includes(search.toLowerCase())
+  );
+
   if (loading) return <p className="text-center mt-5">Loading...</p>;
 
   if (!order)
@@ -50,43 +107,87 @@ function MobileOrderView() {
 
   return (
     <div className="container mt-5">
-      <h2>Mobile Order Details</h2>
-      <div className="card shadow p-4 mt-3">
-        <dl>
-          <dt>Id:</dt>
-          <dd>{order.id}</dd>
-          <dt>Requester's Name:</dt>
-          <dd>{order.requesterName}</dd>
-          <dt>Requester's Username:</dt>
-          <dd>{order.requesterUsername}</dd>
-          <dt>Customer's Name:</dt>
-          <dd>{order.customerName}</dd>
-          <dt>Customer's Username:</dt>
-          <dd>{order.customerUsername}</dd>
-          <dt>Customer's Cost Center:</dt>
-          <dd>{order.customersCostCenter}</dd>
-          <dt>Device Type:</dt>
-          <dd>{order.deviceType}</dd>
-          <dt>Call Control Group:</dt>
-          <dd>{order.callControlGroup}</dd>
-          <dt>Pickup Location:</dt>
-          <dd>{order.pickupLocation}</dd>
-          <dt>Order's Status:</dt>
-          <dd>{order.status}</dd>
-          <dt>Created By:</dt>
-          <dd>{order.createdBy}</dd>
-          <dt>Created At:</dt>
-          <dd>{new Date(order.createdAt).toLocaleString()}</dd>
-          <dt>Modified By:</dt>
-          <dd>{order.modifiedBy}</dd>
-          <dt>Modified At:</dt>
-          <dd>{new Date(order.modifiedAt).toLocaleString()}</dd>
-        </dl>
-      </div>
-      <div className="mt-3 mb-2">
-        <Link to="/mobile-orders" className="btn btn-primary mb-2">
-          Back to Orders
-        </Link>
+      <div className="row align-items-start">
+        {/* Order Details */}
+        <div className="col-md-8">
+          <h2>Mobile Order Details</h2>
+          <div className="card shadow p-4 mt-3">
+            <dl>
+              <dt>Id:</dt>
+              <dd>{order.id}</dd>
+              <dt>Requester's Name:</dt>
+              <dd>{order.requesterName}</dd>
+              <dt>Requester's Username:</dt>
+              <dd>{order.requesterUsername}</dd>
+              <dt>Customer's Name:</dt>
+              <dd>{order.customerName}</dd>
+              <dt>Customer's Username:</dt>
+              <dd>{order.customerUsername}</dd>
+              <dt>Customer's Cost Center:</dt>
+              <dd>{order.customersCostCenter}</dd>
+              <dt>Device Type:</dt>
+              <dd>{order.deviceType}</dd>
+              <dt>Call Control Group:</dt>
+              <dd>{order.callControlGroup}</dd>
+              <dt>Pickup Location:</dt>
+              <dd>{order.pickupLocation}</dd>
+              <dt>Order's Status:</dt>
+              <dd>{order.status}</dd>
+              <dt>Created By:</dt>
+              <dd>{order.createdBy}</dd>
+              <dt>Created At:</dt>
+              <dd>{new Date(order.createdAt).toLocaleString()}</dd>
+              <dt>Modified By:</dt>
+              <dd>{order.modifiedBy}</dd>
+              <dt>Modified At:</dt>
+              <dd>{new Date(order.modifiedAt).toLocaleString()}</dd>
+            </dl>
+          </div>
+        </div>
+        {/* Device Allocation Section */}
+        <div className="col-md-4">
+          <h2>Allocate Device</h2>
+          <input
+            type="text"
+            className="form-control mb-3"
+            placeholder="Search by hostname..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <div className="card shadow p-3">
+            {filteredDevices.length === 0 ? (
+              <div>No devices available for allocation.</div>
+            ) : (
+              <ul className="list-group">
+                {filteredDevices.map((device) => (
+                  <li
+                    key={device.id}
+                    className="list-group-item d-flex flex-column"
+                  >
+                    <strong>{device.hostname}</strong>
+                    <span>Category: {device.mobileDeviceCategory}</span>
+                    <span>IMEI: {device.imeiNumber}</span>
+                    <span>Serial: {device.serialNumber}</span>
+                    <span>iOS: {device.iosVersion}</span>
+                    <span>Status: {device.deviceStatus}</span>
+                    <button
+                      className="btn btn-success btn-sm mt-2 align-self-end"
+                      disabled={allocating === device.id}
+                      onClick={() => handleAllocate(device.id)}
+                    >
+                      {allocating === device.id ? "Allocating..." : "Allocate"}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+        <div className="mt-3 mb-2">
+          <Link to="/mobile-orders" className="btn btn-primary mb-2">
+            Back to Orders
+          </Link>
+        </div>
       </div>
     </div>
   );
