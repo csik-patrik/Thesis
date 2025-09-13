@@ -33,7 +33,7 @@ namespace ThesisApi.Helpers
                 Id = user.Id,
                 Username = user.Username,
                 Email = user.Email,
-                Department = user.Password,
+                Department = user.Department,
                 CostCenter = user.CostCenter,
                 UserRoles = user.UserRoles.Select(x => x.MapToResponse()).ToList()
             };

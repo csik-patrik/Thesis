@@ -66,7 +66,7 @@ export default function Users() {
                 <td>{d.costCenter}</td>
                 <td>
                   {d.userRoles.map((r) => (
-                    <span key={r.id}>{r.name}</span>
+                    <span key={r.id}>{r.name} </span>
                   ))}
                 </td>
                 <td>
