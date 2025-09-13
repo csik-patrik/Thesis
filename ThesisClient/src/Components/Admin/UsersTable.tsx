@@ -27,6 +27,17 @@ export default function Users() {
       .catch((err) => console.log(err));
   }, []);
 
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:5268/api/admin/users/${id}`);
+      setData((prev) => prev.filter((item) => item.id !== id));
+      toast.success("User deleted successfully!");
+    } catch (err) {
+      console.error("Error deleting user:", err);
+      alert("Failed to delete user.");
+    }
+  };
+
   return (
     <div className="d-flex flex-column justify-content-center align-items-center bd-light vh-100">
       <h1>Users</h1>
@@ -58,7 +69,14 @@ export default function Users() {
                     <span key={r.id}>{r.name}</span>
                   ))}
                 </td>
-                <td></td>
+                <td>
+                  <button
+                    className="btn btn-danger btn-sm text-light"
+                    onClick={() => handleDelete(d.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
