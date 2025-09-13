@@ -46,7 +46,9 @@ export default function UserCreate() {
   const navigate = useNavigate();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+      | { target: { name: string; value: any } }
   ) => {
     const { name, value } = e.target;
 

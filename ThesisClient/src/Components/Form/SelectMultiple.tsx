@@ -23,14 +23,23 @@ export default function SelectMultiple({
   options,
   handleChange,
 }: SelectMultipleProps) {
+  // Helper to convert string[] back to original types
+  const parseValues = (selected: string[]): (string | number)[] => {
+    return selected.map((val) => {
+      const opt = options.find((o) => String(o.value) === val);
+      return opt ? opt.value : val;
+    });
+  };
+
   return (
     <div className="mb-2">
       <label htmlFor={fieldName}>{title}</label>
       <select
+        id={fieldName}
         name={fieldName}
         multiple
         className="form-control"
-        value={value.map(String)} // React expects string[]
+        value={value.map(String)}
         onChange={(e) => {
           const selectedValues = Array.from(
             e.target.selectedOptions,
@@ -39,7 +48,7 @@ export default function SelectMultiple({
           handleChange({
             target: {
               name: fieldName,
-              value: selectedValues,
+              value: parseValues(selectedValues),
             },
           });
         }}
