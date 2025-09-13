@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface MobileOrder {
   id: number;
@@ -20,7 +21,7 @@ interface MobileOrder {
 }
 
 function MobileOrderView() {
-  const { id } = useParams<{ id: string }>(); // get ID from URL
+  const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<MobileOrder | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,6 +33,7 @@ function MobileOrderView() {
         );
         setOrder(res.data);
       } catch (err) {
+        toast.error("Error fetching mobile order.");
         console.error("Error fetching mobile order:", err);
       } finally {
         setLoading(false);
@@ -50,53 +52,39 @@ function MobileOrderView() {
     <div className="container mt-5">
       <h2>Mobile Order Details</h2>
       <div className="card shadow p-4 mt-3">
-        <p>
-          <strong>Id:</strong> {order.id}
-        </p>
-        <p>
-          <strong>Requester's Name:</strong> {order.requesterName}
-        </p>
-        <p>
-          <strong>Requester's Username:</strong> {order.requesterUsername}
-        </p>
-        <p>
-          <strong>Customer's Name:</strong> {order.customerName}
-        </p>
-        <p>
-          <strong>Customer's Username:</strong> {order.customerUsername}
-        </p>
-        <p>
-          <strong>Customer's Cost Center:</strong> {order.customersCostCenter}
-        </p>
-        <p>
-          <strong>Device Type:</strong> {order.deviceType}
-        </p>
-        <p>
-          <strong>Call Control Grouop:</strong> {order.callControlGroup}
-        </p>
-        <p>
-          <strong>Pickup Location:</strong> {order.pickupLocation}
-        </p>
-        <p>
-          <strong>Order's status:</strong> {order.status}
-        </p>
-        <p>
-          <strong>Created By:</strong> {order.createdBy}
-        </p>
-        <p>
-          <strong>Created At:</strong>{" "}
-          {new Date(order.createdAt).toLocaleString()}
-        </p>
-        <p>
-          <strong>Modified By:</strong> {order.modifiedBy}
-        </p>
-        <p>
-          <strong>Modified At:</strong>{" "}
-          {new Date(order.modifiedAt).toLocaleString()}
-        </p>
+        <dl>
+          <dt>Id:</dt>
+          <dd>{order.id}</dd>
+          <dt>Requester's Name:</dt>
+          <dd>{order.requesterName}</dd>
+          <dt>Requester's Username:</dt>
+          <dd>{order.requesterUsername}</dd>
+          <dt>Customer's Name:</dt>
+          <dd>{order.customerName}</dd>
+          <dt>Customer's Username:</dt>
+          <dd>{order.customerUsername}</dd>
+          <dt>Customer's Cost Center:</dt>
+          <dd>{order.customersCostCenter}</dd>
+          <dt>Device Type:</dt>
+          <dd>{order.deviceType}</dd>
+          <dt>Call Control Group:</dt>
+          <dd>{order.callControlGroup}</dd>
+          <dt>Pickup Location:</dt>
+          <dd>{order.pickupLocation}</dd>
+          <dt>Order's Status:</dt>
+          <dd>{order.status}</dd>
+          <dt>Created By:</dt>
+          <dd>{order.createdBy}</dd>
+          <dt>Created At:</dt>
+          <dd>{new Date(order.createdAt).toLocaleString()}</dd>
+          <dt>Modified By:</dt>
+          <dd>{order.modifiedBy}</dd>
+          <dt>Modified At:</dt>
+          <dd>{new Date(order.modifiedAt).toLocaleString()}</dd>
+        </dl>
       </div>
-      <div className="mt-3">
-        <Link to="/mobile-orders" className="btn btn-primary">
+      <div className="mt-3 mb-2">
+        <Link to="/mobile-orders" className="btn btn-primary mb-2">
           Back to Orders
         </Link>
       </div>
