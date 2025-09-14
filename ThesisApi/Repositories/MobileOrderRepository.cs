@@ -13,11 +13,44 @@ namespace ThesisApi.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<MobileOrder>> GetAllAsync()
+        {
+            return await _context.MobileOrders
+                .Include(x => x.MobileDeviceCategory)
+                .ToListAsync();
+        }
+
+        public async Task<MobileOrder?> GetByIdAsync(int id)
+        {
+            return await _context.MobileOrders
+                .Include(x => x.MobileDeviceCategory)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<MobileOrder> AddAsync(MobileOrder order)
         {
             await _context.MobileOrders.AddAsync(order);
             await _context.SaveChangesAsync();
             return order;
+        }
+
+        public async Task<bool> UpdateAsync(MobileOrder order)
+        {
+            _context.MobileOrders.Update(order);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var order = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == id);
+            if (order != null)
+            {
+                _context.MobileOrders.Remove(order);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
         public async Task<MobileOrder?> AllocateMobileToOrderAsync(int orderId, int mobileId)
@@ -39,35 +72,6 @@ namespace ThesisApi.Repositories
 
             await _context.SaveChangesAsync();
             return order;
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var order = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == id);
-            if (order != null)
-            {
-                _context.MobileOrders.Remove(order);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<IEnumerable<MobileOrder>> GetAllAsync()
-        {
-            return await _context.MobileOrders.ToListAsync();
-        }
-
-        public async Task<MobileOrder?> GetByIdAsync(int id)
-        {
-            return await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<bool> UpdateAsync(MobileOrder order)
-        {
-            _context.MobileOrders.Update(order);
-            await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

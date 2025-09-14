@@ -15,7 +15,8 @@ namespace ThesisApi.Data
             .ForMember(dest => dest.ModifiedAt, opt => opt.MapFrom(src => DateTime.Now))
             .ForMember(dest => dest.ModifiedBy, opt => opt.MapFrom(src => src.CreatedBy));
 
-            CreateMap<MobileOrder, MobileOrderResponse>();
+            CreateMap<MobileOrder, MobileOrderResponse>()
+            .ForMember(dest => dest.MobileDeviceCategory, opt => opt.MapFrom(src => src.MobileDeviceCategory != null ? src.MobileDeviceCategory.Name : null));
         }
     }
 }
