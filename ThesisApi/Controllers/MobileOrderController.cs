@@ -1,8 +1,12 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata;
 using ThesisApi.Contracts.Requests.MobileOrders;
+using ThesisApi.Contracts.Responses.MobileOrders;
 using ThesisApi.Helpers;
 using ThesisApi.Interfaces;
+using ThesisApi.Models;
 
 namespace ThesisApi.Controllers
 {
@@ -11,17 +15,21 @@ namespace ThesisApi.Controllers
     public class MobileOrderController : ControllerBase
     {
         private readonly IMobileOrderRepository _mobileOrderRepository;
-
-        public MobileOrderController(IMobileOrderRepository mobileOrderRepository)
+        private readonly IMapper _mapper;
+        public MobileOrderController(IMobileOrderRepository mobileOrderRepository, IMapper mapper)
         {
             _mobileOrderRepository = mobileOrderRepository;
+            _mapper = mapper;
         }
 
         [HttpGet(ApiEndpoints.MobileOrders.GetAll)]
         public async Task<IActionResult> GetAll()
         {
             var orders = await _mobileOrderRepository.GetAllAsync();
-            return Ok(orders);
+
+            var responses = orders.Select(_mapper.Map<MobileOrderResponse>).ToList();
+
+            return Ok(responses);
         }
 
         [HttpPut(ApiEndpoints.MobileOrders.AllocateMobileDevice)]
@@ -32,7 +40,10 @@ namespace ThesisApi.Controllers
                 var updatedOrder = await _mobileOrderRepository.AllocateMobileToOrderAsync(orderId, mobileId);
                 if (updatedOrder == null)
                     return NotFound("Order or mobile not found!");
-                return Ok(updatedOrder);
+
+                var response = _mapper.Map<MobileOrderResponse>(updatedOrder);
+
+                return Ok(response);
             }
             catch (Exception e)
             {
@@ -43,14 +54,16 @@ namespace ThesisApi.Controllers
         [HttpPost(ApiEndpoints.MobileOrders.Create)]
         public async Task<IActionResult> Create([FromBody] CreateMobileOrderRequest request)
         {
-            var order = request.MapToOrder();
+            var order = _mapper.Map<MobileOrder>(request);
 
             if (order == null)
                 return BadRequest();
 
             var newOrder = await _mobileOrderRepository.AddAsync(order);
 
-            return Ok(newOrder.MapToResponse());
+            var response = _mapper.Map<MobileOrderResponse>(newOrder);
+
+            return Ok(response);
         }
 
         [HttpGet(ApiEndpoints.MobileOrders.Get)]
@@ -59,7 +72,10 @@ namespace ThesisApi.Controllers
             var order = await _mobileOrderRepository.GetByIdAsync(id);
             if (order == null)
                 return NotFound();
-            return Ok(order.MapToResponse());
+
+            var response = _mapper.Map<MobileOrderResponse>(order);
+
+            return Ok(response);
         }
 
         [HttpDelete(ApiEndpoints.MobileOrders.Delete)]

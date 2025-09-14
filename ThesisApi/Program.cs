@@ -39,6 +39,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddAutoMapper(typeof(AutomapperProfiles));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
