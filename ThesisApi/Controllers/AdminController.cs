@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ThesisApi.Contracts.Requests.Users;
+using ThesisApi.Contracts.Responses.MobileDevices;
 using ThesisApi.Helpers;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
@@ -12,10 +14,12 @@ namespace ThesisApi.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminRepository _adminRepository;
+        private readonly IMapper _mapper;
 
-        public AdminController(IAdminRepository adminRepository)
+        public AdminController(IAdminRepository adminRepository, IMapper mapper)
         {
             _adminRepository = adminRepository;
+            _mapper = mapper;
         }
 
         [HttpGet(ApiEndpoints.Admin.GetAllMobileDeviceCategories)]
@@ -25,7 +29,7 @@ namespace ThesisApi.Controllers
             {
                 var models = await _adminRepository.GetAllMobileDeviceCategoriesAsync();
 
-                var response = models.Select(x => x.MapToResponse());
+                var response = _mapper.Map<List<MobileDeviceCategoryResponse>>(models);
 
                 return Ok(response);
             }
@@ -45,7 +49,7 @@ namespace ThesisApi.Controllers
                 if (model == null)
                     return NotFound();
 
-                var response = model.MapToResponse();
+                var response = _mapper.Map<MobileDeviceCategoryResponse>(model);
 
                 return Ok(response);
             }
@@ -62,7 +66,9 @@ namespace ThesisApi.Controllers
             {
                 var model = await _adminRepository.CreateMobileDeviceCategoryAsync(name);
 
-                return Ok(model.MapToResponse());
+                var response = _mapper.Map<MobileDeviceCategoryResponse>(model);
+
+                return Ok(response);
             }
             catch (Exception e)
             {

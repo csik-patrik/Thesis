@@ -1,7 +1,10 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.MobileDevices;
+using ThesisApi.Contracts.Responses.MobileDevices;
 using ThesisApi.Helpers;
 using ThesisApi.Interfaces;
+using ThesisApi.Models;
 
 namespace ThesisApi.Controllers
 {
@@ -10,10 +13,11 @@ namespace ThesisApi.Controllers
     public class MobileDeviceController : ControllerBase
     {
         private readonly IMobileDeviceRepository _mobileDeviceRepository;
-
-        public MobileDeviceController(IMobileDeviceRepository mobileDeviceRepository)
+        private readonly IMapper _mapper;
+        public MobileDeviceController(IMobileDeviceRepository mobileDeviceRepository, IMapper mapper)
         {
             _mobileDeviceRepository = mobileDeviceRepository;
+            _mapper = mapper;
         }
 
         [HttpGet(ApiEndpoints.MobileDevices.GetAll)]
@@ -21,7 +25,7 @@ namespace ThesisApi.Controllers
         {
             var mobileDevices = await _mobileDeviceRepository.GetAllAsync();
 
-            var response = mobileDevices.Select(x => x.MapToResponse()).ToList();
+            var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
 
             return Ok(response);
         }
@@ -31,7 +35,7 @@ namespace ThesisApi.Controllers
         {
             var mobileDevices = await _mobileDeviceRepository.GetAllForAllocationAsync();
 
-            var response = mobileDevices.Select(x => x.MapToResponse()).ToList();
+            var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
 
             return Ok(response);
         }
@@ -39,23 +43,29 @@ namespace ThesisApi.Controllers
         [HttpPost(ApiEndpoints.MobileDevices.Create)]
         public async Task<IActionResult> Create([FromBody] CreateMobileDeviceRequest request)
         {
-            var mobileDevice = request.MapToMobileDevice();
+            var mobileDevice = _mapper.Map<MobileDevice>(request);
 
             if (mobileDevice == null)
                 return BadRequest();
 
             var newMobileDevice = await _mobileDeviceRepository.AddAsync(mobileDevice);
 
-            return Ok(newMobileDevice.MapToResponse());
+            var response = _mapper.Map<MobileDeviceResponse>(newMobileDevice);
+
+            return Ok(response);
         }
 
         [HttpGet(ApiEndpoints.MobileDevices.Get)]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var mobileDevice = await _mobileDeviceRepository.GetByIdAsync(id);
+
             if (mobileDevice == null)
                 return NotFound();
-            return Ok(mobileDevice.MapToResponse());
+
+            var response = _mapper.Map<MobileDeviceResponse>(mobileDevice);
+
+            return Ok(response);
         }
 
         [HttpDelete(ApiEndpoints.MobileDevices.Delete)]
@@ -75,7 +85,7 @@ namespace ThesisApi.Controllers
             {
                 var models = await _mobileDeviceRepository.GetMobileDeviceCategoriesAsync();
 
-                var response = models.Select(x => x.MapToResponse());
+                var response = models.Select(_mapper.Map<MobileDeviceResponse>).ToList();
 
                 return Ok(response);
             }
