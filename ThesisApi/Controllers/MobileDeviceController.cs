@@ -84,7 +84,7 @@ namespace ThesisApi.Controllers
             {
                 var models = await _mobileDeviceRepository.GetMobileDeviceCategoriesAsync();
 
-                var response = models.Select(_mapper.Map<MobileDeviceResponse>).ToList();
+                var response = models.Select(_mapper.Map<MobileDeviceCategoryResponse>).ToList();
 
                 return Ok(response);
             }
