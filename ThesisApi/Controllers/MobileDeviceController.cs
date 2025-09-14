@@ -2,7 +2,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.MobileDevices;
 using ThesisApi.Contracts.Responses.MobileDevices;
-using ThesisApi.Helpers;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 

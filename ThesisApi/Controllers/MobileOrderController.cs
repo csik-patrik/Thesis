@@ -1,10 +1,7 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata;
 using ThesisApi.Contracts.Requests.MobileOrders;
 using ThesisApi.Contracts.Responses.MobileOrders;
-using ThesisApi.Helpers;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 

@@ -2,7 +2,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.SimCards;
 using ThesisApi.Contracts.Responses.SimCards;
-using ThesisApi.Helpers;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 

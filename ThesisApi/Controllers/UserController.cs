@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ThesisApi.Contracts.Requests.Users;
 using ThesisApi.Data;
-using ThesisApi.Helpers;
 using ThesisApi.Services;
 using Microsoft.AspNetCore.Identity;
 using ThesisApi.Models;
+using AutoMapper;
 
 namespace ThesisApi.Controllers
 {
@@ -15,11 +15,13 @@ namespace ThesisApi.Controllers
     {
         private readonly TokenGenerator _tokenGenerator;
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public UserController(TokenGenerator tokenGenerator, ApplicationDbContext context)
+        public UserController(TokenGenerator tokenGenerator, ApplicationDbContext context, IMapper mapper)
         {
             _tokenGenerator = tokenGenerator;
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpPost(ApiEndpoints.Users.Login)]
@@ -35,7 +37,9 @@ namespace ThesisApi.Controllers
             if (result == PasswordVerificationResult.Failed)
                 return Unauthorized("Invalid email or password.");
 
-            var access_token = _tokenGenerator.GenerateToken(user.MapToTokenRequest());
+            var newTokenRequest = _mapper.Map<NewTokenRequest>(user);
+
+            var access_token = _tokenGenerator.GenerateToken(newTokenRequest);
 
             return Ok(access_token);
 

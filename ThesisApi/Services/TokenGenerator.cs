@@ -8,7 +8,7 @@ namespace ThesisApi.Services
 {
     public class TokenGenerator
     {
-        public string GenerateToken(GenerateTokenRequest request)
+        public string GenerateToken(NewTokenRequest request)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 

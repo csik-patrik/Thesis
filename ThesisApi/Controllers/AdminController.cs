@@ -1,9 +1,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using ThesisApi.Contracts.Requests.Users;
 using ThesisApi.Contracts.Responses.MobileDevices;
-using ThesisApi.Helpers;
+using ThesisApi.Contracts.Responses.Users;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -118,7 +117,7 @@ namespace ThesisApi.Controllers
             {
                 var users = await _adminRepository.GetUsersAsync();
 
-                var response = users.Select(x => x.MapToResponse()).ToList();
+                var response = users.Select(_mapper.Map<UserResponse>).ToList();
 
                 return Ok(response);
             }
@@ -149,7 +148,9 @@ namespace ThesisApi.Controllers
 
                 await _adminRepository.AddUserAsync(user);
 
-                return Ok(user.MapToResponse());
+                var response = _mapper.Map<UserResponse>(user);
+
+                return Ok(response);
             }
             catch (Exception e)
             {
@@ -184,7 +185,7 @@ namespace ThesisApi.Controllers
             {
                 var roles = await _adminRepository.GetUserRolesAsync();
 
-                var response = roles.Select(x => x.MapToResponse()).ToList();
+                var response = roles.Select(_mapper.Map<UserRoleResponse>).ToList();
 
                 return Ok(response);
             }
