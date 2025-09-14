@@ -17,6 +17,7 @@ namespace ThesisApi.Repositories
         {
             return await _context.MobileOrders
                 .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.MobileDevice)
                 .ToListAsync();
         }
 
@@ -24,6 +25,7 @@ namespace ThesisApi.Repositories
         {
             return await _context.MobileOrders
                 .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.MobileDevice)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 

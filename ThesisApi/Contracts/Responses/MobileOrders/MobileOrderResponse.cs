@@ -1,3 +1,5 @@
+using ThesisApi.Contracts.Responses.MobileDevices;
+
 namespace ThesisApi.Contracts.Responses.MobileOrders
 {
     public class MobileOrderResponse
@@ -11,6 +13,7 @@ namespace ThesisApi.Contracts.Responses.MobileOrders
         public required string MobileDeviceCategory { get; set; }
         public required string CallControlGroup { get; set; }
         public required string PickupLocation { get; set; }
+        public MobileDeviceResponse? MobileDevice { get; set; }
         public string? Note { get; set; }
         public required string Status { get; set; }
         public required DateTime CreatedAt { get; set; }
