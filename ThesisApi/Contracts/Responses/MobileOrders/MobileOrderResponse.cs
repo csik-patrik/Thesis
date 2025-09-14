@@ -11,6 +11,7 @@ namespace ThesisApi.Contracts.Responses.MobileOrders
         public required string MobileDeviceCategory { get; set; }
         public required string CallControlGroup { get; set; }
         public required string PickupLocation { get; set; }
+        public string? Note { get; set; }
         public required string Status { get; set; }
         public required DateTime CreatedAt { get; set; }
         public required string CreatedBy { get; set; }
