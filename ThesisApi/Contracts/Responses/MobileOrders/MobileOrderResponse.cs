@@ -8,7 +8,7 @@ namespace ThesisApi.Contracts.Responses.MobileOrders
         public required string CustomerName { get; set; }
         public required string CustomerUsername { get; set; }
         public required string CustomersCostCenter { get; set; }
-        public required string DeviceType { get; set; }
+        public required string MobileDeviceCategory { get; set; }
         public required string CallControlGroup { get; set; }
         public required string PickupLocation { get; set; }
         public required string Status { get; set; }
