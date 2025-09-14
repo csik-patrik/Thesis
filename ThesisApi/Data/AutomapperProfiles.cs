@@ -19,7 +19,8 @@ namespace ThesisApi.Data
             CreateMap<MobileOrder, MobileOrderResponse>()
                 .ForMember(dest => dest.MobileDeviceCategory, opt => opt.MapFrom(src => src.MobileDeviceCategory != null ? src.MobileDeviceCategory.Name : null));
 
-            CreateMap<MobileDevice, MobileDeviceResponse>();
+            CreateMap<MobileDevice, MobileDeviceResponse>()
+                .ForMember(dest => dest.MobileDeviceCategory, opt => opt.MapFrom(src => src.MobileDeviceCategory != null ? src.MobileDeviceCategory.Name : null));
         }
     }
 }
