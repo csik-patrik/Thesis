@@ -20,6 +20,7 @@ interface MobileOrder {
 function MobileOrdersTable() {
   const [data, setData] = useState<MobileOrder[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<string>("New");
 
   useEffect(() => {
     axios
@@ -43,16 +44,44 @@ function MobileOrdersTable() {
     }
   };
 
+  // Get unique statuses for the filter dropdown
+  const statuses = Array.from(new Set(data.map((order) => order.status)));
+
+  // Filter data by status
+  const filteredData = statusFilter
+    ? data.filter((order) => order.status === statusFilter)
+    : data;
+
   return (
     <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
       <h1>Mobile Orders</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
-        <Link className="btn btn-success me-2 mb-3" to="/mobile-orders/create">
-          Create
-        </Link>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <Link className="btn btn-success me-2" to="/mobile-orders/create">
+            Create
+          </Link>
+          <div>
+            <label htmlFor="statusFilter" className="me-2">
+              Filter by Status:
+            </label>
+            <select
+              id="statusFilter"
+              className="form-select d-inline-block w-auto"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="">All</option>
+              {statuses.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
         {loading ? (
           <div>Loading...</div>
-        ) : data.length === 0 ? (
+        ) : filteredData.length === 0 ? (
           <div>No mobile orders found.</div>
         ) : (
           <div className="table-responsive">
@@ -73,7 +102,7 @@ function MobileOrdersTable() {
                 </tr>
               </thead>
               <tbody>
-                {data.map((d) => (
+                {filteredData.map((d) => (
                   <tr key={d.id}>
                     <td>{d.id}</td>
                     <td>{d.customerName}</td>
