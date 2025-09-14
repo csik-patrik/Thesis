@@ -68,16 +68,17 @@ function MobileOrderView() {
   }, [id]);
 
   useEffect(() => {
+    if (!order || order.mobileDevice) return; // Only fetch if order exists and no device is allocated
     axios
       .get<AllocableDevice[]>(
-        "http://localhost:5268/api/mobile-devices/for-allocation"
+        `http://localhost:5268/api/mobile-devices/for-allocation/${order?.id}`
       )
       .then((res) => setDevices(res.data))
       .catch((err) => {
         toast.error("Error fetching allocable devices.");
         console.error("Error fetching allocable devices:", err);
       });
-  }, []);
+  }, [order]);
 
   const handleAllocate = async (deviceId: number) => {
     setAllocating(deviceId);
