@@ -36,7 +36,8 @@ namespace ThesisApi.Data
                 new DeviceStatusReason { Id = 1, Name = "In Inventory" },
                 new DeviceStatusReason { Id = 2, Name = "Reserved" },
                 new DeviceStatusReason { Id = 3, Name = "In Repair" },
-                new DeviceStatusReason { Id = 4, Name = "Pending Disposal" }
+                new DeviceStatusReason { Id = 4, Name = "Pending Disposal" },
+                new DeviceStatusReason { Id = 5, Name = "Productive" }
             );
 
             modelBuilder.Entity<MobileDeviceCategory>().HasData(
