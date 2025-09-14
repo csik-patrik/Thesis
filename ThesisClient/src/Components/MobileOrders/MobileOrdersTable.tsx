@@ -10,7 +10,7 @@ interface MobileOrder {
   customerName: string;
   customerUsername: string;
   customersCostCenter: string;
-  deviceType: string;
+  mobileDeviceCategory: string;
   callControlGroup: string;
   pickupLocation: string;
   status: string;
@@ -78,7 +78,7 @@ function MobileOrdersTable() {
                     <td>{d.id}</td>
                     <td>{d.customerName}</td>
                     <td>{d.customerUsername}</td>
-                    <td>{d.deviceType}</td>
+                    <td>{d.mobileDeviceCategory}</td>
                     <td>{d.pickupLocation}</td>
                     <td>{d.status}</td>
                     <td>{d.createdBy}</td>
