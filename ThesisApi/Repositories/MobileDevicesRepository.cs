@@ -41,13 +41,16 @@ namespace ThesisApi.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<MobileDevice>> GetAllForAllocationAsync()
+        public async Task<IEnumerable<MobileDevice>> GetAllForAllocationAsync(int mobileDeviceCategoryId)
         {
+
             return await _context.MobileDevices
                 .Include(x => x.MobileDeviceCategory)
                 .Include(x => x.DeviceStatus)
                 .Include(x => x.DeviceStatusReason)
-                .Where(x => x.DeviceStatus.Name == "In Inventory" && x.DeviceStatusReason.Name == "In Inventory")
+                .Where(x => x.DeviceStatus.Name == "In Inventory"
+                    && x.DeviceStatusReason.Name == "In Inventory"
+                    && x.MobileDeviceCategoryId == mobileDeviceCategoryId)
                 .ToListAsync();
         }
 

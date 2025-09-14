@@ -5,7 +5,7 @@ namespace ThesisApi.Interfaces
     public interface IMobileDeviceRepository
     {
         Task<IEnumerable<MobileDevice>> GetAllAsync();
-        Task<IEnumerable<MobileDevice>> GetAllForAllocationAsync();
+        Task<IEnumerable<MobileDevice>> GetAllForAllocationAsync(int mobileDeviceCategoryId);
         Task<MobileDevice?> GetByIdAsync(int id);
         Task<MobileDevice> AddAsync(MobileDevice mobileDevice);
         Task<bool> UpdateAsync(MobileDevice mobileDevice);

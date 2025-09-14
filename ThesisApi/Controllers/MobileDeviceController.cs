@@ -12,11 +12,15 @@ namespace ThesisApi.Controllers
     public class MobileDeviceController : ControllerBase
     {
         private readonly IMobileDeviceRepository _mobileDeviceRepository;
+        private readonly IMobileOrderRepository _mobileOrderRepository;
         private readonly IMapper _mapper;
-        public MobileDeviceController(IMobileDeviceRepository mobileDeviceRepository, IMapper mapper)
+        public MobileDeviceController(IMobileDeviceRepository mobileDeviceRepository,
+            IMapper mapper,
+            IMobileOrderRepository mobileOrderRepository)
         {
             _mobileDeviceRepository = mobileDeviceRepository;
             _mapper = mapper;
+            _mobileOrderRepository = mobileOrderRepository;
         }
 
         [HttpGet(ApiEndpoints.MobileDevices.GetAll)]
@@ -30,9 +34,14 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet(ApiEndpoints.MobileDevices.GetAllForAllocation)]
-        public async Task<IActionResult> GetAllForAllocation()
+        public async Task<IActionResult> GetAllForAllocation([FromRoute] int orderId)
         {
-            var mobileDevices = await _mobileDeviceRepository.GetAllForAllocationAsync();
+            var order = await _mobileOrderRepository.GetByIdAsync(orderId);
+
+            if (order == null)
+                return NotFound($"Mobile order with ID {orderId} not found.");
+
+            var mobileDevices = await _mobileDeviceRepository.GetAllForAllocationAsync(order.MobileDeviceCategoryId);
 
             var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
 
