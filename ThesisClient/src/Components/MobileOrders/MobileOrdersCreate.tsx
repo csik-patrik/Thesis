@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { GetMobileDeviceCategories } from "../../Services/MobileDeviceServices";
 import type { MobileDeviceCategory } from "../../Services/MobileDeviceServices";
+import { useAuth } from "../../Auth/AuthContext";
 
 interface CreateMobileOrderRequest {
   requesterName: string;
@@ -19,6 +20,7 @@ interface CreateMobileOrderRequest {
 }
 
 function MobileOrdersCreate() {
+  const { user } = useAuth();
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
     MobileDeviceCategory[]
   >([]);
@@ -43,6 +45,17 @@ function MobileOrdersCreate() {
         console.error("Error fetching categories:", error);
       });
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        requesterName: user.name || "",
+        requesterUsername: user.email || "",
+        createdBy: user.email || "",
+      }));
+    }
+  }, [user]);
 
   const navigate = useNavigate();
 
