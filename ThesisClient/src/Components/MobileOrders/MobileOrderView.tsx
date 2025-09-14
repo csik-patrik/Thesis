@@ -10,7 +10,7 @@ interface MobileOrder {
   customerName: string;
   customerUsername: string;
   customersCostCenter: string;
-  deviceType: string;
+  mobileDeviceCategory: string;
   callControlGroup: string;
   pickupLocation: string;
   status: string;
@@ -126,7 +126,7 @@ function MobileOrderView() {
               <dt>Customer's Cost Center:</dt>
               <dd>{order.customersCostCenter}</dd>
               <dt>Device Type:</dt>
-              <dd>{order.deviceType}</dd>
+              <dd>{order.mobileDeviceCategory}</dd>
               <dt>Call Control Group:</dt>
               <dd>{order.callControlGroup}</dd>
               <dt>Pickup Location:</dt>
