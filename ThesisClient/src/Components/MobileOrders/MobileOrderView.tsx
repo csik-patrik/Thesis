@@ -3,6 +3,24 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+interface AllocableDevice {
+  id: number;
+  hostname: string;
+  mobileDeviceCategory: string;
+  imeiNumber: string;
+  serialNumber: string;
+  iosVersion: string;
+  batteryStatus: number;
+  userId: number | null;
+  simCard: any;
+  deviceStatus: string | null;
+  deviceStatusReason: string | null;
+  createdAt: string;
+  createdBy: string;
+  modifiedAt: string;
+  modifiedBy: string;
+}
+
 interface MobileOrder {
   id: number;
   requesterName: string;
@@ -18,22 +36,8 @@ interface MobileOrder {
   createdAt: string;
   modifiedBy: string;
   modifiedAt: string;
-}
-
-interface AllocableDevice {
-  id: number;
-  hostname: string;
-  mobileDeviceCategory: string;
-  imeiNumber: string;
-  serialNumber: string;
-  iosVersion: string;
-  batteryStatus: number;
-  deviceStatus: string;
-  deviceStatusReason: string;
-  createdAt: string;
-  createdBy: string;
-  modifiedAt: string;
-  modifiedBy: string;
+  note?: string | null;
+  mobileDevice?: AllocableDevice | null;
 }
 
 function MobileOrderView() {
@@ -78,15 +82,18 @@ function MobileOrderView() {
   const handleAllocate = async (deviceId: number) => {
     setAllocating(deviceId);
     try {
-      await axios.post(
-        `http://localhost:5268/api/mobile-orders/${id}/allocate-device`,
-        {
-          deviceId,
-        }
+      await axios.put(
+        `http://localhost:5268/api/mobile-orders/allocate/${id}`,
+        deviceId.toString(), // send as string
+        { headers: { "Content-Type": "application/json" } }
       );
       toast.success("Device allocated successfully!");
-      // Optionally, remove device from list or refresh order/devices
       setDevices((prev) => prev.filter((d) => d.id !== deviceId));
+      // Refresh order to show allocated device
+      const res = await axios.get<MobileOrder>(
+        `http://localhost:5268/api/mobile-orders/${id}`
+      );
+      setOrder(res.data);
     } catch (err) {
       toast.error("Failed to allocate device.");
       console.error("Allocation error:", err);
@@ -125,7 +132,7 @@ function MobileOrderView() {
               <dd>{order.customerUsername}</dd>
               <dt>Customer's Cost Center:</dt>
               <dd>{order.customersCostCenter}</dd>
-              <dt>Device Type:</dt>
+              <dt>Device Category:</dt>
               <dd>{order.mobileDeviceCategory}</dd>
               <dt>Call Control Group:</dt>
               <dd>{order.callControlGroup}</dd>
@@ -133,6 +140,10 @@ function MobileOrderView() {
               <dd>{order.pickupLocation}</dd>
               <dt>Order's Status:</dt>
               <dd>{order.status}</dd>
+              <dt>Note:</dt>
+              <dd>
+                {order.note || <span className="text-muted">No note</span>}
+              </dd>
               <dt>Created By:</dt>
               <dd>{order.createdBy}</dd>
               <dt>Created At:</dt>
@@ -144,49 +155,98 @@ function MobileOrderView() {
             </dl>
           </div>
         </div>
-        {/* Device Allocation Section */}
+        {/* Allocated Device or Allocation Section */}
         <div className="col-md-4">
-          <h2>Allocate Device</h2>
-          <input
-            type="text"
-            className="form-control mb-3"
-            placeholder="Search by hostname..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <div className="card shadow p-3">
-            {filteredDevices.length === 0 ? (
-              <div>No devices available for allocation.</div>
-            ) : (
-              <ul className="list-group">
-                {filteredDevices.map((device) => (
-                  <li
-                    key={device.id}
-                    className="list-group-item d-flex flex-column"
-                  >
-                    <strong>{device.hostname}</strong>
-                    <span>Category: {device.mobileDeviceCategory}</span>
-                    <span>IMEI: {device.imeiNumber}</span>
-                    <span>Serial: {device.serialNumber}</span>
-                    <span>iOS: {device.iosVersion}</span>
-                    <span>Status: {device.deviceStatus}</span>
-                    <button
-                      className="btn btn-success btn-sm mt-2 align-self-end"
-                      disabled={allocating === device.id}
-                      onClick={() => handleAllocate(device.id)}
-                    >
-                      {allocating === device.id ? "Allocating..." : "Allocate"}
-                    </button>
+          {order.mobileDevice ? (
+            <>
+              <h2>Allocated Device</h2>
+              <div className="card shadow p-3">
+                <ul className="list-group">
+                  <li className="list-group-item">
+                    <strong>Hostname:</strong> {order.mobileDevice.hostname}
                   </li>
-                ))}
-              </ul>
-            )}
+                  <li className="list-group-item">
+                    <strong>Category:</strong>{" "}
+                    {order.mobileDevice.mobileDeviceCategory}
+                  </li>
+                  <li className="list-group-item">
+                    <strong>IMEI:</strong> {order.mobileDevice.imeiNumber}
+                  </li>
+                  <li className="list-group-item">
+                    <strong>Serial:</strong> {order.mobileDevice.serialNumber}
+                  </li>
+                  <li className="list-group-item">
+                    <strong>iOS:</strong> {order.mobileDevice.iosVersion}
+                  </li>
+                  <li className="list-group-item">
+                    <strong>Battery:</strong> {order.mobileDevice.batteryStatus}
+                    %
+                  </li>
+                  <li className="list-group-item">
+                    <strong>Created By:</strong> {order.mobileDevice.createdBy}
+                  </li>
+                  <li className="list-group-item">
+                    <strong>Created At:</strong>{" "}
+                    {new Date(order.mobileDevice.createdAt).toLocaleString()}
+                  </li>
+                  <li className="list-group-item">
+                    <strong>Modified By:</strong>{" "}
+                    {order.mobileDevice.modifiedBy}
+                  </li>
+                  <li className="list-group-item">
+                    <strong>Modified At:</strong>{" "}
+                    {new Date(order.mobileDevice.modifiedAt).toLocaleString()}
+                  </li>
+                </ul>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2>Allocate Device</h2>
+              <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Search by hostname..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <div className="card shadow p-3">
+                {filteredDevices.length === 0 ? (
+                  <div>No devices available for allocation.</div>
+                ) : (
+                  <ul className="list-group">
+                    {filteredDevices.map((device) => (
+                      <li
+                        key={device.id}
+                        className="list-group-item d-flex flex-column"
+                      >
+                        <strong>{device.hostname}</strong>
+                        <span>Category: {device.mobileDeviceCategory}</span>
+                        <span>IMEI: {device.imeiNumber}</span>
+                        <span>Serial: {device.serialNumber}</span>
+                        <span>iOS: {device.iosVersion}</span>
+                        <span>Status: {device.deviceStatus}</span>
+                        <button
+                          className="btn btn-success btn-sm mt-2 align-self-end"
+                          disabled={allocating === device.id}
+                          onClick={() => handleAllocate(device.id)}
+                        >
+                          {allocating === device.id
+                            ? "Allocating..."
+                            : "Allocate"}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </>
+          )}
+          <div className="mt-3 mb-2">
+            <Link to="/mobile-orders" className="btn btn-primary mb-2">
+              Back to Orders
+            </Link>
           </div>
-        </div>
-        <div className="mt-3 mb-2">
-          <Link to="/mobile-orders" className="btn btn-primary mb-2">
-            Back to Orders
-          </Link>
         </div>
       </div>
     </div>
