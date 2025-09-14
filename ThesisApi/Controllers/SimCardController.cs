@@ -1,7 +1,10 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.SimCards;
+using ThesisApi.Contracts.Responses.SimCards;
 using ThesisApi.Helpers;
 using ThesisApi.Interfaces;
+using ThesisApi.Models;
 
 namespace ThesisApi.Controllers
 {
@@ -10,10 +13,12 @@ namespace ThesisApi.Controllers
     public class SimCardController : ControllerBase
     {
         private readonly ISimCardRepository _simCardRepository;
+        private readonly IMapper _mapper;
 
-        public SimCardController(ISimCardRepository simCardRepository)
+        public SimCardController(ISimCardRepository simCardRepository, IMapper mapper)
         {
             _simCardRepository = simCardRepository;
+            _mapper = mapper;
         }
 
         [HttpGet(ApiEndpoints.SimCards.GetAll)]
@@ -26,14 +31,16 @@ namespace ThesisApi.Controllers
         [HttpPost(ApiEndpoints.SimCards.Create)]
         public async Task<IActionResult> Create([FromBody] CreateSimCardRequest request)
         {
-            var simCard = request.MapToSimCard();
+            var simCard = _mapper.Map<SimCard>(request);
 
             if (simCard == null)
                 return BadRequest();
 
             var newSimCard = await _simCardRepository.AddAsync(simCard);
 
-            return Ok(newSimCard.MapToResponse());
+            var response = _mapper.Map<SimCardResponse>(newSimCard);
+
+            return Ok(response);
 
         }
 
@@ -41,9 +48,13 @@ namespace ThesisApi.Controllers
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var simCard = await _simCardRepository.GetByIdAsync(id);
+
             if (simCard == null)
                 return NotFound();
-            return Ok(simCard.MapToResponse());
+
+            var response = _mapper.Map<SimCardResponse>(simCard);
+
+            return Ok(response);
         }
 
         [HttpPut(ApiEndpoints.SimCards.Update)]
@@ -55,7 +66,10 @@ namespace ThesisApi.Controllers
 
                 if (newSimCard == null)
                     return NotFound();
-                return Ok(newSimCard.MapToResponse());
+
+                var response = _mapper.Map<SimCardResponse>(newSimCard);
+
+                return Ok(response);
             }
             catch (Exception e)
             {

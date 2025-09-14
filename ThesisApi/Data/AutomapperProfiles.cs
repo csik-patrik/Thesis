@@ -1,6 +1,7 @@
 using AutoMapper;
 using ThesisApi.Contracts.Requests.MobileDevices;
 using ThesisApi.Contracts.Requests.MobileOrders;
+using ThesisApi.Contracts.Requests.SimCards;
 using ThesisApi.Contracts.Responses.MobileDevices;
 using ThesisApi.Contracts.Responses.MobileOrders;
 using ThesisApi.Contracts.Responses.SimCards;
@@ -38,6 +39,12 @@ namespace ThesisApi.Data
                 .ForMember(dest => dest.DeviceStatusReason, opt => opt.MapFrom(src => src.DeviceStatusReason != null ? src.DeviceStatusReason.Name : null));
 
             CreateMap<MobileDeviceCategory, MobileDeviceCategoryResponse>();
+
+            CreateMap<CreateSimCardRequest, SimCard>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "In inventory"))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(dest => dest.ModifiedAt, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(dest => dest.ModifiedBy, opt => opt.MapFrom(src => src.CreatedBy));
 
             CreateMap<SimCard, SimCardResponse>();
 
