@@ -20,6 +20,27 @@ namespace ThesisApi.Repositories
             return order;
         }
 
+        public async Task<MobileOrder?> AllocateMobileToOrderAsync(int orderId, int mobileId)
+        {
+            var order = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == orderId);
+            if (order == null) return null;
+
+            var mobile = await _context.MobileDevices.FirstOrDefaultAsync(x => x.Id == mobileId);
+            if (mobile == null) return null;
+
+            order.MobileDevice = mobile;
+            order.Status = "Deliver device";
+            order.ModifiedAt = DateTime.UtcNow;
+
+            mobile.DeviceStatusId = 1;
+            mobile.DeviceStatusReasonId = 2;
+
+            mobile.ModifiedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return order;
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             var order = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == id);

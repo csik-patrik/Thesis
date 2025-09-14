@@ -24,6 +24,22 @@ namespace ThesisApi.Controllers
             return Ok(orders);
         }
 
+        [HttpPut(ApiEndpoints.MobileOrders.AllocateMobileDevice)]
+        public async Task<IActionResult> AllocateMobileDevice([FromRoute] int orderId, [FromBody] int mobileId)
+        {
+            try
+            {
+                var updatedOrder = await _mobileOrderRepository.AllocateMobileToOrderAsync(orderId, mobileId);
+                if (updatedOrder == null)
+                    return NotFound("Order or mobile not found!");
+                return Ok(updatedOrder);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Internal server error: {e.Message}");
+            }
+        }
+
         [HttpPost(ApiEndpoints.MobileOrders.Create)]
         public async Task<IActionResult> Create([FromBody] CreateMobileOrderRequest request)
         {

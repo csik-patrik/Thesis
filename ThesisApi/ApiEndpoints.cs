@@ -29,6 +29,7 @@ namespace ThesisApi
             private const string Base = $"{ApiBase}/mobile-orders";
 
             public const string GetAll = Base;
+            public const string AllocateMobileDevice = $"{Base}/allocate/{{orderId:int}}";
 
             public const string Create = Base;
 
