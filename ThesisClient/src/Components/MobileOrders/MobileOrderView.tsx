@@ -103,6 +103,21 @@ function MobileOrderView() {
     }
   };
 
+  const handleDeliver = async () => {
+    try {
+      await axios.put(`http://localhost:5268/api/mobile-orders/deliver/${id}`);
+      toast.success("Order marked as delivered!");
+      // Optionally refresh order data
+      const res = await axios.get<MobileOrder>(
+        `http://localhost:5268/api/mobile-orders/${id}`
+      );
+      setOrder(res.data);
+    } catch (err) {
+      toast.error("Failed to deliver device.");
+      console.error("Delivery error:", err);
+    }
+  };
+
   // Filter devices by hostname
   const filteredDevices = devices.filter((device) =>
     device.hostname.toLowerCase().includes(search.toLowerCase())
@@ -199,6 +214,12 @@ function MobileOrderView() {
                     {new Date(order.mobileDevice.modifiedAt).toLocaleString()}
                   </li>
                 </ul>
+                <button
+                  className="btn btn-success mt-3"
+                  onClick={handleDeliver}
+                >
+                  Deliver Device
+                </button>
               </div>
             </>
           ) : (
