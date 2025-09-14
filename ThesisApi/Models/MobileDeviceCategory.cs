@@ -6,5 +6,6 @@ namespace ThesisApi.Models
         public required string Name { get; set; }
 
         public ICollection<MobileDevice> MobileDevices { get; set; } = [];
+        public ICollection<MobileOrder> MobileOrders { get; set; } = [];
     }
 }
