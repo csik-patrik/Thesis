@@ -160,7 +160,7 @@ function MobileOrderView() {
           {order.mobileDevice ? (
             <>
               <h2>Allocated Device</h2>
-              <div className="card shadow p-3">
+              <div className="card shadow p-4 mt-3">
                 <ul className="list-group">
                   <li className="list-group-item">
                     <strong>Hostname:</strong> {order.mobileDevice.hostname}
@@ -205,7 +205,7 @@ function MobileOrderView() {
               <h2>Allocate Device</h2>
               <input
                 type="text"
-                className="form-control mb-3"
+                className="form-control mb-3 mt-3"
                 placeholder="Search by hostname..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
