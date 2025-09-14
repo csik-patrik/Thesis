@@ -214,12 +214,14 @@ function MobileOrderView() {
                     {new Date(order.mobileDevice.modifiedAt).toLocaleString()}
                   </li>
                 </ul>
-                <button
-                  className="btn btn-success mt-3"
-                  onClick={handleDeliver}
-                >
-                  Deliver Device
-                </button>
+                {order.status !== "Delivered" && (
+                  <button
+                    className="btn btn-success mt-3"
+                    onClick={handleDeliver}
+                  >
+                    Deliver Device
+                  </button>
+                )}
               </div>
             </>
           ) : (
