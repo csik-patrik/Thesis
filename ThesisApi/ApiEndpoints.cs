@@ -13,43 +13,31 @@ namespace ThesisApi
         public class SimCards
         {
             private const string Base = $"{ApiBase}/sim-cards";
-
             public const string GetAll = Base;
-
             public const string Create = Base;
-
             public const string Get = $"{Base}/{{id:int}}";
             public const string Update = $"{Base}/{{id:int}}";
-
             public const string Delete = $"{Base}/{{id:int}}";
         }
 
         public class MobileOrders
         {
             private const string Base = $"{ApiBase}/mobile-orders";
-
-            public const string GetAll = Base;
-            public const string AllocateMobileDevice = $"{Base}/allocate/{{orderId:int}}";
-
             public const string Create = Base;
-
+            public const string GetAll = Base;
             public const string Get = $"{Base}/{{id:int}}";
-
+            public const string AllocateMobileDevice = $"{Base}/allocate/{{id:int}}";
+            public const string DeliverOrder = $"{Base}/deliver/{{id:int}}";
             public const string Delete = $"{Base}/{{id:int}}";
-
         }
 
         public class MobileDevices
         {
             private const string Base = $"{ApiBase}/mobile-devices";
-
             public const string GetAll = Base;
             public const string GetAllForAllocation = $"{Base}/for-allocation/{{orderId:int}}";
-
             public const string Create = Base;
-
             public const string Get = $"{Base}/{{id:int}}";
-
             public const string Delete = $"{Base}/{{id:int}}";
             public const string GetAllMobileDeviceCategories = $"{Base}/categories";
         }

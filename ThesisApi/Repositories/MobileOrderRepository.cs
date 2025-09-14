@@ -13,6 +13,13 @@ namespace ThesisApi.Repositories
             _context = context;
         }
 
+        public async Task<MobileOrder> CreateAsync(MobileOrder order)
+        {
+            await _context.MobileOrders.AddAsync(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
+
         public async Task<IEnumerable<MobileOrder>> GetAllAsync()
         {
             return await _context.MobileOrders
@@ -27,32 +34,6 @@ namespace ThesisApi.Repositories
                 .Include(x => x.MobileDeviceCategory)
                 .Include(x => x.MobileDevice)
                 .FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<MobileOrder> AddAsync(MobileOrder order)
-        {
-            await _context.MobileOrders.AddAsync(order);
-            await _context.SaveChangesAsync();
-            return order;
-        }
-
-        public async Task<bool> UpdateAsync(MobileOrder order)
-        {
-            _context.MobileOrders.Update(order);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var order = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == id);
-            if (order != null)
-            {
-                _context.MobileOrders.Remove(order);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
         }
 
         public async Task<MobileOrder?> AllocateMobileToOrderAsync(int orderId, int mobileId)
@@ -74,6 +55,42 @@ namespace ThesisApi.Repositories
 
             await _context.SaveChangesAsync();
             return order;
+        }
+
+        public async Task<MobileOrder?> DeliverOrderAsync(int id)
+        {
+            var order = await _context.MobileOrders
+                .Include(x => x.MobileDevice)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (order == null) return null;
+
+            if (order.MobileDevice == null) return null;
+
+            order.Status = "Delivered";
+            order.ModifiedAt = DateTime.UtcNow;
+            order.MobileDevice.DeviceStatusId = 2;
+            order.MobileDevice.DeviceStatusReasonId = 5;
+            await _context.SaveChangesAsync();
+            return order;
+        }
+
+        public async Task<bool> UpdateAsync(MobileOrder order)
+        {
+            _context.MobileOrders.Update(order);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var order = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == id);
+            if (order != null)
+            {
+                _context.MobileOrders.Remove(order);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

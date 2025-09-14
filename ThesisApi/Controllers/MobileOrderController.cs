@@ -30,13 +30,32 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut(ApiEndpoints.MobileOrders.AllocateMobileDevice)]
-        public async Task<IActionResult> AllocateMobileDevice([FromRoute] int orderId, [FromBody] int mobileId)
+        public async Task<IActionResult> AllocateMobileDevice([FromRoute] int id, [FromBody] int mobileId)
         {
             try
             {
-                var updatedOrder = await _mobileOrderRepository.AllocateMobileToOrderAsync(orderId, mobileId);
+                var updatedOrder = await _mobileOrderRepository.AllocateMobileToOrderAsync(id, mobileId);
                 if (updatedOrder == null)
                     return NotFound("Order or mobile not found!");
+
+                var response = _mapper.Map<MobileOrderResponse>(updatedOrder);
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Internal server error: {e.Message}");
+            }
+        }
+
+        [HttpPut(ApiEndpoints.MobileOrders.DeliverOrder)]
+        public async Task<IActionResult> DeliverOrder([FromRoute] int id)
+        {
+            try
+            {
+                var updatedOrder = await _mobileOrderRepository.DeliverOrderAsync(id);
+                if (updatedOrder == null)
+                    return NotFound("Order not found!");
 
                 var response = _mapper.Map<MobileOrderResponse>(updatedOrder);
 
@@ -56,7 +75,7 @@ namespace ThesisApi.Controllers
             if (order == null)
                 return BadRequest();
 
-            var newOrder = await _mobileOrderRepository.AddAsync(order);
+            var newOrder = await _mobileOrderRepository.CreateAsync(order);
 
             var response = _mapper.Map<MobileOrderResponse>(newOrder);
 
