@@ -85,12 +85,14 @@ function MobileOrdersCreate() {
   };
 
   return (
-    <div className="d-flex w-100 vh-100 justify-content-center align-items-center bg-light">
-      <div className="w-50 border bg-white shadow px-5 pt-3 pb-5 rounded">
-        <h1>Create a new mobile order</h1>
+    <div className="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
+      <div className="col-12 col-md-8 col-lg-6 col-xl-5 border bg-white shadow px-4 py-5 rounded">
+        <h1 className="mb-4 text-center">Create a New Mobile Order</h1>
         <form onSubmit={handleSubmit}>
-          <div className="mb-2">
-            <label htmlFor="requesterName">Requester's name:</label>
+          <div className="mb-3">
+            <label htmlFor="requesterName" className="form-label">
+              Requester's name:
+            </label>
             <input
               type="text"
               id="requesterName"
@@ -102,8 +104,10 @@ function MobileOrdersCreate() {
               required
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="requesterUsername">Requester's username:</label>
+          <div className="mb-3">
+            <label htmlFor="requesterUsername" className="form-label">
+              Requester's username:
+            </label>
             <input
               type="text"
               id="requesterUsername"
@@ -115,8 +119,10 @@ function MobileOrdersCreate() {
               required
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="customerName">Customer's name:</label>
+          <div className="mb-3">
+            <label htmlFor="customerName" className="form-label">
+              Customer's name:
+            </label>
             <input
               type="text"
               id="customerName"
@@ -128,8 +134,10 @@ function MobileOrdersCreate() {
               required
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="customerUsername">Customer's username:</label>
+          <div className="mb-3">
+            <label htmlFor="customerUsername" className="form-label">
+              Customer's username:
+            </label>
             <input
               type="text"
               id="customerUsername"
@@ -141,8 +149,10 @@ function MobileOrdersCreate() {
               required
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="customersCostCenter">Customer's cost center:</label>
+          <div className="mb-3">
+            <label htmlFor="customersCostCenter" className="form-label">
+              Customer's cost center:
+            </label>
             <input
               type="text"
               id="customersCostCenter"
@@ -154,12 +164,14 @@ function MobileOrdersCreate() {
               required
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="mobileDeviceCategoryId">Device category:</label>
+          <div className="mb-3">
+            <label htmlFor="mobileDeviceCategoryId" className="form-label">
+              Device category:
+            </label>
             <select
               id="mobileDeviceCategoryId"
               name="mobileDeviceCategoryId"
-              className="form-control"
+              className="form-select"
               value={formData.mobileDeviceCategoryId}
               onChange={handleChange}
               required
@@ -174,12 +186,14 @@ function MobileOrdersCreate() {
               ))}
             </select>
           </div>
-          <div className="mb-2">
-            <label htmlFor="callControlGroup">Call control group:</label>
+          <div className="mb-3">
+            <label htmlFor="callControlGroup" className="form-label">
+              Call control group:
+            </label>
             <select
               id="callControlGroup"
               name="callControlGroup"
-              className="form-control"
+              className="form-select"
               value={formData.callControlGroup}
               onChange={handleChange}
               required
@@ -188,12 +202,14 @@ function MobileOrdersCreate() {
               <option value="MIX 10">MIX 10</option>
             </select>
           </div>
-          <div className="mb-2">
-            <label htmlFor="pickupLocation">Pickup location:</label>
+          <div className="mb-3">
+            <label htmlFor="pickupLocation" className="form-label">
+              Pickup location:
+            </label>
             <select
               id="pickupLocation"
               name="pickupLocation"
-              className="form-control"
+              className="form-select"
               value={formData.pickupLocation}
               onChange={handleChange}
               required
@@ -202,8 +218,10 @@ function MobileOrdersCreate() {
               <option value="cHub">cHub</option>
             </select>
           </div>
-          <div className="mb-2">
-            <label htmlFor="note">Note:</label>
+          <div className="mb-3">
+            <label htmlFor="note" className="form-label">
+              Note:
+            </label>
             <textarea
               id="note"
               name="note"
@@ -214,8 +232,10 @@ function MobileOrdersCreate() {
               rows={2}
             />
           </div>
-          <div className="mb-2">
-            <label htmlFor="createdBy">Created by:</label>
+          <div className="mb-3">
+            <label htmlFor="createdBy" className="form-label">
+              Created by:
+            </label>
             <input
               type="text"
               id="createdBy"
@@ -227,16 +247,18 @@ function MobileOrdersCreate() {
               required
             />
           </div>
-          <button
-            type="submit"
-            className="btn btn-success"
-            disabled={formData.mobileDeviceCategoryId === 0}
-          >
-            Submit
-          </button>
-          <Link to="/mobile-orders" className="btn btn-primary ms-3">
-            Back
-          </Link>
+          <div className="d-flex flex-wrap justify-content-between align-items-center mt-4">
+            <button
+              type="submit"
+              className="btn btn-success mb-2 mb-md-0"
+              disabled={formData.mobileDeviceCategoryId === 0}
+            >
+              Submit
+            </button>
+            <Link to="/mobile-orders" className="btn btn-primary ms-md-3">
+              Back
+            </Link>
+          </div>
         </form>
       </div>
     </div>
