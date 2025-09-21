@@ -139,6 +139,7 @@ namespace ThesisApi.Controllers
                 var user = new User()
                 {
                     Username = request.Username,
+                    DisplayName = request.DisplayName,
                     Email = request.Email,
                     Password = request.Password,
                     Department = request.Department,
