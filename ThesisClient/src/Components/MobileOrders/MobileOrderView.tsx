@@ -66,6 +66,7 @@ function MobileOrderView() {
 
   const [simCards, setSimCards] = useState<SimCard[]>([]);
   const [allocatingSim, setAllocatingSim] = useState<number | null>(null);
+  const [simSearch, setSimSearch] = useState("");
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -175,6 +176,11 @@ function MobileOrderView() {
   // Filter devices by hostname
   const filteredDevices = devices.filter((device) =>
     device.hostname.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Filter sim cards by phone number
+  const filteredSimCards = simCards.filter((sim) =>
+    sim.phoneNumber.toLowerCase().includes(simSearch.toLowerCase())
   );
 
   if (loading) return <p className="text-center mt-5">Loading...</p>;
@@ -366,12 +372,19 @@ function MobileOrderView() {
           ) : (
             <>
               <h2 className="mt-4">Allocate Sim Card</h2>
+              <input
+                type="text"
+                className="form-control mb-3 mt-3"
+                placeholder="Search by phone number..."
+                value={simSearch}
+                onChange={(e) => setSimSearch(e.target.value)}
+              />
               <div className="card shadow p-3">
-                {simCards.length === 0 ? (
+                {filteredSimCards.length === 0 ? (
                   <div>No sim cards available for allocation.</div>
                 ) : (
                   <ul className="list-group">
-                    {simCards.map((sim) => (
+                    {filteredSimCards.map((sim) => (
                       <li
                         key={sim.id}
                         className="list-group-item d-flex flex-column"
