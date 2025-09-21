@@ -13,6 +13,7 @@ interface UserRole {
 
 interface CreateUserRequest {
   username: string;
+  displayname: string;
   email: string;
   password: string;
   department: string;
@@ -36,6 +37,7 @@ export default function UserCreate() {
 
   const [formData, setFormData] = useState<CreateUserRequest>({
     username: "",
+    displayname: "",
     email: "",
     password: "",
     department: "",
@@ -80,6 +82,14 @@ export default function UserCreate() {
           placeHolder=""
           type="text"
           value={formData.username}
+          handleChange={handleChange}
+        />
+        <Input
+          title="Displayname:"
+          fieldName="displayname"
+          placeHolder=""
+          type="text"
+          value={formData.displayname}
           handleChange={handleChange}
         />
         <Input

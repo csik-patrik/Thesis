@@ -8,7 +8,7 @@ interface UserRole {
   name: string;
 }
 
-interface MobileDevice {
+interface User {
   id: number;
   username: string;
   displayName: string;
@@ -19,11 +19,11 @@ interface MobileDevice {
 }
 
 export default function Users() {
-  const [data, setData] = useState<MobileDevice[]>([]);
+  const [data, setData] = useState<User[]>([]);
 
   useEffect(() => {
     axios
-      .get<MobileDevice[]>("http://localhost:5268/api/admin/users")
+      .get<User[]>("http://localhost:5268/api/admin/users")
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -59,23 +59,23 @@ export default function Users() {
             </tr>
           </thead>
           <tbody>
-            {data.map((d) => (
-              <tr key={d.id}>
-                <td scope="row">{d.id}</td>
-                <td>{d.username}</td>
-                <td>{d.displayName}</td>
-                <td>{d.email}</td>
-                <td>{d.department}</td>
-                <td>{d.costCenter}</td>
+            {data.map((u) => (
+              <tr key={u.id}>
+                <td scope="row">{u.id}</td>
+                <td>{u.username}</td>
+                <td>{u.displayName}</td>
+                <td>{u.email}</td>
+                <td>{u.department}</td>
+                <td>{u.costCenter}</td>
                 <td>
-                  {d.userRoles.map((r) => (
+                  {u.userRoles.map((r) => (
                     <span key={r.id}>{r.name} </span>
                   ))}
                 </td>
                 <td>
                   <button
                     className="btn btn-danger btn-sm text-light"
-                    onClick={() => handleDelete(d.id)}
+                    onClick={() => handleDelete(u.id)}
                   >
                     Delete
                   </button>

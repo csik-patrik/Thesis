@@ -18,8 +18,8 @@ export default function Home() {
             <br />
             Id: {user.id} <br />
             Email: {user.email} <br />
-            Name: {user.name} <br />
-            Role: {user.role}
+            Name: {user.displayname} <br />
+            Role:
           </div>
         )}
       </div>
