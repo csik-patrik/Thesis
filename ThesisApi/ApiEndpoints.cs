@@ -28,6 +28,7 @@ namespace ThesisApi
             public const string GetAll = Base;
             public const string Get = $"{Base}/{{id:int}}";
             public const string AllocateMobileDevice = $"{Base}/allocate/{{id:int}}";
+            public const string AllocateSimCard = $"{Base}/allocate-sim/{{id:int}}";
             public const string DeliverOrder = $"{Base}/deliver/{{id:int}}";
             public const string Delete = $"{Base}/{{id:int}}";
         }

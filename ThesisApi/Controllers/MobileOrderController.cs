@@ -48,6 +48,25 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpPut(ApiEndpoints.MobileOrders.AllocateSimCard)]
+        public async Task<IActionResult> AllocateSimCard([FromRoute] int id, [FromBody] int simId)
+        {
+            try
+            {
+                var updatedOrder = await _mobileOrderRepository.AllocateSimCardToOrderAsync(id, simId);
+                if (updatedOrder == null)
+                    return NotFound("Order or SIM card not found!");
+
+                var response = _mapper.Map<MobileOrderResponse>(updatedOrder);
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Internal server error: {e.Message}");
+            }
+        }
+
         [HttpPut(ApiEndpoints.MobileOrders.DeliverOrder)]
         public async Task<IActionResult> DeliverOrder([FromRoute] int id)
         {

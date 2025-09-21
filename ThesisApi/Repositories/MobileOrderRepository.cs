@@ -45,7 +45,7 @@ namespace ThesisApi.Repositories
             if (mobile == null) return null;
 
             order.MobileDevice = mobile;
-            order.Status = "Deliver device";
+            order.Status = "In progress";
             order.ModifiedAt = DateTime.UtcNow;
 
             mobile.DeviceStatusId = 1;
@@ -91,6 +91,34 @@ namespace ThesisApi.Repositories
                 return true;
             }
             return false;
+        }
+
+        public async Task<MobileOrder?> AllocateSimCardToOrderAsync(int orderId, int simId)
+        {
+            var order = _context.MobileOrders
+                .Include(x => x.MobileDevice)
+                .FirstOrDefault(x => x.Id == orderId);
+            if (order == null)
+                throw new Exception("Order not found");
+
+            if (order.MobileDevice == null)
+                throw new Exception("No mobile device allocated to order");
+
+            var simCard = _context.SimCards.FirstOrDefault(x => x.Id == simId);
+            if (simCard == null)
+                throw new Exception("Sim card not found");
+
+            simCard.Status = "Allocated";
+            simCard.ModifiedAt = DateTime.UtcNow;
+
+            order.MobileDevice.SimCardId = simCard.Id;
+            order.MobileDevice.SimCard = simCard;
+            order.MobileDevice.ModifiedAt = DateTime.UtcNow;
+            order.Status = "Deliver device";
+            order.ModifiedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return order;
         }
     }
 }
