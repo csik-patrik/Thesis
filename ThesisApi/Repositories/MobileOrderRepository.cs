@@ -33,6 +33,7 @@ namespace ThesisApi.Repositories
             return await _context.MobileOrders
                 .Include(x => x.MobileDeviceCategory)
                 .Include(x => x.MobileDevice)
+                .ThenInclude(x => x.SimCard)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 

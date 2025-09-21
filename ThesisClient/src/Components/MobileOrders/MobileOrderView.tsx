@@ -99,8 +99,9 @@ function MobileOrderView() {
       });
   }, [order]);
 
+  // Only fetch allocable sim cards if a device is allocated and no sim card is allocated
   useEffect(() => {
-    if (!order || order.simCard) return; // Only fetch if order exists and no sim card is allocated
+    if (!order || !order.mobileDevice || order.simCard) return;
     axios
       .get<SimCard[]>(
         `http://localhost:5268/api/sim-cards/for-allocation/${order.id}`
@@ -258,21 +259,6 @@ function MobileOrderView() {
                     <strong>Battery:</strong> {order.mobileDevice.batteryStatus}
                     %
                   </li>
-                  <li className="list-group-item">
-                    <strong>Created By:</strong> {order.mobileDevice.createdBy}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Created At:</strong>{" "}
-                    {new Date(order.mobileDevice.createdAt).toLocaleString()}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Modified By:</strong>{" "}
-                    {order.mobileDevice.modifiedBy}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Modified At:</strong>{" "}
-                    {new Date(order.mobileDevice.modifiedAt).toLocaleString()}
-                  </li>
                 </ul>
                 {order.status !== "Delivered" && (
                   <button
@@ -327,92 +313,84 @@ function MobileOrderView() {
             </>
           )}
           {/* Allocated Sim Card or Allocation Section */}
-          {order.simCard ? (
-            <>
-              <h2 className="mt-4">Allocated Sim Card</h2>
-              <div className="card shadow p-4 mt-3">
-                <ul className="list-group">
-                  <li className="list-group-item">
-                    <strong>Phone Number:</strong> {order.simCard.phoneNumber}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Department:</strong> {order.simCard.department}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Call Control Group:</strong>{" "}
-                    {order.simCard.callControlGroup}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Data Enabled:</strong>{" "}
-                    {order.simCard.isDataEnabled ? "Yes" : "No"}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Type:</strong> {order.simCard.type}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Status:</strong> {order.simCard.status}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Created By:</strong> {order.simCard.createdBy}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Created At:</strong>{" "}
-                    {new Date(order.simCard.createdAt).toLocaleString()}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Modified By:</strong> {order.simCard.modifiedBy}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Modified At:</strong>{" "}
-                    {new Date(order.simCard.modifiedAt).toLocaleString()}
-                  </li>
-                </ul>
-              </div>
-            </>
-          ) : (
-            <>
-              <h2 className="mt-4">Allocate Sim Card</h2>
-              <input
-                type="text"
-                className="form-control mb-3 mt-3"
-                placeholder="Search by phone number..."
-                value={simSearch}
-                onChange={(e) => setSimSearch(e.target.value)}
-              />
-              <div className="card shadow p-3">
-                {filteredSimCards.length === 0 ? (
-                  <div>No sim cards available for allocation.</div>
-                ) : (
+          {order.mobileDevice &&
+            (order.mobileDevice.simCard ? (
+              <>
+                <h2 className="mt-4">Allocated Sim Card</h2>
+                <div className="card shadow p-4 mt-3">
                   <ul className="list-group">
-                    {filteredSimCards.map((sim) => (
-                      <li
-                        key={sim.id}
-                        className="list-group-item d-flex flex-column"
-                      >
-                        <strong>{sim.phoneNumber}</strong>
-                        <span>Department: {sim.department}</span>
-                        <span>Call Control Group: {sim.callControlGroup}</span>
-                        <span>
-                          Data Enabled: {sim.isDataEnabled ? "Yes" : "No"}
-                        </span>
-                        <span>Type: {sim.type}</span>
-                        <span>Status: {sim.status}</span>
-                        <button
-                          className="btn btn-success btn-sm mt-2 align-self-end"
-                          disabled={allocatingSim === sim.id}
-                          onClick={() => handleAllocateSim(sim.id)}
-                        >
-                          {allocatingSim === sim.id
-                            ? "Allocating..."
-                            : "Allocate"}
-                        </button>
-                      </li>
-                    ))}
+                    <li className="list-group-item">
+                      <strong>Phone Number:</strong>{" "}
+                      {order.mobileDevice.simCard.phoneNumber}
+                    </li>
+                    <li className="list-group-item">
+                      <strong>Department:</strong>{" "}
+                      {order.mobileDevice.simCard.department}
+                    </li>
+                    <li className="list-group-item">
+                      <strong>Call Control Group:</strong>{" "}
+                      {order.mobileDevice.simCard.callControlGroup}
+                    </li>
+                    <li className="list-group-item">
+                      <strong>Data Enabled:</strong>{" "}
+                      {order.mobileDevice.simCard.isDataEnabled ? "Yes" : "No"}
+                    </li>
+                    <li className="list-group-item">
+                      <strong>Type:</strong> {order.mobileDevice.simCard.type}
+                    </li>
+                    <li className="list-group-item">
+                      <strong>Status:</strong>{" "}
+                      {order.mobileDevice.simCard.status}
+                    </li>
                   </ul>
-                )}
-              </div>
-            </>
-          )}
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="mt-4">Allocate Sim Card</h2>
+                <input
+                  type="text"
+                  className="form-control mb-3 mt-3"
+                  placeholder="Search by phone number..."
+                  value={simSearch}
+                  onChange={(e) => setSimSearch(e.target.value)}
+                />
+                <div className="card shadow p-3">
+                  {filteredSimCards.length === 0 ? (
+                    <div>No sim cards available for allocation.</div>
+                  ) : (
+                    <ul className="list-group">
+                      {filteredSimCards.map((sim) => (
+                        <li
+                          key={sim.id}
+                          className="list-group-item d-flex flex-column"
+                        >
+                          <strong>{sim.phoneNumber}</strong>
+                          <span>Department: {sim.department}</span>
+                          <span>
+                            Call Control Group: {sim.callControlGroup}
+                          </span>
+                          <span>
+                            Data Enabled: {sim.isDataEnabled ? "Yes" : "No"}
+                          </span>
+                          <span>Type: {sim.type}</span>
+                          <span>Status: {sim.status}</span>
+                          <button
+                            className="btn btn-success btn-sm mt-2 align-self-end"
+                            disabled={allocatingSim === sim.id}
+                            onClick={() => handleAllocateSim(sim.id)}
+                          >
+                            {allocatingSim === sim.id
+                              ? "Allocating..."
+                              : "Allocate"}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </>
+            ))}
           <div className="mt-3 mb-2">
             <Link to="/mobile-orders" className="btn btn-primary mb-2">
               Back to Orders
