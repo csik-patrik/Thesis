@@ -9,6 +9,7 @@ import { jwtDecode } from "jwt-decode";
 
 interface JwtPayload {
   sub: string; // usually the user id
+  displayname?: string;
   email?: string;
   name?: string;
   role?: string;
@@ -18,6 +19,7 @@ interface JwtPayload {
 
 interface User {
   id: string;
+  displayname?: string;
   email?: string;
   name?: string;
   role?: string;
@@ -40,6 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const userData: User = {
       id: decoded.sub,
+      displayname: decoded.displayname,
       email: decoded.email,
       name: decoded.name,
       role: decoded.role,

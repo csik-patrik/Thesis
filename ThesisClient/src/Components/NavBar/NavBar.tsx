@@ -47,7 +47,7 @@ export default function NavBar() {
             {user ? (
               <>
                 <li className="nav-item me-2">
-                  <span className="navbar-text">{user.email}</span>
+                  <span className="navbar-text">{user.displayname}</span>
                 </li>
                 <li className="nav-item">
                   <button
