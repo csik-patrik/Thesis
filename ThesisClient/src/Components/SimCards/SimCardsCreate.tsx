@@ -19,7 +19,7 @@ function SimCardsCreate() {
   const [formData, setFormData] = useState<CreateSimCardRequest>({
     phoneNumber: "",
     department: "",
-    callControlGroup: "",
+    callControlGroup: "SPECIAL F",
     isDataEnabled: false,
     type: "Voice",
     createdBy: "",
@@ -112,10 +112,10 @@ function SimCardsCreate() {
           value={formData.createdBy}
           handleChange={handleChange}
         />
+        <Link to="/sim-cards" className="btn btn-primary">
+          Back
+        </Link>
       </Form>
-      <Link to="/sim-cards" className="btn btn-primary ms-3">
-        Back
-      </Link>
     </>
   );
 }
