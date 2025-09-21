@@ -18,6 +18,7 @@ namespace ThesisApi
             public const string Get = $"{Base}/{{id:int}}";
             public const string Update = $"{Base}/{{id:int}}";
             public const string Delete = $"{Base}/{{id:int}}";
+            public const string GetAllForAllocation = $"{Base}/for-allocation/{{orderId:int}}";
         }
 
         public class MobileOrders

@@ -56,6 +56,20 @@ namespace ThesisApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet(ApiEndpoints.SimCards.GetAllForAllocation)]
+        public async Task<IActionResult> GetAllForAllocation([FromRoute] int orderId)
+        {
+            try
+            {
+                var simCards = await _simCardRepository.GetAllForAllocationAsync(orderId);
+                return Ok(simCards);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPut(ApiEndpoints.SimCards.Update)]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSimCardRequest request)
         {

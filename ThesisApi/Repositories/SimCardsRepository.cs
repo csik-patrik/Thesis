@@ -9,6 +9,8 @@ namespace ThesisApi.Repositories
     public class SimCardsRepository : ISimCardRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly string availableForAllocationStatus = "In inventory";
+        private readonly string simTypeForPhone = "Voice";
 
         public SimCardsRepository(ApplicationDbContext context)
         {
@@ -37,6 +39,20 @@ namespace ThesisApi.Repositories
         public async Task<IEnumerable<SimCard>> GetAllAsync()
         {
             return await _context.SimCards.ToListAsync();
+        }
+
+        public async Task<IEnumerable<SimCard>> GetAllForAllocationAsync(int mobileOrderId)
+        {
+            var mobileOrder = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == mobileOrderId);
+            if (mobileOrder == null)
+                throw new ArgumentException("Invalid mobile order ID!");
+
+
+            return await _context.SimCards
+                .Where(x => x.Status == availableForAllocationStatus
+                        && x.CallControlGroup == mobileOrder.CallControlGroup
+                        && x.Type == simTypeForPhone)
+                .ToListAsync();
         }
 
         public async Task<SimCard?> GetByIdAsync(int id)
