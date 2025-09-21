@@ -50,9 +50,12 @@ function MobileOrdersCreate() {
     if (user) {
       setFormData((prev) => ({
         ...prev,
-        requesterName: user.name || "",
-        requesterUsername: user.email || "",
-        createdBy: user.email || "",
+        requesterName: user.displayname || "",
+        requesterUsername: user.username || "",
+        customerName: user.displayname || "",
+        customerUsername: user.username || "",
+        customersCostCenter: user.costCenter || "",
+        createdBy: user.username || "",
       }));
     }
   }, [user]);

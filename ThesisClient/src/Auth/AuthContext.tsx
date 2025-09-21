@@ -8,13 +8,16 @@ import {
 import { jwtDecode } from "jwt-decode";
 
 interface JwtPayload {
-  sub: string; // usually the user id
+  sub: string;
   displayname?: string;
   email?: string;
   name?: string;
   role?: string;
+  username?: string;
+  department?: string;
+  costCenter?: string;
   exp?: number;
-  [key: string]: any; // in case you have custom claims
+  [key: string]: any;
 }
 
 interface User {
@@ -23,6 +26,9 @@ interface User {
   email?: string;
   name?: string;
   role?: string;
+  username?: string;
+  department?: string;
+  costCenter?: string;
   token: string;
 }
 
@@ -46,6 +52,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email: decoded.email,
       name: decoded.name,
       role: decoded.role,
+      username: decoded.username,
+      department: decoded.department,
+      costCenter: decoded.costCenter,
       token,
     };
 
