@@ -11,6 +11,7 @@ interface UserRole {
 interface MobileDevice {
   id: number;
   username: string;
+  displayName: string;
   email: string;
   department: string;
   costCenter: string;
@@ -50,6 +51,7 @@ export default function Users() {
             <tr>
               <th scope="col">Id</th>
               <th scope="col">Username</th>
+              <th scope="col">Displayname</th>
               <th scope="col">Email</th>
               <th scope="col">Department</th>
               <th scope="col">Cost center</th>
@@ -61,6 +63,7 @@ export default function Users() {
               <tr key={d.id}>
                 <td scope="row">{d.id}</td>
                 <td>{d.username}</td>
+                <td>{d.displayName}</td>
                 <td>{d.email}</td>
                 <td>{d.department}</td>
                 <td>{d.costCenter}</td>
