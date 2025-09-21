@@ -23,6 +23,7 @@ namespace ThesisApi.Services
                 new(JwtRegisteredClaimNames.Email, request.Email),
 
                 new("username", request.Username),
+                new("displayname", request.Displayname),
                 new("department", request.Department),
                 new("costCenter", request.CostCenter)
             };
