@@ -70,6 +70,8 @@ namespace ThesisApi.Repositories
             order.ModifiedAt = DateTime.UtcNow;
             order.MobileDevice.DeviceStatusId = 2;
             order.MobileDevice.DeviceStatusReasonId = 5;
+            order.MobileDevice.UserId = order.CustomerUsername;
+            order.MobileDevice.ModifiedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             return order;
         }
