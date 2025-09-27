@@ -118,12 +118,14 @@ function MobileOrdersTable() {
                       >
                         View
                       </Link>
-                      <button
-                        className="btn btn-danger btn-sm text-light"
-                        onClick={() => handleDelete(d.id)}
-                      >
-                        Delete
-                      </button>
+                      {d.status !== "Delivered" && (
+                        <button
+                          className="btn btn-danger btn-sm text-light"
+                          onClick={() => handleDelete(d.id)}
+                        >
+                          Delete
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
