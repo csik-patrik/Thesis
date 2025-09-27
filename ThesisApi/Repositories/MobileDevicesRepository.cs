@@ -20,6 +20,13 @@ namespace ThesisApi.Repositories
             return mobileDevice;
         }
 
+        public async Task<bool> AddBulkAsync(IEnumerable<MobileDevice> mobileDevices)
+        {
+            _context.MobileDevices.AddRange(mobileDevices);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             var mobileDevice = await _context.MobileDevices.FirstOrDefaultAsync(x => x.Id == id);

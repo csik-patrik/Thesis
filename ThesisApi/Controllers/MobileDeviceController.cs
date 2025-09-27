@@ -73,6 +73,19 @@ namespace ThesisApi.Controllers
             return Ok(response);
         }
 
+        [HttpPost(ApiEndpoints.MobileDevices.CreateBulk)]
+        public async Task<IActionResult> CreateBulk([FromBody] List<CreateMobileDeviceRequest> requests)
+        {
+            var mobileDevices = requests.Select(_mapper.Map<MobileDevice>).ToList();
+
+            if (mobileDevices == null || !mobileDevices.Any())
+                return BadRequest();
+
+            await _mobileDeviceRepository.AddBulkAsync(mobileDevices);
+
+            return Ok();
+        }
+
         [HttpGet(ApiEndpoints.MobileDevices.Get)]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {

@@ -40,6 +40,7 @@ namespace ThesisApi
             public const string GetAllForAllocation = $"{Base}/for-allocation/{{orderId:int}}";
             public const string GetAllDeployed = $"{Base}/deployed";
             public const string Create = Base;
+            public const string CreateBulk = $"{Base}/create-bulk";
             public const string Get = $"{Base}/{{id:int}}";
             public const string Delete = $"{Base}/{{id:int}}";
             public const string GetAllMobileDeviceCategories = $"{Base}/categories";
