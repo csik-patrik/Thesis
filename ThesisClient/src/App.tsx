@@ -21,6 +21,7 @@ import { AuthProvider } from "../src/Auth/AuthContext.tsx";
 import UsersTable from "./Components/Admin/UsersTable.tsx";
 import UserCreate from "./Components/Admin/UserCreate.tsx";
 import DeployedMobileDevicesTable from "./Components/MobileDevices/DeployedMobileDevicesTable.tsx";
+import MobileDeviceCreateBulk from "./Components/MobileDevices/MobileDeviceCreateBulk.tsx";
 
 function App() {
   return (
@@ -39,6 +40,10 @@ function App() {
               <Route
                 path="/mobiles/create"
                 element={<MobileDeviceCreate />}
+              ></Route>
+              <Route
+                path="/mobiles/create-bulk"
+                element={<MobileDeviceCreateBulk />}
               ></Route>
               <Route path="/sim-cards" element={<SimCardsTable />}></Route>
               <Route
