@@ -41,6 +41,17 @@ namespace ThesisApi.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<MobileDevice>> GetAllDeployedAsync()
+        {
+            return await _context.MobileDevices
+                .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.DeviceStatus)
+                .Include(x => x.DeviceStatusReason)
+                .Include(x => x.SimCard)
+                .Where(x => x.DeviceStatus.Id == 2 && x.DeviceStatusReason.Id == 5)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<MobileDevice>> GetAllForAllocationAsync(int mobileDeviceCategoryId)
         {
 
