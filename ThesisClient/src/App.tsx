@@ -20,6 +20,7 @@ import EditMobileDeviceCategory from "./Components/Admin/EditMobileDeviceCategor
 import { AuthProvider } from "../src/Auth/AuthContext.tsx";
 import UsersTable from "./Components/Admin/UsersTable.tsx";
 import UserCreate from "./Components/Admin/UserCreate.tsx";
+import DeployedMobileDevicesTable from "./Components/MobileDevices/DeployedMobileDevicesTable.tsx";
 
 function App() {
   return (
@@ -31,6 +32,10 @@ function App() {
               <Route index element={<Home />} />
               <Route path="/login" element={<Login />}></Route>
               <Route path="/mobiles" element={<MobileDevicesTable />}></Route>
+              <Route
+                path="/mobiles/deployed"
+                element={<DeployedMobileDevicesTable />}
+              ></Route>
               <Route
                 path="/mobiles/create"
                 element={<MobileDeviceCreate />}

@@ -26,6 +26,9 @@ export default function NavBar() {
           {user && (
             <ul className="navbar-nav">
               <NavItem title="Home" to="/" />
+              <DropDown title="Production">
+                <NavItem title="Mobiles" to="/mobiles/deployed" />
+              </DropDown>
               <DropDown title="Orders">
                 <NavItem title="Mobile orders" to="/mobile-orders" />
               </DropDown>
