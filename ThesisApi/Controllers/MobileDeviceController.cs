@@ -48,6 +48,16 @@ namespace ThesisApi.Controllers
             return Ok(response);
         }
 
+        [HttpGet(ApiEndpoints.MobileDevices.GetAllDeployed)]
+        public async Task<IActionResult> GetAllDeployed()
+        {
+            var mobileDevices = await _mobileDeviceRepository.GetAllDeployedAsync();
+
+            var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
+
+            return Ok(response);
+        }
+
         [HttpPost(ApiEndpoints.MobileDevices.Create)]
         public async Task<IActionResult> Create([FromBody] CreateMobileDeviceRequest request)
         {
