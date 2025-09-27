@@ -1,3 +1,206 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { GetMobileDeviceCategories } from "../../Services/MobileDeviceServices";
+import type { MobileDeviceCategory } from "../../Services/MobileDeviceServices";
+
+interface CreateMobileDeviceRequest {
+  hostname: string;
+  mobileDeviceCategoryId: number;
+  imeiNumber: string;
+  serialNumber: string;
+  iosVersion: string;
+  createdBy: string;
+}
+
 export default function MobileDeviceCreateBulk() {
-  return <div>MobileDeviceCreateBulk</div>;
+  const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
+    MobileDeviceCategory[]
+  >([]);
+  const [deviceCount, setDeviceCount] = useState<number>(1);
+  const [devices, setDevices] = useState<CreateMobileDeviceRequest[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    GetMobileDeviceCategories()
+      .then((response) => setMobileDeviceCategories(response.data))
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+
+  // Generate empty rows when deviceCount changes
+  useEffect(() => {
+    setDevices(
+      Array.from({ length: deviceCount }, () => ({
+        hostname: "",
+        mobileDeviceCategoryId: 0,
+        imeiNumber: "",
+        serialNumber: "",
+        iosVersion: "",
+        createdBy: "",
+      }))
+    );
+  }, [deviceCount]);
+
+  const handleDeviceChange = (
+    idx: number,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setDevices((prev) =>
+      prev.map((dev, i) =>
+        i === idx
+          ? {
+              ...dev,
+              [name]: name === "mobileDeviceCategoryId" ? Number(value) : value,
+            }
+          : dev
+      )
+    );
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await axios.post(
+        "http://localhost:5268/api/mobile-devices/create-bulk",
+        devices
+      );
+      toast.success("Mobile devices created successfully!");
+      navigate("/mobiles");
+    } catch (err) {
+      console.error("Error creating mobile devices:", err);
+      toast.error("Failed to create mobile devices.");
+    }
+  };
+
+  return (
+    <div className="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
+      <div className="col-12 col-xl-10 border bg-white shadow px-4 py-5 rounded">
+        <h1 className="mb-4 text-center">Bulk Create Mobile Devices</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4 d-flex align-items-center">
+            <label htmlFor="deviceCount" className="form-label me-2 mb-0">
+              Number of devices:
+            </label>
+            <input
+              type="number"
+              id="deviceCount"
+              min={1}
+              max={100}
+              className="form-control w-auto"
+              value={deviceCount}
+              onChange={(e) => setDeviceCount(Number(e.target.value))}
+              required
+            />
+          </div>
+          <div className="table-responsive mb-4">
+            <table className="table table-bordered align-middle">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Hostname</th>
+                  <th>Category</th>
+                  <th>IMEI Number</th>
+                  <th>Serial Number</th>
+                  <th>iOS Version</th>
+                  <th>Created By</th>
+                </tr>
+              </thead>
+              <tbody>
+                {devices.map((dev, idx) => (
+                  <tr key={idx}>
+                    <td>{idx + 1}</td>
+                    <td>
+                      <input
+                        type="text"
+                        name="hostname"
+                        className="form-control"
+                        placeholder="HTV-M-00001"
+                        value={dev.hostname}
+                        onChange={(e) => handleDeviceChange(idx, e)}
+                        required
+                      />
+                    </td>
+                    <td>
+                      <select
+                        name="mobileDeviceCategoryId"
+                        className="form-select"
+                        value={dev.mobileDeviceCategoryId}
+                        onChange={(e) => handleDeviceChange(idx, e)}
+                        required
+                      >
+                        <option value={0} disabled>
+                          Select category...
+                        </option>
+                        {mobileDeviceCategories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name="imeiNumber"
+                        className="form-control"
+                        placeholder="3525..."
+                        value={dev.imeiNumber}
+                        onChange={(e) => handleDeviceChange(idx, e)}
+                        required
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name="serialNumber"
+                        className="form-control"
+                        placeholder="SFZ213"
+                        value={dev.serialNumber}
+                        onChange={(e) => handleDeviceChange(idx, e)}
+                        required
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name="iosVersion"
+                        className="form-control"
+                        placeholder="18.6.2"
+                        value={dev.iosVersion}
+                        onChange={(e) => handleDeviceChange(idx, e)}
+                        required
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name="createdBy"
+                        className="form-control"
+                        placeholder="Username"
+                        value={dev.createdBy}
+                        onChange={(e) => handleDeviceChange(idx, e)}
+                        required
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="d-flex flex-wrap justify-content-between align-items-center mt-4">
+            <button type="submit" className="btn btn-success mb-2 mb-md-0">
+              Submit All
+            </button>
+            <Link to="/mobiles" className="btn btn-primary ms-md-3">
+              Back
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
