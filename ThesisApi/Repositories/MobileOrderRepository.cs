@@ -62,6 +62,7 @@ namespace ThesisApi.Repositories
         {
             var order = await _context.MobileOrders
                 .Include(x => x.MobileDevice)
+                .ThenInclude(x => x.SimCard)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (order == null) return null;
 
@@ -73,6 +74,7 @@ namespace ThesisApi.Repositories
             order.MobileDevice.DeviceStatusReasonId = 5;
             order.MobileDevice.UserId = order.CustomerUsername;
             order.MobileDevice.ModifiedAt = DateTime.UtcNow;
+            order.MobileDevice.SimCard.Status = "Deployed";
             await _context.SaveChangesAsync();
             return order;
         }
