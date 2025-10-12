@@ -1,7 +1,6 @@
 using AutoMapper;
 using ThesisApi.Contracts.Requests.MobileDevices;
 using ThesisApi.Contracts.Requests.MobileOrders;
-using ThesisApi.Contracts.Requests.SimCards;
 using ThesisApi.Contracts.Requests.Users;
 using ThesisApi.Contracts.Responses.MobileDevices;
 using ThesisApi.Contracts.Responses.MobileOrders;
@@ -29,8 +28,6 @@ namespace ThesisApi.Data
             CreateMap<MobileDevice, MobileDeviceResponse>();
 
             CreateMap<MobileDeviceCategory, MobileDeviceCategoryResponse>();
-
-            CreateMap<CreateSimCardRequest, SimCard>();
 
             CreateMap<SimCard, SimCardResponse>();
 

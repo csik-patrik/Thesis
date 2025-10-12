@@ -20,20 +20,17 @@ namespace ThesisApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet(ApiEndpoints.SimCards.GetAll)]
+        [HttpGet("/sim-cards")]
         public async Task<IActionResult> GetAll()
         {
             var simCards = await _simCardRepository.GetAllAsync();
             return Ok(simCards);
         }
 
-        [HttpPost(ApiEndpoints.SimCards.Create)]
+        [HttpPost("/sim-cards")]
         public async Task<IActionResult> Create([FromBody] CreateSimCardRequest request)
         {
-            var simCard = _mapper.Map<SimCard>(request);
-
-            if (simCard == null)
-                return BadRequest();
+            var simCard = await SimCard.Create(request, _simCardRepository);
 
             var newSimCard = await _simCardRepository.AddAsync(simCard);
 

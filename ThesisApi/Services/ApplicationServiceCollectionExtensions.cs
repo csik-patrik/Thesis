@@ -10,6 +10,7 @@ namespace ThesisApi.Services
 
             services.AddScoped<IAdminRepository, AdminRepository>();
             services.AddScoped<ISimCardRepository, SimCardsRepository>();
+            services.AddScoped<ISimCallControlGroupRepository, SimCardCallControlGroupRepository>();
             services.AddScoped<IMobileDeviceRepository, MobileDevicesRepository>();
             services.AddScoped<IMobileOrderRepository, MobileOrderRepository>();
             services.AddSingleton<TokenGenerator>();
