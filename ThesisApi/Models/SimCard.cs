@@ -14,12 +14,12 @@ namespace ThesisApi.Models
         public MobileDevice? MobileDevice { get; set; }
         public ICollection<MobileOrder> MobileOrders { get; set; } = new List<MobileOrder>();
 
-        public async static Task<SimCard> Create(CreateSimCardRequest request, ISimCardRepository repository)
+        public async static Task<SimCard> Create(CreateSimCardRequest request, ISimCallControlGroupRepository repository)
         {
             var simCallControlGroup = await repository.GetSimCallControlGroupByIdAsync(request.SimCallControlGroupId);
 
-            if(simCallControlGroup == null)
-                throw new Exception($"Call control group cannot be found!");
+            if (simCallControlGroup == null)
+                throw new Exception("Call control group cannot be found!");
 
             return new SimCard()
             {

@@ -12,11 +12,13 @@ namespace ThesisApi.Controllers
     public class SimCardController : ControllerBase
     {
         private readonly ISimCardRepository _simCardRepository;
+        private readonly ISimCallControlGroupRepository _simCallControlGroupRepository;
         private readonly IMapper _mapper;
 
-        public SimCardController(ISimCardRepository simCardRepository, IMapper mapper)
+        public SimCardController(ISimCardRepository simCardRepository, IMapper mapper, ISimCallControlGroupRepository simCallControlGroupRepository)
         {
             _simCardRepository = simCardRepository;
+            _simCallControlGroupRepository = simCallControlGroupRepository;
             _mapper = mapper;
         }
 
@@ -30,7 +32,7 @@ namespace ThesisApi.Controllers
         [HttpPost("/sim-cards")]
         public async Task<IActionResult> Create([FromBody] CreateSimCardRequest request)
         {
-            var simCard = await SimCard.Create(request, _simCardRepository);
+            var simCard = await SimCard.Create(request, _simCallControlGroupRepository);
 
             var newSimCard = await _simCardRepository.AddAsync(simCard);
 
