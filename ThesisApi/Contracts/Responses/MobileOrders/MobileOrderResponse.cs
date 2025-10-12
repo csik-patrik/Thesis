@@ -1,24 +1,18 @@
 using ThesisApi.Contracts.Responses.MobileDevices;
+using ThesisApi.Contracts.Responses.SimCards;
+using ThesisApi.Contracts.Responses.Users;
 
 namespace ThesisApi.Contracts.Responses.MobileOrders
 {
     public class MobileOrderResponse
     {
         public int Id { get; set; }
-        public required string RequesterName { get; set; }
-        public required string RequesterUsername { get; set; }
-        public required string CustomerName { get; set; }
-        public required string CustomerUsername { get; set; }
-        public required string CustomersCostCenter { get; set; }
-        public required string MobileDeviceCategory { get; set; }
-        public required string CallControlGroup { get; set; }
+        public required UserOrderResponse Customer { get; set; }
+        public required MobileDeviceCategoryResponse MobileDeviceCategory { get; set; }
+        public required SimCallControlGroupResponse SimCallControlGroup { get; set; }
         public required string PickupLocation { get; set; }
         public MobileDeviceResponse? MobileDevice { get; set; }
         public string? Note { get; set; }
         public required string Status { get; set; }
-        public required DateTime CreatedAt { get; set; }
-        public required string CreatedBy { get; set; }
-        public required DateTime ModifiedAt { get; set; }
-        public required string ModifiedBy { get; set; }
     }
 }

@@ -50,8 +50,7 @@ namespace ThesisApi.Repositories
 
             return await _context.SimCards
                 .Where(x => x.Status == availableForAllocationStatus
-                        && x.CallControlGroup == mobileOrder.CallControlGroup
-                        && x.Type == simTypeForPhone)
+                        && x.SimCallControlGroup.Id == mobileOrder.SimCallControlGroup.Id)
                 .ToListAsync();
         }
 
@@ -67,10 +66,13 @@ namespace ThesisApi.Repositories
             if (simCard == null)
                 return null;
 
-            simCard.Department = request.Department;
-            simCard.CallControlGroup = request.CallControlGroup;
-            simCard.IsDataEnabled = request.IsDataEnabled;
-            simCard.Status = request.Status;
+            var callControlGroup = _context.SimCallControlGroups.FirstOrDefault(x => x.Id == request.SimCallControlGroupId);
+
+            if (callControlGroup == null)
+                throw new ArgumentException("Invalid Call Control Group ID!");
+
+            simCard.SimCallControlGroup = callControlGroup;
+            simCard.SimCallControlGroupId = callControlGroup.Id;
 
             await _context.SaveChangesAsync();
             return simCard;

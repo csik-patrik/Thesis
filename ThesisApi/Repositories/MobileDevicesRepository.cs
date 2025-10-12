@@ -43,8 +43,7 @@ namespace ThesisApi.Repositories
         {
             return await _context.MobileDevices
                 .Include(x => x.MobileDeviceCategory)
-                .Include(x => x.DeviceStatus)
-                .Include(x => x.DeviceStatusReason)
+
                 .ToListAsync();
         }
 
@@ -52,10 +51,8 @@ namespace ThesisApi.Repositories
         {
             return await _context.MobileDevices
                 .Include(x => x.MobileDeviceCategory)
-                .Include(x => x.DeviceStatus)
-                .Include(x => x.DeviceStatusReason)
+
                 .Include(x => x.SimCard)
-                .Where(x => x.DeviceStatus.Id == 2 && x.DeviceStatusReason.Id == 5)
                 .ToListAsync();
         }
 
@@ -64,11 +61,8 @@ namespace ThesisApi.Repositories
 
             return await _context.MobileDevices
                 .Include(x => x.MobileDeviceCategory)
-                .Include(x => x.DeviceStatus)
-                .Include(x => x.DeviceStatusReason)
-                .Where(x => x.DeviceStatus.Name == "In Inventory"
-                    && x.DeviceStatusReason.Name == "In Inventory"
-                    && x.MobileDeviceCategoryId == mobileDeviceCategoryId)
+
+
                 .ToListAsync();
         }
 
@@ -76,8 +70,6 @@ namespace ThesisApi.Repositories
         {
             return await _context.MobileDevices
                 .Include(x => x.MobileDeviceCategory)
-                .Include(x => x.DeviceStatus)
-                .Include(x => x.DeviceStatusReason)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 

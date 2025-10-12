@@ -5,14 +5,10 @@ namespace ThesisApi.Models
         public int Id { get; set; }
         public required string PhoneNumber { get; set; }
         public required string Department { get; set; }
-        public required string CallControlGroup { get; set; }
-        public required bool IsDataEnabled { get; set; }
-        public required string Type { get; set; }
+        public int SimCallControlGroupId { get; set; }
+        public SimCallControlGroup SimCallControlGroup { get; set; } = null!;
         public required string Status { get; set; }
-        public required DateTime CreatedAt { get; set; }
-        public required string CreatedBy { get; set; }
-        public required DateTime ModifiedAt { get; set; }
-        public required string ModifiedBy { get; set; }
-
+        public MobileDevice? MobileDevice { get; set; }
+        public ICollection<MobileOrder> MobileOrders { get; set; } = new List<MobileOrder>();
     }
 }

@@ -47,12 +47,9 @@ namespace ThesisApi.Repositories
 
             order.MobileDevice = mobile;
             order.Status = "In progress";
-            order.ModifiedAt = DateTime.UtcNow;
 
-            mobile.DeviceStatusId = 1;
-            mobile.DeviceStatusReasonId = 2;
-
-            mobile.ModifiedAt = DateTime.UtcNow;
+            mobile.Status = "In inventory";
+            mobile.StatusReason = "Reserved";
 
             await _context.SaveChangesAsync();
             return order;
@@ -69,11 +66,9 @@ namespace ThesisApi.Repositories
             if (order.MobileDevice == null) return null;
 
             order.Status = "Delivered";
-            order.ModifiedAt = DateTime.UtcNow;
-            order.MobileDevice.DeviceStatusId = 2;
-            order.MobileDevice.DeviceStatusReasonId = 5;
-            order.MobileDevice.UserId = order.CustomerUsername;
-            order.MobileDevice.ModifiedAt = DateTime.UtcNow;
+            order.MobileDevice.Status = "Deployed";
+            order.MobileDevice.StatusReason = "Productive";
+            order.MobileDevice.UserId = order.Customer.Id;
             order.MobileDevice.SimCard.Status = "Deployed";
             await _context.SaveChangesAsync();
             return order;
@@ -114,13 +109,10 @@ namespace ThesisApi.Repositories
                 throw new Exception("Sim card not found");
 
             simCard.Status = "Allocated";
-            simCard.ModifiedAt = DateTime.UtcNow;
 
             order.MobileDevice.SimCardId = simCard.Id;
             order.MobileDevice.SimCard = simCard;
-            order.MobileDevice.ModifiedAt = DateTime.UtcNow;
             order.Status = "Deliver device";
-            order.ModifiedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return order;

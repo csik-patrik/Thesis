@@ -8,18 +8,12 @@ namespace ThesisApi.Models
         public MobileDeviceCategory MobileDeviceCategory { get; set; } = null!;
         public string? ImeiNumber { get; set; }
         public string? SerialNumber { get; set; }
-        public string? IosVersion { get; set; }
-        public int? BatteryStatus { get; set; }
-        public string? UserId { get; set; }
+        public int? UserId { get; set; }
+        public User? User { get; set; }
         public int? SimCardId { get; set; }
         public SimCard? SimCard { get; set; }
-        public int DeviceStatusId { get; set; }
-        public DeviceStatus DeviceStatus { get; set; } = null!;
-        public int DeviceStatusReasonId { get; set; }
-        public DeviceStatusReason DeviceStatusReason { get; set; } = null!;
-        public required DateTime CreatedAt { get; set; }
-        public required string CreatedBy { get; set; }
-        public required DateTime ModifiedAt { get; set; }
-        public required string ModifiedBy { get; set; }
+        public required string Status { get; set; }
+        public required string StatusReason { get; set; }
+        public ICollection<MobileOrder> MobileOrders { get; set; } = new List<MobileOrder>();
     }
 }

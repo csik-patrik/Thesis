@@ -11,5 +11,7 @@ namespace ThesisApi.Models
         public required string Password { get; set; }
 
         public ICollection<UserRole> UserRoles { get; set; } = null!;
+        public ICollection<MobileDevice> MobileDevices { get; set; } = new List<MobileDevice>();
+        public ICollection<MobileOrder> MobileOrders { get; set; } = new List<MobileOrder>();
     }
 }
