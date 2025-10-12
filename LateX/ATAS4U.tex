@@ -1,0 +1,150 @@
+%
+% Szakdolgozatminta az Eszterházy Károly Katolikus Egyetem
+% matematika illetve informatika szakos hallgatóinak.
+%
+
+\documentclass[
+% opciók nélkül: egyoldalas nyomtatás, elektronikus verzió
+% twoside,     % kétoldalas nyomtatás
+% tocnopagenum,% oldalszámozás a tartalomjegyzék után kezdődik
+]{thesis-ekf}
+\usepackage[T1]{fontenc}
+\PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
+\usepackage[magyar]{babel}
+\usepackage{mathtools,amssymb,amsthm,pdfpages}
+\footnotestyle{rule=fourth}
+
+\newtheorem{tetel}{Tétel}[chapter]
+\theoremstyle{definition}
+\newtheorem{definicio}[tetel]{Definíció}
+\theoremstyle{remark}
+\newtheorem{megjegyzes}[tetel]{Megjegyzés}
+
+\begin{document}
+
+\institute{Matematikai és Informatikai Intézet}
+\title{Informatikai eszközök nyilvántartására, eszközkiadás kezelésére tervezett alkalmazás készítése}
+\author{Csik Patrik\\Programtervező informatikus}
+\supervisor{Dr. Király Roland\\Egyetemi docens}
+\city{Eger}
+\date{2025}
+\maketitle
+
+\tableofcontents
+
+\chapter{Bevezetés}
+% A téma bemutatása, aktualitása, célkitűzések, dolgozat felépítése
+
+\section{A téma aktualitása és célja}
+% Írd le, miért fontos az informatikai eszközök nyilvántartása, és miért választottad ezt a témát.
+
+\section{A dolgozat felépítése}
+% Röviden ismertesd, hogy mely fejezetekből áll a szakdolgozat.
+
+%------------------------------------------------
+\chapter{Követelményanalízis}
+% A rendszer célja, funkcionális és nem-funkcionális követelmények
+
+\section{A probléma megfogalmazása}
+% Ismertesd, milyen problémát old meg a fejlesztett rendszer.
+
+\section{Funkcionális követelmények}
+% Pontokba szedve sorold fel a rendszer fő funkcióit.
+
+\section{Nem-funkcionális követelmények}
+% Például biztonság, teljesítmény, megbízhatóság, bővíthetőség.
+
+\section{Use case forgatókönyvek}
+% Felhasználói történetek, példák a rendszer használatára.
+
+%------------------------------------------------
+\chapter{Tervezés}
+% Rendszerterv, architektúra, adatbázis, API és frontend struktúra
+
+\section{Rendszerarchitektúra}
+% Írd le a .NET Web API és a React közti kapcsolatot, és hogyan épül fel a rendszer.
+
+\section{Adatbázis-tervezés}
+% ER-diagram, táblák, kulcsok, kapcsolatok.
+
+\section{Backend tervezése}
+% Controller, Service, Repository rétegek, endpoint-ok.
+
+\section{Frontend tervezése}
+% React komponensek, oldalak, felhasználói felület terve.
+
+\section{Autentikáció és jogosultságkezelés}
+% Azure AD, JWT vagy más megoldás leírása.
+
+%------------------------------------------------
+\chapter{Fejlesztés és megvalósítás}
+% A fejlesztés környezete, eszközök, technológiák
+
+\section{Fejlesztési környezet}
+% .NET 8, React, TypeScript, SQL Server, Git, stb.
+
+\section{Backend fejlesztés}
+% API endpointok, adatkezelés, hibakezelés.
+
+\section{Frontend fejlesztés}
+% React komponensek, adatlekérés, felhasználói interakciók.
+
+\section{Integráció}
+% API és frontend összekapcsolása, adatáramlás, kommunikáció.
+
+\section{Biztonság és naplózás}
+% Hitelesítés, jogosultságkezelés, auditálás.
+
+%------------------------------------------------
+\chapter{Tesztelés}
+% Tesztelési stratégia és eredmények
+
+\section{Tesztelési módszertan}
+% Egységtesztek, integrációs tesztek, manuális tesztelés.
+
+\section{Tesztesetek és eredmények}
+% Példák: eszköz létrehozása, módosítása, törlése, hibás adat kezelése.
+
+%------------------------------------------------
+\chapter{Eredmények és értékelés}
+% A rendszer céljainak teljesülése és értékelése
+
+\section{A fejlesztett rendszer funkciói}
+% Fő funkciók összefoglalása, képernyőképek.
+
+\section{A célok teljesülése}
+% Mennyiben valósult meg az eredeti cél.
+
+\section{A rendszer előnyei és korlátai}
+% Milyen problémákat old meg, és mik a fejlesztés korlátai.
+
+%------------------------------------------------
+\chapter{További fejlesztési lehetőségek}
+% Fejlesztési irányok, jövőbeli bővítések
+
+%------------------------------------------------
+\chapter{Összefoglalás}
+% A dolgozat főbb eredményeinek összegzése, személyes tanulságok
+
+%------------------------------------------------
+\chapter*{Irodalomjegyzék}
+% \begin{thebibliography}{99}
+	% \bibitem{pelda} Szerző, Cím, Kiadó, Év.
+	% \end{thebibliography}
+
+%------------------------------------------------
+\appendix
+\chapter{Mellékletek}
+% Forráskód részletek, adatbázis diagram, API dokumentáció, képernyőképek
+
+\begin{thebibliography}{2}
+\addcontentsline{toc}{chapter}{\bibname}
+\bibitem{Fazekas}
+\textsc{Fazekas István}: \emph{Valószínűségszámítás}, Debreceni Egyetem, Debrecen, 2004.
+\bibitem{Tomacs}
+\textsc{Tómács Tibor}: \emph{A valószínűségszámítás alapjai}, Líceum Kiadó, Eger, 2005.
+\end{thebibliography}
+
+% Aláírt, szkennelt nyilatkozat beillesztése a szakdolgozat végére
+\includepdf{nyilatkozat/nyilatkozat.pdf}
+\end{document}
