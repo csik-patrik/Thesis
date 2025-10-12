@@ -25,8 +25,18 @@ namespace ThesisApi.Controllers
         [HttpGet("/sim-cards")]
         public async Task<IActionResult> GetAll()
         {
-            var simCards = await _simCardRepository.GetAllAsync();
-            return Ok(simCards);
+            try
+            {
+                var simCards = await _simCardRepository.GetAllAsync();
+
+                var response = simCards.Select(_mapper.Map<SimCardResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("/sim-cards")]
@@ -42,17 +52,24 @@ namespace ThesisApi.Controllers
 
         }
 
-        [HttpGet(ApiEndpoints.SimCards.Get)]
+        [HttpGet("/sim-cards/{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var simCard = await _simCardRepository.GetByIdAsync(id);
+            try
+            {
+                var simCard = await _simCardRepository.GetByIdAsync(id);
 
-            if (simCard == null)
-                return NotFound();
+                if (simCard == null)
+                    return NotFound();
 
-            var response = _mapper.Map<SimCardResponse>(simCard);
+                var response = _mapper.Map<SimCardResponse>(simCard);
 
-            return Ok(response);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet(ApiEndpoints.SimCards.GetAllForAllocation)]
@@ -69,27 +86,7 @@ namespace ThesisApi.Controllers
             }
         }
 
-        [HttpPut(ApiEndpoints.SimCards.Update)]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateSimCardRequest request)
-        {
-            try
-            {
-                var newSimCard = await _simCardRepository.UpdateAsync(id, request);
-
-                if (newSimCard == null)
-                    return NotFound();
-
-                var response = _mapper.Map<SimCardResponse>(newSimCard);
-
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpDelete(ApiEndpoints.SimCards.Delete)]
+        [HttpDelete("/sim-cards/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var result = await _simCardRepository.DeleteAsync(id);
