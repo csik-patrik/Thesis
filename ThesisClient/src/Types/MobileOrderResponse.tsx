@@ -1,0 +1,49 @@
+interface UserOrderResponse {
+  id: number;
+  userName: string;
+  displayName: string;
+  email: string;
+  department: string;
+  costCenter: string;
+}
+
+interface MobileDeviceCategoryResponse {
+  id: number;
+  name: string;
+}
+
+interface SimCallControlGroupResponse {
+  id: number;
+  name: string;
+  isDataEnabled: boolean;
+}
+
+export interface SimCardResponse {
+  id: number;
+  phoneNumber: string;
+  simCallControlGroup: SimCallControlGroupResponse;
+  status: string;
+}
+
+export interface MobileDeviceResponse {
+  id: number;
+  hostname: string;
+  mobileDeviceCategory: MobileDeviceCategoryResponse;
+  imeiNumber: string;
+  serialNumber: string;
+  user: UserOrderResponse;
+  simCard: SimCardResponse;
+  status: string;
+  statusReason: string;
+}
+
+export interface MobileOrderResponse {
+  id: number;
+  customer: UserOrderResponse;
+  mobileDeviceCategory: MobileDeviceCategoryResponse;
+  simCallControlGroup: SimCallControlGroupResponse;
+  pickupLocation: string;
+  mobileDevice: MobileDeviceResponse;
+  note: string;
+  status: string;
+}

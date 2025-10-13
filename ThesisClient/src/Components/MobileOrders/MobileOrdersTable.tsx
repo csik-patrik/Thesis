@@ -2,36 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
-interface UserOrderResponse {
-  id: number;
-  userName: string;
-  displayName: string;
-  email: string;
-  department: string;
-  costCenter: string;
-}
-
-interface MobileDeviceCategoryResponse {
-  id: number;
-  name: string;
-}
-
-interface SimCallControlGroupResponse {
-  id: number;
-  name: string;
-  isDataEnabled: boolean;
-}
-
-interface MobileOrderResponse {
-  id: number;
-  customer: UserOrderResponse;
-  mobileDeviceCategory: MobileDeviceCategoryResponse;
-  simCallControlGroup: SimCallControlGroupResponse;
-  pickupLocation: string;
-  note: string;
-  status: string;
-}
+import type { MobileOrderResponse } from "../../Types/MobileOrderResponse";
 
 function MobileOrdersTable() {
   const [data, setData] = useState<MobileOrderResponse[]>([]);

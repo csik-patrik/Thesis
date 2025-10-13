@@ -2,82 +2,35 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-
-interface AllocableDevice {
-  id: number;
-  hostname: string;
-  mobileDeviceCategory: string;
-  imeiNumber: string;
-  serialNumber: string;
-  iosVersion: string;
-  batteryStatus: number;
-  userId: number | null;
-  simCard: any;
-  deviceStatus: string | null;
-  deviceStatusReason: string | null;
-  createdAt: string;
-  createdBy: string;
-  modifiedAt: string;
-  modifiedBy: string;
-}
-
-interface MobileOrder {
-  id: number;
-  requesterName: string;
-  requesterUsername: string;
-  customerName: string;
-  customerUsername: string;
-  customersCostCenter: string;
-  mobileDeviceCategory: string;
-  callControlGroup: string;
-  pickupLocation: string;
-  status: string;
-  simCard?: SimCard | null;
-  createdBy: string;
-  createdAt: string;
-  modifiedBy: string;
-  modifiedAt: string;
-  note?: string | null;
-  mobileDevice?: AllocableDevice | null;
-}
-
-interface SimCard {
-  id: number;
-  phoneNumber: string;
-  department: string;
-  callControlGroup: string;
-  isDataEnabled: boolean;
-  type: string;
-  status: string;
-  createdAt: string;
-  createdBy: string;
-  modifiedAt: string;
-  modifiedBy: string;
-}
+import type {
+  MobileOrderResponse,
+  MobileDeviceResponse,
+  SimCardResponse,
+} from "../../Types/MobileOrderResponse";
 
 function MobileOrderView() {
   const { id } = useParams<{ id: string }>();
-  const [order, setOrder] = useState<MobileOrder | null>(null);
+  const [order, setOrder] = useState<MobileOrderResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [devices, setDevices] = useState<AllocableDevice[]>([]);
+  const [devices, setDevices] = useState<MobileDeviceResponse[]>([]);
   const [allocating, setAllocating] = useState<number | null>(null);
   const [search, setSearch] = useState("");
 
-  const [simCards, setSimCards] = useState<SimCard[]>([]);
+  const [simCards, setSimCards] = useState<SimCardResponse[]>([]);
   const [allocatingSim, setAllocatingSim] = useState<number | null>(null);
   const [simSearch, setSimSearch] = useState("");
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const res = await axios.get<MobileOrder>(
-          `http://localhost:5268/api/mobile-orders/${id}`
+        const res = await axios.get<MobileOrderResponse>(
+          `http://localhost:5268/mobile-orders/${id}`
         );
         setOrder(res.data);
       } catch (err) {
-        toast.error("Error fetching mobile order.");
-        console.error("Error fetching mobile order:", err);
+        toast.error("Error fetching mobile orders.");
+        console.error("Error fetching mobile orders:", err);
       } finally {
         setLoading(false);
       }
@@ -89,8 +42,8 @@ function MobileOrderView() {
   useEffect(() => {
     if (!order || order.mobileDevice) return; // Only fetch if order exists and no device is allocated
     axios
-      .get<AllocableDevice[]>(
-        `http://localhost:5268/api/mobile-devices/for-allocation/${order?.id}`
+      .get<MobileDeviceResponse[]>(
+        `http://localhost:5268/mobile-devices/allocation/${order?.mobileDeviceCategory.id}`
       )
       .then((res) => setDevices(res.data))
       .catch((err) => {
@@ -101,10 +54,10 @@ function MobileOrderView() {
 
   // Only fetch allocable sim cards if a device is allocated and no sim card is allocated
   useEffect(() => {
-    if (!order || !order.mobileDevice || order.simCard) return;
+    if (!order || !order.mobileDevice || order.mobileDevice.simCard) return;
     axios
-      .get<SimCard[]>(
-        `http://localhost:5268/api/sim-cards/for-allocation/${order.id}`
+      .get<SimCardResponse[]>(
+        `http://localhost:5268/sim-cards/for-allocation/${order.id}`
       )
       .then((res) => setSimCards(res.data))
       .catch((err) => {
@@ -113,19 +66,19 @@ function MobileOrderView() {
       });
   }, [order]);
 
-  const handleAllocate = async (deviceId: number) => {
+  const handleAllocateMobileDevice = async (deviceId: number) => {
     setAllocating(deviceId);
     try {
       await axios.put(
-        `http://localhost:5268/api/mobile-orders/allocate/${id}`,
+        `http://localhost:5268/mobile-orders/allocate/${id}`,
         deviceId.toString(), // send as string
         { headers: { "Content-Type": "application/json" } }
       );
       toast.success("Device allocated successfully!");
       setDevices((prev) => prev.filter((d) => d.id !== deviceId));
       // Refresh order to show allocated device
-      const res = await axios.get<MobileOrder>(
-        `http://localhost:5268/api/mobile-orders/${id}`
+      const res = await axios.get<MobileOrderResponse>(
+        `http://localhost:5268/mobile-orders/${id}`
       );
       setOrder(res.data);
     } catch (err) {
@@ -140,15 +93,15 @@ function MobileOrderView() {
     setAllocatingSim(simCardId);
     try {
       await axios.put(
-        `http://localhost:5268/api/mobile-orders/allocate-sim/${id}`,
+        `http://localhost:5268/mobile-orders/allocate-sim/${id}`,
         simCardId.toString(),
         { headers: { "Content-Type": "application/json" } }
       );
       toast.success("Sim card allocated successfully!");
       setSimCards((prev) => prev.filter((s) => s.id !== simCardId));
       // Refresh order to show allocated sim card
-      const res = await axios.get<MobileOrder>(
-        `http://localhost:5268/api/mobile-orders/${id}`
+      const res = await axios.get<MobileOrderResponse>(
+        `http://localhost:5268/mobile-orders/${id}`
       );
       setOrder(res.data);
     } catch (err) {
@@ -161,11 +114,11 @@ function MobileOrderView() {
 
   const handleDeliver = async () => {
     try {
-      await axios.put(`http://localhost:5268/api/mobile-orders/deliver/${id}`);
+      await axios.put(`http://localhost:5268/mobile-orders/deliver/${id}`);
       toast.success("Order marked as delivered!");
       // Optionally refresh order data
-      const res = await axios.get<MobileOrder>(
-        `http://localhost:5268/api/mobile-orders/${id}`
+      const res = await axios.get<MobileOrderResponse>(
+        `http://localhost:5268/mobile-orders/${id}`
       );
       setOrder(res.data);
     } catch (err) {
@@ -199,36 +152,20 @@ function MobileOrderView() {
             <dl>
               <dt>Id:</dt>
               <dd>{order.id}</dd>
-              <dt>Requester's Name:</dt>
-              <dd>{order.requesterName}</dd>
-              <dt>Requester's Username:</dt>
-              <dd>{order.requesterUsername}</dd>
               <dt>Customer's Name:</dt>
-              <dd>{order.customerName}</dd>
-              <dt>Customer's Username:</dt>
-              <dd>{order.customerUsername}</dd>
+              <dd>{order.customer.displayName}</dd>
               <dt>Customer's Cost Center:</dt>
-              <dd>{order.customersCostCenter}</dd>
+              <dd>{order.customer.costCenter}</dd>
               <dt>Device Category:</dt>
-              <dd>{order.mobileDeviceCategory}</dd>
+              <dd>{order.mobileDeviceCategory.name}</dd>
               <dt>Call Control Group:</dt>
-              <dd>{order.callControlGroup}</dd>
+              <dd>{order.simCallControlGroup.name}</dd>
               <dt>Pickup Location:</dt>
               <dd>{order.pickupLocation}</dd>
+              <dt>Note:</dt>
+              <dd>{order.note}</dd>
               <dt>Order's Status:</dt>
               <dd>{order.status}</dd>
-              <dt>Note:</dt>
-              <dd>
-                {order.note || <span className="text-muted">No note</span>}
-              </dd>
-              <dt>Created By:</dt>
-              <dd>{order.createdBy}</dd>
-              <dt>Created At:</dt>
-              <dd>{new Date(order.createdAt).toLocaleString()}</dd>
-              <dt>Modified By:</dt>
-              <dd>{order.modifiedBy}</dd>
-              <dt>Modified At:</dt>
-              <dd>{new Date(order.modifiedAt).toLocaleString()}</dd>
             </dl>
           </div>
         </div>
@@ -244,20 +181,13 @@ function MobileOrderView() {
                   </li>
                   <li className="list-group-item">
                     <strong>Category:</strong>{" "}
-                    {order.mobileDevice.mobileDeviceCategory}
+                    {order.mobileDevice.mobileDeviceCategory.name}
                   </li>
                   <li className="list-group-item">
                     <strong>IMEI:</strong> {order.mobileDevice.imeiNumber}
                   </li>
                   <li className="list-group-item">
                     <strong>Serial:</strong> {order.mobileDevice.serialNumber}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>iOS:</strong> {order.mobileDevice.iosVersion}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Battery:</strong> {order.mobileDevice.batteryStatus}
-                    %
                   </li>
                 </ul>
                 {order.status !== "Delivered" && (
@@ -291,15 +221,16 @@ function MobileOrderView() {
                         className="list-group-item d-flex flex-column"
                       >
                         <strong>{device.hostname}</strong>
-                        <span>Category: {device.mobileDeviceCategory}</span>
+                        <span>
+                          Category: {device.mobileDeviceCategory.name}
+                        </span>
                         <span>IMEI: {device.imeiNumber}</span>
                         <span>Serial: {device.serialNumber}</span>
-                        <span>iOS: {device.iosVersion}</span>
-                        <span>Status: {device.deviceStatus}</span>
+                        <span>Status: {device.status}</span>
                         <button
                           className="btn btn-success btn-sm mt-2 align-self-end"
                           disabled={allocating === device.id}
-                          onClick={() => handleAllocate(device.id)}
+                          onClick={() => handleAllocateMobileDevice(device.id)}
                         >
                           {allocating === device.id
                             ? "Allocating..."
@@ -324,19 +255,15 @@ function MobileOrderView() {
                       {order.mobileDevice.simCard.phoneNumber}
                     </li>
                     <li className="list-group-item">
-                      <strong>Department:</strong>{" "}
-                      {order.mobileDevice.simCard.department}
-                    </li>
-                    <li className="list-group-item">
                       <strong>Call Control Group:</strong>{" "}
-                      {order.mobileDevice.simCard.callControlGroup}
+                      {order.mobileDevice.simCard.simCallControlGroup.name}
                     </li>
                     <li className="list-group-item">
                       <strong>Data Enabled:</strong>{" "}
-                      {order.mobileDevice.simCard.isDataEnabled ? "Yes" : "No"}
-                    </li>
-                    <li className="list-group-item">
-                      <strong>Type:</strong> {order.mobileDevice.simCard.type}
+                      {order.mobileDevice.simCard.simCallControlGroup
+                        .isDataEnabled
+                        ? "Yes"
+                        : "No"}
                     </li>
                     <li className="list-group-item">
                       <strong>Status:</strong>{" "}
