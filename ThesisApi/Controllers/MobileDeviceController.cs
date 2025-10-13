@@ -12,28 +12,117 @@ namespace ThesisApi.Controllers
     public class MobileDeviceController : ControllerBase
     {
         private readonly IMobileDeviceRepository _mobileDeviceRepository;
+        private readonly IMobileDeviceCategoryRepository _mobileDeviceCategoryRepository;
         private readonly IMobileOrderRepository _mobileOrderRepository;
         private readonly IMapper _mapper;
-        public MobileDeviceController(IMobileDeviceRepository mobileDeviceRepository,
-            IMapper mapper,
-            IMobileOrderRepository mobileOrderRepository)
+        public MobileDeviceController(
+            IMobileDeviceRepository mobileDeviceRepository,
+            IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
+            IMobileOrderRepository mobileOrderRepository,
+            IMapper mapper)
         {
             _mobileDeviceRepository = mobileDeviceRepository;
-            _mapper = mapper;
+            _mobileDeviceCategoryRepository = mobileDeviceCategoryRepository;
             _mobileOrderRepository = mobileOrderRepository;
+            _mapper = mapper;
         }
 
-        [HttpGet(ApiEndpoints.MobileDevices.GetAll)]
+        [HttpPost("/mobile-devices")]
+        public async Task<IActionResult> Create([FromBody] CreateMobileDeviceRequest request)
+        {
+            try
+            {
+                var mobileDevice = await MobileDevice.Create(request, _mobileDeviceCategoryRepository);
+
+                var newMobileDevice = await _mobileDeviceRepository.AddAsync(mobileDevice);
+
+                var response = _mapper.Map<MobileDeviceResponse>(newMobileDevice);
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost("/mobile-devices/bulk")]
+        public async Task<IActionResult> CreateBulk([FromBody] List<CreateMobileDeviceRequest> request)
+        {
+            try
+            {
+                var mobiles = await MobileDevice.CreateBulk(request, _mobileDeviceCategoryRepository);
+
+                if (mobiles == null || !mobiles.Any())
+                    return BadRequest("Error while creating devices!");
+
+                await _mobileDeviceRepository.AddBulkAsync(mobiles);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("/mobile-devices")]
         public async Task<IActionResult> GetAll()
         {
-            var mobileDevices = await _mobileDeviceRepository.GetAllAsync();
+            try
+            {
+                var mobileDevices = await _mobileDeviceRepository.GetAllAsync();
 
-            var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
+                var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
 
-            return Ok(response);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        [HttpGet(ApiEndpoints.MobileDevices.GetAllForAllocation)]
+        [HttpGet("/mobile-devices/{id:int}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
+        {
+            try
+            {
+                var mobileDevice = await _mobileDeviceRepository.GetByIdAsync(id);
+
+                if (mobileDevice == null)
+                    return NotFound();
+
+                var response = _mapper.Map<MobileDeviceResponse>(mobileDevice);
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("/mobile-devices/{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            try
+            {
+                var result = await _mobileDeviceRepository.DeleteAsync(id);
+
+                if (!result)
+                    return NotFound();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+        /*[HttpGet(ApiEndpoints.MobileDevices.GetAllForAllocation)]
         public async Task<IActionResult> GetAllForAllocation([FromRoute] int orderId)
         {
             var order = await _mobileOrderRepository.GetByIdAsync(orderId);
@@ -56,75 +145,7 @@ namespace ThesisApi.Controllers
             var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
 
             return Ok(response);
-        }
-
-        [HttpPost(ApiEndpoints.MobileDevices.Create)]
-        public async Task<IActionResult> Create([FromBody] CreateMobileDeviceRequest request)
-        {
-            var mobileDevice = _mapper.Map<MobileDevice>(request);
-
-            if (mobileDevice == null)
-                return BadRequest();
-
-            var newMobileDevice = await _mobileDeviceRepository.AddAsync(mobileDevice);
-
-            var response = _mapper.Map<MobileDeviceResponse>(newMobileDevice);
-
-            return Ok(response);
-        }
-
-        [HttpPost(ApiEndpoints.MobileDevices.CreateBulk)]
-        public async Task<IActionResult> CreateBulk([FromBody] List<CreateMobileDeviceRequest> requests)
-        {
-            var mobileDevices = requests.Select(_mapper.Map<MobileDevice>).ToList();
-
-            if (mobileDevices == null || !mobileDevices.Any())
-                return BadRequest();
-
-            await _mobileDeviceRepository.AddBulkAsync(mobileDevices);
-
-            return Ok();
-        }
-
-        [HttpGet(ApiEndpoints.MobileDevices.Get)]
-        public async Task<IActionResult> GetById([FromRoute] int id)
-        {
-            var mobileDevice = await _mobileDeviceRepository.GetByIdAsync(id);
-
-            if (mobileDevice == null)
-                return NotFound();
-
-            var response = _mapper.Map<MobileDeviceResponse>(mobileDevice);
-
-            return Ok(response);
-        }
-
-        [HttpDelete(ApiEndpoints.MobileDevices.Delete)]
-        public async Task<IActionResult> Delete([FromRoute] int id)
-        {
-            var result = await _mobileDeviceRepository.DeleteAsync(id);
-
-            if (!result)
-                return NotFound();
-            return Ok();
-        }
-
-        [HttpGet(ApiEndpoints.MobileDevices.GetAllMobileDeviceCategories)]
-        public async Task<IActionResult> GetAllMobileDeviceCategories()
-        {
-            try
-            {
-                var models = await _mobileDeviceRepository.GetMobileDeviceCategoriesAsync();
-
-                var response = models.Select(_mapper.Map<MobileDeviceCategoryResponse>).ToList();
-
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        }*/
 
     }
 }

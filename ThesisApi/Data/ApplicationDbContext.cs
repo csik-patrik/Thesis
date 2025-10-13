@@ -23,12 +23,6 @@ namespace ThesisApi.Data
                 new UserRole { Id = 1, Name = "User" },
                 new UserRole { Id = 2, Name = "Admin" }
             );
-
-            modelBuilder.Entity<MobileDeviceCategory>().HasData(
-                new MobileDeviceCategory { Id = 1, Name = "Standard smartphone" },
-                new MobileDeviceCategory { Id = 2, Name = "Enhanced smartphone" },
-                new MobileDeviceCategory { Id = 3, Name = "Feature phone" }
-            );
         }
     }
 }

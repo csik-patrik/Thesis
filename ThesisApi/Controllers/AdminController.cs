@@ -1,6 +1,8 @@
+using System.Runtime.CompilerServices;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.Users;
+using ThesisApi.Contracts.Responses.MobileDeviceCategories;
 using ThesisApi.Contracts.Responses.MobileDevices;
 using ThesisApi.Contracts.Responses.Users;
 using ThesisApi.Interfaces;
@@ -12,102 +14,18 @@ namespace ThesisApi.Controllers
     [Route("[controller]")]
     public class AdminController : ControllerBase
     {
-        private readonly IAdminRepository _adminRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
         private readonly IMapper _mapper;
 
-        public AdminController(IAdminRepository adminRepository, IMapper mapper)
+        public AdminController(
+            IUserRepository userRepository,
+            IUserRoleRepository userRoleRepository,
+            IMapper mapper)
         {
-            _adminRepository = adminRepository;
+            _userRepository = userRepository;
+            _userRoleRepository = userRoleRepository;
             _mapper = mapper;
-        }
-
-        [HttpGet(ApiEndpoints.Admin.GetAllMobileDeviceCategories)]
-        public async Task<IActionResult> GetAllMobileDeviceCategories()
-        {
-            try
-            {
-                var models = await _adminRepository.GetAllMobileDeviceCategoriesAsync();
-
-                var response = _mapper.Map<List<MobileDeviceCategoryResponse>>(models);
-
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet(ApiEndpoints.Admin.GetMobileDeviceCategoryById)]
-        public async Task<IActionResult> GetMobileDeviceCategoryById([FromRoute] int id)
-        {
-            try
-            {
-                var model = await _adminRepository.GetMobileDeviceCategoryByIdAsync(id);
-
-                if (model == null)
-                    return NotFound();
-
-                var response = _mapper.Map<MobileDeviceCategoryResponse>(model);
-
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPost(ApiEndpoints.Admin.CreateMobileDeviceCategory)]
-        public async Task<IActionResult> CreateMobileDeviceCategory([FromBody] string name)
-        {
-            try
-            {
-                var model = await _adminRepository.CreateMobileDeviceCategoryAsync(name);
-
-                var response = _mapper.Map<MobileDeviceCategoryResponse>(model);
-
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPut(ApiEndpoints.Admin.UpdateMobileDeviceCategory)]
-        public async Task<IActionResult> UpdateMobileDeviceCategory([FromRoute] int id, [FromBody] string name)
-        {
-            try
-            {
-                var model = await _adminRepository.UpdateMobileDeviceCategoryAsync(id, name);
-                if (model == null)
-                    return NotFound();
-
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpDelete(ApiEndpoints.Admin.DeleteMobileDeviceCategory)]
-        public async Task<IActionResult> DeleteMobileDeviceCategory([FromRoute] int id)
-        {
-            try
-            {
-                var result = await _adminRepository.DeleteMobileDeviceCategory(id);
-
-                if (result)
-                    return Ok();
-
-                return NotFound();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
         }
 
         [HttpGet(ApiEndpoints.Admin.GetUsers)]
@@ -115,7 +33,7 @@ namespace ThesisApi.Controllers
         {
             try
             {
-                var users = await _adminRepository.GetUsersAsync();
+                var users = await _userRepository.GetAllAsync();
 
                 var response = users.Select(_mapper.Map<UserResponse>).ToList();
 
@@ -132,7 +50,7 @@ namespace ThesisApi.Controllers
         {
             try
             {
-                var roles = await _adminRepository.GetUserRolesByIdAsync(request.UserRoleIds);
+                var roles = await _userRoleRepository.GetUserRolesByIdAsync(request.UserRoleIds);
                 if (!roles.Any())
                     return BadRequest("User roles are not valid!");
 
@@ -147,7 +65,7 @@ namespace ThesisApi.Controllers
                     UserRoles = roles.ToList()
                 };
 
-                await _adminRepository.AddUserAsync(user);
+                await _userRepository.CreateAsync(user);
 
                 var response = _mapper.Map<UserResponse>(user);
 
@@ -164,11 +82,15 @@ namespace ThesisApi.Controllers
         {
             try
             {
-                var result = await _adminRepository.DeleteUserById(id);
+                var user = await _userRepository.GetByIdAsync(id);
+                if (user == null)
+                    return NotFound("User is not found!");
+
+                var result = await _userRepository.DeleteById(user);
 
                 if (!result)
                 {
-                    return NotFound("User not found!");
+                    return NotFound("Error while deleting");
                 }
 
                 return Ok();
@@ -184,7 +106,7 @@ namespace ThesisApi.Controllers
         {
             try
             {
-                var roles = await _adminRepository.GetUserRolesAsync();
+                var roles = await _userRoleRepository.GetUserRolesAsync();
 
                 var response = roles.Select(_mapper.Map<UserRoleResponse>).ToList();
 

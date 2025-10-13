@@ -1,7 +1,6 @@
 using AutoMapper;
-using ThesisApi.Contracts.Requests.MobileDevices;
-using ThesisApi.Contracts.Requests.MobileOrders;
 using ThesisApi.Contracts.Requests.Users;
+using ThesisApi.Contracts.Responses.MobileDeviceCategories;
 using ThesisApi.Contracts.Responses.MobileDevices;
 using ThesisApi.Contracts.Responses.MobileOrders;
 using ThesisApi.Contracts.Responses.SimCards;
@@ -14,16 +13,11 @@ namespace ThesisApi.Data
     {
         public AutomapperProfiles()
         {
-            CreateMap<CreateMobileOrderRequest, MobileOrder>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => "New"));
-
             CreateMap<MobileOrder, MobileOrderResponse>()
                 .ForMember(dest => dest.MobileDeviceCategory, opt => opt.MapFrom(src => src.MobileDeviceCategory != null ? src.MobileDeviceCategory.Name : null));
 
             CreateMap<MobileDevice, MobileDeviceResponse>()
                 .ForMember(dest => dest.MobileDeviceCategory, opt => opt.MapFrom(src => src.MobileDeviceCategory != null ? src.MobileDeviceCategory.Name : null));
-
-            CreateMap<CreateMobileDeviceRequest, MobileDevice>();
 
             CreateMap<MobileDevice, MobileDeviceResponse>();
 
@@ -32,6 +26,8 @@ namespace ThesisApi.Data
             CreateMap<SimCard, SimCardResponse>();
 
             CreateMap<SimCallControlGroup, SimCallControlGroupResponse>();
+
+            CreateMap<User, UserOrderResponse>();
 
             CreateMap<User, NewTokenRequest>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Username))

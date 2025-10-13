@@ -16,7 +16,7 @@ namespace ThesisApi.Models
 
         public async static Task<SimCard> Create(CreateSimCardRequest request, ISimCallControlGroupRepository repository)
         {
-            var simCallControlGroup = await repository.GetSimCallControlGroupByIdAsync(request.SimCallControlGroupId);
+            var simCallControlGroup = await repository.GetByIdAsync(request.SimCallControlGroupId);
 
             if (simCallControlGroup == null)
                 throw new Exception("Call control group cannot be found!");

@@ -12,14 +12,37 @@ namespace ThesisApi.Controllers
     public class MobileOrderController : ControllerBase
     {
         private readonly IMobileOrderRepository _mobileOrderRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IMobileDeviceCategoryRepository _mobileDeviceCategoryRepository;
+        private readonly ISimCallControlGroupRepository _simCallControlGroupRepository;
         private readonly IMapper _mapper;
-        public MobileOrderController(IMobileOrderRepository mobileOrderRepository, IMapper mapper)
+        public MobileOrderController(
+            IMobileOrderRepository mobileOrderRepository,
+            IUserRepository userRepository,
+            IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
+            ISimCallControlGroupRepository simCallControlGroupRepository,
+            IMapper mapper)
         {
             _mobileOrderRepository = mobileOrderRepository;
+            _userRepository = userRepository;
+            _mobileDeviceCategoryRepository = mobileDeviceCategoryRepository;
+            _simCallControlGroupRepository = simCallControlGroupRepository;
             _mapper = mapper;
         }
 
-        [HttpGet(ApiEndpoints.MobileOrders.GetAll)]
+        [HttpPost(ApiEndpoints.MobileOrders.Create)]
+        public async Task<IActionResult> Create([FromBody] CreateMobileOrderRequest request)
+        {
+            var order = await MobileOrder.Create(request, _userRepository, _mobileDeviceCategoryRepository, _simCallControlGroupRepository);
+
+            var newOrder = await _mobileOrderRepository.CreateAsync(order);
+
+            var response = _mapper.Map<MobileOrderResponse>(newOrder);
+
+            return Ok(response);
+        }
+
+        /*[HttpGet(ApiEndpoints.MobileOrders.GetAll)]
         public async Task<IActionResult> GetAll()
         {
             var orders = await _mobileOrderRepository.GetAllAsync();
@@ -86,20 +109,7 @@ namespace ThesisApi.Controllers
             }
         }
 
-        [HttpPost(ApiEndpoints.MobileOrders.Create)]
-        public async Task<IActionResult> Create([FromBody] CreateMobileOrderRequest request)
-        {
-            var order = _mapper.Map<MobileOrder>(request);
-
-            if (order == null)
-                return BadRequest();
-
-            var newOrder = await _mobileOrderRepository.CreateAsync(order);
-
-            var response = _mapper.Map<MobileOrderResponse>(newOrder);
-
-            return Ok(response);
-        }
+        
 
         [HttpGet(ApiEndpoints.MobileOrders.Get)]
         public async Task<IActionResult> GetById([FromRoute] int id)
@@ -121,6 +131,6 @@ namespace ThesisApi.Controllers
             if (!result)
                 return NotFound();
             return Ok();
-        }
+        }*/
     }
 }

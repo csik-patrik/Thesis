@@ -20,7 +20,7 @@ namespace ThesisApi.Repositories
             return order;
         }
 
-        public async Task<IEnumerable<MobileOrder>> GetAllAsync()
+        /*public async Task<IEnumerable<MobileOrder>> GetAllAsync()
         {
             return await _context.MobileOrders
                 .Include(x => x.MobileDeviceCategory)
@@ -116,6 +116,6 @@ namespace ThesisApi.Repositories
 
             await _context.SaveChangesAsync();
             return order;
-        }
+        }*/
     }
 }

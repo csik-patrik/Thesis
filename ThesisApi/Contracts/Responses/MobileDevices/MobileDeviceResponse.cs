@@ -1,3 +1,4 @@
+using ThesisApi.Contracts.Responses.MobileDeviceCategories;
 using ThesisApi.Contracts.Responses.SimCards;
 using ThesisApi.Contracts.Responses.Users;
 

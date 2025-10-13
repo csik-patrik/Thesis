@@ -30,20 +30,19 @@ namespace ThesisApi.Repositories
         public async Task<bool> DeleteAsync(int id)
         {
             var mobileDevice = await _context.MobileDevices.FirstOrDefaultAsync(x => x.Id == id);
-            if (mobileDevice != null)
-            {
-                _context.MobileDevices.Remove(mobileDevice);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
+
+            if (mobileDevice == null)
+                return false;
+
+            _context.MobileDevices.Remove(mobileDevice);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<MobileDevice>> GetAllAsync()
         {
             return await _context.MobileDevices
                 .Include(x => x.MobileDeviceCategory)
-
                 .ToListAsync();
         }
 

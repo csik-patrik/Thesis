@@ -1,4 +1,4 @@
-namespace ThesisApi.Contracts.Responses.MobileDevices
+namespace ThesisApi.Contracts.Responses.MobileDeviceCategories
 {
     public class MobileDeviceCategoryResponse
     {

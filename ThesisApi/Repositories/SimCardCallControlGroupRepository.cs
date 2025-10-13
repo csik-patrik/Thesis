@@ -22,7 +22,7 @@ namespace ThesisApi.Repositories
             return simCallControlGroup;
         }
 
-        public async Task<SimCallControlGroup?> GetSimCallControlGroupByIdAsync(int id)
+        public async Task<SimCallControlGroup?> GetByIdAsync(int id)
         {
             return await _context.SimCallControlGroups.FirstOrDefaultAsync(x => x.Id == id);
         }
