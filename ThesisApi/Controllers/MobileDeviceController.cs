@@ -13,7 +13,6 @@ namespace ThesisApi.Controllers
     {
         private readonly IMobileDeviceRepository _mobileDeviceRepository;
         private readonly IMobileDeviceCategoryRepository _mobileDeviceCategoryRepository;
-        private readonly IMobileOrderRepository _mobileOrderRepository;
         private readonly IMapper _mapper;
         public MobileDeviceController(
             IMobileDeviceRepository mobileDeviceRepository,
@@ -23,7 +22,6 @@ namespace ThesisApi.Controllers
         {
             _mobileDeviceRepository = mobileDeviceRepository;
             _mobileDeviceCategoryRepository = mobileDeviceCategoryRepository;
-            _mobileOrderRepository = mobileOrderRepository;
             _mapper = mapper;
         }
 
@@ -103,6 +101,40 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpGet("/mobile-devices/allocation/{categoryId:int}")]
+        public async Task<IActionResult> GetAllForAllocation([FromRoute] int categoryId)
+        {
+            try
+            {
+                var mobileDevices = await _mobileDeviceRepository.GetAllForAllocationAsync(categoryId);
+
+                var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("/mobile-devices/deployed")]
+        public async Task<IActionResult> GetAllDeployed()
+        {
+            try
+            {
+                var mobileDevices = await _mobileDeviceRepository.GetAllDeployedAsync();
+
+                var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete("/mobile-devices/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
@@ -121,31 +153,5 @@ namespace ThesisApi.Controllers
             }
 
         }
-
-        /*[HttpGet(ApiEndpoints.MobileDevices.GetAllForAllocation)]
-        public async Task<IActionResult> GetAllForAllocation([FromRoute] int orderId)
-        {
-            var order = await _mobileOrderRepository.GetByIdAsync(orderId);
-
-            if (order == null)
-                return NotFound($"Mobile order with ID {orderId} not found.");
-
-            var mobileDevices = await _mobileDeviceRepository.GetAllForAllocationAsync(order.MobileDeviceCategoryId);
-
-            var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
-
-            return Ok(response);
-        }
-
-        [HttpGet(ApiEndpoints.MobileDevices.GetAllDeployed)]
-        public async Task<IActionResult> GetAllDeployed()
-        {
-            var mobileDevices = await _mobileDeviceRepository.GetAllDeployedAsync();
-
-            var response = mobileDevices.Select(_mapper.Map<MobileDeviceResponse>).ToList();
-
-            return Ok(response);
-        }*/
-
     }
 }

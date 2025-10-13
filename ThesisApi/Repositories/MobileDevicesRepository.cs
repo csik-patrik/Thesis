@@ -27,6 +27,60 @@ namespace ThesisApi.Repositories
             return true;
         }
 
+        public async Task<IEnumerable<MobileDevice>> GetAllAsync()
+        {
+            return await _context.MobileDevices
+                .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.User)
+                .Include(x => x.SimCard)
+                .AsNoTracking()
+                .AsSplitQuery()
+                .ToListAsync();
+        }
+
+        public async Task<MobileDevice?> GetByIdAsync(int id)
+        {
+            return await _context.MobileDevices
+                .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.User)
+                .Include(x => x.SimCard)
+                .AsNoTracking()
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<MobileDevice>> GetAllForAllocationAsync(int mobileDeviceCategoryId)
+        {
+
+            return await _context.MobileDevices
+                .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.User)
+                .Include(x => x.SimCard)
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Where(x => x.MobileDeviceCategoryId == mobileDeviceCategoryId
+                    && x.Status == "In inventory"
+                    && x.StatusReason == "In inventory")
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<MobileDevice>> GetAllDeployedAsync()
+        {
+            return await _context.MobileDevices
+                .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.User)
+                .Include(x => x.SimCard)
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Where(x => x.Status == "Deployed" && x.StatusReason == "Productive")
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<MobileDeviceCategory>> GetMobileDeviceCategoriesAsync()
+        {
+            return await _context.MobileDeviceCategories.ToListAsync();
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             var mobileDevice = await _context.MobileDevices.FirstOrDefaultAsync(x => x.Id == id);
@@ -39,50 +93,15 @@ namespace ThesisApi.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<MobileDevice>> GetAllAsync()
-        {
-            return await _context.MobileDevices
-                .Include(x => x.MobileDeviceCategory)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<MobileDevice>> GetAllDeployedAsync()
-        {
-            return await _context.MobileDevices
-                .Include(x => x.MobileDeviceCategory)
-
-                .Include(x => x.SimCard)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<MobileDevice>> GetAllForAllocationAsync(int mobileDeviceCategoryId)
-        {
-
-            return await _context.MobileDevices
-                .Include(x => x.MobileDeviceCategory)
+        // 
+        //
+        // public async Task<bool> UpdateAsync(MobileDevice mobileDevice)
+        // {
+        //     _context.MobileDevices.Update(mobileDevice);
+        //     await _context.SaveChangesAsync();
+        //     return true;
+        // }
 
 
-                .ToListAsync();
-        }
-
-        public async Task<MobileDevice?> GetByIdAsync(int id)
-        {
-            return await _context.MobileDevices
-                .Include(x => x.MobileDeviceCategory)
-                .FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<IEnumerable<MobileDeviceCategory>> GetMobileDeviceCategoriesAsync()
-        {
-            return await _context.MobileDeviceCategories.ToListAsync();
-
-        }
-
-        public async Task<bool> UpdateAsync(MobileDevice mobileDevice)
-        {
-            _context.MobileDevices.Update(mobileDevice);
-            await _context.SaveChangesAsync();
-            return true;
-        }
     }
 }
