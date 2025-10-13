@@ -23,12 +23,12 @@ namespace ThesisApi.Repositories
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(x => x.UserRoles).ToListAsync();
         }
 
         public async Task<User?> GetByIdAsync(int id)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Users.Include(x => x.UserRoles).FirstOrDefaultAsync(x => x.Id == id);
         }
         public async Task<bool> DeleteById(User user)
         {

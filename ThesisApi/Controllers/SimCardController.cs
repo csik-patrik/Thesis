@@ -72,7 +72,7 @@ namespace ThesisApi.Controllers
             }
         }
 
-        [HttpGet(ApiEndpoints.SimCards.GetAllForAllocation)]
+        /*[HttpGet(ApiEndpoints.SimCards.GetAllForAllocation)]
         public async Task<IActionResult> GetAllForAllocation([FromRoute] int orderId)
         {
             try
@@ -94,6 +94,6 @@ namespace ThesisApi.Controllers
             if (!result)
                 return NotFound();
             return Ok();
-        }
+        }*/
     }
 }
