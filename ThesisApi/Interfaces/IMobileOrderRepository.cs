@@ -8,8 +8,8 @@ namespace ThesisApi.Interfaces
         Task<IEnumerable<MobileOrder>> GetAllAsync();
         Task<MobileOrder?> GetByIdAsync(int id);
         Task<MobileOrder> AllocateMobileDeviceToOrderAsync(MobileOrder mobileOrder, MobileDevice mobileDevice);
-        /*Task<MobileOrder?> AllocateSimCardToOrderAsync(int orderId, int simId);
-        Task<MobileOrder?> DeliverOrderAsync(int id);
+        Task<MobileOrder> AllocateSimCardToOrderAsync(MobileOrder mobileOrder, SimCard simCard);
+        /*Task<MobileOrder?> DeliverOrderAsync(int id);
         Task<bool> UpdateAsync(MobileOrder order);*/
         Task<bool> DeleteAsync(MobileOrder order);
     }

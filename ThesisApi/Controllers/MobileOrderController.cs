@@ -11,25 +11,28 @@ namespace ThesisApi.Controllers
     [Route("[controller]")]
     public class MobileOrderController : ControllerBase
     {
-        private readonly IMobileOrderRepository _mobileOrderRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IMobileOrderRepository _mobileOrderRepository;
         private readonly IMobileDeviceRepository _mobileDeviceRepository;
         private readonly IMobileDeviceCategoryRepository _mobileDeviceCategoryRepository;
         private readonly ISimCallControlGroupRepository _simCallControlGroupRepository;
+        private readonly ISimCardRepository _simCardRepository;
         private readonly IMapper _mapper;
         public MobileOrderController(
-            IMobileOrderRepository mobileOrderRepository,
             IUserRepository userRepository,
+            IMobileOrderRepository mobileOrderRepository,
             IMobileDeviceRepository mobileDeviceRepository,
             IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
             ISimCallControlGroupRepository simCallControlGroupRepository,
+            ISimCardRepository simCardRepository,
             IMapper mapper)
         {
-            _mobileOrderRepository = mobileOrderRepository;
             _userRepository = userRepository;
+            _mobileOrderRepository = mobileOrderRepository;
             _mobileDeviceRepository = mobileDeviceRepository;
             _mobileDeviceCategoryRepository = mobileDeviceCategoryRepository;
             _simCallControlGroupRepository = simCallControlGroupRepository;
+            _simCardRepository = simCardRepository;
             _mapper = mapper;
         }
 
@@ -90,7 +93,7 @@ namespace ThesisApi.Controllers
             }
         }
 
-        [HttpPut("/mobile-orders/allocate")]
+        [HttpPut("/mobile-orders/allocate/device")]
         public async Task<IActionResult> AllocateMobileDevice([FromBody] AllocateMobileDeviceToOrderRequest request)
         {
             try
@@ -116,6 +119,35 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpPut("/mobile-orders/allocate/sim-card")]
+        public async Task<IActionResult> AllocateSimCard([FromBody] AllocateSimCardToOrderRequest request)
+        {
+            try
+            {
+                var mobileOrder = await _mobileOrderRepository.GetByIdAsync(request.OrderId);
+                if (mobileOrder == null)
+                    return NotFound("Mobile order is not found!");
+
+                var simCard = await _simCardRepository.GetByIdAsync(request.SimCardId);
+                if (simCard == null)
+                    return NotFound("Sim card is not found!");
+
+                if (mobileOrder.MobileDevice == null)
+                    return StatusCode(400, "You must assign a mobile device first!");
+
+                if (simCard.SimCallControlGroupId != mobileOrder.SimCallControlGroupId)
+                    return StatusCode(400, "Sim card call control group is not the same as requested!");
+
+                await _mobileOrderRepository.AllocateSimCardToOrderAsync(mobileOrder, simCard);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete("/mobile-orders/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
@@ -138,24 +170,7 @@ namespace ThesisApi.Controllers
 
         /*
 
-        [HttpPut(ApiEndpoints.MobileOrders.AllocateSimCard)]
-        public async Task<IActionResult> AllocateSimCard([FromRoute] int id, [FromBody] int simId)
-        {
-            try
-            {
-                var updatedOrder = await _mobileOrderRepository.AllocateSimCardToOrderAsync(id, simId);
-                if (updatedOrder == null)
-                    return NotFound("Order or SIM card not found!");
-
-                var response = _mapper.Map<MobileOrderResponse>(updatedOrder);
-
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, $"Internal server error: {e.Message}");
-            }
-        }
+        
 
         [HttpPut(ApiEndpoints.MobileOrders.DeliverOrder)]
         public async Task<IActionResult> DeliverOrder([FromRoute] int id)

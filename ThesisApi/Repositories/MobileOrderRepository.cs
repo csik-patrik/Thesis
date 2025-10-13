@@ -58,6 +58,21 @@ namespace ThesisApi.Repositories
             return mobileOrder;
         }
 
+        public async Task<MobileOrder> AllocateSimCardToOrderAsync(MobileOrder mobileOrder, SimCard simCard)
+        {
+            mobileOrder.SimCardId = simCard.Id;
+            mobileOrder.SimCard = simCard;
+
+            simCard.Status = "Reserved";
+
+            mobileOrder.MobileDevice.SimCardId = simCard.Id;
+            mobileOrder.MobileDevice.SimCard = simCard;
+            mobileOrder.Status = "Deliver device";
+
+            await _context.SaveChangesAsync();
+            return mobileOrder;
+        }
+
         public async Task<bool> DeleteAsync(MobileOrder mobileOrder)
         {
 
@@ -96,29 +111,6 @@ namespace ThesisApi.Repositories
 
         
 
-        public async Task<MobileOrder?> AllocateSimCardToOrderAsync(int orderId, int simId)
-        {
-            var order = _context.MobileOrders
-                .Include(x => x.MobileDevice)
-                .FirstOrDefault(x => x.Id == orderId);
-            if (order == null)
-                throw new Exception("Order not found");
-
-            if (order.MobileDevice == null)
-                throw new Exception("No mobile device allocated to order");
-
-            var simCard = _context.SimCards.FirstOrDefault(x => x.Id == simId);
-            if (simCard == null)
-                throw new Exception("Sim card not found");
-
-            simCard.Status = "Allocated";
-
-            order.MobileDevice.SimCardId = simCard.Id;
-            order.MobileDevice.SimCard = simCard;
-            order.Status = "Deliver device";
-
-            await _context.SaveChangesAsync();
-            return order;
-        }*/
+        */
     }
 }
