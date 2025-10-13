@@ -13,11 +13,9 @@ namespace ThesisApi.Data
     {
         public AutomapperProfiles()
         {
-            CreateMap<MobileOrder, MobileOrderResponse>()
-                .ForMember(dest => dest.MobileDeviceCategory, opt => opt.MapFrom(src => src.MobileDeviceCategory != null ? src.MobileDeviceCategory.Name : null));
+            CreateMap<MobileOrder, MobileOrderResponse>();
 
-            CreateMap<MobileDevice, MobileDeviceResponse>()
-                .ForMember(dest => dest.MobileDeviceCategory, opt => opt.MapFrom(src => src.MobileDeviceCategory != null ? src.MobileDeviceCategory.Name : null));
+            CreateMap<MobileDevice, MobileDeviceResponse>();
 
             CreateMap<MobileDevice, MobileDeviceResponse>();
 

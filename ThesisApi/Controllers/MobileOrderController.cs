@@ -30,29 +30,84 @@ namespace ThesisApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost(ApiEndpoints.MobileOrders.Create)]
+        [HttpPost("/mobile-orders")]
         public async Task<IActionResult> Create([FromBody] CreateMobileOrderRequest request)
         {
-            var order = await MobileOrder.Create(request, _userRepository, _mobileDeviceCategoryRepository, _simCallControlGroupRepository);
+            try
+            {
+                var order = await MobileOrder.Create(
+                request,
+                _userRepository,
+                _mobileDeviceCategoryRepository,
+                _simCallControlGroupRepository);
 
-            var newOrder = await _mobileOrderRepository.CreateAsync(order);
+                await _mobileOrderRepository.CreateAsync(order);
 
-            var response = _mapper.Map<MobileOrderResponse>(newOrder);
-
-            return Ok(response);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        /*[HttpGet(ApiEndpoints.MobileOrders.GetAll)]
+        [HttpGet("/mobile-orders")]
         public async Task<IActionResult> GetAll()
         {
-            var orders = await _mobileOrderRepository.GetAllAsync();
+            try
+            {
+                var orders = await _mobileOrderRepository.GetAllAsync();
 
-            var responses = orders.Select(_mapper.Map<MobileOrderResponse>).ToList();
+                var responses = orders.Select(_mapper.Map<MobileOrderResponse>).ToList();
 
-            return Ok(responses);
+                return Ok(responses);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        [HttpPut(ApiEndpoints.MobileOrders.AllocateMobileDevice)]
+        [HttpGet("/mobile-orders/{id:int}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
+        {
+            try
+            {
+                var order = await _mobileOrderRepository.GetByIdAsync(id);
+                if (order == null)
+                    return NotFound();
+
+                var response = _mapper.Map<MobileOrderResponse>(order);
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("/mobile-orders/{id:int}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            try
+            {
+                var mobileOrder = await _mobileOrderRepository.GetByIdAsync(id);
+
+                if (mobileOrder == null)
+                    return NotFound();
+
+                await _mobileOrderRepository.DeleteAsync(mobileOrder);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /*[HttpPut(ApiEndpoints.MobileOrders.AllocateMobileDevice)]
         public async Task<IActionResult> AllocateMobileDevice([FromRoute] int id, [FromBody] int mobileId)
         {
             try
@@ -111,26 +166,8 @@ namespace ThesisApi.Controllers
 
         
 
-        [HttpGet(ApiEndpoints.MobileOrders.Get)]
-        public async Task<IActionResult> GetById([FromRoute] int id)
-        {
-            var order = await _mobileOrderRepository.GetByIdAsync(id);
-            if (order == null)
-                return NotFound();
+        
 
-            var response = _mapper.Map<MobileOrderResponse>(order);
-
-            return Ok(response);
-        }
-
-        [HttpDelete(ApiEndpoints.MobileOrders.Delete)]
-        public async Task<IActionResult> Delete([FromRoute] int id)
-        {
-            var result = await _mobileOrderRepository.DeleteAsync(id);
-
-            if (!result)
-                return NotFound();
-            return Ok();
-        }*/
+        */
     }
 }

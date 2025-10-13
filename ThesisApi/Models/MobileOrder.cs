@@ -1,7 +1,4 @@
-using System.Runtime.InteropServices;
-using Microsoft.AspNetCore.Http.HttpResults;
 using ThesisApi.Contracts.Requests.MobileOrders;
-using ThesisApi.Controllers;
 using ThesisApi.Interfaces;
 
 namespace ThesisApi.Models

@@ -20,11 +20,16 @@ namespace ThesisApi.Repositories
             return order;
         }
 
-        /*public async Task<IEnumerable<MobileOrder>> GetAllAsync()
+        public async Task<IEnumerable<MobileOrder>> GetAllAsync()
         {
             return await _context.MobileOrders
                 .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.Customer)
+                .Include(x => x.SimCallControlGroup)
                 .Include(x => x.MobileDevice)
+                .Include(x => x.SimCard)
+                .AsNoTracking()
+                .AsSplitQuery()
                 .ToListAsync();
         }
 
@@ -32,12 +37,24 @@ namespace ThesisApi.Repositories
         {
             return await _context.MobileOrders
                 .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.Customer)
+                .Include(x => x.SimCallControlGroup)
                 .Include(x => x.MobileDevice)
-                .ThenInclude(x => x.SimCard)
+                .Include(x => x.SimCard)
+                .AsNoTracking()
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<MobileOrder?> AllocateMobileToOrderAsync(int orderId, int mobileId)
+        public async Task<bool> DeleteAsync(MobileOrder mobileOrder)
+        {
+
+            _context.MobileOrders.Remove(mobileOrder);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        /*public async Task<MobileOrder?> AllocateMobileToOrderAsync(int orderId, int mobileId)
         {
             var order = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == orderId);
             if (order == null) return null;
@@ -81,17 +98,7 @@ namespace ThesisApi.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var order = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == id);
-            if (order != null)
-            {
-                _context.MobileOrders.Remove(order);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
+        
 
         public async Task<MobileOrder?> AllocateSimCardToOrderAsync(int orderId, int simId)
         {
