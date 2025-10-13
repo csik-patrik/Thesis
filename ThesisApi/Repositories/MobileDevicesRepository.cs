@@ -44,7 +44,6 @@ namespace ThesisApi.Repositories
                 .Include(x => x.MobileDeviceCategory)
                 .Include(x => x.User)
                 .Include(x => x.SimCard)
-                .AsNoTracking()
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }

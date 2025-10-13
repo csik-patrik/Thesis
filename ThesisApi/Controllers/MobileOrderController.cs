@@ -13,18 +13,21 @@ namespace ThesisApi.Controllers
     {
         private readonly IMobileOrderRepository _mobileOrderRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IMobileDeviceRepository _mobileDeviceRepository;
         private readonly IMobileDeviceCategoryRepository _mobileDeviceCategoryRepository;
         private readonly ISimCallControlGroupRepository _simCallControlGroupRepository;
         private readonly IMapper _mapper;
         public MobileOrderController(
             IMobileOrderRepository mobileOrderRepository,
             IUserRepository userRepository,
+            IMobileDeviceRepository mobileDeviceRepository,
             IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
             ISimCallControlGroupRepository simCallControlGroupRepository,
             IMapper mapper)
         {
             _mobileOrderRepository = mobileOrderRepository;
             _userRepository = userRepository;
+            _mobileDeviceRepository = mobileDeviceRepository;
             _mobileDeviceCategoryRepository = mobileDeviceCategoryRepository;
             _simCallControlGroupRepository = simCallControlGroupRepository;
             _mapper = mapper;
@@ -87,6 +90,32 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpPut("/mobile-orders/allocate")]
+        public async Task<IActionResult> AllocateMobileDevice([FromBody] AllocateMobileDeviceToOrderRequest request)
+        {
+            try
+            {
+                var mobileOrder = await _mobileOrderRepository.GetByIdAsync(request.OrderId);
+                if (mobileOrder == null)
+                    return NotFound("Mobile order is not found!");
+
+                var mobileDevice = await _mobileDeviceRepository.GetByIdAsync(request.MobileDeviceId);
+                if (mobileDevice == null)
+                    return NotFound("Mobile device is not found!");
+
+                if (mobileOrder.MobileDeviceCategoryId != mobileDevice.MobileDeviceCategoryId)
+                    return StatusCode(400, "Mobile device category is not the same as the requested!");
+
+                await _mobileOrderRepository.AllocateMobileDeviceToOrderAsync(mobileOrder, mobileDevice);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Internal server error: {e.Message}");
+            }
+        }
+
         [HttpDelete("/mobile-orders/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
@@ -107,24 +136,7 @@ namespace ThesisApi.Controllers
             }
         }
 
-        /*[HttpPut(ApiEndpoints.MobileOrders.AllocateMobileDevice)]
-        public async Task<IActionResult> AllocateMobileDevice([FromRoute] int id, [FromBody] int mobileId)
-        {
-            try
-            {
-                var updatedOrder = await _mobileOrderRepository.AllocateMobileToOrderAsync(id, mobileId);
-                if (updatedOrder == null)
-                    return NotFound("Order or mobile not found!");
-
-                var response = _mapper.Map<MobileOrderResponse>(updatedOrder);
-
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, $"Internal server error: {e.Message}");
-            }
-        }
+        /*
 
         [HttpPut(ApiEndpoints.MobileOrders.AllocateSimCard)]
         public async Task<IActionResult> AllocateSimCard([FromRoute] int id, [FromBody] int simId)

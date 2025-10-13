@@ -41,9 +41,21 @@ namespace ThesisApi.Repositories
                 .Include(x => x.SimCallControlGroup)
                 .Include(x => x.MobileDevice)
                 .Include(x => x.SimCard)
-                .AsNoTracking()
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<MobileOrder> AllocateMobileDeviceToOrderAsync(MobileOrder mobileOrder, MobileDevice mobileDevice)
+        {
+            mobileOrder.MobileDevice = mobileDevice;
+            mobileOrder.MobileDeviceId = mobileDevice.Id;
+            mobileOrder.Status = "In progress";
+
+            mobileDevice.StatusReason = "Reserved";
+
+            await _context.SaveChangesAsync();
+
+            return mobileOrder;
         }
 
         public async Task<bool> DeleteAsync(MobileOrder mobileOrder)
@@ -54,23 +66,7 @@ namespace ThesisApi.Repositories
             return true;
         }
 
-        /*public async Task<MobileOrder?> AllocateMobileToOrderAsync(int orderId, int mobileId)
-        {
-            var order = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == orderId);
-            if (order == null) return null;
-
-            var mobile = await _context.MobileDevices.FirstOrDefaultAsync(x => x.Id == mobileId);
-            if (mobile == null) return null;
-
-            order.MobileDevice = mobile;
-            order.Status = "In progress";
-
-            mobile.Status = "In inventory";
-            mobile.StatusReason = "Reserved";
-
-            await _context.SaveChangesAsync();
-            return order;
-        }
+        /*
 
         public async Task<MobileOrder?> DeliverOrderAsync(int id)
         {
