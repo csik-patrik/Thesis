@@ -3,28 +3,44 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-interface MobileOrder {
+interface UserOrderResponse {
   id: number;
-  requesterName: string;
-  requesterUsername: string;
-  customerName: string;
-  customerUsername: string;
-  customersCostCenter: string;
-  mobileDeviceCategory: string;
-  callControlGroup: string;
+  userName: string;
+  displayName: string;
+  email: string;
+  department: string;
+  costCenter: string;
+}
+
+interface MobileDeviceCategoryResponse {
+  id: number;
+  name: string;
+}
+
+interface SimCallControlGroupResponse {
+  id: number;
+  name: string;
+  isDataEnabled: boolean;
+}
+
+interface MobileOrderResponse {
+  id: number;
+  customer: UserOrderResponse;
+  mobileDeviceCategory: MobileDeviceCategoryResponse;
+  simCallControlGroup: SimCallControlGroupResponse;
   pickupLocation: string;
+  note: string;
   status: string;
-  createdBy: string;
 }
 
 function MobileOrdersTable() {
-  const [data, setData] = useState<MobileOrder[]>([]);
+  const [data, setData] = useState<MobileOrderResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>("New");
 
   useEffect(() => {
     axios
-      .get<MobileOrder[]>("http://localhost:5268/api/mobile-orders")
+      .get<MobileOrderResponse[]>("http://localhost:5268/mobile-orders")
       .then((res) => setData(res.data))
       .catch((err) => {
         toast.error("Failed to fetch mobile orders.");
@@ -93,11 +109,9 @@ function MobileOrdersTable() {
                 <tr>
                   <th scope="col">ID</th>
                   <th scope="col">Customer Name</th>
-                  <th scope="col">Customer Username</th>
                   <th scope="col">Device Type</th>
                   <th scope="col">Pickup Location</th>
                   <th scope="col">Status</th>
-                  <th scope="col">Created By</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
@@ -105,12 +119,10 @@ function MobileOrdersTable() {
                 {filteredData.map((d) => (
                   <tr key={d.id}>
                     <td>{d.id}</td>
-                    <td>{d.customerName}</td>
-                    <td>{d.customerUsername}</td>
-                    <td>{d.mobileDeviceCategory}</td>
+                    <td>{d.customer.displayName}</td>
+                    <td>{d.mobileDeviceCategory.name}</td>
                     <td>{d.pickupLocation}</td>
                     <td>{d.status}</td>
-                    <td>{d.createdBy}</td>
                     <td>
                       <Link
                         to={`/mobile-orders/${d.id}`}
