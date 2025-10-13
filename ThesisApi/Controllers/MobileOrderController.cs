@@ -148,6 +148,31 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpPut("/mobile-orders/deliver/{id:int}")]
+        public async Task<IActionResult> DeliverOrder([FromRoute] int id)
+        {
+            try
+            {
+                var mobileOrder = await _mobileOrderRepository.GetByIdAsync(id);
+                if (mobileOrder == null)
+                    return NotFound("Mobile order is not found!");
+
+                if (mobileOrder.MobileDevice == null)
+                    return StatusCode(400, "Allocate a mobile device first!");
+
+                if (mobileOrder.SimCard == null)
+                    return StatusCode(400, "Allocate a sim card first!");
+
+                await _mobileOrderRepository.DeliverOrderAsync(mobileOrder);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete("/mobile-orders/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
@@ -167,34 +192,5 @@ namespace ThesisApi.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-        /*
-
-        
-
-        [HttpPut(ApiEndpoints.MobileOrders.DeliverOrder)]
-        public async Task<IActionResult> DeliverOrder([FromRoute] int id)
-        {
-            try
-            {
-                var updatedOrder = await _mobileOrderRepository.DeliverOrderAsync(id);
-                if (updatedOrder == null)
-                    return NotFound("Order not found!");
-
-                var response = _mapper.Map<MobileOrderResponse>(updatedOrder);
-
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, $"Internal server error: {e.Message}");
-            }
-        }
-
-        
-
-        
-
-        */
     }
 }

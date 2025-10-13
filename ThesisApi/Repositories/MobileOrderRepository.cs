@@ -65,11 +65,25 @@ namespace ThesisApi.Repositories
 
             simCard.Status = "Reserved";
 
-            mobileOrder.MobileDevice.SimCardId = simCard.Id;
+            mobileOrder.MobileDevice!.SimCardId = simCard.Id;
             mobileOrder.MobileDevice.SimCard = simCard;
             mobileOrder.Status = "Deliver device";
 
             await _context.SaveChangesAsync();
+            return mobileOrder;
+        }
+
+        public async Task<MobileOrder> DeliverOrderAsync(MobileOrder mobileOrder)
+        {
+            mobileOrder.Status = "Delivered";
+            mobileOrder.MobileDevice!.Status = "Deployed";
+            mobileOrder.MobileDevice.StatusReason = "Productive";
+            mobileOrder.MobileDevice.UserId = mobileOrder.Customer.Id;
+            mobileOrder.MobileDevice.User = mobileOrder.Customer;
+            mobileOrder.MobileDevice.SimCard!.Status = "Deployed";
+
+            await _context.SaveChangesAsync();
+
             return mobileOrder;
         }
 
@@ -83,24 +97,7 @@ namespace ThesisApi.Repositories
 
         /*
 
-        public async Task<MobileOrder?> DeliverOrderAsync(int id)
-        {
-            var order = await _context.MobileOrders
-                .Include(x => x.MobileDevice)
-                .ThenInclude(x => x.SimCard)
-                .FirstOrDefaultAsync(x => x.Id == id);
-            if (order == null) return null;
-
-            if (order.MobileDevice == null) return null;
-
-            order.Status = "Delivered";
-            order.MobileDevice.Status = "Deployed";
-            order.MobileDevice.StatusReason = "Productive";
-            order.MobileDevice.UserId = order.Customer.Id;
-            order.MobileDevice.SimCard.Status = "Deployed";
-            await _context.SaveChangesAsync();
-            return order;
-        }
+        
 
         public async Task<bool> UpdateAsync(MobileOrder order)
         {
