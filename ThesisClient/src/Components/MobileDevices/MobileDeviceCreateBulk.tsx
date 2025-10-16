@@ -3,20 +3,14 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { GetMobileDeviceCategories } from "../../Services/MobileDeviceServices";
-import type { MobileDeviceCategory } from "../../Services/MobileDeviceServices";
-
-interface CreateMobileDeviceRequest {
-  hostname: string;
-  mobileDeviceCategoryId: number;
-  imeiNumber: string;
-  serialNumber: string;
-  iosVersion: string;
-  createdBy: string;
-}
+import type {
+  CreateMobileDeviceRequest,
+  MobileDeviceCategoryResponse,
+} from "../../Types/MobileTypes";
 
 export default function MobileDeviceCreateBulk() {
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
-    MobileDeviceCategory[]
+    MobileDeviceCategoryResponse[]
   >([]);
   const [deviceCount, setDeviceCount] = useState<number>(1);
   const [devices, setDevices] = useState<CreateMobileDeviceRequest[]>([]);
@@ -38,8 +32,6 @@ export default function MobileDeviceCreateBulk() {
         mobileDeviceCategoryId: 0,
         imeiNumber: "",
         serialNumber: "",
-        iosVersion: "",
-        createdBy: "",
       }))
     );
   }, [deviceCount]);
@@ -64,10 +56,7 @@ export default function MobileDeviceCreateBulk() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "http://localhost:5268/api/mobile-devices/create-bulk",
-        devices
-      );
+      await axios.post("http://localhost:5268/mobile-devices/bulk", devices);
       toast.success("Mobile devices created successfully!");
       navigate("/mobiles");
     } catch (err) {
@@ -105,8 +94,6 @@ export default function MobileDeviceCreateBulk() {
                   <th>Category</th>
                   <th>IMEI Number</th>
                   <th>Serial Number</th>
-                  <th>iOS Version</th>
-                  <th>Created By</th>
                 </tr>
               </thead>
               <tbody>
@@ -164,40 +151,18 @@ export default function MobileDeviceCreateBulk() {
                         required
                       />
                     </td>
-                    <td>
-                      <input
-                        type="text"
-                        name="iosVersion"
-                        className="form-control"
-                        placeholder="18.6.2"
-                        value={dev.iosVersion}
-                        onChange={(e) => handleDeviceChange(idx, e)}
-                        required
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name="createdBy"
-                        className="form-control"
-                        placeholder="Username"
-                        value={dev.createdBy}
-                        onChange={(e) => handleDeviceChange(idx, e)}
-                        required
-                      />
-                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <div className="d-flex flex-wrap justify-content-between align-items-center mt-4">
-            <button type="submit" className="btn btn-success mb-2 mb-md-0">
-              Submit All
-            </button>
-            <Link to="/mobiles" className="btn btn-primary ms-md-3">
+          <div className="d-flex flex-wrap">
+            <Link to="/mobiles" className="btn btn-primary me-2">
               Back
             </Link>
+            <button type="submit" className="btn btn-success">
+              Submit
+            </button>
           </div>
         </form>
       </div>
