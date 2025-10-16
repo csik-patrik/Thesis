@@ -70,8 +70,11 @@ function MobileOrderView() {
     setAllocating(deviceId);
     try {
       await axios.put(
-        `http://localhost:5268/mobile-orders/allocate/${id}`,
-        deviceId.toString(), // send as string
+        `http://localhost:5268/mobile-orders/allocate/device/`,
+        {
+          orderId: id,
+          mobileDeviceId: deviceId,
+        },
         { headers: { "Content-Type": "application/json" } }
       );
       toast.success("Device allocated successfully!");
@@ -84,8 +87,6 @@ function MobileOrderView() {
     } catch (err) {
       toast.error("Failed to allocate device.");
       console.error("Allocation error:", err);
-    } finally {
-      setAllocating(null);
     }
   };
 
@@ -293,14 +294,15 @@ function MobileOrderView() {
                           className="list-group-item d-flex flex-column"
                         >
                           <strong>{sim.phoneNumber}</strong>
-                          <span>Department: {sim.department}</span>
                           <span>
-                            Call Control Group: {sim.callControlGroup}
+                            Call Control Group: {sim.simCallControlGroup.name}
                           </span>
                           <span>
-                            Data Enabled: {sim.isDataEnabled ? "Yes" : "No"}
+                            Data Enabled:{" "}
+                            {sim.simCallControlGroup.isDataEnabled
+                              ? "Yes"
+                              : "No"}
                           </span>
-                          <span>Type: {sim.type}</span>
                           <span>Status: {sim.status}</span>
                           <button
                             className="btn btn-success btn-sm mt-2 align-self-end"
