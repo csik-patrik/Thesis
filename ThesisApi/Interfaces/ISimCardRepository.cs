@@ -8,7 +8,7 @@ namespace ThesisApi.Interfaces
         Task<SimCard> AddAsync(SimCard simCard);
         Task<IEnumerable<SimCard>> GetAllAsync();
         Task<SimCard?> GetByIdAsync(int id);
-        Task<IEnumerable<SimCard>> GetAllForAllocationAsync(int mobileOrderId);
+        Task<IEnumerable<SimCard>> GetAllForAllocationAsync(int simCallControlGroupId);
         Task<bool> DeleteAsync(int id);
     }
 }

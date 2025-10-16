@@ -72,19 +72,24 @@ namespace ThesisApi.Controllers
             }
         }
 
-        /*[HttpGet(ApiEndpoints.SimCards.GetAllForAllocation)]
-        public async Task<IActionResult> GetAllForAllocation([FromRoute] int orderId)
+        [HttpGet("/sim-cards/allocation/{simCallControlGroupId:int}")]
+        public async Task<IActionResult> GetAllForAllocation([FromRoute] int simCallControlGroupId)
         {
             try
             {
-                var simCards = await _simCardRepository.GetAllForAllocationAsync(orderId);
-                return Ok(simCards);
+                var simCards = await _simCardRepository.GetAllForAllocationAsync(simCallControlGroupId);
+
+                var response = simCards.Select(_mapper.Map<SimCardResponse>).ToList();
+
+                return Ok(response);
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
         }
+
+        /*
 
         [HttpDelete("/sim-cards/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)

@@ -33,16 +33,15 @@ namespace ThesisApi.Repositories
             return await _context.SimCards.Include(x => x.SimCallControlGroup).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<SimCard>> GetAllForAllocationAsync(int mobileOrderId)
+        public async Task<IEnumerable<SimCard>> GetAllForAllocationAsync(int simCallControlGroupId)
         {
-            var mobileOrder = await _context.MobileOrders.FirstOrDefaultAsync(x => x.Id == mobileOrderId);
-            if (mobileOrder == null)
-                throw new ArgumentException("Invalid mobile order ID!");
+            var simCallControlGroup = await _context.SimCallControlGroups.FirstOrDefaultAsync(x => x.Id == simCallControlGroupId);
 
+            if (simCallControlGroup == null)
+                throw new Exception("Sim call control group not found!");
 
             return await _context.SimCards
-                .Where(x => x.Status == availableForAllocationStatus
-                        && x.SimCallControlGroup.Id == mobileOrder.SimCallControlGroup.Id)
+                .Where(x => x.Status == availableForAllocationStatus && x.SimCallControlGroup.Id == simCallControlGroup.Id)
                 .ToListAsync();
         }
         public async Task<bool> DeleteAsync(int id)
