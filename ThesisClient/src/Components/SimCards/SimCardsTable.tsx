@@ -2,30 +2,21 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
-interface SimCard {
-  id: number;
-  phoneNumber: string;
-  department: string;
-  callControlGroup: string;
-  isDataEnabled: boolean;
-  type: string;
-  status: string;
-}
+import type { SimCardResponse } from "../../Types/MobileTypes";
 
 function SimCardsTable() {
-  const [data, setData] = useState<SimCard[]>([]);
+  const [data, setData] = useState<SimCardResponse[]>([]);
   useEffect(() => {
     axios
-      .get<SimCard[]>("http://localhost:5268/api/sim-cards")
+      .get<SimCardResponse[]>("http://localhost:5268/sim-cards")
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:5268/api/sim-cards/${id}`);
-      setData((prev) => prev.filter((item) => item.id !== id)); // update table
+      await axios.delete(`http://localhost:5268/sim-cards/${id}`);
+      setData((prev) => prev.filter((item) => item.id !== id));
       toast.success("Sim card deleted successfully!");
     } catch (err) {
       console.error("Error deleting sim card:", err);
@@ -44,10 +35,8 @@ function SimCardsTable() {
             <tr>
               <th scope="col">Id</th>
               <th scope="col">PhoneNumber</th>
-              <th scope="col">Department</th>
               <th scope="col">CallControlGroup</th>
               <th scope="col">IsDataEnabled</th>
-              <th scope="col">Type</th>
               <th scope="col">Status</th>
               <th scope="col">Actions</th>
             </tr>
@@ -57,10 +46,10 @@ function SimCardsTable() {
               <tr key={d.id}>
                 <td scope="row">{d.id}</td>
                 <td>{d.phoneNumber}</td>
-                <td>{d.department}</td>
-                <td>{d.callControlGroup}</td>
-                <td>{d.isDataEnabled ? "True" : "False"}</td>
-                <td>{d.type}</td>
+                <td>{d.simCallControlGroup.name}</td>
+                <td>
+                  {d.simCallControlGroup.isDataEnabled ? "True" : "False"}
+                </td>
                 <td>{d.status}</td>
                 <td>
                   <button className="btn btn-sm btn-primary me-2">View</button>
