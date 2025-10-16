@@ -54,3 +54,8 @@ export interface CreateMobileDeviceRequest {
   imeiNumber: string;
   serialNumber: string;
 }
+
+export interface CreateSimCardRequest {
+  phoneNumber: string;
+  simCallControlGroupId: number;
+}

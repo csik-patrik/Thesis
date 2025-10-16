@@ -5,24 +5,12 @@ import Form from "../Form/Form";
 import Input from "../Form/Input";
 import Select from "../Form/Select";
 import { toast } from "react-toastify";
-
-interface CreateSimCardRequest {
-  phoneNumber: string;
-  department: string;
-  callControlGroup: string;
-  isDataEnabled: boolean;
-  type: string;
-  createdBy: string;
-}
+import type { CreateSimCardRequest } from "../../Types/MobileTypes";
 
 function SimCardsCreate() {
   const [formData, setFormData] = useState<CreateSimCardRequest>({
     phoneNumber: "",
-    department: "",
-    callControlGroup: "SPECIAL F",
-    isDataEnabled: false,
-    type: "Voice",
-    createdBy: "",
+    simCallControlGroupId: 0,
   });
 
   const navigate = useNavigate();
@@ -66,50 +54,14 @@ function SimCardsCreate() {
           value={formData.phoneNumber}
           handleChange={handleChange}
         />
-        <Input
-          title="Department:"
-          fieldName="department"
-          placeHolder="BD/SLE-EET3"
-          type="text"
-          value={formData.department}
-          handleChange={handleChange}
-        />
         <Select
           title="Call control group:"
           fieldName="callControlGroup"
-          value={formData.callControlGroup}
+          value={formData.simCallControlGroupId}
           options={[
             { label: "SPECIAL F", value: "SPECIAL F" },
             { label: "MIX 10", value: "MIX 10" },
           ]}
-          handleChange={handleChange}
-        />
-        <Select
-          title="Data enabled:"
-          fieldName="isDataEnabled"
-          value={formData.isDataEnabled ? "true" : "false"}
-          options={[
-            { label: "True", value: "true" },
-            { label: "False", value: "false" },
-          ]}
-          handleChange={handleChange}
-        />
-        <Select
-          title="Type:"
-          fieldName="type"
-          value={formData.type}
-          options={[
-            { label: "Voice", value: "Voice" },
-            { label: "Data", value: "Data" },
-          ]}
-          handleChange={handleChange}
-        />
-        <Input
-          title="Created by:"
-          fieldName="createdBy"
-          placeHolder="CSP8HTV"
-          type="text"
-          value={formData.createdBy}
           handleChange={handleChange}
         />
         <Link to="/sim-cards" className="btn btn-primary">
