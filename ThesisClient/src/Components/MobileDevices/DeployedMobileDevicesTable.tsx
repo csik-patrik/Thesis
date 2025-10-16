@@ -3,7 +3,7 @@ import axios from "axios";
 import type {
   SimCardResponse,
   MobileDeviceResponse,
-} from "../../Types/MobileOrderResponse";
+} from "../../Types/MobileTypes";
 
 export default function DeployedMobileDevicesTable() {
   const [data, setData] = useState<MobileDeviceResponse[]>([]);

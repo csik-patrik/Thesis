@@ -2,35 +2,24 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 
-interface MobileDevice {
-  id: number;
-  hostname: string;
-  mobileDeviceCategory: string;
-  imeiNumber: string;
-  serialNumber: string;
-  iosVersion: string;
-  batteryStatus: string;
-  deviceStatus: string;
-  deviceStatusReason: string;
-}
-
-function MobileDevicesTable() {
-  const [data, setData] = useState<MobileDevice[]>([]);
+export default function MobileDevicesTable() {
+  const [data, setData] = useState<MobileDeviceResponse[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [statusReasonFilter, setStatusReasonFilter] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
 
   useEffect(() => {
     axios
-      .get<MobileDevice[]>("http://localhost:5268/api/mobile-devices")
+      .get<MobileDeviceResponse[]>("http://localhost:5268/mobile-devices")
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:5268/api/mobile-devices/${id}`);
+      await axios.delete(`http://localhost:5268/mobile-devices/${id}`);
       setData((prev) => prev.filter((item) => item.id !== id)); // update table
       toast.success("Mobile deleted successfully!");
     } catch (err) {
@@ -41,25 +30,21 @@ function MobileDevicesTable() {
 
   // Get unique device categories for the filter dropdown
   const categories = Array.from(
-    new Set(data.map((device) => device.mobileDeviceCategory))
+    new Set(data.map((device) => device.mobileDeviceCategory.name))
   );
-  const statuses = Array.from(
-    new Set(data.map((device) => device.deviceStatus))
-  );
+  const statuses = Array.from(new Set(data.map((device) => device.status)));
   const statusReasons = Array.from(
-    new Set(data.map((device) => device.deviceStatusReason))
+    new Set(data.map((device) => device.statusReason))
   );
 
   // Filter data by device category, status, and status reason
   const filteredData = data.filter((device) => {
     const categoryMatch = categoryFilter
-      ? device.mobileDeviceCategory === categoryFilter
+      ? device.mobileDeviceCategory.name === categoryFilter
       : true;
-    const statusMatch = statusFilter
-      ? device.deviceStatus === statusFilter
-      : true;
+    const statusMatch = statusFilter ? device.status === statusFilter : true;
     const reasonMatch = statusReasonFilter
-      ? device.deviceStatusReason === statusReasonFilter
+      ? device.statusReason === statusReasonFilter
       : true;
     return categoryMatch && statusMatch && reasonMatch;
   });
@@ -98,8 +83,6 @@ function MobileDevicesTable() {
                 </th>
                 <th scope="col">Imei number</th>
                 <th scope="col">Serial number</th>
-                <th scope="col">IOs version</th>
-                <th scope="col">Battery status</th>
                 <th scope="col">
                   Status
                   <select
@@ -140,13 +123,11 @@ function MobileDevicesTable() {
                 <tr key={d.id}>
                   <td scope="row">{d.id}</td>
                   <td>{d.hostname}</td>
-                  <td>{d.mobileDeviceCategory}</td>
+                  <td>{d.mobileDeviceCategory.name}</td>
                   <td>{d.imeiNumber}</td>
                   <td>{d.serialNumber}</td>
-                  <td>{d.iosVersion}</td>
-                  <td>{d.batteryStatus}</td>
-                  <td>{d.deviceStatus}</td>
-                  <td>{d.deviceStatusReason}</td>
+                  <td>{d.status}</td>
+                  <td>{d.statusReason}</td>
                   <td>
                     <button
                       className="btn btn-danger btn-sm text-light"
@@ -164,5 +145,3 @@ function MobileDevicesTable() {
     </div>
   );
 }
-
-export default MobileDevicesTable;

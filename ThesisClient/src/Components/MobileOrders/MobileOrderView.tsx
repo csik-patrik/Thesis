@@ -6,7 +6,7 @@ import type {
   MobileOrderResponse,
   MobileDeviceResponse,
   SimCardResponse,
-} from "../../Types/MobileOrderResponse";
+} from "../../Types/MobileTypes";
 
 function MobileOrderView() {
   const { id } = useParams<{ id: string }>();
