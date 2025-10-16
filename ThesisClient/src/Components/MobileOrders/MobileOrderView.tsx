@@ -57,7 +57,7 @@ function MobileOrderView() {
     if (!order || !order.mobileDevice || order.mobileDevice.simCard) return;
     axios
       .get<SimCardResponse[]>(
-        `http://localhost:5268/sim-cards/for-allocation/${order.id}`
+        `http://localhost:5268/sim-cards/allocation/${order.simCallControlGroup.id}`
       )
       .then((res) => setSimCards(res.data))
       .catch((err) => {
@@ -94,8 +94,11 @@ function MobileOrderView() {
     setAllocatingSim(simCardId);
     try {
       await axios.put(
-        `http://localhost:5268/mobile-orders/allocate-sim/${id}`,
-        simCardId.toString(),
+        `http://localhost:5268/mobile-orders/allocate/sim-card`,
+        {
+          orderId: id,
+          simCardId: simCardId,
+        },
         { headers: { "Content-Type": "application/json" } }
       );
       toast.success("Sim card allocated successfully!");
