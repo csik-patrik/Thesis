@@ -172,6 +172,18 @@ function MobileOrderView() {
               <dd>{order.status}</dd>
             </dl>
           </div>
+          <div className="mt-3 mb-2">
+            <Link to="/mobile-orders" className="btn btn-primary me-2">
+              Back to Orders
+            </Link>
+            {order.mobileDevice !== null &&
+              order.mobileDevice.simCard !== null &&
+              order.status !== "Delivered" && (
+                <button className="btn btn-success" onClick={handleDeliver}>
+                  Deliver Device
+                </button>
+              )}
+          </div>
         </div>
         {/* Allocated Device or Allocation Section */}
         <div className="col-md-4">
@@ -194,14 +206,6 @@ function MobileOrderView() {
                     <strong>Serial:</strong> {order.mobileDevice.serialNumber}
                   </li>
                 </ul>
-                {order.status !== "Delivered" && (
-                  <button
-                    className="btn btn-success mt-3"
-                    onClick={handleDeliver}
-                  >
-                    Deliver Device
-                  </button>
-                )}
               </div>
             </>
           ) : (
@@ -269,10 +273,6 @@ function MobileOrderView() {
                         ? "Yes"
                         : "No"}
                     </li>
-                    <li className="list-group-item">
-                      <strong>Status:</strong>{" "}
-                      {order.mobileDevice.simCard.status}
-                    </li>
                   </ul>
                 </div>
               </>
@@ -323,11 +323,6 @@ function MobileOrderView() {
                 </div>
               </>
             ))}
-          <div className="mt-3 mb-2">
-            <Link to="/mobile-orders" className="btn btn-primary mb-2">
-              Back to Orders
-            </Link>
-          </div>
         </div>
       </div>
     </div>
