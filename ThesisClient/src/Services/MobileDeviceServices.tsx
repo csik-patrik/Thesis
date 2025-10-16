@@ -1,12 +1,8 @@
 import axios from "axios";
-
-export interface MobileDeviceCategory {
-  id: number;
-  name: string;
-}
+import type { MobileDeviceCategoryResponse } from "../Types/MobileTypes";
 
 export function GetMobileDeviceCategories() {
-  return axios.get<MobileDeviceCategory[]>(
-    "http://localhost:5268/api/mobile-devices/categories"
+  return axios.get<MobileDeviceCategoryResponse[]>(
+    "http://localhost:5268/MobileDeviceCategory/mobile-device-categories"
   );
 }

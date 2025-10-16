@@ -7,7 +7,7 @@ interface UserOrderResponse {
   costCenter: string;
 }
 
-interface MobileDeviceCategoryResponse {
+export interface MobileDeviceCategoryResponse {
   id: number;
   name: string;
 }
@@ -46,4 +46,11 @@ export interface MobileOrderResponse {
   mobileDevice: MobileDeviceResponse;
   note: string;
   status: string;
+}
+
+export interface CreateMobileDeviceRequest {
+  hostname: string;
+  mobileDeviceCategoryId: number;
+  imeiNumber: string;
+  serialNumber: string;
 }

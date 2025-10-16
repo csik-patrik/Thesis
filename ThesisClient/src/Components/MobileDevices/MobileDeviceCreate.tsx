@@ -3,20 +3,14 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { GetMobileDeviceCategories } from "../../Services/MobileDeviceServices";
-import type { MobileDeviceCategory } from "../../Services/MobileDeviceServices";
-
-interface CreateMobileDeviceRequest {
-  hostname: string;
-  mobileDeviceCategoryId: number;
-  imeiNumber: string;
-  serialNumber: string;
-  iosVersion: string;
-  createdBy: string;
-}
+import type {
+  CreateMobileDeviceRequest,
+  MobileDeviceCategoryResponse,
+} from "../../Types/MobileTypes";
 
 function MobileDeviceCreate() {
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
-    MobileDeviceCategory[]
+    MobileDeviceCategoryResponse[]
   >([]);
 
   useEffect(() => {
@@ -34,8 +28,6 @@ function MobileDeviceCreate() {
     mobileDeviceCategoryId: 0,
     imeiNumber: "",
     serialNumber: "",
-    iosVersion: "",
-    createdBy: "",
   });
 
   const navigate = useNavigate();
@@ -54,7 +46,7 @@ function MobileDeviceCreate() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5268/api/mobile-devices", formData);
+      await axios.post("http://localhost:5268/mobile-devices", formData);
       toast.success("Mobile device created successfully!");
       navigate("/mobiles");
     } catch (err) {
@@ -135,43 +127,13 @@ function MobileDeviceCreate() {
               required
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="iosVersion" className="form-label">
-              iOS Version
-            </label>
-            <input
-              type="text"
-              name="iosVersion"
-              id="iosVersion"
-              className="form-control"
-              placeholder="18.6.2"
-              value={formData.iosVersion}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="createdBy" className="form-label">
-              Created By
-            </label>
-            <input
-              type="text"
-              name="createdBy"
-              id="createdBy"
-              className="form-control"
-              placeholder="Username"
-              value={formData.createdBy}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="d-flex flex-wrap justify-content-between align-items-center mt-4">
-            <button type="submit" className="btn btn-success mb-2 mb-md-0">
-              Submit
-            </button>
-            <Link to="/mobiles" className="btn btn-primary ms-md-3">
+          <div className="d-flex flex-wrap">
+            <Link to="/mobiles" className="btn btn-primary me-2">
               Back
             </Link>
+            <button type="submit" className="btn btn-success ">
+              Submit
+            </button>
           </div>
         </form>
       </div>
