@@ -135,6 +135,30 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpGet("/mobile-devices/my-devices")]
+        public async Task<IActionResult> GetMyDevices()
+        {
+            try
+            {
+                var username = User.FindFirst("username")?.Value;
+
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("User is not logged in.");
+                }
+
+                var mobiles = await _mobileDeviceRepository.GetAllByUserAsync(username);
+
+                var response = mobiles.Select(_mapper.Map<MobileDeviceResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete("/mobile-devices/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {

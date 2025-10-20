@@ -10,7 +10,7 @@ namespace ThesisApi.Interfaces
         Task<MobileDevice?> GetByIdAsync(int id);
         Task<IEnumerable<MobileDevice>> GetAllForAllocationAsync(int mobileDeviceCategoryId);
         Task<IEnumerable<MobileDevice>> GetAllDeployedAsync();
-        Task<IEnumerable<MobileDeviceCategory>> GetMobileDeviceCategoriesAsync();
+        Task<IEnumerable<MobileDevice>> GetAllByUserAsync(string username);
         Task<bool> DeleteAsync(int id);
         //Task<bool> UpdateAsync(MobileDevice mobileDevice);
     }

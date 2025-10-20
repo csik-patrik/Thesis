@@ -79,9 +79,12 @@ namespace ThesisApi.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<MobileDeviceCategory>> GetMobileDeviceCategoriesAsync()
+        public async Task<IEnumerable<MobileDevice>> GetAllByUserAsync(string username)
         {
-            return await _context.MobileDeviceCategories.ToListAsync();
+            return await _context.MobileDevices
+                .Include(x => x.User)
+                .Where(x => x.User.Username == username)
+                .ToListAsync();
         }
 
         public async Task<bool> DeleteAsync(int id)
