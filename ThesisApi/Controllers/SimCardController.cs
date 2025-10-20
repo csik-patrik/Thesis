@@ -89,16 +89,25 @@ namespace ThesisApi.Controllers
             }
         }
 
-        /*
-
         [HttpDelete("/sim-cards/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var result = await _simCardRepository.DeleteAsync(id);
+            try
+            {
+                var simCard = await _simCardRepository.GetByIdAsync(id);
 
-            if (!result)
-                return NotFound();
-            return Ok();
-        }*/
+                if (simCard == null)
+                    return NotFound("Sim card is not found!");
+
+                await _simCardRepository.DeleteAsync(simCard);
+
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

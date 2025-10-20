@@ -44,16 +44,13 @@ namespace ThesisApi.Repositories
                 .Where(x => x.Status == availableForAllocationStatus && x.SimCallControlGroup.Id == simCallControlGroup.Id)
                 .ToListAsync();
         }
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(SimCard simCard)
         {
-            var simCard = await _context.SimCards.FirstOrDefaultAsync(x => x.Id == id);
-            if (simCard != null)
-            {
-                _context.SimCards.Remove(simCard);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
+            _context.SimCards.Remove(simCard);
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

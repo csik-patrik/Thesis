@@ -1,4 +1,3 @@
-using ThesisApi.Contracts.Requests.SimCards;
 using ThesisApi.Models;
 
 namespace ThesisApi.Interfaces
@@ -9,6 +8,6 @@ namespace ThesisApi.Interfaces
         Task<IEnumerable<SimCard>> GetAllAsync();
         Task<SimCard?> GetByIdAsync(int id);
         Task<IEnumerable<SimCard>> GetAllForAllocationAsync(int simCallControlGroupId);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(SimCard simCard);
     }
 }
