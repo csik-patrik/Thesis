@@ -22,7 +22,7 @@ namespace ThesisApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("mobile-device-categories")]
+        [HttpPost("/mobile-device-categories")]
         public async Task<IActionResult> Create(CreateMobileDeviceCategoryRequest request)
         {
             try
@@ -39,7 +39,7 @@ namespace ThesisApi.Controllers
             }
         }
 
-        [HttpGet("mobile-device-categories")]
+        [HttpGet("/mobile-device-categories")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -56,7 +56,7 @@ namespace ThesisApi.Controllers
             }
         }
 
-        [HttpGet("mobile-device-categories/{id:int}")]
+        [HttpGet("/mobile-device-categories/{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             try

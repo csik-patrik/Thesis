@@ -1,33 +1,22 @@
 import { useEffect, useState } from "react";
-import type { MobileDeviceCategory } from "../../Types/MobileDeviceCategory";
-import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import type { MobileDeviceCategoryResponse } from "../../Types/MobileTypes";
+import { GetMobileDeviceCategories } from "../../Services/MobileDeviceServices";
 
 export default function MobileDeviceCategoryTable() {
-  const [data, setData] = useState<MobileDeviceCategory[]>([]);
+  const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
+    MobileDeviceCategoryResponse[]
+  >([]);
 
   useEffect(() => {
-    axios
-      .get<MobileDeviceCategory[]>(
-        "http://localhost:5268/api/admin/mobile-device-categories"
-      )
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+    GetMobileDeviceCategories()
+      .then((response) => setMobileDeviceCategories(response.data))
+      .catch((error) => {
+        toast.error("Error fetching categories");
+        console.error("Error fetching categories:", error);
+      });
   }, []);
-
-  const handleDelete = async (id: number) => {
-    try {
-      await axios.delete(
-        `http://localhost:5268/api/admin/mobile-device-categories/${id}`
-      );
-      setData((prev) => prev.filter((item) => item.id !== id));
-      toast.success("Category deleted successfully!");
-    } catch (err) {
-      console.error("Error deleting category:", err);
-      alert("Failed to delete category.");
-    }
-  };
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center bd-light">
@@ -48,7 +37,7 @@ export default function MobileDeviceCategoryTable() {
             </tr>
           </thead>
           <tbody>
-            {data.map((d) => (
+            {mobileDeviceCategories.map((d) => (
               <tr key={d.id}>
                 <td scope="row">{d.id}</td>
                 <td>{d.name}</td>
@@ -59,12 +48,6 @@ export default function MobileDeviceCategoryTable() {
                   >
                     Edit
                   </Link>
-                  <button
-                    className="btn btn-danger btn-sm text-light"
-                    onClick={() => handleDelete(d.id)}
-                  >
-                    Delete
-                  </button>
                 </td>
               </tr>
             ))}

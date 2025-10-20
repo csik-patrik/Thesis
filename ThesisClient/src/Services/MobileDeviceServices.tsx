@@ -6,7 +6,7 @@ import type {
 
 export function GetMobileDeviceCategories() {
   return axios.get<MobileDeviceCategoryResponse[]>(
-    "http://localhost:5268/MobileDeviceCategory/mobile-device-categories"
+    "http://localhost:5268/mobile-device-categories"
   );
 }
 

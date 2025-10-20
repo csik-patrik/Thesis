@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { GetMobileDeviceCategories } from "../../Services/MobileDeviceServices";
-import type { MobileDeviceCategory } from "../../Services/MobileDeviceServices";
+import type { MobileDeviceCategoryResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
 
 interface CreateMobileOrderRequest {
@@ -22,7 +22,7 @@ interface CreateMobileOrderRequest {
 function MobileOrdersCreate() {
   const { user } = useAuth();
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
-    MobileDeviceCategory[]
+    MobileDeviceCategoryResponse[]
   >([]);
   const [formData, setFormData] = useState<CreateMobileOrderRequest>({
     requesterName: "",
