@@ -40,13 +40,13 @@ namespace ThesisApi.Controllers
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null)
-                return Unauthorized("Invalid email or password.");
+                return Unauthorized("Invalid email!");
 
             var passwordHasher = new PasswordHasher<User>();
             var result = passwordHasher.VerifyHashedPassword(user, user.Password, request.Password);
 
             if (result == PasswordVerificationResult.Failed)
-                return Unauthorized("Invalid email or password.");
+                return Unauthorized("Invalid password!");
 
             var newTokenRequest = _mapper.Map<NewTokenRequest>(user);
 
@@ -82,6 +82,10 @@ namespace ThesisApi.Controllers
                 if (!roles.Any())
                     return BadRequest("User roles are not valid!");
 
+                var passwordHasher = new PasswordHasher<User>();
+
+
+
                 var user = new User()
                 {
                     Username = request.Username,
@@ -92,6 +96,8 @@ namespace ThesisApi.Controllers
                     CostCenter = request.CostCenter,
                     UserRoles = roles.ToList()
                 };
+
+                user.Password = passwordHasher.HashPassword(user, user.Password);
 
                 await _userRepository.CreateAsync(user);
 
