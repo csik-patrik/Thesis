@@ -50,7 +50,9 @@ export default function NavBar() {
             {user ? (
               <>
                 <li className="nav-item me-2">
-                  <span className="navbar-text">{user.displayname}</span>
+                  <DropDown title={user.displayname!}>
+                    <NavItem title="My mobiles" to="/mobiles/my-mobiles" />
+                  </DropDown>
                 </li>
                 <li className="nav-item">
                   <button
