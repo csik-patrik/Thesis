@@ -1,8 +1,17 @@
 import axios from "axios";
-import type { MobileDeviceCategoryResponse } from "../Types/MobileTypes";
+import type {
+  MobileDeviceCategoryResponse,
+  SimCallControlGroupResponse,
+} from "../Types/MobileTypes";
 
 export function GetMobileDeviceCategories() {
   return axios.get<MobileDeviceCategoryResponse[]>(
     "http://localhost:5268/MobileDeviceCategory/mobile-device-categories"
+  );
+}
+
+export function GetSimCallControlGroups() {
+  return axios.get<SimCallControlGroupResponse[]>(
+    "http://localhost:5268/sim-call-control-groups"
   );
 }

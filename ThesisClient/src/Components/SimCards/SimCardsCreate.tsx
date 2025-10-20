@@ -1,13 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Form from "../Form/Form";
 import Input from "../Form/Input";
 import Select from "../Form/Select";
 import { toast } from "react-toastify";
-import type { CreateSimCardRequest } from "../../Types/MobileTypes";
+import type {
+  CreateSimCardRequest,
+  SimCallControlGroupResponse,
+} from "../../Types/MobileTypes";
+import { GetSimCallControlGroups } from "../../Services/MobileDeviceServices";
 
 function SimCardsCreate() {
+  const [simCallControlGroups, setSimCallControlGroups] = useState<
+    SimCallControlGroupResponse[]
+  >([]);
+
+  useEffect(() => {
+    GetSimCallControlGroups()
+      .then((response) => setSimCallControlGroups(response.data))
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+
   const [formData, setFormData] = useState<CreateSimCardRequest>({
     phoneNumber: "",
     simCallControlGroupId: 0,
@@ -25,6 +41,8 @@ function SimCardsCreate() {
       [name]:
         name === "isDataEnabled"
           ? value === "true" // convert dropdown string -> boolean
+          : name === "simCallControlGroupId"
+          ? Number(value) // convert select id string -> number
           : value,
     }));
   };
@@ -33,7 +51,7 @@ function SimCardsCreate() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5268/api/sim-cards", formData);
+      await axios.post("http://localhost:5268/sim-cards", formData);
       toast.success("Sim card created successfully!");
       navigate("/sim-cards");
     } catch (err) {
@@ -56,12 +74,12 @@ function SimCardsCreate() {
         />
         <Select
           title="Call control group:"
-          fieldName="callControlGroup"
+          fieldName="simCallControlGroupId"
           value={formData.simCallControlGroupId}
-          options={[
-            { label: "SPECIAL F", value: "SPECIAL F" },
-            { label: "MIX 10", value: "MIX 10" },
-          ]}
+          options={simCallControlGroups.map((g) => ({
+            label: g.name,
+            value: String(g.id),
+          }))}
           handleChange={handleChange}
         />
         <Link to="/sim-cards" className="btn btn-primary">

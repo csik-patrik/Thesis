@@ -12,7 +12,7 @@ export interface MobileDeviceCategoryResponse {
   name: string;
 }
 
-interface SimCallControlGroupResponse {
+export interface SimCallControlGroupResponse {
   id: number;
   name: string;
   isDataEnabled: boolean;
