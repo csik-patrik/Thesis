@@ -22,10 +22,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "http://localhost:5268/api/users/login",
-        formData
-      );
+      const res = await axios.post("http://localhost:5268/login", formData);
 
       // assuming your backend returns { id, email, name, token }
       login(res.data);
