@@ -7,6 +7,10 @@ interface UserOrderResponse {
   costCenter: string;
 }
 
+export interface CreateMobileDeviceCategoryRequest {
+  name: string;
+}
+
 export interface MobileDeviceCategoryResponse {
   id: number;
   name: string;

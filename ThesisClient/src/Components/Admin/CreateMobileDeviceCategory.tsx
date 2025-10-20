@@ -4,13 +4,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Form from "../Form/Form";
 import Input from "../Form/Input";
-
-interface CreateMobileDeviceCategory {
-  name: string;
-}
+import type { CreateMobileDeviceCategoryRequest } from "../../Types/MobileTypes";
 
 export default function CreateMobileDeviceCategory() {
-  const [formData, setFormData] = useState<CreateMobileDeviceCategory>({
+  const [formData, setFormData] = useState<CreateMobileDeviceCategoryRequest>({
     name: "",
   });
 
@@ -32,8 +29,8 @@ export default function CreateMobileDeviceCategory() {
 
     try {
       await axios.post(
-        "http://localhost:5268/api/admin/mobile-device-categories",
-        JSON.stringify(formData.name),
+        "http://localhost:5268/mobile-device-categories",
+        { name: formData.name },
         { headers: { "Content-Type": "application/json" } }
       );
       toast.success("Category created successfully!");
@@ -55,7 +52,7 @@ export default function CreateMobileDeviceCategory() {
         handleChange={handleChange}
       />
       <Link
-        to="/api/admin/mobile-device-categories"
+        to="/admin/mobile-device-categories"
         className="btn btn-primary me-2"
       >
         Back
