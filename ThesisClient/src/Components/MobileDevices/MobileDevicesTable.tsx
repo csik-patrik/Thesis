@@ -16,8 +16,8 @@ export default function MobileDevicesTable() {
   console.log(user);
 
   useEffect(() => {
-    if (!user) return; // ⛔ no user yet — skip until restored
-    if (!user.token) return; // ⛔ user exists but missing token
+    if (!user) return;
+    if (!user.token) return;
 
     const fetchDevices = async () => {
       try {
@@ -37,9 +37,14 @@ export default function MobileDevicesTable() {
   }, [user]);
 
   const handleDelete = async (id: number) => {
+    if (!user) return;
+    if (!user.token) return;
+
     try {
-      await axios.delete(`http://localhost:5268/mobile-devices/${id}`);
-      setData((prev) => prev.filter((item) => item.id !== id)); // update table
+      await axios.delete(`http://localhost:5268/mobile-devices/${id}`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      setData((prev) => prev.filter((item) => item.id !== id));
       toast.success("Mobile deleted successfully!");
     } catch (err) {
       console.error("Error deleting mobile device:", err);
