@@ -5,28 +5,17 @@ import { toast } from "react-toastify";
 import Form from "../Form/Form";
 import Input from "../Form/Input";
 import SelectMultiple from "../Form/SelectMultiple";
-
-interface UserRole {
-  id: number;
-  name: string;
-}
-
-interface CreateUserRequest {
-  username: string;
-  displayname: string;
-  email: string;
-  password: string;
-  department: string;
-  costCenter: string;
-  userRoleIds: number[];
-}
+import type {
+  CreateUserRequest,
+  UserRoleResponse,
+} from "../../Types/UserTypes";
 
 export default function UserCreate() {
-  const [userRoles, setUserRoles] = useState<UserRole[]>([]);
+  const [userRoles, setUserRoles] = useState<UserRoleResponse[]>([]);
 
   useEffect(() => {
     axios
-      .get<UserRole[]>("http://localhost:5268/api/admin/users/roles")
+      .get<UserRoleResponse[]>("http://localhost:5268/roles")
       .then((response) => {
         setUserRoles(response.data);
       })
@@ -37,7 +26,7 @@ export default function UserCreate() {
 
   const [formData, setFormData] = useState<CreateUserRequest>({
     username: "",
-    displayname: "",
+    displayName: "",
     email: "",
     password: "",
     department: "",
@@ -64,7 +53,7 @@ export default function UserCreate() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5268/api/admin/users", formData);
+      await axios.post("http://localhost:5268/users", formData);
       toast.success("User created successfully!");
       navigate("/admin/users");
     } catch (err) {
@@ -86,10 +75,10 @@ export default function UserCreate() {
         />
         <Input
           title="Displayname:"
-          fieldName="displayname"
+          fieldName="displayName"
           placeHolder=""
           type="text"
-          value={formData.displayname}
+          value={formData.displayName}
           handleChange={handleChange}
         />
         <Input

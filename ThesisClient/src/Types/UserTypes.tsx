@@ -1,3 +1,13 @@
+export type CreateUserRequest = {
+  username: string;
+  displayName: string;
+  email: string;
+  password: string;
+  department: string;
+  costCenter: string;
+  userRoleIds: number[];
+};
+
 export type UserResponse = {
   id: number;
   username: string;
@@ -8,7 +18,7 @@ export type UserResponse = {
   userRoles: UserRoleResponse[];
 };
 
-type UserRoleResponse = {
+export type UserRoleResponse = {
   id: number;
   name: string;
 };
