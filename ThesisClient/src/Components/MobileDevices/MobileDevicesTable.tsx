@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { MobileDeviceResponse } from "../../Types/MobileTypes";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function MobileDevicesTable() {
   const [data, setData] = useState<MobileDeviceResponse[]>([]);
@@ -10,12 +11,30 @@ export default function MobileDevicesTable() {
   const [statusReasonFilter, setStatusReasonFilter] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
 
+  const { user } = useAuth();
+
+  console.log(user);
+
   useEffect(() => {
-    axios
-      .get<MobileDeviceResponse[]>("http://localhost:5268/mobile-devices")
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
-  }, []);
+    if (!user) return; // ⛔ no user yet — skip until restored
+    if (!user.token) return; // ⛔ user exists but missing token
+
+    const fetchDevices = async () => {
+      try {
+        const res = await axios.get<MobileDeviceResponse[]>(
+          "http://localhost:5268/mobile-devices/",
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
+        );
+        setData(res.data);
+      } catch (err) {
+        console.error("Failed to fetch devices:", err);
+      }
+    };
+
+    fetchDevices();
+  }, [user]);
 
   const handleDelete = async (id: number) => {
     try {

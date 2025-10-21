@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../Auth/AuthContext";
 
 export default function MyMobileDeviceTable() {
@@ -15,20 +14,15 @@ export default function MyMobileDeviceTable() {
   console.log(user);
 
   useEffect(() => {
-    // Don’t call the API until user and token are ready
-    if (!user?.token) {
-      console.warn("No token found, skipping request");
-      return;
-    }
+    if (!user) return; // ⛔ no user yet — skip until restored
+    if (!user.token) return; // ⛔ user exists but missing token
 
     const fetchDevices = async () => {
       try {
         const res = await axios.get<MobileDeviceResponse[]>(
           "http://localhost:5268/mobile-devices/my-devices",
           {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
+            headers: { Authorization: `Bearer ${user.token}` },
           }
         );
         setData(res.data);
