@@ -73,6 +73,23 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpGet("/users/{name}")]
+        public async Task<IActionResult> GetUsersByDisplayName([FromRoute] string name)
+        {
+            try
+            {
+                var users = await _userRepository.GetByDisplayNameAsync(name);
+
+                var response = users.Select(_mapper.Map<UserResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPost("/users")]
         public async Task<IActionResult> CreateUser(CreateUserRequest request)
         {

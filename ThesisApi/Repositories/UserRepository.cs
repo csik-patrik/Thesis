@@ -30,6 +30,14 @@ namespace ThesisApi.Repositories
         {
             return await _context.Users.Include(x => x.UserRoles).FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task<List<User>> GetByDisplayNameAsync(string displayName)
+        {
+            return await _context.Users
+                .Where(u => EF.Functions.Like(u.DisplayName.ToLower(), $"%{displayName.ToLower()}%"))
+                .ToListAsync();
+        }
+
         public async Task<bool> DeleteById(User user)
         {
             _context.Users.Remove(user);
