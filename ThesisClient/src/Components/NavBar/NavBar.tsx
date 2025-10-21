@@ -49,11 +49,9 @@ export default function NavBar() {
           <ul className="navbar-nav ms-auto align-items-center">
             {user ? (
               <>
-                <li className="nav-item me-2">
-                  <DropDown title={user.displayname!}>
-                    <NavItem title="My mobiles" to="/mobiles/my-mobiles" />
-                  </DropDown>
-                </li>
+                <DropDown title={user.displayname!}>
+                  <NavItem title="My mobiles" to="/mobiles/my-mobiles" />
+                </DropDown>
                 <li className="nav-item">
                   <button
                     className="btn btn-outline-danger btn-sm"

@@ -3,6 +3,8 @@ import { useAuth } from "../../Auth/AuthContext";
 
 export default function Home() {
   const { user } = useAuth();
+  const token = localStorage.getItem("user.token");
+  console.log(token);
 
   return (
     <div className="container py-5">

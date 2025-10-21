@@ -23,8 +23,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
 {
     builder.WithOrigins("http://localhost:5173", "http://localhost:5173")
-        .AllowAnyMethod()
         .AllowAnyHeader()
+        .AllowAnyMethod()
         .AllowCredentials();
 }));
 
@@ -52,6 +52,8 @@ builder.Services.AddAutoMapper(typeof(AutomapperProfiles));
 
 var app = builder.Build();
 
+app.UseCors("ApiCorsPolicy");
+
 app.UseAuthentication();  // must come before UseAuthorization
 app.UseAuthorization();
 
@@ -64,6 +66,5 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("ApiCorsPolicy");
 app.MapControllers();
 app.Run();
