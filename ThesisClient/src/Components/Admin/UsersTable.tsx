@@ -2,35 +2,21 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
-interface UserRole {
-  id: number;
-  name: string;
-}
-
-interface User {
-  id: number;
-  username: string;
-  displayName: string;
-  email: string;
-  department: string;
-  costCenter: string;
-  userRoles: UserRole[];
-}
+import type { UserResponse } from "../../Types/UserTypes";
 
 export default function Users() {
-  const [data, setData] = useState<User[]>([]);
+  const [data, setData] = useState<UserResponse[]>([]);
 
   useEffect(() => {
     axios
-      .get<User[]>("http://localhost:5268/api/admin/users")
+      .get<UserResponse[]>("http://localhost:5268/users")
       .then((res) => setData(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:5268/api/admin/users/${id}`);
+      await axios.delete(`http://localhost:5268/users/${id}`);
       setData((prev) => prev.filter((item) => item.id !== id));
       toast.success("User deleted successfully!");
     } catch (err) {

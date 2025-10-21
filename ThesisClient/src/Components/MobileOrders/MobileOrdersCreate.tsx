@@ -78,7 +78,7 @@ function MobileOrdersCreate() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5268/api/mobile-orders", formData);
+      await axios.post("http://localhost:5268/mobile-orders", formData);
       toast.success("Mobile order created successfully!");
       navigate("/mobile-orders");
     } catch (err) {
