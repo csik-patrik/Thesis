@@ -7,11 +7,24 @@ import type {
   CreateMobileDeviceRequest,
   MobileDeviceCategoryResponse,
 } from "../../Types/MobileTypes";
+import { useAuth } from "../../Auth/AuthContext";
 
-function MobileDeviceCreate() {
+export default function MobileDeviceCreate() {
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
     MobileDeviceCategoryResponse[]
   >([]);
+
+  const [formData, setFormData] = useState<CreateMobileDeviceRequest>({
+    hostname: "",
+    mobileDeviceCategoryId: 0,
+    imeiNumber: "",
+    serialNumber: "",
+  });
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  console.log(user);
 
   useEffect(() => {
     GetMobileDeviceCategories()
@@ -22,15 +35,6 @@ function MobileDeviceCreate() {
         console.error("Error fetching categories:", error);
       });
   }, []);
-
-  const [formData, setFormData] = useState<CreateMobileDeviceRequest>({
-    hostname: "",
-    mobileDeviceCategoryId: 0,
-    imeiNumber: "",
-    serialNumber: "",
-  });
-
-  const navigate = useNavigate();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -45,9 +49,24 @@ function MobileDeviceCreate() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!user?.token) {
+      toast.error("You must be logged in to create a device.");
+      return;
+    }
+
     try {
-      await axios.post("http://localhost:5268/mobile-devices", formData);
+      const res = await axios.post(
+        "http://localhost:5268/mobile-devices",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`, // ✅ attach token
+          },
+        }
+      );
+
       toast.success("Mobile device created successfully!");
+      console.log("Created device:", res.data);
       navigate("/mobiles");
     } catch (err) {
       console.error("Error creating mobile device:", err);
@@ -140,5 +159,3 @@ function MobileDeviceCreate() {
     </div>
   );
 }
-
-export default MobileDeviceCreate;
