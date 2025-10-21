@@ -7,14 +7,21 @@ import type {
   CreateMobileDeviceRequest,
   MobileDeviceCategoryResponse,
 } from "../../Types/MobileTypes";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function MobileDeviceCreateBulk() {
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
     MobileDeviceCategoryResponse[]
   >([]);
+
   const [deviceCount, setDeviceCount] = useState<number>(1);
+
   const [devices, setDevices] = useState<CreateMobileDeviceRequest[]>([]);
+
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  console.log(user);
 
   useEffect(() => {
     GetMobileDeviceCategories()
@@ -24,7 +31,6 @@ export default function MobileDeviceCreateBulk() {
       });
   }, []);
 
-  // Generate empty rows when deviceCount changes
   useEffect(() => {
     setDevices(
       Array.from({ length: deviceCount }, () => ({
@@ -53,10 +59,37 @@ export default function MobileDeviceCreateBulk() {
     );
   };
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   try {
+  //     await axios.post("http://localhost:5268/mobile-devices/bulk", devices);
+  //     toast.success("Mobile devices created successfully!");
+  //     navigate("/mobiles");
+  //   } catch (err) {
+  //     console.error("Error creating mobile devices:", err);
+  //     toast.error("Failed to create mobile devices.");
+  //   }
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!user?.token) {
+      toast.error("You must be logged in to create a device.");
+      return;
+    }
+
     try {
-      await axios.post("http://localhost:5268/mobile-devices/bulk", devices);
+      const res = await axios.post(
+        "http://localhost:5268/mobile-devices/bulk",
+        devices,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
       toast.success("Mobile devices created successfully!");
       navigate("/mobiles");
     } catch (err) {

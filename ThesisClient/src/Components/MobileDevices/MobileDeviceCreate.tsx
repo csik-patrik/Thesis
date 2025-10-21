@@ -60,7 +60,7 @@ export default function MobileDeviceCreate() {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${user.token}`, // ✅ attach token
+            Authorization: `Bearer ${user.token}`,
           },
         }
       );
