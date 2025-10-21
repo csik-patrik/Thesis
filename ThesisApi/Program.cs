@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,42 +22,48 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
 {
-    builder.WithOrigins("http://localhost:5173", "http://localhost:5173").AllowAnyMethod().AllowAnyHeader();
+    builder.WithOrigins("http://localhost:5173", "http://localhost:5173")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
 }));
 
-builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(x =>
+    .AddJwtBearer(options =>
     {
-        x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        var key = Encoding.UTF8.GetBytes("qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123?????????");
+
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            IssuerSigningKey = new SymmetricSecurityKey("qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123"u8.ToArray()),
+            ValidateIssuer = true,
             ValidIssuer = "Api",
+            ValidateAudience = true,
             ValidAudience = "Users",
-            ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
-            ValidateAudience = true
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ClockSkew = TimeSpan.Zero // avoids extra 5-min default tolerance
         };
     });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddAutoMapper(typeof(AutomapperProfiles));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseAuthentication();  // must come before UseAuthorization
+app.UseAuthorization();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "ThesisApi"));
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "ThesisApi");
+    });
 }
 
-app.UseHttpsRedirection();
-
 app.UseCors("ApiCorsPolicy");
-
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

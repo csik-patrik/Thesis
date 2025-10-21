@@ -8,34 +8,39 @@ namespace ThesisApi.Services
 {
     public class TokenGenerator
     {
+        private const string SecretKey = "qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123?????????";
+        private const string Issuer = "Api";
+        private const string Audience = "Users";
+
         public string GenerateToken(NewTokenRequest request)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(SecretKey);
 
-            var key = Encoding.UTF8.GetBytes("qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123?????????");
+            var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Sub, request.Email ?? string.Empty),
+            new(JwtRegisteredClaimNames.GivenName, request.Username ?? string.Empty),
+            new(JwtRegisteredClaimNames.Email, request.Email ?? string.Empty),
 
+            new("username", request.Username ?? string.Empty),
+            new("displayname", request.Displayname ?? string.Empty),
+            new("department", request.Department ?? string.Empty),
+            new("costCenter", request.CostCenter ?? string.Empty)
+        };
 
-            var claims = new List<Claim>()
-            {
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new(JwtRegisteredClaimNames.Sub, request.Email),
-                new(JwtRegisteredClaimNames.GivenName, request.Username),
-                new(JwtRegisteredClaimNames.Email, request.Email),
-
-                new("username", request.Username),
-                new("displayname", request.Displayname),
-                new("department", request.Department),
-                new("costCenter", request.CostCenter)
-            };
+            var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(60),
-                Issuer = "Api",
-                Audience = "Users",
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.UtcNow.AddHours(1),
+                Issuer = "Api",          // must match validator
+                Audience = "Users",      // must match validator
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };
+
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
