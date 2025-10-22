@@ -1,3 +1,12 @@
+export type UserOrderResponse = {
+  id: number;
+  userName: string;
+  displayName: string;
+  email: string;
+  department: string;
+  costCenter: string;
+};
+
 export type CreateUserRequest = {
   username: string;
   displayName: string;

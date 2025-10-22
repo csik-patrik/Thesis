@@ -1,11 +1,4 @@
-interface UserOrderResponse {
-  id: number;
-  userName: string;
-  displayName: string;
-  email: string;
-  department: string;
-  costCenter: string;
-}
+import type { UserOrderResponse } from "./UserTypes";
 
 export interface CreateMobileDeviceCategoryRequest {
   name: string;
@@ -63,3 +56,11 @@ export interface CreateSimCardRequest {
   phoneNumber: string;
   simCallControlGroupId: number;
 }
+
+export type CreateMobileOrderRequest = {
+  customerId: number;
+  mobileDeviceCategoryId: number;
+  simCallControlGroupId: number;
+  pickupLocation: string;
+  note?: string;
+};

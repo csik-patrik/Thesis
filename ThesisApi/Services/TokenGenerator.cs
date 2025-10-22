@@ -20,7 +20,7 @@ namespace ThesisApi.Services
             var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Sub, request.Email ?? string.Empty),
+            new(JwtRegisteredClaimNames.Sub, request.Id.ToString() ?? string.Empty),
             new(JwtRegisteredClaimNames.GivenName, request.Username ?? string.Empty),
             new(JwtRegisteredClaimNames.Email, request.Email ?? string.Empty),
 

@@ -2,39 +2,36 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { GetMobileDeviceCategories } from "../../Services/MobileDeviceServices";
 import type { MobileDeviceCategoryResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
 
-interface CreateMobileOrderRequest {
-  requesterName: string;
-  requesterUsername: string;
-  customerName: string;
-  customerUsername: string;
-  customersCostCenter: string;
-  mobileDeviceCategoryId: number;
-  callControlGroup: string;
-  pickupLocation: string;
-  note: string;
-  createdBy: string;
-}
+import {
+  GetMobileDeviceCategories,
+  GetSimCallControlGroups,
+} from "../../Services/MobileDeviceServices";
 
-function MobileOrdersCreate() {
+import type {
+  CreateMobileOrderRequest,
+  SimCallControlGroupResponse,
+} from "../../Types/MobileTypes";
+
+export default function MobileOrdersCreate() {
   const { user } = useAuth();
+
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
     MobileDeviceCategoryResponse[]
   >([]);
+
+  const [simCallControlGroups, setSimCallControlGroups] = useState<
+    SimCallControlGroupResponse[]
+  >([]);
+
   const [formData, setFormData] = useState<CreateMobileOrderRequest>({
-    requesterName: "",
-    requesterUsername: "",
-    customerName: "",
-    customerUsername: "",
-    customersCostCenter: "",
+    customerId: 0,
     mobileDeviceCategoryId: 0,
-    callControlGroup: "SPECIAL F",
+    simCallControlGroupId: 0,
     pickupLocation: "HtvP",
-    note: "",
-    createdBy: "",
+    note: undefined,
   });
 
   useEffect(() => {
@@ -47,15 +44,19 @@ function MobileOrdersCreate() {
   }, []);
 
   useEffect(() => {
+    GetSimCallControlGroups()
+      .then((response) => setSimCallControlGroups(response.data))
+      .catch((error) => {
+        toast.error("Error fetching categories");
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+
+  useEffect(() => {
     if (user) {
       setFormData((prev) => ({
         ...prev,
-        requesterName: user.displayname || "",
-        requesterUsername: user.username || "",
-        customerName: user.displayname || "",
-        customerUsername: user.username || "",
-        customersCostCenter: user.costCenter || "",
-        createdBy: user.username || "",
+        customerId: Number(user.id),
       }));
     }
   }, [user]);
@@ -93,78 +94,15 @@ function MobileOrdersCreate() {
         <h1 className="mb-4 text-center">Create a New Mobile Order</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="requesterName" className="form-label">
-              Requester's name:
+            <label htmlFor="customerId" className="form-label">
+              Requester:
             </label>
             <input
               type="text"
-              id="requesterName"
-              name="requesterName"
+              id="customerId"
               className="form-control"
-              placeholder="Patrik Csik"
-              value={formData.requesterName}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="requesterUsername" className="form-label">
-              Requester's username:
-            </label>
-            <input
-              type="text"
-              id="requesterUsername"
-              name="requesterUsername"
-              className="form-control"
-              placeholder="CSP8HTV"
-              value={formData.requesterUsername}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="customerName" className="form-label">
-              Customer's name:
-            </label>
-            <input
-              type="text"
-              id="customerName"
-              name="customerName"
-              className="form-control"
-              placeholder="Patrik Csik"
-              value={formData.customerName}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="customerUsername" className="form-label">
-              Customer's username:
-            </label>
-            <input
-              type="text"
-              id="customerUsername"
-              name="customerUsername"
-              className="form-control"
-              placeholder="CSP8HTV"
-              value={formData.customerUsername}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="customersCostCenter" className="form-label">
-              Customer's cost center:
-            </label>
-            <input
-              type="text"
-              id="customersCostCenter"
-              name="customersCostCenter"
-              className="form-control"
-              placeholder="658091"
-              value={formData.customersCostCenter}
-              onChange={handleChange}
-              required
+              value={user?.displayname ?? ""}
+              disabled
             />
           </div>
           <div className="mb-3">
@@ -190,19 +128,25 @@ function MobileOrdersCreate() {
             </select>
           </div>
           <div className="mb-3">
-            <label htmlFor="callControlGroup" className="form-label">
-              Call control group:
+            <label htmlFor="simCallControlGroupId" className="form-label">
+              Sim call control group:
             </label>
             <select
-              id="callControlGroup"
-              name="callControlGroup"
+              id="simCallControlGroupId"
+              name="simCallControlGroupId"
               className="form-select"
-              value={formData.callControlGroup}
+              value={formData.simCallControlGroupId}
               onChange={handleChange}
               required
             >
-              <option value="SPECIAL F">SPECIAL F</option>
-              <option value="MIX 10">MIX 10</option>
+              <option value={0} disabled>
+                Select call control group...
+              </option>
+              {simCallControlGroups.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
             </select>
           </div>
           <div className="mb-3">
@@ -235,21 +179,6 @@ function MobileOrdersCreate() {
               rows={2}
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="createdBy" className="form-label">
-              Created by:
-            </label>
-            <input
-              type="text"
-              id="createdBy"
-              name="createdBy"
-              className="form-control"
-              placeholder="Username"
-              value={formData.createdBy}
-              onChange={handleChange}
-              required
-            />
-          </div>
           <div className="d-flex flex-wrap justify-content-between align-items-center mt-4">
             <button
               type="submit"
@@ -267,5 +196,3 @@ function MobileOrdersCreate() {
     </div>
   );
 }
-
-export default MobileOrdersCreate;

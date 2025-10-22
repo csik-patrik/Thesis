@@ -42,10 +42,10 @@ namespace ThesisApi.Controllers
             try
             {
                 var order = await MobileOrder.Create(
-                request,
-                _userRepository,
-                _mobileDeviceCategoryRepository,
-                _simCallControlGroupRepository);
+                    request,
+                    _userRepository,
+                    _mobileDeviceCategoryRepository,
+                    _simCallControlGroupRepository);
 
                 await _mobileOrderRepository.CreateAsync(order);
 
