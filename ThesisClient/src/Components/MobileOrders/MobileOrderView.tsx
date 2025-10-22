@@ -1,7 +1,9 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../../Auth/AuthContext";
+
 import type {
   MobileOrderResponse,
   MobileDeviceResponse,
@@ -21,11 +23,20 @@ function MobileOrderView() {
   const [allocatingSim, setAllocatingSim] = useState<number | null>(null);
   const [simSearch, setSimSearch] = useState("");
 
+  const { user } = useAuth();
+
+  console.log(user?.token);
+
   useEffect(() => {
+    if (!user || !user.token) return;
+
     const fetchOrder = async () => {
       try {
         const res = await axios.get<MobileOrderResponse>(
-          `http://localhost:5268/mobile-orders/${id}`
+          `http://localhost:5268/mobile-orders/${id}`,
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
         );
         setOrder(res.data);
       } catch (err) {
@@ -37,34 +48,44 @@ function MobileOrderView() {
     };
 
     fetchOrder();
-  }, [id]);
+  }, [id, user]);
 
   useEffect(() => {
-    if (!order || order.mobileDevice) return; // Only fetch if order exists and no device is allocated
+    if (!user || !user.token) return;
+    if (!order || order.mobileDevice) return;
+
     axios
       .get<MobileDeviceResponse[]>(
-        `http://localhost:5268/mobile-devices/allocation/${order?.mobileDeviceCategory.id}`
+        `http://localhost:5268/mobile-devices/allocation/${order?.mobileDeviceCategory.id}`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
       )
       .then((res) => setDevices(res.data))
       .catch((err) => {
         toast.error("Error fetching allocable devices.");
         console.error("Error fetching allocable devices:", err);
       });
-  }, [order]);
+  }, [order, user]);
 
   // Only fetch allocable sim cards if a device is allocated and no sim card is allocated
   useEffect(() => {
+    if (!user || !user.token) return;
     if (!order || !order.mobileDevice || order.mobileDevice.simCard) return;
+
     axios
       .get<SimCardResponse[]>(
-        `http://localhost:5268/sim-cards/allocation/${order.simCallControlGroup.id}`
+        `http://localhost:5268/sim-cards/allocation/${order.simCallControlGroup.id}`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
       )
       .then((res) => setSimCards(res.data))
       .catch((err) => {
         toast.error("Error fetching allocable sim cards.");
         console.error("Error fetching allocable sim cards:", err);
       });
-  }, [order]);
+  }, [order, user]);
 
   const handleAllocateMobileDevice = async (deviceId: number) => {
     setAllocating(deviceId);
