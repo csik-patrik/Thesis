@@ -83,6 +83,7 @@ namespace ThesisApi.Repositories
         {
             return await _context.MobileDevices
                 .Include(x => x.User)
+                .Include(x => x.MobileDeviceCategory)
                 .Where(x => x.User.Username == username)
                 .ToListAsync();
         }
