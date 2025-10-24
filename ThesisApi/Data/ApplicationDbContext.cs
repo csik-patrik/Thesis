@@ -10,6 +10,8 @@ namespace ThesisApi.Data
         public DbSet<SimCard> SimCards { get; set; }
         public DbSet<MobileDevice> MobileDevices { get; set; }
         public DbSet<MobileOrder> MobileOrders { get; set; }
+        public DbSet<Computer> Computers { get; set; }
+        public DbSet<ComputerCategory> ComputerCategories { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
 

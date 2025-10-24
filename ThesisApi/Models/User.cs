@@ -13,5 +13,6 @@ namespace ThesisApi.Models
         public ICollection<UserRole> UserRoles { get; set; } = null!;
         public ICollection<MobileDevice> MobileDevices { get; set; } = new List<MobileDevice>();
         public ICollection<MobileOrder> MobileOrders { get; set; } = new List<MobileOrder>();
+        public ICollection<Computer> Computers { get; set; } = new List<Computer>();
     }
 }
