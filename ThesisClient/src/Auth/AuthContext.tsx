@@ -6,6 +6,7 @@ import {
   useEffect,
 } from "react";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 interface JwtPayload {
   sub: string;
@@ -67,11 +68,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("user");
   };
 
-  // reload user from localStorage when app refreshes
+  // ✅ On startup, restore user & check token validity
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (!storedUser) return;
+
+    const parsedUser = JSON.parse(storedUser);
+    const decoded = jwtDecode<JwtPayload>(parsedUser.token);
+
+    // Check if expired
+    if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+      console.warn("Token expired, logging out");
+      logout();
+    } else {
+      setUser(parsedUser);
+
+      // Auto-logout when token expires
+      const msUntilExpiry = decoded.exp ? decoded.exp * 1000 - Date.now() : 0;
+
+      if (msUntilExpiry > 0) {
+        const timeout = setTimeout(() => {
+          toast.warn("Session expired. Please log in again.");
+          logout();
+        }, msUntilExpiry);
+
+        // Cleanup on unmount
+        return () => clearTimeout(timeout);
+      }
     }
   }, []);
 
