@@ -68,35 +68,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("user");
   };
 
-  // ✅ On startup, restore user & check token validity
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) return;
+  // // ✅ On startup, restore user & check token validity
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem("user");
+  //   if (!storedUser) return;
 
-    const parsedUser = JSON.parse(storedUser);
-    const decoded = jwtDecode<JwtPayload>(parsedUser.token);
+  //   const parsedUser = JSON.parse(storedUser);
+  //   const decoded = jwtDecode<JwtPayload>(parsedUser.token);
 
-    // Check if expired
-    if (decoded.exp && decoded.exp * 1000 < Date.now()) {
-      console.warn("Token expired, logging out");
-      logout();
-    } else {
-      setUser(parsedUser);
+  //   // Check if expired
+  //   if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+  //     console.warn("Token expired, logging out");
+  //     logout();
+  //   } else {
+  //     setUser(parsedUser);
 
-      // Auto-logout when token expires
-      const msUntilExpiry = decoded.exp ? decoded.exp * 1000 - Date.now() : 0;
+  //     // Auto-logout when token expires
+  //     const msUntilExpiry = decoded.exp ? decoded.exp * 1000 - Date.now() : 0;
 
-      if (msUntilExpiry > 0) {
-        const timeout = setTimeout(() => {
-          toast.warn("Session expired. Please log in again.");
-          logout();
-        }, msUntilExpiry);
+  //     if (msUntilExpiry > 0) {
+  //       const timeout = setTimeout(() => {
+  //         toast.warn("Session expired. Please log in again.");
+  //         logout();
+  //       }, msUntilExpiry);
 
-        // Cleanup on unmount
-        return () => clearTimeout(timeout);
-      }
-    }
-  }, []);
+  //       // Cleanup on unmount
+  //       return () => clearTimeout(timeout);
+  //     }
+  //   }
+  // }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

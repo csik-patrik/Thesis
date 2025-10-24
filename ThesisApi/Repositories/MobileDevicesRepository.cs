@@ -73,8 +73,6 @@ namespace ThesisApi.Repositories
                 .Include(x => x.User)
                 .Include(x => x.SimCard)
                 .ThenInclude(x => x.SimCallControlGroup)
-                .AsNoTracking()
-                .AsSplitQuery()
                 .Where(x => x.Status == "Deployed" && x.StatusReason == "Productive")
                 .ToListAsync();
         }

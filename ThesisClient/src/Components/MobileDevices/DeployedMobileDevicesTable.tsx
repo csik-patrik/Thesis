@@ -1,22 +1,37 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useAuth } from "../../Auth/AuthContext";
+import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 import axios from "axios";
-import type {
-  SimCardResponse,
-  MobileDeviceResponse,
-} from "../../Types/MobileTypes";
 
 export default function DeployedMobileDevicesTable() {
   const [data, setData] = useState<MobileDeviceResponse[]>([]);
   const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const { user } = useAuth();
+
+  console.log(user);
 
   useEffect(() => {
+    if (!user?.token) {
+      toast.error("You must be logged in to view this page.");
+      return;
+    }
     axios
       .get<MobileDeviceResponse[]>(
-        "http://localhost:5268/mobile-devices/deployed"
+        "http://localhost:5268/mobile-devices/deployed",
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
       )
-      .then((res) => setData(res.data))
+      .then((res) => {
+        console.log("Fetched devices:", res.data);
+
+        setData(res.data);
+      })
       .catch((err) => console.log(err));
-  }, []);
+  }, [user]);
 
   // Get unique device categories for the filter dropdown
   const categories = Array.from(
@@ -77,11 +92,11 @@ export default function DeployedMobileDevicesTable() {
                   <td>{d.mobileDeviceCategory.name}</td>
                   <td>{d.imeiNumber}</td>
                   <td>{d.serialNumber}</td>
-                  <td>{d.user.displayName}</td>
-                  <td>{d.simCard.phoneNumber}</td>
-                  <td>{d.simCard.simCallControlGroup.name}</td>
+                  <td>{d.user?.userName}</td>
+                  <td>{d.simCard?.phoneNumber}</td>
+                  <td>{d.simCard?.simCallControlGroup.name}</td>
                   <td>
-                    {d.simCard.simCallControlGroup.isDataEnabled
+                    {d.simCard?.simCallControlGroup.isDataEnabled
                       ? "True"
                       : "False"}
                   </td>
