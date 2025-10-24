@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using ThesisApi.Data;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -5,19 +7,25 @@ namespace ThesisApi.Repositories
 {
     public class ComputerCategoryRepository : IComputerCategoryRepository
     {
-        public Task<ComputerCategory> AddAsync(ComputerCategory category)
+        private readonly ApplicationDbContext _context;
+        public ComputerCategoryRepository(ApplicationDbContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<ComputerCategory> AddAsync(ComputerCategory category)
+        {
+            await _context.ComputerCategories.AddAsync(category);
+            return category;
         }
 
-        public Task<IEnumerable<ComputerCategory>> GetAllAsync()
+        public async Task<IEnumerable<ComputerCategory>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.ComputerCategories.ToListAsync();
         }
 
-        public Task<ComputerCategory?> GetByIdAsync(int id)
+        public async Task<ComputerCategory?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.ComputerCategories.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }
