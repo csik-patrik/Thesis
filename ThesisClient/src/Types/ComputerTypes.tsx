@@ -9,6 +9,7 @@ export type ComputerResponse = {
   id: number;
   hostname: string;
   computerCategory: ComputerCategoryResponse;
+  model: string;
   serialNumber: string;
   user: UserOrderResponse;
   status: string;
@@ -18,5 +19,6 @@ export type ComputerResponse = {
 export type CreateComputerRequest = {
   hostname: string;
   computerCategoryId: number;
+  model: string;
   serialNumber: string;
 };

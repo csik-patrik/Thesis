@@ -15,6 +15,7 @@ export default function ComputersCreate() {
   const [formData, setFormData] = useState<CreateComputerRequest>({
     hostname: "",
     computerCategoryId: 0,
+    model: "",
     serialNumber: "",
   });
 
@@ -100,6 +101,21 @@ export default function ComputersCreate() {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="mb-3">
+            <label htmlFor="model" className="form-label">
+              Model
+            </label>
+            <input
+              type="text"
+              name="model"
+              id="model"
+              className="form-control"
+              placeholder="Lenovo T14 G2"
+              value={formData.model}
+              onChange={handleChange}
+              required
+            />
           </div>
           <div className="mb-3">
             <label htmlFor="serialNumber" className="form-label">
