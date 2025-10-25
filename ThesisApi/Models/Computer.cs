@@ -10,6 +10,7 @@ namespace ThesisApi.Models
         public required string Hostname { get; set; }
         public int ComputerCategoryId { get; set; }
         public ComputerCategory ComputerCategory { get; set; } = null!;
+        public required string Model { get; set; }
         public required string SerialNumber { get; set; }
         public int? UserId { get; set; }
         public User? User { get; set; }
@@ -27,6 +28,7 @@ namespace ThesisApi.Models
             {
                 Hostname = request.Hostname,
                 ComputerCategoryId = category.Id,
+                Model = request.Model,
                 ComputerCategory = category,
                 SerialNumber = request.SerialNumber,
                 Status = "In inventory",

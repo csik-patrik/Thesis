@@ -8,6 +8,7 @@ namespace ThesisApi.Contracts.Responses.Computers
         public required int Id { get; set; }
         public required string Hostname { get; set; }
         public required ComputerCategoryResponse ComputerCategory { get; set; }
+        public required string Model { get; set; }
         public required string SerialNumber { get; set; }
         public UserOrderResponse? User { get; set; }
         public required string Status { get; set; }
