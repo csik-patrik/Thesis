@@ -114,6 +114,28 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpPut("/computer-orders/deliver/{id:int}")]
+        public async Task<IActionResult> DeliverOrder([FromRoute] int id)
+        {
+            try
+            {
+                var order = await _computerOrderRepository.GetByIdAsync(id);
+                if (order == null)
+                    return NotFound("Computer order is not found!");
+
+                if (order.Computer == null)
+                    return StatusCode(400, "Allocate a computer first!");
+
+                await _computerOrderRepository.DeliverOrderAsync(order);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete("/computer-orders/{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {

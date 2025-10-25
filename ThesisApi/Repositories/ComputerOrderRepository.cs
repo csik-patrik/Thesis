@@ -51,6 +51,20 @@ namespace ThesisApi.Repositories
             return order;
         }
 
+        public async Task<ComputerOrder> DeliverOrderAsync(ComputerOrder order)
+        {
+            order.Status = "Delivered";
+
+            order.Computer!.Status = "Deployed";
+            order.Computer!.StatusReason = "Productive";
+            order.Computer.UserId = order.CustomerId;
+            order.Computer.User = order.Customer;
+
+            await _context.SaveChangesAsync();
+
+            return order;
+        }
+
         public async Task<bool> DeleteAsync(ComputerOrder order)
         {
             _context.ComputerOrders.Remove(order);
