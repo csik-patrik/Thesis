@@ -14,7 +14,7 @@ namespace ThesisApi.Services
             services.AddScoped<IMobileDeviceRepository, MobileDevicesRepository>();
             services.AddScoped<IMobileDeviceCategoryRepository, MobileDeviceCategoryRepository>();
             services.AddScoped<IMobileOrderRepository, MobileOrderRepository>();
-            services.AddScoped<IComputerCategoryRepository, IComputerCategoryRepository>();
+            services.AddScoped<IComputerCategoryRepository, ComputerCategoryRepository>();
             services.AddSingleton<TokenGenerator>();
             return services;
         }

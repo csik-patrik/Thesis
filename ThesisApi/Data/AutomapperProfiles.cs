@@ -1,5 +1,6 @@
 using AutoMapper;
 using ThesisApi.Contracts.Requests.Users;
+using ThesisApi.Contracts.Responses.ComputerCategories;
 using ThesisApi.Contracts.Responses.MobileDeviceCategories;
 using ThesisApi.Contracts.Responses.MobileDevices;
 using ThesisApi.Contracts.Responses.MobileOrders;
@@ -24,6 +25,8 @@ namespace ThesisApi.Data
             CreateMap<SimCard, SimCardResponse>();
 
             CreateMap<SimCallControlGroup, SimCallControlGroupResponse>();
+
+            CreateMap<ComputerCategory, ComputerCategoryResponse>();
 
             CreateMap<User, UserOrderResponse>();
 

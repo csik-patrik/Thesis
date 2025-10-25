@@ -15,6 +15,9 @@ namespace ThesisApi.Repositories
         public async Task<ComputerCategory> AddAsync(ComputerCategory category)
         {
             await _context.ComputerCategories.AddAsync(category);
+
+            await _context.SaveChangesAsync();
+
             return category;
         }
 
