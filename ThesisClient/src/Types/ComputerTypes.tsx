@@ -22,3 +22,13 @@ export type CreateComputerRequest = {
   model: string;
   serialNumber: string;
 };
+
+export type ComputerOrderResponse = {
+  id: number;
+  customer: UserOrderResponse;
+  computerCategory: ComputerCategoryResponse;
+  pickupLocation: string;
+  note: string;
+  computer: ComputerResponse;
+  status: string;
+};
