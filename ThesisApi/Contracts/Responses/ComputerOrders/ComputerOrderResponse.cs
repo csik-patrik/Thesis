@@ -11,7 +11,6 @@ namespace ThesisApi.Contracts.Responses.ComputerOrders
         public required ComputerCategoryResponse ComputerCategory { get; set; }
         public required string PickupLocation { get; set; }
         public string? Note { get; set; }
-        public int? ComputerId { get; set; }
         public ComputerResponse? Computer { get; set; }
         public required string Status { get; set; }
     }
