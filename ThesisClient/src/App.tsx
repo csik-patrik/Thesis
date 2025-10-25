@@ -23,6 +23,7 @@ import UserCreate from "./Components/Admin/UserCreate.tsx";
 import DeployedMobileDevicesTable from "./Components/MobileDevices/DeployedMobileDevicesTable.tsx";
 import MobileDeviceCreateBulk from "./Components/MobileDevices/MobileDeviceCreateBulk.tsx";
 import MyMobileDeviceTable from "./Components/MobileDevices/MyMobileDevicesTable.tsx";
+import ComputersTable from "./Components/Computers/ComputersTable.tsx";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="/login" element={<Login />}></Route>
+              <Route path="/computers" element={<ComputersTable />}></Route>
               <Route path="/mobiles" element={<MobileDevicesTable />}></Route>
               <Route
                 path="/mobiles/my-mobiles"

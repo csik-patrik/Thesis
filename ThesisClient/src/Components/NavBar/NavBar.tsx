@@ -33,6 +33,7 @@ export default function NavBar() {
                 <NavItem title="Mobile orders" to="/mobile-orders" />
               </DropDown>
               <DropDown title="Inventory">
+                <NavItem title="Computers" to="/computers" />
                 <NavItem title="Mobiles" to="/mobiles" />
                 <NavItem title="Sim cards" to="/sim-cards" />
               </DropDown>
