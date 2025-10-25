@@ -11,18 +11,21 @@ namespace ThesisApi.Controllers
     [Route("[controller]")]
     public class ComputerOrderController : ControllerBase
     {
+        private readonly IComputerRepository _computerRepository;
         private readonly IComputerOrderRepository _computerOrderRepository;
         private readonly IUserRepository _userRepository;
         private readonly IComputerCategoryRepository _computerCategoryRepository;
         private readonly IMapper _mapper;
 
         public ComputerOrderController(
+            IComputerRepository computerRepository,
             IComputerOrderRepository computerOrderRepository,
             IUserRepository userRepository,
             IComputerCategoryRepository computerCategoryRepository,
             IMapper mapper
         )
         {
+            _computerRepository = computerRepository;
             _computerOrderRepository = computerOrderRepository;
             _userRepository = userRepository;
             _computerCategoryRepository = computerCategoryRepository;
@@ -82,6 +85,32 @@ namespace ThesisApi.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("/computer-orders/allocate")]
+        public async Task<IActionResult> AllocateMobileDevice([FromBody] AllocateComputerToOrderRequest request)
+        {
+            try
+            {
+                var computerOrder = await _computerOrderRepository.GetByIdAsync(request.OrderId);
+                if (computerOrder == null)
+                    return NotFound("Computer order is not found!");
+
+                var computer = await _computerRepository.GetByIdAsync(request.ComputerId);
+                if (computer == null)
+                    return NotFound("Computer is not found!");
+
+                if (computerOrder.ComputerCategoryId != computer.ComputerCategoryId)
+                    return StatusCode(400, "Computer category is not the same as the requested!");
+
+                await _computerOrderRepository.AllocateComputerToOrder(computerOrder, computer);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Internal server error: {e.Message}");
             }
         }
 

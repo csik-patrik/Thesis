@@ -38,6 +38,18 @@ namespace ThesisApi.Repositories
                 .Include(x => x.Computer)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+        public async Task<ComputerOrder> AllocateComputerToOrder(ComputerOrder order, Computer computer)
+        {
+            order.Computer = computer;
+            order.ComputerId = computer.Id;
+            order.Status = "In progress";
+
+            computer.StatusReason = "Reserved";
+
+            await _context.SaveChangesAsync();
+
+            return order;
+        }
 
         public async Task<bool> DeleteAsync(ComputerOrder order)
         {
