@@ -16,6 +16,7 @@ namespace ThesisApi.Models
         public User? User { get; set; }
         public required string Status { get; set; }
         public required string StatusReason { get; set; }
+        public ICollection<ComputerOrder> ComputerOrders { get; set; } = new List<ComputerOrder>();
 
         public static async Task<Computer> Create(CreateComputerRequest request, IComputerCategoryRepository computerCategoryRepository)
         {

@@ -8,6 +8,7 @@ namespace ThesisApi.Models
         public int Id { get; set; }
         public required string Name { get; set; }
         public ICollection<Computer> Computers { get; set; } = new List<Computer>();
+        public ICollection<ComputerOrder> ComputerOrders { get; set; } = new List<ComputerOrder>();
 
         public static async Task<ComputerCategory> Create(CreateComputerCategoryRequest request)
         {

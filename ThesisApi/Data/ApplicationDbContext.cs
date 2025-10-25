@@ -12,6 +12,7 @@ namespace ThesisApi.Data
         public DbSet<MobileOrder> MobileOrders { get; set; }
         public DbSet<Computer> Computers { get; set; }
         public DbSet<ComputerCategory> ComputerCategories { get; set; }
+        public DbSet<ComputerOrder> ComputerOrders { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
 
