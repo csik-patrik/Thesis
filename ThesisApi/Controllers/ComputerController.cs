@@ -78,5 +78,25 @@ namespace ThesisApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpDelete("/computers/{id:int}")]
+        public async Task<IActionResult> DeleteById([FromRoute] int id)
+        {
+            try
+            {
+                var model = await _computerRepository.GetByIdAsync(id);
+
+                if (model == null)
+                    return NotFound();
+
+                await _computerRepository.Delete(model);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

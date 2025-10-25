@@ -12,6 +12,7 @@ namespace ThesisApi.Repositories
         {
             _context = context;
         }
+
         public async Task<Computer> AddAsync(Computer computer)
         {
             await _context.Computers.AddAsync(computer);
@@ -35,6 +36,15 @@ namespace ThesisApi.Repositories
                 .Include(x => x.ComputerCategory)
                 .Include(x => x.User)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<bool> Delete(Computer computer)
+        {
+            _context.Computers.Remove(computer);
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
