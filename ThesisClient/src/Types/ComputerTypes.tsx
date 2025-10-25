@@ -32,3 +32,10 @@ export type ComputerOrderResponse = {
   computer: ComputerResponse;
   status: string;
 };
+
+export type CreateComputerOrderRequest = {
+  customerId: number;
+  computerCategoryId: number;
+  pickupLocation: string;
+  note?: string;
+};
