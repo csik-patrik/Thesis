@@ -30,6 +30,17 @@ namespace ThesisApi.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Computer>> GetAllForAllocationAsync(int categoryId)
+        {
+            return await _context.Computers
+                .Include(x => x.ComputerCategory)
+                .Where(
+                    x => x.ComputerCategoryId == categoryId
+                    && x.Status == "In inventory"
+                    && x.StatusReason == "In inventory")
+                .ToListAsync();
+        }
+
         public async Task<Computer?> GetByIdAsync(int id)
         {
             return await _context.Computers

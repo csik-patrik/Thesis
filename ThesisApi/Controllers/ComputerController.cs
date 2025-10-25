@@ -79,6 +79,28 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpGet("/allocation/{categoryId:int}")]
+        public async Task<IActionResult> GetAllForAllocation([FromRoute] int categoryId)
+        {
+            try
+            {
+                var category = await _computerCategoryRepository.GetByIdAsync(categoryId);
+
+                if (category == null)
+                    return NotFound("Computer category not found!");
+
+                var models = await _computerRepository.GetAllForAllocationAsync(categoryId);
+
+                var response = models.Select(_mapper.Map<ComputerResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete("/computers/{id:int}")]
         public async Task<IActionResult> DeleteById([FromRoute] int id)
         {
