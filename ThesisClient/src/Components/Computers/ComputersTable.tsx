@@ -25,7 +25,7 @@ export default function ComputersTable() {
     <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
       <h1>Computers</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
-        <Link className="btn btn-success me-2" to="/mobiles/create">
+        <Link className="btn btn-success me-2" to="/computers/create">
           Create
         </Link>
         <div className="table-responsive">

@@ -1,6 +1,6 @@
 import type { UserOrderResponse } from "./UserTypes";
 
-type ComputerCategoryResponse = {
+export type ComputerCategoryResponse = {
   id: number;
   name: string;
 };
@@ -13,4 +13,10 @@ export type ComputerResponse = {
   user: UserOrderResponse;
   status: string;
   statusReason: string;
+};
+
+export type CreateComputerRequest = {
+  hostname: string;
+  computerCategoryId: number;
+  serialNumber: string;
 };
