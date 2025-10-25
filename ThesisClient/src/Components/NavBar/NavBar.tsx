@@ -31,6 +31,7 @@ export default function NavBar() {
               </DropDown>
               <DropDown title="Orders">
                 <NavItem title="Mobile orders" to="/mobile-orders" />
+                <NavItem title="Computer orders" to="/computer-orders" />
               </DropDown>
               <DropDown title="Inventory">
                 <NavItem title="Computers" to="/computers" />

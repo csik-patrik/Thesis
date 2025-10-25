@@ -25,6 +25,7 @@ import MobileDeviceCreateBulk from "./Components/MobileDevices/MobileDeviceCreat
 import MyMobileDeviceTable from "./Components/MobileDevices/MyMobileDevicesTable.tsx";
 import ComputersTable from "./Components/Computers/ComputersTable.tsx";
 import ComputersCreate from "./Components/Computers/ComputersCreate.tsx";
+import ComputerOrdersTable from "./Components/ComputerOrders/ComputerOrdersTable.tsx";
 
 function App() {
   return (
@@ -39,6 +40,10 @@ function App() {
               <Route
                 path="/computers/create"
                 element={<ComputersCreate />}
+              ></Route>
+              <Route
+                path="/computer-orders"
+                element={<ComputerOrdersTable />}
               ></Route>
               <Route path="/mobiles" element={<MobileDevicesTable />}></Route>
               <Route
