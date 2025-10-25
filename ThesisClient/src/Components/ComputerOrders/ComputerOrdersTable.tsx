@@ -44,7 +44,7 @@ export default function ComputerOrdersTable() {
       <h1>Computer Orders</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <Link className="btn btn-success me-2" to="/mobile-orders/create">
+          <Link className="btn btn-success me-2" to="/computer-orders/create">
             Create
           </Link>
           <div>
