@@ -6,11 +6,14 @@ export default function NavBar() {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
-          Navbar
+        {/* Brand */}
+        <a className="navbar-brand fw-bold text-light" href="/">
+          📱 IT Asset Portal
         </a>
+
+        {/* Toggler (for mobile) */}
         <button
           className="navbar-toggler"
           type="button"
@@ -22,26 +25,28 @@ export default function NavBar() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
+
+        {/* Navbar content */}
         <div className="collapse navbar-collapse" id="navbarNav">
+          {/* Left side — navigation */}
           {user && (
-            <ul className="navbar-nav">
-              <NavItem title="Home" to="/" />
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <DropDown title="Production">
                 <NavItem title="Computers" to="/computers/deployed" />
                 <NavItem title="Mobiles" to="/mobiles/deployed" />
               </DropDown>
               <DropDown title="Orders">
-                <NavItem title="Mobile orders" to="/mobile-orders" />
-                <NavItem title="Computer orders" to="/computer-orders" />
+                <NavItem title="Mobile Orders" to="/mobile-orders" />
+                <NavItem title="Computer Orders" to="/computer-orders" />
               </DropDown>
               <DropDown title="Inventory">
                 <NavItem title="Computers" to="/computers" />
                 <NavItem title="Mobiles" to="/mobiles" />
-                <NavItem title="Sim cards" to="/sim-cards" />
+                <NavItem title="Sim Cards" to="/sim-cards" />
               </DropDown>
               <DropDown title="Admin">
                 <NavItem
-                  title="Mobile categories"
+                  title="Mobile Categories"
                   to="/admin/mobile-device-categories"
                 />
                 <NavItem title="Users" to="/admin/users" />
@@ -49,15 +54,16 @@ export default function NavBar() {
             </ul>
           )}
 
+          {/* Right side — user info / login */}
           <ul className="navbar-nav ms-auto align-items-center">
             {user ? (
               <>
-                <DropDown title={user.displayname!}>
-                  <NavItem title="My mobiles" to="/mobiles/my-mobiles" />
+                <DropDown title={`👤 ${user.displayname ?? "User"}`}>
+                  <NavItem title="My Mobiles" to="/mobiles/my-mobiles" />
                 </DropDown>
-                <li className="nav-item">
+                <li className="nav-item ms-2">
                   <button
-                    className="btn btn-outline-danger btn-sm"
+                    className="btn btn-outline-light btn-sm px-3"
                     onClick={logout}
                   >
                     Logout
