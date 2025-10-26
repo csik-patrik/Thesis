@@ -79,7 +79,7 @@ namespace ThesisApi.Controllers
             }
         }
 
-        [HttpGet("/allocation/{categoryId:int}")]
+        [HttpGet("/computers/allocation/{categoryId:int}")]
         public async Task<IActionResult> GetAllForAllocation([FromRoute] int categoryId)
         {
             try
