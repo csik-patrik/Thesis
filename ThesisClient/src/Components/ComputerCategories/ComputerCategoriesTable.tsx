@@ -25,7 +25,7 @@ export default function ComputerCategoriesTable() {
       <div className="w-75 rounded bg-white border shadow p-4">
         <Link
           className="btn btn-success me-2"
-          to="/admin/mobile-device-categories/create"
+          to="/admin/computers/categories/create"
         >
           Create
         </Link>

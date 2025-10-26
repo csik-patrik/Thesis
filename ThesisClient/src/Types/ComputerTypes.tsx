@@ -5,6 +5,10 @@ export type ComputerCategoryResponse = {
   name: string;
 };
 
+export type CreateComputerCategoryRequest = {
+  name: string;
+};
+
 export type ComputerResponse = {
   id: number;
   hostname: string;
