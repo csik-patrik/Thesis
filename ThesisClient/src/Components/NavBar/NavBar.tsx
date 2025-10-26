@@ -63,6 +63,7 @@ export default function NavBar() {
             {user ? (
               <>
                 <DropDown title={`👤 ${user.displayname ?? "User"}`}>
+                  <NavItem title="My Computers" to="/computers/my-computers" />
                   <NavItem title="My Mobiles" to="/mobiles/my-mobiles" />
                 </DropDown>
                 <li className="nav-item ms-2">

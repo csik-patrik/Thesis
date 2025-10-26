@@ -24,7 +24,7 @@ namespace ThesisApi.Controllers
         {
             try
             {
-                var model = await ComputerCategory.Create(request);
+                var model = ComputerCategory.Create(request);
 
                 await _computerCategoryRepository.AddAsync(model);
 
