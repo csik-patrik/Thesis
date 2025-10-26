@@ -58,6 +58,15 @@ namespace ThesisApi.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Computer>> GetAllByUserAsync(string username)
+        {
+            return await _context.Computers
+                .Include(x => x.User)
+                .Include(x => x.ComputerCategory)
+                .Where(x => x.User != null && x.User.Username == username)
+                .ToListAsync();
+        }
+
         public async Task<bool> Delete(Computer computer)
         {
             _context.Computers.Remove(computer);

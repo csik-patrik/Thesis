@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.Computers;
 using ThesisApi.Contracts.Responses.Computers;
@@ -9,6 +10,7 @@ namespace ThesisApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class ComputerController : ControllerBase
     {
         private readonly IComputerRepository _computerRepository;
@@ -109,6 +111,30 @@ namespace ThesisApi.Controllers
                 var mobileDevices = await _computerRepository.GetAllDeployedAsync();
 
                 var response = mobileDevices.Select(_mapper.Map<ComputerResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("/computers/my-devices")]
+        public async Task<IActionResult> GetMyDevices()
+        {
+            try
+            {
+                var username = User.FindFirst("username")?.Value;
+
+                if (string.IsNullOrEmpty(username))
+                {
+                    return Unauthorized("User is not logged in.");
+                }
+
+                var mobiles = await _computerRepository.GetAllByUserAsync(username);
+
+                var response = mobiles.Select(_mapper.Map<ComputerResponse>).ToList();
 
                 return Ok(response);
             }
