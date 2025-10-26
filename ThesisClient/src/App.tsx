@@ -27,6 +27,7 @@ import ComputersTable from "./Components/Computers/ComputersTable.tsx";
 import ComputersCreate from "./Components/Computers/ComputersCreate.tsx";
 import ComputerOrdersTable from "./Components/ComputerOrders/ComputerOrdersTable.tsx";
 import ComputerOrderCreate from "./Components/ComputerOrders/ComputerOrderCreate.tsx";
+import ComputerOrderView from "./Components/ComputerOrders/ComputerOrderView.tsx";
 
 function App() {
   return (
@@ -49,6 +50,10 @@ function App() {
               <Route
                 path="/computer-orders/create"
                 element={<ComputerOrderCreate />}
+              ></Route>
+              <Route
+                path="/computer-orders/:id"
+                element={<ComputerOrderView />}
               ></Route>
               <Route path="/mobiles" element={<MobileDevicesTable />}></Route>
               <Route

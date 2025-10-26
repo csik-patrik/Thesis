@@ -96,7 +96,7 @@ export default function ComputerOrdersTable() {
                     <td>{d.status}</td>
                     <td>
                       <Link
-                        to={`/mobile-orders/${d.id}`}
+                        to={`/computer-orders/${d.id}`}
                         className="btn btn-primary btn-sm me-2 text-light"
                       >
                         View
