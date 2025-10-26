@@ -10,9 +10,9 @@ namespace ThesisApi.Models
         public ICollection<Computer> Computers { get; set; } = new List<Computer>();
         public ICollection<ComputerOrder> ComputerOrders { get; set; } = new List<ComputerOrder>();
 
-        public static async Task<ComputerCategory> Create(CreateComputerCategoryRequest request)
+        public static ComputerCategory Create(CreateComputerCategoryRequest request)
         {
-            return new ComputerCategory
+            return new ComputerCategory()
             {
                 Name = request.Name
             };
