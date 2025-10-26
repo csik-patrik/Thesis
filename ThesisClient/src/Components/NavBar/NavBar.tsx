@@ -27,6 +27,7 @@ export default function NavBar() {
             <ul className="navbar-nav">
               <NavItem title="Home" to="/" />
               <DropDown title="Production">
+                <NavItem title="Computers" to="/computers/deployed" />
                 <NavItem title="Mobiles" to="/mobiles/deployed" />
               </DropDown>
               <DropDown title="Orders">
