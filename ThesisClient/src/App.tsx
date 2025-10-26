@@ -29,6 +29,7 @@ import ComputerOrdersTable from "./Components/ComputerOrders/ComputerOrdersTable
 import ComputerOrderCreate from "./Components/ComputerOrders/ComputerOrderCreate.tsx";
 import ComputerOrderView from "./Components/ComputerOrders/ComputerOrderView.tsx";
 import ComputersDeployedTable from "./Components/Computers/ComputersDeployedTable.tsx";
+import ComputerCategoriesTable from "./Components/ComputerCategories/ComputerCategoriesTable.tsx";
 
 function App() {
   return (
@@ -94,6 +95,10 @@ function App() {
               <Route
                 path="/mobile-orders/:id"
                 element={<MobileOrderView />}
+              ></Route>
+              <Route
+                path="/admin/computers/categories"
+                element={<ComputerCategoriesTable />}
               ></Route>
               <Route
                 path="/admin/mobile-device-categories"
