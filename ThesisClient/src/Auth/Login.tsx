@@ -6,7 +6,9 @@ import { useAuth } from "../Auth/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth(); // get login function from context
+  const { login } = useAuth();
+
+  const [loading, setLoading] = useState(false);
 
   interface LoginRequest {
     email: string;
@@ -22,6 +24,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
+      setLoading(true);
       const res = await axios.post("http://localhost:5268/login", formData);
 
       // assuming your backend returns { id, email, name, token }
@@ -33,6 +36,8 @@ export default function Login() {
       console.error("Login error:", err);
       toast.error("Login error.");
       alert("Failed to login.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,32 +47,51 @@ export default function Login() {
   };
 
   return (
-    <form className="container p-3" onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="email">Email address</label>
-        <input
-          type="email"
-          className="form-control"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
+    <div className="d-flex align-items-center justify-content-center min-vh-100 bg-light">
+      <div className="card shadow p-4" style={{ width: "350px" }}>
+        <h3 className="text-center mb-4">Sign In</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="email" className="form-label fw-bold">
+              Email address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="form-control"
+              required
+              disabled={loading}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="password" className="form-label fw-bold">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="form-control"
+              required
+              disabled={loading}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary w-100 mt-2"
+            disabled={loading}
+          >
+            {loading ? "Signing in..." : "Login"}
+          </button>
+        </form>
       </div>
-      <div className="form-group">
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          className="form-control"
-          id="password"
-          value={formData.password}
-          onChange={handleChange}
-        />
-      </div>
-      <button type="submit" className="btn btn-primary mt-2">
-        Submit
-      </button>
-    </form>
+    </div>
   );
 }
