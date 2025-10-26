@@ -32,6 +32,8 @@ import ComputersDeployedTable from "./Components/Computers/ComputersDeployedTabl
 import ComputerCategoriesTable from "./Components/ComputerCategories/ComputerCategoriesTable.tsx";
 import ComputerCategoriesCreate from "./Components/ComputerCategories/ComputerCategoriesCreate.tsx";
 import MyComputersTable from "./Components/Computers/MyComputersTable.tsx";
+import ProtectedRoute from "./Auth/ProtectedRoute.tsx";
+import Unauthorized from "./Pages/Unauthorized.tsx";
 
 function App() {
   return (
@@ -42,30 +44,62 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="/login" element={<Login />}></Route>
-              <Route path="/computers" element={<ComputersTable />}></Route>
+              <Route path="/unauthorized" element={<Unauthorized />} />
+              <Route
+                path="/computers"
+                element={
+                  <ProtectedRoute>
+                    <ComputersTable />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/computers/create"
-                element={<ComputersCreate />}
+                element={
+                  <ProtectedRoute>
+                    <ComputersCreate />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/computer-orders"
-                element={<ComputerOrdersTable />}
+                element={
+                  <ProtectedRoute>
+                    <ComputerOrdersTable />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/computer-orders/create"
-                element={<ComputerOrderCreate />}
+                element={
+                  <ProtectedRoute>
+                    <ComputerOrderCreate />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/computer-orders/:id"
-                element={<ComputerOrderView />}
+                element={
+                  <ProtectedRoute>
+                    <ComputerOrderView />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/computers/deployed"
-                element={<ComputersDeployedTable />}
+                element={
+                  <ProtectedRoute>
+                    <ComputersDeployedTable />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/computers/my-computers"
-                element={<MyComputersTable />}
+                element={
+                  <ProtectedRoute>
+                    <MyComputersTable />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route path="/mobiles" element={<MobileDevicesTable />}></Route>
               <Route
