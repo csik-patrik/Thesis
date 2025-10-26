@@ -93,53 +93,84 @@ export default function ComputerOrderView() {
     device.hostname.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (loading) return <p className="text-center mt-5">Loading...</p>;
+  if (loading)
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary" role="status"></div>
+      </div>
+    );
 
   if (!order)
-    return <p className="text-center text-danger mt-5">Order not found.</p>;
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <p className="text-danger fs-4">Order not found.</p>
+      </div>
+    );
 
   return (
-    <div className="container mt-5">
-      <div className="row align-items-start">
-        {/* Order Details */}
-        <div className="col-md-8">
-          <h2>Computer order details</h2>
-          <div className="card shadow p-4 mt-3">
-            <dl>
-              <dt>Id:</dt>
-              <dd>{order.id}</dd>
-              <dt>Customer's Name:</dt>
-              <dd>{order.customer.displayName}</dd>
-              <dt>Customer's Cost Center:</dt>
-              <dd>{order.customer.costCenter}</dd>
-              <dt>Device Category:</dt>
-              <dd>{order.computerCategory.name}</dd>
-              <dt>Pickup Location:</dt>
-              <dd>{order.pickupLocation}</dd>
-              <dt>Note:</dt>
-              <dd>{order.note}</dd>
-              <dt>Order's Status:</dt>
-              <dd>{order.status}</dd>
+    <div className="container m-5">
+      <div className="row g-4">
+        {/* 🧾 Order Details Section */}
+        <div className="col-lg-8">
+          <h2 className="mb-3">🧾 Order Details</h2>
+          <div className="card shadow-sm border-0 p-4">
+            <dl className="row mb-0">
+              <dt className="col-sm-4">Order ID:</dt>
+              <dd className="col-sm-8">{order.id}</dd>
+
+              <dt className="col-sm-4">Customer Name:</dt>
+              <dd className="col-sm-8">{order.customer.displayName}</dd>
+
+              <dt className="col-sm-4">Cost Center:</dt>
+              <dd className="col-sm-8">{order.customer.costCenter}</dd>
+
+              <dt className="col-sm-4">Device Category:</dt>
+              <dd className="col-sm-8">{order.computerCategory.name}</dd>
+
+              <dt className="col-sm-4">Pickup Location:</dt>
+              <dd className="col-sm-8">{order.pickupLocation}</dd>
+
+              <dt className="col-sm-4">Note:</dt>
+              <dd className="col-sm-8">{order.note || "—"}</dd>
+
+              <dt className="col-sm-4">Status:</dt>
+              <dd className="col-sm-8">
+                <span
+                  className={`badge ${
+                    order.status === "Delivered"
+                      ? "bg-success"
+                      : "bg-warning text-dark"
+                  }`}
+                >
+                  {order.status}
+                </span>
+              </dd>
             </dl>
           </div>
-          <div className="mt-3 mb-2">
-            <Link to="/computer-orders" className="btn btn-primary me-2">
-              Back to Orders
+
+          {/* Actions */}
+          <div className="mt-4">
+            <Link
+              to="/computer-orders"
+              className="btn btn-outline-primary me-2"
+            >
+              ⬅ Back to Orders
             </Link>
-            {order.computer !== null && order.status !== "Delivered" && (
+            {order.computer && order.status !== "Delivered" && (
               <button className="btn btn-success" onClick={handleDeliver}>
-                Deliver Device
+                🚚 Deliver Device
               </button>
             )}
           </div>
         </div>
-        {/* Allocated Device or Allocation Section */}
-        <div className="col-md-4">
+
+        {/* 💻 Device Allocation Section */}
+        <div className="col-lg-4">
           {order.computer ? (
             <>
-              <h2>Allocated Device</h2>
-              <div className="card shadow p-4 mt-3">
-                <ul className="list-group">
+              <h2 className="mb-3">💻 Allocated Device</h2>
+              <div className="card shadow-sm border-0 p-3">
+                <ul className="list-group list-group-flush">
                   <li className="list-group-item">
                     <strong>Hostname:</strong> {order.computer.hostname}
                   </li>
@@ -151,39 +182,38 @@ export default function ComputerOrderView() {
                     <strong>Model:</strong> {order.computer.model}
                   </li>
                   <li className="list-group-item">
-                    <strong>Serial number:</strong>{" "}
-                    {order.computer.serialNumber}
+                    <strong>Serial:</strong> {order.computer.serialNumber}
                   </li>
                 </ul>
               </div>
             </>
           ) : (
             <>
-              <h2>Allocate Device</h2>
+              <h2 className="mb-3">🧩 Allocate Device</h2>
               <input
                 type="text"
-                className="form-control mb-3 mt-3"
-                placeholder="Search by hostname..."
+                className="form-control mb-3"
+                placeholder="🔍 Search by hostname..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <div className="card shadow p-3">
+              <div className="card shadow-sm border-0 p-3">
                 {filteredDevices.length === 0 ? (
-                  <div>No devices available for allocation.</div>
+                  <p className="text-muted mb-0">No available devices found.</p>
                 ) : (
-                  <ul className="list-group">
+                  <ul className="list-group list-group-flush">
                     {filteredDevices.map((device) => (
                       <li
                         key={device.id}
                         className="list-group-item d-flex flex-column"
                       >
                         <strong>{device.hostname}</strong>
-                        <span>Category: {device.computerCategory.name}</span>
-                        <span>Model: {device.model}</span>
-                        <span>Serial number: {device.serialNumber}</span>
-                        <span>Status: {device.status}</span>
+                        <small>Category: {device.computerCategory.name}</small>
+                        <small>Model: {device.model}</small>
+                        <small>Serial: {device.serialNumber}</small>
+                        <small>Status: {device.status}</small>
                         <button
-                          className="btn btn-success btn-sm mt-2 align-self-end"
+                          className="btn btn-outline-success btn-sm mt-2 align-self-end"
                           disabled={allocating === device.id}
                           onClick={() => handleAllocateComputer(device.id)}
                         >

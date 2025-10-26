@@ -36,3 +36,13 @@ h3 {
   background-color: #f8f9fa !important;
   color: #0d6efd !important;
 }
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.2s ease;
+}
+
+.btn-outline-success:hover {
+  background-color: #198754;
+  color: white;
+}
