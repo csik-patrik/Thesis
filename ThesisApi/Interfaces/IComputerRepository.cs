@@ -8,6 +8,7 @@ namespace ThesisApi.Interfaces
         Task<IEnumerable<Computer>> GetAllAsync();
         Task<IEnumerable<Computer>> GetAllForAllocationAsync(int categoryId);
         Task<Computer?> GetByIdAsync(int id);
+        Task<IEnumerable<Computer>> GetAllDeployedAsync();
         Task<bool> Delete(Computer computer);
     }
 }

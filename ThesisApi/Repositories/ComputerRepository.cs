@@ -49,6 +49,15 @@ namespace ThesisApi.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<IEnumerable<Computer>> GetAllDeployedAsync()
+        {
+            return await _context.Computers
+                .Include(x => x.ComputerCategory)
+                .Include(x => x.User)
+                .Where(x => x.Status == "Deployed" && x.StatusReason == "Productive")
+                .ToListAsync();
+        }
+
         public async Task<bool> Delete(Computer computer)
         {
             _context.Computers.Remove(computer);

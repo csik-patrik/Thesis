@@ -101,6 +101,23 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpGet("/computers/deployed")]
+        public async Task<IActionResult> GetAllDeployed()
+        {
+            try
+            {
+                var mobileDevices = await _computerRepository.GetAllDeployedAsync();
+
+                var response = mobileDevices.Select(_mapper.Map<ComputerResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete("/computers/{id:int}")]
         public async Task<IActionResult> DeleteById([FromRoute] int id)
         {
