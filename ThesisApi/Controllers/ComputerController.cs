@@ -61,6 +61,23 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpGet("/computers/inventory")]
+        public async Task<IActionResult> GetAllInInventory()
+        {
+            try
+            {
+                var models = await _computerRepository.GetAllInInventoryAsync();
+
+                var response = models.Select(_mapper.Map<ComputerInInventoryResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet("/computers/{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {

@@ -32,6 +32,8 @@ namespace ThesisApi.Data
 
             CreateMap<Computer, ComputerResponse>();
 
+            CreateMap<Computer, ComputerInInventoryResponse>();
+
             CreateMap<ComputerOrder, ComputerOrderResponse>();
 
             CreateMap<User, UserOrderResponse>();
