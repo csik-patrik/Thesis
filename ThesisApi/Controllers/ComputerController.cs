@@ -44,6 +44,26 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpPost("/computers/bulk")]
+        public async Task<IActionResult> CreateBulk([FromBody] List<CreateComputerRequest> request)
+        {
+            try
+            {
+                var mobiles = await Computer.CreateBulk(request, _computerCategoryRepository);
+
+                if (mobiles == null || !mobiles.Any())
+                    return BadRequest("Error while creating devices!");
+
+                await _computerRepository.AddBulkAsync(mobiles);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet("/computers")]
         public async Task<IActionResult> GetAll()
         {

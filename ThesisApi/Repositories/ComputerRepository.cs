@@ -21,6 +21,14 @@ namespace ThesisApi.Repositories
 
             return computer;
         }
+        public async Task<IEnumerable<Computer>> AddBulkAsync(IEnumerable<Computer> computers)
+        {
+            await _context.Computers.AddRangeAsync(computers);
+
+            await _context.SaveChangesAsync();
+
+            return computers;
+        }
 
         public async Task<IEnumerable<Computer>> GetAllAsync()
         {

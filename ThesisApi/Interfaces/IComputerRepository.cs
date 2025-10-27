@@ -5,6 +5,7 @@ namespace ThesisApi.Interfaces
     public interface IComputerRepository
     {
         Task<Computer> AddAsync(Computer computer);
+        Task<IEnumerable<Computer>> AddBulkAsync(IEnumerable<Computer> computers);
         Task<IEnumerable<Computer>> GetAllAsync();
         Task<IEnumerable<Computer>> GetAllInInventoryAsync();
         Task<IEnumerable<Computer>> GetAllForAllocationAsync(int categoryId);

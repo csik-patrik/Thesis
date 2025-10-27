@@ -36,5 +36,31 @@ namespace ThesisApi.Models
                 StatusReason = "In inventory"
             };
         }
+
+        public static async Task<List<Computer>> CreateBulk(List<CreateComputerRequest> request, IComputerCategoryRepository computerCategoryRepository)
+        {
+            var computers = new List<Computer>();
+
+            foreach (var item in request)
+            {
+                var category = await computerCategoryRepository.GetByIdAsync(item.ComputerCategoryId);
+
+                if (category == null)
+                    throw new Exception("Computer category not found!");
+
+                computers.Add(new Computer()
+                {
+                    Hostname = item.Hostname,
+                    ComputerCategoryId = category.Id,
+                    Model = item.Model,
+                    ComputerCategory = category,
+                    SerialNumber = item.SerialNumber,
+                    Status = "In inventory",
+                    StatusReason = "In inventory"
+                });
+            }
+
+            return computers;
+        }
     }
 }
