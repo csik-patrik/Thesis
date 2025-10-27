@@ -23,7 +23,7 @@ import UserCreate from "./Components/Admin/UserCreate.tsx";
 import DeployedMobileDevicesTable from "./Components/MobileDevices/DeployedMobileDevicesTable.tsx";
 import MobileDeviceCreateBulk from "./Components/MobileDevices/MobileDeviceCreateBulk.tsx";
 import MyMobileDeviceTable from "./Components/MobileDevices/MyMobileDevicesTable.tsx";
-import ComputersTable from "./Components/Computers/ComputersTable.tsx";
+import ComputersInInventoryTable from "./Components/Computers/ComputersInInventoryTable.tsx";
 import ComputersCreate from "./Components/Computers/ComputersCreate.tsx";
 import ComputerOrdersTable from "./Components/ComputerOrders/ComputerOrdersTable.tsx";
 import ComputerOrderCreate from "./Components/ComputerOrders/ComputerOrderCreate.tsx";
@@ -49,7 +49,7 @@ function App() {
                 path="/computers"
                 element={
                   <ProtectedRoute>
-                    <ComputersTable />
+                    <ComputersInInventoryTable />
                   </ProtectedRoute>
                 }
               />
