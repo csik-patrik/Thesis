@@ -3,15 +3,23 @@ import type { ComputerResponse } from "../../Types/ComputerTypes";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function ComputersTable() {
   const [data, setData] = useState<ComputerResponse[]>([]);
 
+  const { user } = useAuth();
+
   useEffect(() => {
+    if (!user || !user.token) return;
+
     const fetchDevices = async () => {
       try {
         const res = await axios.get<ComputerResponse[]>(
-          "http://localhost:5268/computers/"
+          "http://localhost:5268/computers/",
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
         );
         setData(res.data);
       } catch (err) {
@@ -20,12 +28,16 @@ export default function ComputersTable() {
     };
 
     fetchDevices();
-  }, []);
+  }, [user]);
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:5268/computers/${id}`);
-      setData((prev) => prev.filter((item) => item.id !== id));
+      if (!user || !user.token) return;
+
+      await axios.delete(`http://localhost:5268/computers/${id}`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      }),
+        setData((prev) => prev.filter((item) => item.id !== id));
       toast.success("Computer deleted!");
     } catch (err) {
       console.error("Error deleting computer: ", err);

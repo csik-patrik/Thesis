@@ -1,19 +1,33 @@
 import { useEffect, useState } from "react";
 import type { ComputerResponse } from "../../Types/ComputerTypes";
 import axios from "axios";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function ComputersDeployedTable() {
   const [data, setData] = useState<ComputerResponse[]>([]);
   const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const { user } = useAuth();
 
   useEffect(() => {
-    axios
-      .get<ComputerResponse[]>("http://localhost:5268/computers/deployed")
-      .then((res) => {
+    if (!user) return;
+    if (!user.token) return;
+
+    const fetchDevices = async () => {
+      try {
+        const res = await axios.get<ComputerResponse[]>(
+          "http://localhost:5268/computers/deployed",
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
+        );
         setData(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+      } catch (err) {
+        console.error("Failed to fetch devices:", err);
+      }
+    };
+
+    fetchDevices();
+  }, [user]);
 
   const categories = Array.from(
     new Set(data.map((device) => device.computerCategory.name))

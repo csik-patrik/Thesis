@@ -6,8 +6,11 @@ import type {
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function ComputersCreate() {
+  const { user } = useAuth();
+
   const [computerCategories, setComputerCategories] = useState<
     ComputerCategoryResponse[]
   >([]);
@@ -22,10 +25,14 @@ export default function ComputersCreate() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user || !user.token) return;
     const fetchComputerCategories = async () => {
       try {
         const res = await axios.get<ComputerCategoryResponse[]>(
-          "http://localhost:5268/computer-categories"
+          "http://localhost:5268/computer-categories",
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
         );
         setComputerCategories(res.data);
       } catch (err) {
@@ -34,7 +41,7 @@ export default function ComputersCreate() {
     };
 
     fetchComputerCategories();
-  }, []);
+  }, [user]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -47,10 +54,14 @@ export default function ComputersCreate() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    if (!user || !user.token) return;
+
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5268/computers", formData);
+      await axios.post("http://localhost:5268/computers", formData, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
 
       toast.success("Computer created successfully!");
       navigate("/computers");
