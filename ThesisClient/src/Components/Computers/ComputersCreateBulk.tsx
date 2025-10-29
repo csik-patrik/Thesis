@@ -73,17 +73,13 @@ export default function ComputersCreateBulk() {
     if (!user || !user.token) return;
 
     try {
-      const res = await axios.post(
-        "http://localhost:5268/computers/bulk",
-        devices,
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
+      await axios.post("http://localhost:5268/computers/bulk", devices, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
 
-      toast.success("Computerss created successfully!");
+      toast.success("Computers created successfully!");
       navigate("/computers");
     } catch (err) {
       console.error("Error creating computers:", err);

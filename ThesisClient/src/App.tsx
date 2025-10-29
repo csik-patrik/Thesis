@@ -35,6 +35,7 @@ import MyComputersTable from "./Components/Computers/MyComputersTable.tsx";
 import ProtectedRoute from "./Auth/ProtectedRoute.tsx";
 import Unauthorized from "./Pages/Unauthorized.tsx";
 import ComputersCreateBulk from "./Components/Computers/ComputersCreateBulk.tsx";
+import NotFound from "./Pages/NotFound.tsx";
 
 function App() {
   return (
@@ -171,6 +172,7 @@ function App() {
                 element={<UserCreate />}
               ></Route>
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
         <ToastContainer position="top-right" autoClose={3000} />
