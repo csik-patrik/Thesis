@@ -78,9 +78,12 @@ export default function ComputersInInventoryTable() {
     <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
       <h1>Computers in inventory</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <Link className="btn btn-success" to="/computers/create">
+        <div className="d-flex justify-content-left align-items-center mb-3">
+          <Link className="btn btn-success me-2" to="/computers/create">
             Create
+          </Link>
+          <Link className="btn btn-success" to="/computers/create-bulk">
+            Create bulk
           </Link>
         </div>
 

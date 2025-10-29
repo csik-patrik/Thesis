@@ -34,6 +34,7 @@ import ComputerCategoriesCreate from "./Components/ComputerCategories/ComputerCa
 import MyComputersTable from "./Components/Computers/MyComputersTable.tsx";
 import ProtectedRoute from "./Auth/ProtectedRoute.tsx";
 import Unauthorized from "./Pages/Unauthorized.tsx";
+import ComputersCreateBulk from "./Components/Computers/ComputersCreateBulk.tsx";
 
 function App() {
   return (
@@ -58,6 +59,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ComputersCreate />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/computers/create-bulk"
+                element={
+                  <ProtectedRoute>
+                    <ComputersCreateBulk />
                   </ProtectedRoute>
                 }
               ></Route>
