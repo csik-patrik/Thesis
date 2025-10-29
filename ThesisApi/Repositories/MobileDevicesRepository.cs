@@ -86,6 +86,22 @@ namespace ThesisApi.Repositories
                 .ToListAsync();
         }
 
+        public async Task<MobileDevice> ReturnDeviceAsync(MobileDevice mobileDevice, string status, string statusReason)
+        {
+            mobileDevice.Status = status;
+            mobileDevice.StatusReason = statusReason;
+            mobileDevice.UserId = null;
+            mobileDevice.User = null;
+
+            mobileDevice.SimCard!.Status = "In inventory";
+            mobileDevice.SimCard.MobileDevice = null;
+            mobileDevice.SimCard = null;
+
+            await _context.SaveChangesAsync();
+
+            return mobileDevice;
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             var mobileDevice = await _context.MobileDevices.FirstOrDefaultAsync(x => x.Id == id);

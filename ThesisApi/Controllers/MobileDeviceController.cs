@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.MobileDevices;
 using ThesisApi.Contracts.Responses.MobileDevices;
+using ThesisApi.Contracts.Responses.MobileOrders;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -152,6 +153,31 @@ namespace ThesisApi.Controllers
                 var mobiles = await _mobileDeviceRepository.GetAllByUserAsync(username);
 
                 var response = mobiles.Select(_mapper.Map<MobileDeviceResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("/mobile-devices/return/{id:int}")]
+        public async Task<IActionResult> ReturnMobileDevice([FromRoute] int id, [FromBody] ReturnMobileDeviceRequest request)
+        {
+            try
+            {
+                var mobileDevice = await _mobileDeviceRepository.GetByIdAsync(id);
+
+                if (mobileDevice == null)
+                    return NotFound("Mobile device is not found.");
+
+                if (mobileDevice.Status != "Deployed")
+                    return BadRequest("Only deployed mobile device can be returned.");
+
+                var updatedMobileDevice = await _mobileDeviceRepository.ReturnDeviceAsync(mobileDevice, request.Status, request.StatusReason);
+
+                var response = _mapper.Map<MobileOrderResponse>(updatedMobileDevice);
 
                 return Ok(response);
             }
