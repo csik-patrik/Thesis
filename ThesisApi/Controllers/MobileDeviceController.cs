@@ -177,9 +177,7 @@ namespace ThesisApi.Controllers
 
                 var updatedMobileDevice = await _mobileDeviceRepository.ReturnDeviceAsync(mobileDevice, request.Status, request.StatusReason);
 
-                var response = _mapper.Map<MobileOrderResponse>(updatedMobileDevice);
-
-                return Ok(response);
+                return Ok();
             }
             catch (Exception e)
             {

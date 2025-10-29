@@ -3,13 +3,14 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
 import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import type { ComputerResponse } from "../../Types/ComputerTypes";
 
 export default function DeployedMobileDevicesTable() {
   const [data, setData] = useState<MobileDeviceResponse[]>([]);
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const { user } = useAuth();
-
-  console.log(user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user?.token) {
@@ -32,6 +33,75 @@ export default function DeployedMobileDevicesTable() {
       })
       .catch((err) => console.log(err));
   }, [user]);
+
+  // const handleReturn = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!user?.token) {
+  //     toast.error("You must be logged in to return a device.");
+  //     return;
+  //   }
+
+  //   try {
+  //     const res = await axios.put(
+  //       `http://localhost:5268/mobile-devices/return/${id}`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${user.token}`,
+  //         },
+  //       }
+  //     );
+
+  //     toast.success("Mobile device created successfully!");
+  //     console.log("Created device:", res.data);
+  //     navigate("/mobiles/deployed");
+  //   } catch (err) {
+  //     console.error("Error creating mobile device:", err);
+  //     toast.error("Failed to create mobile device.");
+  //   }
+  // };
+
+  const handleReturn = async (deviceId: number) => {
+    if (!user?.token) {
+      toast.error("Unauthorized — please log in again.");
+      return;
+    }
+
+    try {
+      await axios.put(
+        `http://localhost:5268/mobile-devices/return/${deviceId}`,
+        {
+          status: "In inventory",
+          statusReason: "In inventory",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      toast.success("Device returned successfully!");
+
+      // 🟢 Update state locally first
+      setData((prev) => prev.filter((d) => d.id !== deviceId));
+
+      // 🟢 Optionally refresh data from server to stay in sync
+      const res = await axios.get<MobileDeviceResponse[]>(
+        "http://localhost:5268/mobile-devices/deployed",
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      );
+
+      setData(res.data);
+    } catch (err) {
+      console.error("Return error:", err);
+      toast.error("Failed to return device.");
+    }
+  };
 
   // Get unique device categories for the filter dropdown
   const categories = Array.from(
@@ -100,7 +170,14 @@ export default function DeployedMobileDevicesTable() {
                       ? "True"
                       : "False"}
                   </td>
-                  <td>Actions</td>
+                  <td>
+                    <button
+                      className="btn btn-warning btn-sm text-dark"
+                      onClick={() => handleReturn(d.id)}
+                    >
+                      Return
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

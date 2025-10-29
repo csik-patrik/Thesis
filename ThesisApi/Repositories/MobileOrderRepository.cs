@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using ThesisApi.Data;
 using ThesisApi.Interfaces;
@@ -75,12 +76,18 @@ namespace ThesisApi.Repositories
 
         public async Task<MobileOrder> DeliverOrderAsync(MobileOrder mobileOrder)
         {
+            if (mobileOrder.MobileDevice == null)
+                throw new ValidationException("Mobile device must be allocated to the order.");
+
+            if (mobileOrder.MobileDevice.SimCard == null)
+                throw new ValidationException("Sim card must be allocated to the mobile device.");
+
             mobileOrder.Status = "Delivered";
-            mobileOrder.MobileDevice!.Status = "Deployed";
+            mobileOrder.MobileDevice.Status = "Deployed";
             mobileOrder.MobileDevice.StatusReason = "Productive";
             mobileOrder.MobileDevice.UserId = mobileOrder.Customer.Id;
             mobileOrder.MobileDevice.User = mobileOrder.Customer;
-            mobileOrder.MobileDevice.SimCard!.Status = "Deployed";
+            mobileOrder.MobileDevice.SimCard.Status = "Deployed";
 
             await _context.SaveChangesAsync();
 
