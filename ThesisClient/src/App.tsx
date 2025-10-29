@@ -111,65 +111,149 @@ function App() {
                   </ProtectedRoute>
                 }
               ></Route>
-              <Route path="/mobiles" element={<MobileDevicesTable />}></Route>
+              <Route
+                path="/mobiles"
+                element={
+                  <ProtectedRoute>
+                    <MobileDevicesTable />
+                  </ProtectedRoute>
+                }
+              ></Route>
               <Route
                 path="/mobiles/my-mobiles"
-                element={<MyMobileDeviceTable />}
+                element={
+                  <ProtectedRoute>
+                    <MyMobileDeviceTable />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/mobiles/deployed"
-                element={<DeployedMobileDevicesTable />}
+                element={
+                  <ProtectedRoute>
+                    <DeployedMobileDevicesTable />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/mobiles/create"
-                element={<MobileDeviceCreate />}
+                element={
+                  <ProtectedRoute>
+                    <MobileDeviceCreate />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/mobiles/create-bulk"
-                element={<MobileDeviceCreateBulk />}
+                element={
+                  <ProtectedRoute>
+                    <MobileDeviceCreateBulk />
+                  </ProtectedRoute>
+                }
               ></Route>
-              <Route path="/sim-cards" element={<SimCardsTable />}></Route>
+              <Route
+                path="/sim-cards"
+                element={
+                  <ProtectedRoute>
+                    <SimCardsTable />
+                  </ProtectedRoute>
+                }
+              ></Route>
               <Route
                 path="/sim-cards/create"
-                element={<SimCardsCreate />}
+                element={
+                  <ProtectedRoute>
+                    <SimCardsCreate />
+                  </ProtectedRoute>
+                }
               ></Route>
-              <Route path="/sim-cards/:id" element={<SimCardsEdit />}></Route>
+              <Route
+                path="/sim-cards/:id"
+                element={
+                  <ProtectedRoute>
+                    <SimCardsEdit />
+                  </ProtectedRoute>
+                }
+              ></Route>
               <Route
                 path="/mobile-orders/create"
-                element={<MobileOrdersCreate />}
+                element={
+                  <ProtectedRoute>
+                    <MobileOrdersCreate />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/mobile-orders"
-                element={<MobileOrdersTable />}
+                element={
+                  <ProtectedRoute>
+                    <MobileOrdersTable />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/mobile-orders/:id"
-                element={<MobileOrderView />}
+                element={
+                  <ProtectedRoute>
+                    <MobileOrderView />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/admin/computers/categories"
-                element={<ComputerCategoriesTable />}
+                element={
+                  <ProtectedRoute>
+                    <ComputerCategoriesTable />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/admin/computers/categories/create"
-                element={<ComputerCategoriesCreate />}
+                element={
+                  <ProtectedRoute>
+                    <ComputerCategoriesCreate />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/admin/mobile-device-categories"
-                element={<MobileDeviceCategoryTable />}
+                element={
+                  <ProtectedRoute>
+                    <MobileDeviceCategoryTable />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/admin/mobile-device-categories/:id"
-                element={<EditMobileDeviceCategory />}
+                element={
+                  <ProtectedRoute>
+                    <EditMobileDeviceCategory />
+                  </ProtectedRoute>
+                }
               ></Route>
               <Route
                 path="/admin/mobile-device-categories/create"
-                element={<CreateMobileDeviceCategory />}
+                element={
+                  <ProtectedRoute>
+                    <CreateMobileDeviceCategory />
+                  </ProtectedRoute>
+                }
               ></Route>
-              <Route path="/admin/users" element={<UsersTable />}></Route>
+              <Route
+                path="/admin/users"
+                element={
+                  <ProtectedRoute>
+                    <UsersTable />
+                  </ProtectedRoute>
+                }
+              ></Route>
               <Route
                 path="/admin/users/create"
-                element={<UserCreate />}
+                element={
+                  <ProtectedRoute>
+                    <UserCreate />
+                  </ProtectedRoute>
+                }
               ></Route>
             </Route>
             <Route path="*" element={<NotFound />} />
