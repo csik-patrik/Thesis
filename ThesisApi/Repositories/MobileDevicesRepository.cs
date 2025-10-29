@@ -114,6 +114,15 @@ namespace ThesisApi.Repositories
             return true;
         }
 
+        public async Task<MobileDevice> UpdateStatusReasonAsync(MobileDevice mobileDevice, string statusReason)
+        {
+            mobileDevice.StatusReason = statusReason;
+
+            await _context.SaveChangesAsync();
+
+            return mobileDevice;
+        }
+
         // 
         //
         // public async Task<bool> UpdateAsync(MobileDevice mobileDevice)

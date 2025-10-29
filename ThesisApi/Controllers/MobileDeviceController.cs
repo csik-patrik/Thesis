@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.MobileDevices;
 using ThesisApi.Contracts.Responses.MobileDevices;
-using ThesisApi.Contracts.Responses.MobileOrders;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -175,7 +174,28 @@ namespace ThesisApi.Controllers
                 if (mobileDevice.Status != "Deployed")
                     return BadRequest("Only deployed mobile device can be returned.");
 
-                var updatedMobileDevice = await _mobileDeviceRepository.ReturnDeviceAsync(mobileDevice, request.Status, request.StatusReason);
+                await _mobileDeviceRepository.ReturnDeviceAsync(mobileDevice, request.Status, request.StatusReason);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("/mobile-devices/update/status-reason/{id:int}")]
+        public async Task<IActionResult> UpdateStatusReason([FromRoute] int id, [FromBody] string statusReason)
+        {
+            try
+            {
+                var mobileDevice = await _mobileDeviceRepository.GetByIdAsync(id);
+
+                if (mobileDevice == null)
+                    return NotFound("Mobile device is not found.");
+
+
+                await _mobileDeviceRepository.UpdateStatusReasonAsync(mobileDevice, statusReason);
 
                 return Ok();
             }
