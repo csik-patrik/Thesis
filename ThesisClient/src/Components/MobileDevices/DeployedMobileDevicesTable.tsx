@@ -3,14 +3,17 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
 import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import type { ComputerResponse } from "../../Types/ComputerTypes";
 
 export default function DeployedMobileDevicesTable() {
   const [data, setData] = useState<MobileDeviceResponse[]>([]);
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const [showReturnModal, setShowReturnModal] = useState(false);
+  const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
+  const [returnData, setReturnData] = useState({
+    status: "In inventory",
+    statusReason: "In inventory",
+  });
 
   useEffect(() => {
     if (!user?.token) {
@@ -34,35 +37,11 @@ export default function DeployedMobileDevicesTable() {
       .catch((err) => console.log(err));
   }, [user]);
 
-  // const handleReturn = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (!user?.token) {
-  //     toast.error("You must be logged in to return a device.");
-  //     return;
-  //   }
-
-  //   try {
-  //     const res = await axios.put(
-  //       `http://localhost:5268/mobile-devices/return/${id}`,
-  //       formData,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${user.token}`,
-  //         },
-  //       }
-  //     );
-
-  //     toast.success("Mobile device created successfully!");
-  //     console.log("Created device:", res.data);
-  //     navigate("/mobiles/deployed");
-  //   } catch (err) {
-  //     console.error("Error creating mobile device:", err);
-  //     toast.error("Failed to create mobile device.");
-  //   }
-  // };
-
-  const handleReturn = async (deviceId: number) => {
+  const handleReturn = async (
+    deviceId: number,
+    status: string,
+    statusReason: string
+  ) => {
     if (!user?.token) {
       toast.error("Unauthorized — please log in again.");
       return;
@@ -71,10 +50,7 @@ export default function DeployedMobileDevicesTable() {
     try {
       await axios.put(
         `http://localhost:5268/mobile-devices/return/${deviceId}`,
-        {
-          status: "In inventory",
-          statusReason: "In inventory",
-        },
+        { status, statusReason },
         {
           headers: {
             "Content-Type": "application/json",
@@ -83,12 +59,10 @@ export default function DeployedMobileDevicesTable() {
         }
       );
 
-      toast.success("Device returned successfully!");
+      toast.success(`Device marked as "${status}" successfully!`);
 
-      // 🟢 Update state locally first
       setData((prev) => prev.filter((d) => d.id !== deviceId));
 
-      // 🟢 Optionally refresh data from server to stay in sync
       const res = await axios.get<MobileDeviceResponse[]>(
         "http://localhost:5268/mobile-devices/deployed",
         {
@@ -118,6 +92,85 @@ export default function DeployedMobileDevicesTable() {
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
+      {showReturnModal && (
+        <div
+          className="modal fade show d-block"
+          tabIndex={-1}
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Return Device</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowReturnModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="form-label fw-bold">Status</label>
+                  <select
+                    className="form-select"
+                    value={returnData.status}
+                    onChange={(e) =>
+                      setReturnData((prev) => ({
+                        ...prev,
+                        status: e.target.value,
+                      }))
+                    }
+                  >
+                    <option>In inventory</option>
+                  </select>
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label fw-bold">Status Reason</label>
+                  <select
+                    className="form-select"
+                    value={returnData.statusReason}
+                    onChange={(e) =>
+                      setReturnData((prev) => ({
+                        ...prev,
+                        statusReason: e.target.value,
+                      }))
+                    }
+                  >
+                    <option>In inventory</option>
+                    <option>In repair</option>
+                    <option>Pending disposal</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="modal-footer">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowReturnModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    if (selectedDeviceId) {
+                      handleReturn(
+                        selectedDeviceId,
+                        returnData.status,
+                        returnData.statusReason
+                      );
+                    }
+                    setShowReturnModal(false);
+                  }}
+                >
+                  Confirm Return
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <h1>Deployed Mobile Devices</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
         <div className="table-responsive">
@@ -172,8 +225,11 @@ export default function DeployedMobileDevicesTable() {
                   </td>
                   <td>
                     <button
-                      className="btn btn-warning btn-sm text-dark"
-                      onClick={() => handleReturn(d.id)}
+                      className="btn btn-warning btn-sm"
+                      onClick={() => {
+                        setSelectedDeviceId(d.id);
+                        setShowReturnModal(true);
+                      }}
                     >
                       Return
                     </button>
