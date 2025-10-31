@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import type {
-  ComputerOrderResponse,
-  ComputerResponse,
-} from "../../Types/ComputerTypes";
+import type { ComputerOrderResponse, ComputerResponse } from "../../Types/ComputerTypes";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function ComputerOrderView() {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +13,8 @@ export default function ComputerOrderView() {
   const [devices, setDevices] = useState<ComputerResponse[]>([]);
   const [allocating, setAllocating] = useState<number | null>(null);
   const [search, setSearch] = useState("");
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -35,10 +35,14 @@ export default function ComputerOrderView() {
   }, [id]);
 
   useEffect(() => {
+    if (!user || !user.token) return;
     if (order?.computerCategory.id === undefined) return;
     axios
       .get<ComputerResponse[]>(
-        `http://localhost:5268/computers/allocation/${order?.computerCategory.id}`
+        `http://localhost:5268/computers/allocation/${order?.computerCategory.id}`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
       )
       .then((res) => setDevices(res.data))
       .catch((err) => {
@@ -137,9 +141,7 @@ export default function ComputerOrderView() {
               <dd className="col-sm-8">
                 <span
                   className={`badge ${
-                    order.status === "Delivered"
-                      ? "bg-success"
-                      : "bg-warning text-dark"
+                    order.status === "Delivered" ? "bg-success" : "bg-warning text-dark"
                   }`}
                 >
                   {order.status}
@@ -150,10 +152,7 @@ export default function ComputerOrderView() {
 
           {/* Actions */}
           <div className="mt-4">
-            <Link
-              to="/computer-orders"
-              className="btn btn-outline-primary me-2"
-            >
+            <Link to="/computer-orders" className="btn btn-outline-primary me-2">
               ⬅ Back to Orders
             </Link>
             {order.computer && order.status !== "Delivered" && (
@@ -175,8 +174,7 @@ export default function ComputerOrderView() {
                     <strong>Hostname:</strong> {order.computer.hostname}
                   </li>
                   <li className="list-group-item">
-                    <strong>Category:</strong>{" "}
-                    {order.computer.computerCategory.name}
+                    <strong>Category:</strong> {order.computer.computerCategory.name}
                   </li>
                   <li className="list-group-item">
                     <strong>Model:</strong> {order.computer.model}
@@ -203,10 +201,7 @@ export default function ComputerOrderView() {
                 ) : (
                   <ul className="list-group list-group-flush">
                     {filteredDevices.map((device) => (
-                      <li
-                        key={device.id}
-                        className="list-group-item d-flex flex-column"
-                      >
+                      <li key={device.id} className="list-group-item d-flex flex-column">
                         <strong>{device.hostname}</strong>
                         <small>Category: {device.computerCategory.name}</small>
                         <small>Model: {device.model}</small>
@@ -217,9 +212,7 @@ export default function ComputerOrderView() {
                           disabled={allocating === device.id}
                           onClick={() => handleAllocateComputer(device.id)}
                         >
-                          {allocating === device.id
-                            ? "Allocating..."
-                            : "Allocate"}
+                          {allocating === device.id ? "Allocating..." : "Allocate"}
                         </button>
                       </li>
                     ))}
