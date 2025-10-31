@@ -181,6 +181,29 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpPut("/computers/return/{id:int}")]
+        public async Task<IActionResult> ReturnComputer([FromRoute] int id, [FromBody] ReturnComputerRequest request)
+        {
+            try
+            {
+                var computer = await _computerRepository.GetByIdAsync(id);
+
+                if (computer == null)
+                    return NotFound("Computer is not found.");
+
+                if (computer.Status != "Deployed")
+                    return BadRequest("Only deployed computers can be returned.");
+
+                var updatedMobileDevice = await _computerRepository.ReturnDeviceAsync(computer, request.Status, request.StatusReason);
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete("/computers/{id:int}")]
         public async Task<IActionResult> DeleteById([FromRoute] int id)
         {

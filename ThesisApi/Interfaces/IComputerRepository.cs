@@ -12,6 +12,7 @@ namespace ThesisApi.Interfaces
         Task<Computer?> GetByIdAsync(int id);
         Task<IEnumerable<Computer>> GetAllDeployedAsync();
         Task<IEnumerable<Computer>> GetAllByUserAsync(string username);
+        Task<Computer> ReturnDeviceAsync(Computer computer, string status, string statusReason);
         Task<bool> Delete(Computer computer);
     }
 }
