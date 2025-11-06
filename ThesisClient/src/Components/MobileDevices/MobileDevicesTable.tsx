@@ -6,12 +6,16 @@ import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
 
 export default function MobileDevicesTable() {
+  const { user } = useAuth();
   const [data, setData] = useState<MobileDeviceResponse[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [statusReasonFilter, setStatusReasonFilter] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
-
-  const { user } = useAuth();
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
+  const [updateData, setUpdateData] = useState({
+    statusReason: "In inventory",
+  });
 
   console.log(user);
 
