@@ -42,6 +42,10 @@ export default function NavBar() {
                   title="My Computer Orders"
                   to="/computer-orders/my-orders"
                 />
+                <NavItem
+                  title="My Mobile Orders"
+                  to="/mobile-orders/my-orders"
+                />
               </DropDown>
 
               {user.roles.includes("Admin") && (

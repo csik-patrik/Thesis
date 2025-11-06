@@ -37,6 +37,7 @@ import Unauthorized from "./Pages/Unauthorized.tsx";
 import ComputersCreateBulk from "./Components/Computers/ComputersCreateBulk.tsx";
 import NotFound from "./Pages/NotFound.tsx";
 import MyComputerOrdersTable from "./Components/ComputerOrders/MyComputerOrdersTable.tsx";
+import MyMobileOrdersTable from "./Components/MobileOrders/MyMobileOrdersTable.tsx";
 
 function App() {
   return (
@@ -197,6 +198,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <MobileOrdersTable />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/mobile-orders/my-orders"
+                element={
+                  <ProtectedRoute>
+                    <MyMobileOrdersTable />
                   </ProtectedRoute>
                 }
               ></Route>
