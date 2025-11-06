@@ -34,7 +34,7 @@ export default function MyComputerOrdersTable() {
       console.error("Error loading computer orders:", err);
       toast.error("Error loading computer orders:");
     }
-  }, []);
+  }, [user]);
 
   const handleDelete = async (id: number) => {
     try {

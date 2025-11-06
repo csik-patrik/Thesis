@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import type { ComputerOrderResponse, ComputerResponse } from "../../Types/ComputerTypes";
+import type {
+  ComputerOrderResponse,
+  ComputerResponse,
+} from "../../Types/ComputerTypes";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
@@ -19,8 +22,12 @@ export default function ComputerOrderView() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
+        if (!user || !user.token) return;
         const res = await axios.get<ComputerOrderResponse>(
-          `http://localhost:5268/computer-orders/${id}`
+          `http://localhost:5268/computer-orders/${id}`,
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
         );
         setOrder(res.data);
       } catch (err) {
@@ -52,8 +59,11 @@ export default function ComputerOrderView() {
   }, [order]);
 
   const handleAllocateComputer = async (deviceId: number) => {
-    setAllocating(deviceId);
     try {
+      if (!user || !user.token) return;
+
+      setAllocating(deviceId);
+
       await axios.put(
         `http://localhost:5268/computer-orders/allocate`,
         {
@@ -61,15 +71,21 @@ export default function ComputerOrderView() {
           computerId: deviceId,
         },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
         }
       );
+
       toast.success("Device allocated successfully!");
       setDevices((prev) => prev.filter((d) => d.id !== deviceId));
+
       // Refresh order to show allocated device
       const res = await axios.get<ComputerOrderResponse>(
         `http://localhost:5268/computer-orders/${id}`
       );
+
       setOrder(res.data);
     } catch (err) {
       toast.error("Failed to allocate device.");
@@ -141,7 +157,9 @@ export default function ComputerOrderView() {
               <dd className="col-sm-8">
                 <span
                   className={`badge ${
-                    order.status === "Delivered" ? "bg-success" : "bg-warning text-dark"
+                    order.status === "Delivered"
+                      ? "bg-success"
+                      : "bg-warning text-dark"
                   }`}
                 >
                   {order.status}
@@ -152,7 +170,10 @@ export default function ComputerOrderView() {
 
           {/* Actions */}
           <div className="mt-4">
-            <Link to="/computer-orders" className="btn btn-outline-primary me-2">
+            <Link
+              to="/computer-orders"
+              className="btn btn-outline-primary me-2"
+            >
               ⬅ Back to Orders
             </Link>
             {order.computer && order.status !== "Delivered" && (
@@ -164,64 +185,76 @@ export default function ComputerOrderView() {
         </div>
 
         {/* 💻 Device Allocation Section */}
-        <div className="col-lg-4">
-          {order.computer ? (
-            <>
-              <h2 className="mb-3">💻 Allocated Device</h2>
-              <div className="card shadow-sm border-0 p-3">
-                <ul className="list-group list-group-flush">
-                  <li className="list-group-item">
-                    <strong>Hostname:</strong> {order.computer.hostname}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Category:</strong> {order.computer.computerCategory.name}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Model:</strong> {order.computer.model}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Serial:</strong> {order.computer.serialNumber}
-                  </li>
-                </ul>
-              </div>
-            </>
-          ) : (
-            <>
-              <h2 className="mb-3">🧩 Allocate Device</h2>
-              <input
-                type="text"
-                className="form-control mb-3"
-                placeholder="🔍 Search by hostname..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <div className="card shadow-sm border-0 p-3">
-                {filteredDevices.length === 0 ? (
-                  <p className="text-muted mb-0">No available devices found.</p>
-                ) : (
+        {user?.roles.includes("Admin") && (
+          <div className="col-lg-4">
+            {order.computer ? (
+              <>
+                <h2 className="mb-3">💻 Allocated Device</h2>
+                <div className="card shadow-sm border-0 p-3">
                   <ul className="list-group list-group-flush">
-                    {filteredDevices.map((device) => (
-                      <li key={device.id} className="list-group-item d-flex flex-column">
-                        <strong>{device.hostname}</strong>
-                        <small>Category: {device.computerCategory.name}</small>
-                        <small>Model: {device.model}</small>
-                        <small>Serial: {device.serialNumber}</small>
-                        <small>Status: {device.status}</small>
-                        <button
-                          className="btn btn-outline-success btn-sm mt-2 align-self-end"
-                          disabled={allocating === device.id}
-                          onClick={() => handleAllocateComputer(device.id)}
-                        >
-                          {allocating === device.id ? "Allocating..." : "Allocate"}
-                        </button>
-                      </li>
-                    ))}
+                    <li className="list-group-item">
+                      <strong>Hostname:</strong> {order.computer.hostname}
+                    </li>
+                    <li className="list-group-item">
+                      <strong>Category:</strong>{" "}
+                      {order.computer.computerCategory.name}
+                    </li>
+                    <li className="list-group-item">
+                      <strong>Model:</strong> {order.computer.model}
+                    </li>
+                    <li className="list-group-item">
+                      <strong>Serial:</strong> {order.computer.serialNumber}
+                    </li>
                   </ul>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="mb-3">🧩 Allocate Device</h2>
+                <input
+                  type="text"
+                  className="form-control mb-3"
+                  placeholder="🔍 Search by hostname..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <div className="card shadow-sm border-0 p-3">
+                  {filteredDevices.length === 0 ? (
+                    <p className="text-muted mb-0">
+                      No available devices found.
+                    </p>
+                  ) : (
+                    <ul className="list-group list-group-flush">
+                      {filteredDevices.map((device) => (
+                        <li
+                          key={device.id}
+                          className="list-group-item d-flex flex-column"
+                        >
+                          <strong>{device.hostname}</strong>
+                          <small>
+                            Category: {device.computerCategory.name}
+                          </small>
+                          <small>Model: {device.model}</small>
+                          <small>Serial: {device.serialNumber}</small>
+                          <small>Status: {device.status}</small>
+                          <button
+                            className="btn btn-outline-success btn-sm mt-2 align-self-end"
+                            disabled={allocating === device.id}
+                            onClick={() => handleAllocateComputer(device.id)}
+                          >
+                            {allocating === device.id
+                              ? "Allocating..."
+                              : "Allocate"}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
