@@ -38,6 +38,17 @@ namespace ThesisApi.Repositories
                 .Include(x => x.Computer)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task<IEnumerable<ComputerOrder?>> GetByUsernameAsync(string username)
+        {
+            return await _context.ComputerOrders
+                .Include(x => x.Customer)
+                .Include(x => x.ComputerCategory)
+                .Include(x => x.Computer)
+                .Where(x => x.Customer.Username == username)
+                .ToListAsync();
+        }
+
         public async Task<ComputerOrder> AllocateComputerToOrder(ComputerOrder order, Computer computer)
         {
             order.Computer = computer;

@@ -7,6 +7,7 @@ namespace ThesisApi.Interfaces
         Task<ComputerOrder> CreateAsync(ComputerOrder order);
         Task<IEnumerable<ComputerOrder>> GetAllAsync();
         Task<ComputerOrder?> GetByIdAsync(int id);
+        Task<IEnumerable<ComputerOrder?>> GetByUsernameAsync(string username);
         Task<ComputerOrder> AllocateComputerToOrder(ComputerOrder order, Computer computer);
         Task<ComputerOrder> DeliverOrderAsync(ComputerOrder order);
         Task<bool> DeleteAsync(ComputerOrder order);

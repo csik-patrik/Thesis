@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.ComputerOrders;
 using ThesisApi.Contracts.Responses.ComputerOrders;
@@ -9,6 +10,7 @@ namespace ThesisApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class ComputerOrderController : ControllerBase
     {
         private readonly IComputerRepository _computerRepository;
@@ -79,6 +81,27 @@ namespace ThesisApi.Controllers
                     return NotFound();
 
                 var response = _mapper.Map<ComputerOrderResponse>(order);
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet("/computer-orders/my-orders")]
+        public async Task<IActionResult> GetByCustomerId()
+        {
+            try
+            {
+                var username = User.FindFirst("username")?.Value;
+                if (string.IsNullOrEmpty(username))
+                    return Unauthorized("User is not logged in.");
+
+                var orders = await _computerOrderRepository.GetByUsernameAsync(username);
+
+                var response = orders.Select(_mapper.Map<ComputerOrderResponse>).ToList();
 
                 return Ok(response);
             }
