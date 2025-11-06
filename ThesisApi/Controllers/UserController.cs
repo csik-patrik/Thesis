@@ -38,7 +38,7 @@ namespace ThesisApi.Controllers
         [HttpPost("/login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            var user = await _context.Users.Include(x => x.UserRoles).FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user == null)
                 return Unauthorized("Invalid email!");
 

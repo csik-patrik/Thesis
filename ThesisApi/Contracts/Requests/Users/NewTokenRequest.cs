@@ -1,3 +1,5 @@
+using ThesisApi.Contracts.Responses.Users;
+
 namespace ThesisApi.Contracts.Requests.Users
 {
     public class NewTokenRequest
@@ -8,5 +10,7 @@ namespace ThesisApi.Contracts.Requests.Users
         public required string Email { get; set; }
         public required string Department { get; set; }
         public required string CostCenter { get; set; }
+
+        public required ICollection<UserRoleResponse> UserRoles { get; set; }
     }
 }

@@ -18,19 +18,27 @@ namespace ThesisApi.Services
             var key = Encoding.UTF8.GetBytes(SecretKey);
 
             var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(JwtRegisteredClaimNames.Sub, request.Id.ToString() ?? string.Empty),
-            new(JwtRegisteredClaimNames.GivenName, request.Username ?? string.Empty),
-            new(JwtRegisteredClaimNames.Email, request.Email ?? string.Empty),
+            {
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new(JwtRegisteredClaimNames.Sub, request.Id.ToString() ?? string.Empty),
+                new(JwtRegisteredClaimNames.GivenName, request.Username ?? string.Empty),
+                new(JwtRegisteredClaimNames.Email, request.Email ?? string.Empty),
 
-            new("username", request.Username ?? string.Empty),
-            new("displayname", request.Displayname ?? string.Empty),
-            new("department", request.Department ?? string.Empty),
-            new("costCenter", request.CostCenter ?? string.Empty)
-        };
+                new("username", request.Username ?? string.Empty),
+                new("displayname", request.Displayname ?? string.Empty),
+                new("department", request.Department ?? string.Empty),
+                new("costCenter", request.CostCenter ?? string.Empty)
+            };
 
-            var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
+            if (request.UserRoles != null)
+            {
+                foreach (var role in request.UserRoles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role.Name));
+                }
+            }
+
+            //var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
