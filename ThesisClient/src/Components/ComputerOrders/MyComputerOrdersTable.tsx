@@ -7,39 +7,37 @@ import { useAuth } from "../../Auth/AuthContext";
 
 export default function MyComputerOrdersTable() {
   const { user } = useAuth();
-
   const [data, setData] = useState<ComputerOrderResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>("New");
+  const [statusFilter, setStatusFilter] = useState<string>("All");
 
   useEffect(() => {
-    try {
-      if (!user || !user.token) return;
-      axios
-        .get<ComputerOrderResponse[]>(
+    if (!user?.token) return;
+
+    const fetchOrders = async () => {
+      try {
+        const res = await axios.get<ComputerOrderResponse[]>(
           "http://localhost:5268/computer-orders/my-orders",
           {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
+            headers: { Authorization: `Bearer ${user.token}` },
           }
-        )
-        .then((res) => setData(res.data))
-        .catch((err) => {
-          toast.error("Failed to fetch computer orders.");
-          console.log(err);
-        })
-        .finally(() => setLoading(false));
-    } catch (err) {
-      console.error("Error loading computer orders:", err);
-      toast.error("Error loading computer orders:");
-    }
+        );
+        setData(res.data);
+      } catch (err) {
+        console.error("Error loading computer orders:", err);
+        toast.error("Failed to load computer orders.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
   }, [user]);
 
   const handleDelete = async (id: number) => {
-    try {
-      if (!user || !user.token) return;
+    if (!user?.token) return;
 
+    try {
       await axios.delete(`http://localhost:5268/computer-orders/${id}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
@@ -51,16 +49,15 @@ export default function MyComputerOrdersTable() {
     }
   };
 
-  // Get unique statuses for the filter dropdown
-  const statuses = Array.from(new Set(data.map((order) => order.status)));
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+        <h3>Loading your computer orders...</h3>
+      </div>
+    );
+  }
 
-  // Filter data by status
-  const filteredData = statusFilter
-    ? data.filter((order) => order.status === statusFilter)
-    : data;
-
-  //No data state
-  if (!data || data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light text-center">
         <h1 className="text-muted mb-3">💻 No computer orders found</h1>
@@ -73,6 +70,12 @@ export default function MyComputerOrdersTable() {
       </div>
     );
   }
+
+  const statuses = Array.from(new Set(data.map((order) => order.status)));
+  const filteredData =
+    statusFilter === "All"
+      ? data
+      : data.filter((order) => order.status === statusFilter);
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
@@ -101,56 +104,48 @@ export default function MyComputerOrdersTable() {
             </select>
           </div>
         </div>
-        {loading ? (
-          <div>Loading...</div>
-        ) : filteredData.length === 0 ? (
-          <div>No computer orders found.</div>
-        ) : (
-          <div className="table-responsive">
-            <table className="table table-striped">
-              <caption className="visually-hidden">
-                List of computer orders
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Customer Name</th>
-                  <th scope="col">Device Type</th>
-                  <th scope="col">Pickup Location</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.map((d) => (
-                  <tr key={d.id}>
-                    <td>{d.id}</td>
-                    <td>{d.customer.displayName}</td>
-                    <td>{d.computerCategory.name}</td>
-                    <td>{d.pickupLocation}</td>
-                    <td>{d.status}</td>
-                    <td>
-                      <Link
-                        to={`/computer-orders/${d.id}`}
-                        className="btn btn-primary btn-sm me-2 text-light"
+
+        <div className="table-responsive">
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Customer Name</th>
+                <th>Device Type</th>
+                <th>Pickup Location</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((d) => (
+                <tr key={d.id}>
+                  <td>{d.id}</td>
+                  <td>{d.customer.displayName}</td>
+                  <td>{d.computerCategory.name}</td>
+                  <td>{d.pickupLocation}</td>
+                  <td>{d.status}</td>
+                  <td>
+                    <Link
+                      to={`/computer-orders/${d.id}`}
+                      className="btn btn-primary btn-sm me-2 text-light"
+                    >
+                      View
+                    </Link>
+                    {d.status !== "Delivered" && (
+                      <button
+                        className="btn btn-danger btn-sm text-light"
+                        onClick={() => handleDelete(d.id)}
                       >
-                        View
-                      </Link>
-                      {d.status !== "Delivered" && (
-                        <button
-                          className="btn btn-danger btn-sm text-light"
-                          onClick={() => handleDelete(d.id)}
-                        >
-                          Cancel
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                        Cancel
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
