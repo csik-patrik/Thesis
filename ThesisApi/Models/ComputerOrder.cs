@@ -13,6 +13,8 @@ namespace ThesisApi.Models
         public ComputerCategory ComputerCategory { get; set; } = null!;
         public required string PickupLocation { get; set; }
         public string? Note { get; set; }
+        public int ApproverId { get; set; }
+        public User Approver { get; set; } = null!;
         public int? ComputerId { get; set; }
         public Computer? Computer { get; set; }
         public required string Status { get; set; }

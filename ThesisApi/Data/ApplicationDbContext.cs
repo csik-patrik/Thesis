@@ -27,6 +27,22 @@ namespace ThesisApi.Data
                 new UserRole { Id = 2, Name = "Admin" },
                 new UserRole { Id = 3, Name = "Group leader" }
             );
+
+            base.OnModelCreating(modelBuilder);
+
+            // Configure Customer relationship
+            modelBuilder.Entity<ComputerOrder>()
+                .HasOne(o => o.Customer)
+                .WithMany(u => u.CustomerOrders)
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Approver relationship
+            modelBuilder.Entity<ComputerOrder>()
+                .HasOne(o => o.Approver)
+                .WithMany(u => u.ApprovedOrders)
+                .HasForeignKey(o => o.ApproverId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

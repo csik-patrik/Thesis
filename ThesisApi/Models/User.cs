@@ -14,7 +14,8 @@ namespace ThesisApi.Models
         public ICollection<MobileDevice> MobileDevices { get; set; } = new List<MobileDevice>();
         public ICollection<MobileOrder> MobileOrders { get; set; } = new List<MobileOrder>();
         public ICollection<Computer> Computers { get; set; } = new List<Computer>();
-        public ICollection<ComputerOrder> ComputerOrders { get; set; } = new List<ComputerOrder>();
+        public ICollection<ComputerOrder> CustomerOrders { get; set; } = new List<ComputerOrder>();
+        public ICollection<ComputerOrder> ApprovedOrders { get; set; } = new List<ComputerOrder>();
 
     }
 }
