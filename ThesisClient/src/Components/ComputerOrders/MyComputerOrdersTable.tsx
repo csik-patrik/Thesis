@@ -38,7 +38,11 @@ export default function MyComputerOrdersTable() {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:5268/api/computer-orders/${id}`);
+      if (!user || !user.token) return;
+
+      await axios.delete(`http://localhost:5268/computer-orders/${id}`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
       setData((prev) => prev.filter((item) => item.id !== id));
       toast.success("Computer order deleted successfully!");
     } catch (err) {
@@ -137,7 +141,7 @@ export default function MyComputerOrdersTable() {
                           className="btn btn-danger btn-sm text-light"
                           onClick={() => handleDelete(d.id)}
                         >
-                          Delete
+                          Cancel
                         </button>
                       )}
                     </td>

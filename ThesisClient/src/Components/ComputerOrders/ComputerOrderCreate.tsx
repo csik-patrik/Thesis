@@ -64,7 +64,10 @@ export default function ComputerOrderCreate() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5268/computer-orders", formData);
+      if (!user || !user.token) return;
+      await axios.post("http://localhost:5268/computer-orders", formData, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
       toast.success("Computer order created successfully!");
       navigate("/computer-orders");
     } catch (err) {
