@@ -93,6 +93,27 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpGet("/mobile-orders/my-orders")]
+        public async Task<IActionResult> GetByCustomerId()
+        {
+            try
+            {
+                var username = User.FindFirst("username")?.Value;
+                if (string.IsNullOrEmpty(username))
+                    return Unauthorized("User is not logged in.");
+
+                var orders = await _mobileOrderRepository.GetByUsernameAsync(username);
+
+                var response = orders.Select(_mapper.Map<MobileOrderResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPut("/mobile-orders/allocate/device")]
         public async Task<IActionResult> AllocateMobileDevice([FromBody] AllocateMobileDeviceToOrderRequest request)
         {

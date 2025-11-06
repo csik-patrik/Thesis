@@ -46,6 +46,19 @@ namespace ThesisApi.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<IEnumerable<MobileOrder?>> GetByUsernameAsync(string username)
+        {
+            return await _context.MobileOrders
+                .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.Customer)
+                .Include(x => x.SimCallControlGroup)
+                .Include(x => x.MobileDevice)
+                .Include(x => x.SimCard)
+                .AsSplitQuery()
+                .Where(x => x.Customer.Username == username)
+                .ToListAsync();
+        }
+
         public async Task<MobileOrder> AllocateMobileDeviceToOrderAsync(MobileOrder mobileOrder, MobileDevice mobileDevice)
         {
             mobileOrder.MobileDevice = mobileDevice;
