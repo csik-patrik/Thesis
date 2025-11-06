@@ -79,6 +79,14 @@ export default function NavBar() {
           <ul className="navbar-nav ms-auto align-items-center">
             {user ? (
               <>
+                {user.roles.includes("Group leader") && (
+                  <DropDown title="Approvals">
+                    <NavItem
+                      title="Computer orders"
+                      to="/computer-orders/approval"
+                    />
+                  </DropDown>
+                )}
                 <DropDown title={`👤 ${user.displayname ?? "User"}`}>
                   <NavItem title="My Computers" to="/computers/my-computers" />
                   <NavItem title="My Mobiles" to="/mobiles/my-mobiles" />

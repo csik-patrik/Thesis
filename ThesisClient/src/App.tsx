@@ -38,6 +38,7 @@ import ComputersCreateBulk from "./Components/Computers/ComputersCreateBulk.tsx"
 import NotFound from "./Pages/NotFound.tsx";
 import MyComputerOrdersTable from "./Components/ComputerOrders/MyComputerOrdersTable.tsx";
 import MyMobileOrdersTable from "./Components/MobileOrders/MyMobileOrdersTable.tsx";
+import ComputerOrderWaitingForApprovalTable from "./Components/ComputerOrders/ComputerOrderWaitingfForApprovalTable.tsx";
 
 function App() {
   return (
@@ -86,6 +87,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <MyComputerOrdersTable />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/computer-orders/approval"
+                element={
+                  <ProtectedRoute>
+                    <ComputerOrderWaitingForApprovalTable />
                   </ProtectedRoute>
                 }
               ></Route>
