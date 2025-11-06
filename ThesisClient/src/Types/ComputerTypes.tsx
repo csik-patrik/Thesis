@@ -42,4 +42,5 @@ export type CreateComputerOrderRequest = {
   computerCategoryId: number;
   pickupLocation: string;
   note?: string;
+  approverId: number;
 };

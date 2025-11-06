@@ -7,6 +7,7 @@ import axios from "axios";
 import { useAuth } from "../../Auth/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import type { UserResponse } from "../../Types/UserTypes";
 
 export default function ComputerOrderCreate() {
   const { user } = useAuth();
@@ -15,11 +16,14 @@ export default function ComputerOrderCreate() {
     ComputerCategoryResponse[]
   >([]);
 
+  const [groupLeaders, setGroupLeaders] = useState<UserResponse[]>([]);
+
   const [formData, setFormData] = useState<CreateComputerOrderRequest>({
     customerId: 0,
     computerCategoryId: 0,
     pickupLocation: "HtvP",
     note: undefined,
+    approverId: 0,
   });
 
   useEffect(() => {
@@ -35,6 +39,21 @@ export default function ComputerOrderCreate() {
     };
 
     fetchComputerCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchGroupLeaders = async () => {
+      try {
+        const res = await axios.get<UserResponse[]>(
+          "http://localhost:5268/users/group-leader"
+        );
+        setGroupLeaders(res.data);
+      } catch (err) {
+        console.error("Failed to fetch device categories:", err);
+      }
+    };
+
+    fetchGroupLeaders();
   }, []);
 
   useEffect(() => {
@@ -144,6 +163,28 @@ export default function ComputerOrderCreate() {
               onChange={handleChange}
               rows={2}
             />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="approverId" className="form-label">
+              Approver:
+            </label>
+            <select
+              id="approverId"
+              name="approverId"
+              className="form-select"
+              value={formData.approverId}
+              onChange={handleChange}
+              required
+            >
+              <option value={0} disabled>
+                Select an approver...
+              </option>
+              {groupLeaders.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.displayName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="d-flex flex-wrap justify-content-between align-items-center mt-4">
             <button
