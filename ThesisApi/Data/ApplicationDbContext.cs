@@ -24,7 +24,8 @@ namespace ThesisApi.Data
 
             modelBuilder.Entity<UserRole>().HasData(
                 new UserRole { Id = 1, Name = "User" },
-                new UserRole { Id = 2, Name = "Admin" }
+                new UserRole { Id = 2, Name = "Admin" },
+                new UserRole { Id = 3, Name = "Group leader" }
             );
         }
     }
