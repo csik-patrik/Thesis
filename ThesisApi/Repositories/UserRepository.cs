@@ -46,5 +46,13 @@ namespace ThesisApi.Repositories
 
             return true;
         }
+
+        public async Task<IEnumerable<User>> GetGroupLeadersAsync()
+        {
+            return await _context.Users
+                .Include(x => x.UserRoles)
+                .Where(u => u.UserRoles.Any(r => r.Name == "Group leader"))
+                .ToListAsync();
+        }
     }
 }

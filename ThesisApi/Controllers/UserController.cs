@@ -169,7 +169,22 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpGet("/users/group-leader")]
+        public async Task<IActionResult> GetGroupLeaders()
+        {
+            try
+            {
+                var users = await _userRepository.GetGroupLeadersAsync();
 
+                var response = users.Select(_mapper.Map<UserResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
     }
 }

@@ -9,5 +9,6 @@ namespace ThesisApi.Interfaces
         Task<User?> GetByIdAsync(int id);
         Task<List<User>> GetByDisplayNameAsync(string displayName);
         Task<bool> DeleteById(User user);
+        Task<IEnumerable<User>> GetGroupLeadersAsync();
     }
 }
