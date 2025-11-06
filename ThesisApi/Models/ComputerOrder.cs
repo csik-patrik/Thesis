@@ -35,6 +35,11 @@ namespace ThesisApi.Models
             if (category == null)
                 throw new Exception("Computer category not found!");
 
+            var approver = await userRepository.GetByIdAsync(request.ApproverId);
+
+            if (approver == null)
+                throw new Exception("Approver is not found!");
+
             return new ComputerOrder()
             {
                 CustomerId = customer.Id,
@@ -43,7 +48,9 @@ namespace ThesisApi.Models
                 ComputerCategory = category,
                 PickupLocation = request.PickupLocation,
                 Note = request.Note,
-                Status = "New"
+                Status = "Waiting for approval",
+                ApproverId = approver.Id,
+                Approver = approver
             };
         }
     }

@@ -26,6 +26,7 @@ namespace ThesisApi.Repositories
             return await _context.ComputerOrders
                 .Include(x => x.Customer)
                 .Include(x => x.ComputerCategory)
+                .Include(x => x.Approver)
                 .Include(x => x.Computer)
                 .ToListAsync();
         }
@@ -36,6 +37,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.Customer)
                 .Include(x => x.ComputerCategory)
                 .Include(x => x.Computer)
+                .Include(x => x.Approver)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -45,6 +47,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.Customer)
                 .Include(x => x.ComputerCategory)
                 .Include(x => x.Computer)
+                .Include(x => x.Approver)
                 .Where(x => x.Customer.Username == username)
                 .ToListAsync();
         }
