@@ -38,6 +38,10 @@ export default function NavBar() {
                     <NavItem title="Computer Orders" to="/computer-orders" />
                   </>
                 )}
+                <NavItem
+                  title="My Computer Orders"
+                  to="/computer-orders/my-orders"
+                />
               </DropDown>
 
               {user.roles.includes("Admin") && (
