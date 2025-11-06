@@ -13,7 +13,7 @@ interface JwtPayload {
   displayname?: string;
   email?: string;
   name?: string;
-  role?: string;
+  role?: string | string[]; // ✅ can be one or many
   username?: string;
   department?: string;
   costCenter?: string;
@@ -26,7 +26,7 @@ interface User {
   displayname?: string;
   email?: string;
   name?: string;
-  role?: string;
+  roles: string[]; // ✅ plural roles
   username?: string;
   department?: string;
   costCenter?: string;
@@ -47,12 +47,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (token: string) => {
     const decoded = jwtDecode<JwtPayload>(token);
 
+    // ✅ Handle different possible role claim keys
+    const rolesRaw =
+      decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ??
+      decoded.role ??
+      [];
+
+    // ✅ Normalize to array
+    const roles = Array.isArray(rolesRaw)
+      ? rolesRaw
+      : rolesRaw
+      ? [rolesRaw]
+      : [];
+
     const userData: User = {
       id: decoded.sub,
       displayname: decoded.displayname,
       email: decoded.email,
       name: decoded.name,
-      role: decoded.role,
+      roles,
       username: decoded.username,
       department: decoded.department,
       costCenter: decoded.costCenter,
@@ -68,7 +81,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("user");
   };
 
-  // ✅ On startup, restore user & check token validity
+  // ✅ Restore user & auto logout on token expiry
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (!storedUser) return;
@@ -85,7 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         setUser(parsedUser);
 
-        // Schedule automatic logout when token expires
+        // Auto logout when token expires
         const msUntilExpiry = decoded.exp ? decoded.exp * 1000 - Date.now() : 0;
         if (msUntilExpiry > 0) {
           const timeout = setTimeout(() => {
@@ -100,7 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Error restoring user:", err);
       logout();
     }
-  }, []); // 👈 only runs once on app load
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>

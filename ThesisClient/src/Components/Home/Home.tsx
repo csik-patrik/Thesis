@@ -4,7 +4,7 @@ import { useAuth } from "../../Auth/AuthContext";
 export default function Home() {
   const { user } = useAuth();
   const token = localStorage.getItem("user.token");
-  console.log(token);
+  console.log(user);
 
   return (
     <div className="container py-5">
@@ -21,7 +21,7 @@ export default function Home() {
             Id: {user.id} <br />
             Email: {user.email} <br />
             Name: {user.displayname} <br />
-            Role:
+            Roles: {user.roles}
           </div>
         )}
       </div>
