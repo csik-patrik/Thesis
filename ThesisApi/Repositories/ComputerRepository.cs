@@ -83,6 +83,18 @@ namespace ThesisApi.Repositories
                 .ToListAsync();
         }
 
+        public async Task<Computer> ReturnDeviceAsync(Computer computer, string status, string statusReason)
+        {
+            computer.Status = status;
+            computer.StatusReason = statusReason;
+            computer.User = null;
+            computer.UserId = null;
+
+            await _context.SaveChangesAsync();
+
+            return computer;
+        }
+
         public async Task<bool> Delete(Computer computer)
         {
             _context.Computers.Remove(computer);
