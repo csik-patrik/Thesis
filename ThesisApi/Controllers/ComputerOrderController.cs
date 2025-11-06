@@ -111,6 +111,28 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpGet("/computer-orders/approval")]
+        public async Task<IActionResult> GetAllWaitingForApproval()
+        {
+            try
+            {
+                var username = User.FindFirst("username")?.Value;
+
+                if (string.IsNullOrEmpty(username))
+                    return Unauthorized("User is not logged in.");
+
+                var orders = await _computerOrderRepository.GetAllWaitingForApprovalAsync(username);
+
+                var response = orders.Select(_mapper.Map<ComputerOrderResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPut("/computer-orders/allocate")]
         public async Task<IActionResult> AllocateMobileDevice([FromBody] AllocateComputerToOrderRequest request)
         {
