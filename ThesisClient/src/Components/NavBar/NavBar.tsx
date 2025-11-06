@@ -31,30 +31,39 @@ export default function NavBar() {
           {/* Left side — navigation */}
           {user && (
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <DropDown title="Production">
-                <NavItem title="Computers" to="/computers/deployed" />
-                <NavItem title="Mobiles" to="/mobiles/deployed" />
-              </DropDown>
               <DropDown title="Orders">
-                <NavItem title="Mobile Orders" to="/mobile-orders" />
-                <NavItem title="Computer Orders" to="/computer-orders" />
+                {user.roles.includes("Admin") && (
+                  <>
+                    <NavItem title="Mobile Orders" to="/mobile-orders" />
+                    <NavItem title="Computer Orders" to="/computer-orders" />
+                  </>
+                )}
               </DropDown>
-              <DropDown title="Inventory">
-                <NavItem title="Computers" to="/computers" />
-                <NavItem title="Mobiles" to="/mobiles" />
-                <NavItem title="Sim Cards" to="/sim-cards" />
-              </DropDown>
-              <DropDown title="Admin">
-                <NavItem
-                  title="Computer categories"
-                  to="/admin/computers/categories"
-                />
-                <NavItem
-                  title="Mobile Categories"
-                  to="/admin/mobile-device-categories"
-                />
-                <NavItem title="Users" to="/admin/users" />
-              </DropDown>
+
+              {user.roles.includes("Admin") && (
+                <>
+                  <DropDown title="Production">
+                    <NavItem title="Computers" to="/computers/deployed" />
+                    <NavItem title="Mobiles" to="/mobiles/deployed" />
+                  </DropDown>
+                  <DropDown title="Inventory">
+                    <NavItem title="Computers" to="/computers" />
+                    <NavItem title="Mobiles" to="/mobiles" />
+                    <NavItem title="Sim Cards" to="/sim-cards" />
+                  </DropDown>
+                  <DropDown title="Admin">
+                    <NavItem
+                      title="Computer categories"
+                      to="/admin/computers/categories"
+                    />
+                    <NavItem
+                      title="Mobile Categories"
+                      to="/admin/mobile-device-categories"
+                    />
+                    <NavItem title="Users" to="/admin/users" />
+                  </DropDown>
+                </>
+              )}
             </ul>
           )}
 
