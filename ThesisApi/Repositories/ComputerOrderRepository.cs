@@ -98,5 +98,17 @@ namespace ThesisApi.Repositories
                 .Where(x => x.Approver.Username == username && x.Status == "Waiting for approval")
                 .ToListAsync();
         }
+
+        public async Task<ComputerOrder> MakeDecisionAsGroupLeaderAsync(ComputerOrder order, bool decision)
+        {
+            if (decision)
+                order.Status = "Approved";
+            else
+                order.Status = "Rejected by group leader";
+
+            await _context.SaveChangesAsync();
+
+            return order;
+        }
     }
 }

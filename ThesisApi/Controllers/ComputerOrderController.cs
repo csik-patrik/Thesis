@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -126,6 +127,34 @@ namespace ThesisApi.Controllers
                 var response = orders.Select(_mapper.Map<ComputerOrderResponse>).ToList();
 
                 return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("/computer-orders/approval/{id:int}")]
+        public async Task<IActionResult> MakeDecisionAsGroupLeader([FromRoute] int id, bool decision)
+        {
+            try
+            {
+                var username = User.FindFirst("username")?.Value;
+
+                if (string.IsNullOrEmpty(username))
+                    return Unauthorized("User is not logged in.");
+
+                var order = await _computerOrderRepository.GetByIdAsync(id);
+
+                if (order == null)
+                    return NotFound($"Order with the id: {id} is not found!");
+
+                if (order.Approver.Username != username)
+                    throw new ValidationException("Only the approver can make a decision about this order!");
+
+                var orders = await _computerOrderRepository.MakeDecisionAsGroupLeaderAsync(order, decision);
+
+                return Ok();
             }
             catch (Exception e)
             {
