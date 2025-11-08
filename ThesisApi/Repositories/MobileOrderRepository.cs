@@ -32,6 +32,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.Approver)
                 .AsNoTracking()
                 .AsSplitQuery()
+                .Where(x => x.Status != "Rejected by group leader" && x.Status != "Waiting for approval ")
                 .ToListAsync();
         }
 
