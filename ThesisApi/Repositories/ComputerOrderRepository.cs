@@ -28,6 +28,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.ComputerCategory)
                 .Include(x => x.Approver)
                 .Include(x => x.Computer)
+                .Where(x => x.Status != "Rejected by group leader" && x.Status != "Waiting for approval ")
                 .ToListAsync();
         }
 
