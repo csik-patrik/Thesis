@@ -165,22 +165,41 @@ export default function ComputerOrderView() {
                   {order.status}
                 </span>
               </dd>
+
+              <dt className="col-sm-4">Approver:</dt>
+              <dd className="col-sm-8">
+                {order.approver.displayName} - {order.approver.department}
+              </dd>
             </dl>
           </div>
 
           {/* Actions */}
           <div className="mt-4">
-            <Link
-              to="/computer-orders"
-              className="btn btn-outline-primary me-2"
-            >
-              ⬅ Back to Orders
-            </Link>
-            {order.computer && order.status !== "Delivered" && (
-              <button className="btn btn-success" onClick={handleDeliver}>
-                🚚 Deliver Device
-              </button>
+            {user?.roles.includes("Admin") && (
+              <Link
+                to="/computer-orders"
+                className="btn btn-outline-primary me-2"
+              >
+                ⬅ Back to Orders
+              </Link>
             )}
+
+            {user?.roles.includes("Group leader") && (
+              <Link
+                to="/computer-orders/approval"
+                className="btn btn-outline-primary me-2"
+              >
+                ⬅ Back to Orders
+              </Link>
+            )}
+
+            {user?.roles.includes("Admin") &&
+              order.computer &&
+              order.status !== "Delivered" && (
+                <button className="btn btn-success" onClick={handleDeliver}>
+                  🚚 Deliver Device
+                </button>
+              )}
           </div>
         </div>
 

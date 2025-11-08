@@ -60,7 +60,7 @@ export default function ComputerOrderWaitingForApprovalTable() {
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
-      <h1>Computer Orders</h1>
+      <h1>Computer orders waiting for approval</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <div>

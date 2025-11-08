@@ -35,6 +35,7 @@ export type ComputerOrderResponse = {
   note: string;
   computer: ComputerResponse;
   status: string;
+  approver: UserOrderResponse;
 };
 
 export type CreateComputerOrderRequest = {
