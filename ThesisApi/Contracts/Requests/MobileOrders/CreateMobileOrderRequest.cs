@@ -7,5 +7,6 @@ namespace ThesisApi.Contracts.Requests.MobileOrders
         public required int SimCallControlGroupId { get; set; }
         public required string PickupLocation { get; set; }
         public string? Note { get; set; }
+        public required int ApproverId { get; set; }
     }
 }

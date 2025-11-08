@@ -14,6 +14,7 @@ namespace ThesisApi.Contracts.Responses.MobileOrders
         public required string PickupLocation { get; set; }
         public MobileDeviceResponse? MobileDevice { get; set; }
         public string? Note { get; set; }
+        public required UserOrderResponse Approver { get; set; }
         public required string Status { get; set; }
     }
 }

@@ -46,6 +46,11 @@ namespace ThesisApi.Models
             if (simCallControlGroup == null)
                 throw new Exception("Sim call control group is not found!");
 
+            var approver = await userRepository.GetByIdAsync(request.ApproverId);
+
+            if (approver == null)
+                throw new Exception("Approver is not found!");
+
             return new MobileOrder()
             {
                 CustomerId = customer.Id,
@@ -56,7 +61,9 @@ namespace ThesisApi.Models
                 SimCallControlGroup = simCallControlGroup,
                 PickupLocation = request.PickupLocation,
                 Note = request.Note,
-                Status = "New"
+                Status = "New",
+                ApproverId = approver.Id,
+                Approver = approver
             };
         }
     }
