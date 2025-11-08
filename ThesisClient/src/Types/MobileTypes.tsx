@@ -43,6 +43,7 @@ export interface MobileOrderResponse {
   mobileDevice: MobileDeviceResponse;
   note: string;
   status: string;
+  approver: UserOrderResponse;
 }
 
 export interface CreateMobileDeviceRequest {
