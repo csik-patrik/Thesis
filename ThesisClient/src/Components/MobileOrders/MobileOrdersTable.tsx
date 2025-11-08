@@ -3,8 +3,11 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
+import { useAuth } from "../../Auth/AuthContext";
 
 function MobileOrdersTable() {
+  const { user } = useAuth();
+
   const [data, setData] = useState<MobileOrderResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>("New");
@@ -22,11 +25,20 @@ function MobileOrdersTable() {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:5268/api/mobile-orders/${id}`);
+      if (!user || !user.token) return;
+
+      await axios.delete(`http://localhost:5268/mobile-orders/${id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+
       setData((prev) => prev.filter((item) => item.id !== id));
+
       toast.success("Mobile order deleted successfully!");
     } catch (err) {
       console.error("Error deleting mobile order:", err);
+
       toast.error("Failed to delete mobile order.");
     }
   };
