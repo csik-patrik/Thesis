@@ -108,6 +108,46 @@ export default function ComputerOrderView() {
     }
   };
 
+  const handleDecision = async (id: number, decision: boolean) => {
+    if (!user?.token) {
+      toast.error("Unauthorized — please log in again.");
+      return;
+    }
+
+    try {
+      // 🔹 Call approval endpoint
+      await axios.put(
+        `http://localhost:5268/computer-orders/approval/${id}`,
+        decision,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      // 🔹 Refresh order
+      const res = await axios.get<ComputerOrderResponse>(
+        `http://localhost:5268/computer-orders/${id}`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      );
+
+      setOrder(res.data);
+      toast.success(
+        `Order ${decision ? "approved" : "rejected"} successfully!`
+      );
+    } catch (err: any) {
+      console.error("Error updating computer order:", err);
+
+      const message =
+        err.response?.data?.message || "Failed to update computer order.";
+      toast.error(message);
+    }
+  };
+
   // Filter devices by hostname
   const filteredDevices = devices.filter((device) =>
     device.hostname.toLowerCase().includes(search.toLowerCase())
@@ -157,15 +197,16 @@ export default function ComputerOrderView() {
               <dd className="col-sm-8">
                 <span
                   className={`badge ${
-                    order.status === "Delivered"
+                    order.status === "Approved"
                       ? "bg-success"
+                      : order.status === "Rejected by group leader"
+                      ? "bg-danger"
                       : "bg-warning text-dark"
                   }`}
                 >
                   {order.status}
                 </span>
               </dd>
-
               <dt className="col-sm-4">Approver:</dt>
               <dd className="col-sm-8">
                 {order.approver.displayName} - {order.approver.department}
@@ -184,13 +225,33 @@ export default function ComputerOrderView() {
               </Link>
             )}
 
-            {user?.roles.includes("Group leader") && (
-              <Link
-                to="/computer-orders/approval"
-                className="btn btn-outline-primary me-2"
-              >
-                ⬅ Back to Orders
-              </Link>
+            {user?.roles.includes("Group leader") && order && (
+              <>
+                <Link
+                  to="/computer-orders/approval"
+                  className="btn btn-outline-primary me-2"
+                >
+                  ⬅ Back to Orders
+                </Link>
+
+                {order.status == "Waiting for approval" && (
+                  <>
+                    <button
+                      className="btn btn-success me-2"
+                      onClick={() => handleDecision(order.id, true)}
+                    >
+                      ✅ Approve
+                    </button>
+
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDecision(order.id, false)}
+                    >
+                      ❌ Reject
+                    </button>
+                  </>
+                )}
+              </>
             )}
 
             {user?.roles.includes("Admin") &&

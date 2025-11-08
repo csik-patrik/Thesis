@@ -135,7 +135,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/computer-orders/approval/{id:int}")]
-        public async Task<IActionResult> MakeDecisionAsGroupLeader([FromRoute] int id, bool decision)
+        public async Task<IActionResult> MakeDecisionAsGroupLeader([FromRoute] int id, [FromBody] bool decision)
         {
             try
             {
