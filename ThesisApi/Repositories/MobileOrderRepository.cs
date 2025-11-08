@@ -115,6 +115,19 @@ namespace ThesisApi.Repositories
             return true;
         }
 
+        public async Task<IEnumerable<MobileOrder?>> GetAllWaitingForApprovalAsync(string username)
+        {
+            return await _context.MobileOrders
+                .Include(x => x.MobileDeviceCategory)
+                .Include(x => x.Customer)
+                .Include(x => x.SimCallControlGroup)
+                .Include(x => x.MobileDevice)
+                .Include(x => x.SimCard)
+                .AsSplitQuery()
+                .Where(x => x.Approver.Username == username && x.Status == "Waiting for approval")
+                .ToListAsync();
+        }
+
         /*
 
         

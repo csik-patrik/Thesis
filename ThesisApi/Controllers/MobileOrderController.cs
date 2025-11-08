@@ -213,5 +213,27 @@ namespace ThesisApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpGet("/mobile-orders/approval")]
+        public async Task<IActionResult> GetAllWaitingForApproval()
+        {
+            try
+            {
+                var username = User.FindFirst("username")?.Value;
+
+                if (string.IsNullOrEmpty(username))
+                    return Unauthorized("User is not logged in.");
+
+                var orders = await _mobileOrderRepository.GetAllWaitingForApprovalAsync(username);
+
+                var response = orders.Select(_mapper.Map<MobileOrderResponse>).ToList();
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }
