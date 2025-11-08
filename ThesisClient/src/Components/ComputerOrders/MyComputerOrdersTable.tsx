@@ -132,14 +132,15 @@ export default function MyComputerOrdersTable() {
                     >
                       View
                     </Link>
-                    {d.status !== "Delivered" && (
-                      <button
-                        className="btn btn-danger btn-sm text-light"
-                        onClick={() => handleDelete(d.id)}
-                      >
-                        Cancel
-                      </button>
-                    )}
+                    {d.status !== "Delivered" &&
+                      d.status !== "Rejected by group leader" && (
+                        <button
+                          className="btn btn-danger btn-sm text-light"
+                          onClick={() => handleDelete(d.id)}
+                        >
+                          Cancel
+                        </button>
+                      )}
                   </td>
                 </tr>
               ))}
