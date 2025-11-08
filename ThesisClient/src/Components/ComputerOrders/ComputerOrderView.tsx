@@ -83,7 +83,10 @@ export default function ComputerOrderView() {
 
       // Refresh order to show allocated device
       const res = await axios.get<ComputerOrderResponse>(
-        `http://localhost:5268/computer-orders/${id}`
+        `http://localhost:5268/computer-orders/${id}`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
       );
 
       setOrder(res.data);
@@ -95,15 +98,30 @@ export default function ComputerOrderView() {
 
   const handleDeliver = async () => {
     try {
-      await axios.put(`http://localhost:5268/computer-orders/deliver/${id}`);
-      toast.success("Order marked as delivered!");
-      // Optionally refresh order data
-      const res = await axios.get<ComputerOrderResponse>(
-        `http://localhost:5268/computer-orders/${id}`
+      if (!user || !user.token) return;
+
+      await axios.put(
+        `http://localhost:5268/computer-orders/deliver/${id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
       );
+
+      toast.success("Order marked as delivered!");
+
+      // Refresh order to show allocated device
+      const res = await axios.get<ComputerOrderResponse>(
+        `http://localhost:5268/computer-orders/${id}`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      );
+
       setOrder(res.data);
     } catch (err) {
       toast.error("Failed to deliver device.");
+
       console.error("Delivery error:", err);
     }
   };
