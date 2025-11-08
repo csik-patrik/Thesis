@@ -33,14 +33,28 @@ namespace ThesisApi.Data
             // Configure Customer relationship
             modelBuilder.Entity<ComputerOrder>()
                 .HasOne(o => o.Customer)
-                .WithMany(u => u.CustomerOrders)
+                .WithMany(u => u.CustomerComputerOrders)
                 .HasForeignKey(o => o.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Configure Approver relationship
             modelBuilder.Entity<ComputerOrder>()
                 .HasOne(o => o.Approver)
-                .WithMany(u => u.ApprovedOrders)
+                .WithMany(u => u.ApproverComputerOrders)
+                .HasForeignKey(o => o.ApproverId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Customer relationship
+            modelBuilder.Entity<MobileOrder>()
+                .HasOne(o => o.Customer)
+                .WithMany(u => u.CustomerMobileOrders)
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Approver relationship
+            modelBuilder.Entity<MobileOrder>()
+                .HasOne(o => o.Approver)
+                .WithMany(u => u.ApproverMobileOrders)
                 .HasForeignKey(o => o.ApproverId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

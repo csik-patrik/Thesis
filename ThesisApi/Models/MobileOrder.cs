@@ -15,6 +15,8 @@ namespace ThesisApi.Models
         public SimCallControlGroup SimCallControlGroup { get; set; } = null!;
         public required string PickupLocation { get; set; }
         public string? Note { get; set; }
+        public int ApproverId { get; set; }
+        public User Approver { get; set; } = null!;
         public required string Status { get; set; }
         public int? MobileDeviceId { get; set; }
         public MobileDevice? MobileDevice { get; set; }
