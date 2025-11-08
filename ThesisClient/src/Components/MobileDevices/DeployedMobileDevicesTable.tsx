@@ -5,9 +5,11 @@ import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 import axios from "axios";
 
 export default function DeployedMobileDevicesTable() {
-  const [data, setData] = useState<MobileDeviceResponse[]>([]);
-  const [categoryFilter, setCategoryFilter] = useState<string>("");
   const { user } = useAuth();
+  const [data, setData] = useState<MobileDeviceResponse[]>([]);
+
+  const [search, setSearch] = useState<string>("");
+
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
   const [returnData, setReturnData] = useState({
@@ -77,17 +79,11 @@ export default function DeployedMobileDevicesTable() {
     }
   };
 
-  // Get unique device categories for the filter dropdown
-  const categories = Array.from(
-    new Set(data.map((device) => device.mobileDeviceCategory.name))
-  );
-
-  // Filter data by device category, status, and status reason
   const filteredData = data.filter((device) => {
-    const categoryMatch = categoryFilter
-      ? device.mobileDeviceCategory.name === categoryFilter
-      : true;
-    return categoryMatch;
+    const searchMatch = device.hostname
+      .toLowerCase()
+      .includes(search.toLowerCase()); // Filter by hostname
+    return searchMatch;
   });
 
   return (
@@ -175,22 +171,13 @@ export default function DeployedMobileDevicesTable() {
       <div className="w-75 rounded bg-white border shadow p-4">
         <div className="table-responsive">
           <div className="d-flex align-items-center mb-3">
-            <label htmlFor="categoryFilter" className="form-label mb-0 me-2">
-              Filter by Category:
-            </label>
-            <select
-              id="categoryFilter"
-              className="form-select form-select-sm w-auto"
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-            >
-              <option value="">All</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+            <input
+              type="text"
+              className="form-control form-control-sm w-auto"
+              placeholder="Search by hostname"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
           <table className="table table-striped">
             <thead>

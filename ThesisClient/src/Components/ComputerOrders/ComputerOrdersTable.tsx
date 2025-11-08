@@ -53,9 +53,10 @@ export default function ComputerOrdersTable() {
   const statuses = Array.from(new Set(data.map((order) => order.status)));
 
   // Filter data by status
-  const filteredData = statusFilter
-    ? data.filter((order) => order.status === statusFilter)
-    : data;
+  const filteredData =
+    statusFilter === "All"
+      ? data
+      : data.filter((order) => order.status === statusFilter);
 
   if (data.length === 0) {
     return (
@@ -89,7 +90,7 @@ export default function ComputerOrdersTable() {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
-              <option value="">All</option>
+              <option value="All">All</option>
               {statuses.map((status) => (
                 <option key={status} value={status}>
                   {status}

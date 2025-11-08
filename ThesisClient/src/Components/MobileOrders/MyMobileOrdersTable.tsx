@@ -9,7 +9,7 @@ export default function MyMobileOrdersTable() {
   const { user } = useAuth();
   const [data, setData] = useState<MobileOrderResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>("New");
+  const [statusFilter, setStatusFilter] = useState<string>("All");
 
   useEffect(() => {
     try {
@@ -58,9 +58,10 @@ export default function MyMobileOrdersTable() {
   const statuses = Array.from(new Set(data.map((order) => order.status)));
 
   // Filter data by status
-  const filteredData = statusFilter
-    ? data.filter((order) => order.status === statusFilter)
-    : data;
+  const filteredData =
+    statusFilter === "All"
+      ? data
+      : data.filter((order) => order.status === statusFilter);
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
@@ -80,7 +81,7 @@ export default function MyMobileOrdersTable() {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
-              <option value="">All</option>
+              <option value="All">All</option>
               {statuses.map((status) => (
                 <option key={status} value={status}>
                   {status}

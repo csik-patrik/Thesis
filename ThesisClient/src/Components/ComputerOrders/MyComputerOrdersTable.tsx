@@ -79,7 +79,7 @@ export default function MyComputerOrdersTable() {
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
-      <h1>Computer Orders</h1>
+      <h1>My Computer Orders</h1>
       <div className="w-75 rounded bg-white border shadow p-4">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <Link className="btn btn-success me-2" to="/computer-orders/create">
@@ -95,7 +95,7 @@ export default function MyComputerOrdersTable() {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
-              <option value="">All</option>
+              <option value="All">All</option>
               {statuses.map((status) => (
                 <option key={status} value={status}>
                   {status}

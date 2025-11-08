@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 export default function ComputersDeployedTable() {
   const { user } = useAuth();
   const [data, setData] = useState<ComputerResponse[]>([]);
-  const [search, setSearch] = useState<string>(""); // Add search state
+  const [search, setSearch] = useState<string>("");
 
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
