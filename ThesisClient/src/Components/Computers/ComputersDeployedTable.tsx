@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 export default function ComputersDeployedTable() {
   const { user } = useAuth();
   const [data, setData] = useState<ComputerResponse[]>([]);
-  const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [search, setSearch] = useState<string>(""); // Add search state
 
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
@@ -37,15 +37,11 @@ export default function ComputersDeployedTable() {
     fetchDevices();
   }, [user]);
 
-  const categories = Array.from(
-    new Set(data.map((device) => device.computerCategory.name))
-  );
-
   const filteredData = data.filter((device) => {
-    const categoryMatch = categoryFilter
-      ? device.computerCategory.name === categoryFilter
-      : true;
-    return categoryMatch;
+    const searchMatch = device.hostname
+      .toLowerCase()
+      .includes(search.toLowerCase()); // Filter by hostname
+    return searchMatch;
   });
 
   const handleReturn = async (
@@ -70,7 +66,7 @@ export default function ComputersDeployedTable() {
         }
       );
 
-      toast.success(`Device marked as "${status}" successfully!`);
+      toast.success(`Device returned to "${statusReason}" successfully!`);
 
       setData((prev) => prev.filter((d) => d.id !== deviceId));
 
@@ -173,22 +169,13 @@ export default function ComputersDeployedTable() {
       <div className="w-75 rounded bg-white border shadow p-4">
         <div className="table-responsive">
           <div className="d-flex align-items-center mb-3">
-            <label htmlFor="categoryFilter" className="form-label mb-0 me-2">
-              Filter by Category:
-            </label>
-            <select
-              id="categoryFilter"
-              className="form-select form-select-sm w-auto"
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-            >
-              <option value="">All</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+            <input
+              type="text"
+              className="form-control form-control-sm w-auto"
+              placeholder="Search by hostname"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
           <table className="table table-striped">
             <thead>
