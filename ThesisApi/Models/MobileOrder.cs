@@ -61,7 +61,7 @@ namespace ThesisApi.Models
                 SimCallControlGroup = simCallControlGroup,
                 PickupLocation = request.PickupLocation,
                 Note = request.Note,
-                Status = "New",
+                Status = "Waiting for approval",
                 ApproverId = approver.Id,
                 Approver = approver
             };

@@ -63,4 +63,5 @@ export type CreateMobileOrderRequest = {
   simCallControlGroupId: number;
   pickupLocation: string;
   note?: string;
+  approverId: number;
 };
