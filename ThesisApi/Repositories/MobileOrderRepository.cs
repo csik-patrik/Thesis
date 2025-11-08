@@ -128,19 +128,16 @@ namespace ThesisApi.Repositories
                 .ToListAsync();
         }
 
-        /*
-
-        
-
-        public async Task<bool> UpdateAsync(MobileOrder order)
+        public async Task<MobileOrder> MakeDecisionAsGroupLeaderAsync(MobileOrder order, bool decision)
         {
-            _context.MobileOrders.Update(order);
+            if (decision)
+                order.Status = "Approved";
+            else
+                order.Status = "Rejected by group leader";
+
             await _context.SaveChangesAsync();
-            return true;
+
+            return order;
         }
-
-        
-
-        */
     }
 }

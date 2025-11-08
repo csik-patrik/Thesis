@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.MobileOrders;
@@ -229,6 +230,37 @@ namespace ThesisApi.Controllers
                 var response = orders.Select(_mapper.Map<MobileOrderResponse>).ToList();
 
                 return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("/mobile-orders/approval/{id:int}")]
+        public async Task<IActionResult> MakeDecisionAsGroupLeader([FromRoute] int id, [FromBody] bool decision)
+        {
+            try
+            {
+                var username = User.FindFirst("username")?.Value;
+
+                if (string.IsNullOrEmpty(username))
+                    return Unauthorized("User is not logged in.");
+
+                var order = await _mobileOrderRepository.GetByIdAsync(id);
+
+                if (order == null)
+                    return NotFound($"Order with the id: {id} is not found!");
+
+                if (order.Approver.Username != username)
+                    throw new ValidationException("Only the approver can make a decision about this order!");
+
+                if (order.Status != "Waiting for approval")
+                    throw new ValidationException("This order already has a decision!");
+
+                var orders = await _mobileOrderRepository.MakeDecisionAsGroupLeaderAsync(order, decision);
+
+                return Ok();
             }
             catch (Exception e)
             {

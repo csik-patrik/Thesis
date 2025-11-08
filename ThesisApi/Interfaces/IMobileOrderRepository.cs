@@ -9,6 +9,7 @@ namespace ThesisApi.Interfaces
         Task<MobileOrder?> GetByIdAsync(int id);
         Task<IEnumerable<MobileOrder?>> GetByUsernameAsync(string username);
         Task<IEnumerable<MobileOrder?>> GetAllWaitingForApprovalAsync(string username);
+        Task<MobileOrder> MakeDecisionAsGroupLeaderAsync(MobileOrder order, bool decision);
         Task<MobileOrder> AllocateMobileDeviceToOrderAsync(MobileOrder mobileOrder, MobileDevice mobileDevice);
         Task<MobileOrder> AllocateSimCardToOrderAsync(MobileOrder mobileOrder, SimCard simCard);
         Task<MobileOrder> DeliverOrderAsync(MobileOrder mobileOrder);
