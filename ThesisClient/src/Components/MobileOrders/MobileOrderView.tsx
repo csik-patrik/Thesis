@@ -25,8 +25,6 @@ function MobileOrderView() {
 
   const { user } = useAuth();
 
-  console.log(user?.token);
-
   useEffect(() => {
     if (!user || !user.token) return;
 
@@ -152,6 +150,46 @@ function MobileOrderView() {
     }
   };
 
+  const handleDecision = async (id: number, decision: boolean) => {
+    if (!user?.token) {
+      toast.error("Unauthorized — please log in again.");
+      return;
+    }
+
+    try {
+      // 🔹 Call approval endpoint
+      await axios.put(
+        `http://localhost:5268/mobile-orders/approval/${id}`,
+        decision,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      // 🔹 Refresh order
+      const res = await axios.get<MobileOrderResponse>(
+        `http://localhost:5268/mobile-orders/${id}`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      );
+
+      setOrder(res.data);
+      toast.success(
+        `Order ${decision ? "approved" : "rejected"} successfully!`
+      );
+    } catch (err: any) {
+      console.error("Error updating computer order:", err);
+
+      const message =
+        err.response?.data?.message || "Failed to update computer order.";
+      toast.error(message);
+    }
+  };
+
   // Filter devices by hostname
   const filteredDevices = devices.filter((device) =>
     device.hostname.toLowerCase().includes(search.toLowerCase())
@@ -191,13 +229,48 @@ function MobileOrderView() {
               <dd>{order.note}</dd>
               <dt>Order's Status:</dt>
               <dd>{order.status}</dd>
+              <dt className="col-sm-4">Approver:</dt>
+              <dd className="col-sm-8">
+                {order.approver.displayName} - {order.approver.department}
+              </dd>
             </dl>
           </div>
           <div className="mt-3 mb-2">
-            <Link to="/mobile-orders" className="btn btn-primary me-2">
-              Back to Orders
-            </Link>
+            {user?.roles.includes("Admin") && (
+              <Link to="/mobile-orders" className="btn btn-primary me-2">
+                Back to Orders
+              </Link>
+            )}
+            {user?.roles.includes("Group leader") && (
+              <>
+                <Link
+                  to="/mobile-orders/approval"
+                  className="btn btn-primary me-2"
+                >
+                  Back to Orders
+                </Link>
+                {order.status == "Waiting for approval" && (
+                  <>
+                    <button
+                      className="btn btn-success me-2"
+                      onClick={() => handleDecision(order.id, true)}
+                    >
+                      ✅ Approve
+                    </button>
+
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDecision(order.id, false)}
+                    >
+                      ❌ Reject
+                    </button>
+                  </>
+                )}
+              </>
+            )}
+
             {order.mobileDevice !== null &&
+              user?.roles.includes("Admin") &&
               order.mobileDevice.simCard !== null &&
               order.status !== "Delivered" && (
                 <button className="btn btn-success" onClick={handleDeliver}>
@@ -207,133 +280,64 @@ function MobileOrderView() {
           </div>
         </div>
         {/* Allocated Device or Allocation Section */}
-        <div className="col-md-4">
-          {order.mobileDevice ? (
-            <>
-              <h2>Allocated Device</h2>
-              <div className="card shadow p-4 mt-3">
-                <ul className="list-group">
-                  <li className="list-group-item">
-                    <strong>Hostname:</strong> {order.mobileDevice.hostname}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Category:</strong>{" "}
-                    {order.mobileDevice.mobileDeviceCategory.name}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>IMEI:</strong> {order.mobileDevice.imeiNumber}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Serial:</strong> {order.mobileDevice.serialNumber}
-                  </li>
-                </ul>
-              </div>
-            </>
-          ) : (
-            <>
-              <h2>Allocate Device</h2>
-              <input
-                type="text"
-                className="form-control mb-3 mt-3"
-                placeholder="Search by hostname..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <div className="card shadow p-3">
-                {filteredDevices.length === 0 ? (
-                  <div>No devices available for allocation.</div>
-                ) : (
-                  <ul className="list-group">
-                    {filteredDevices.map((device) => (
-                      <li
-                        key={device.id}
-                        className="list-group-item d-flex flex-column"
-                      >
-                        <strong>{device.hostname}</strong>
-                        <span>
-                          Category: {device.mobileDeviceCategory.name}
-                        </span>
-                        <span>IMEI: {device.imeiNumber}</span>
-                        <span>Serial: {device.serialNumber}</span>
-                        <span>Status: {device.status}</span>
-                        <button
-                          className="btn btn-success btn-sm mt-2 align-self-end"
-                          disabled={allocating === device.id}
-                          onClick={() => handleAllocateMobileDevice(device.id)}
-                        >
-                          {allocating === device.id
-                            ? "Allocating..."
-                            : "Allocate"}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </>
-          )}
-          {/* Allocated Sim Card or Allocation Section */}
-          {order.mobileDevice &&
-            (order.mobileDevice.simCard ? (
+        {user?.roles.includes("Admin") && (
+          <div className="col-md-4">
+            {order.mobileDevice ? (
               <>
-                <h2 className="mt-4">Allocated Sim Card</h2>
+                <h2>Allocated Device</h2>
                 <div className="card shadow p-4 mt-3">
                   <ul className="list-group">
                     <li className="list-group-item">
-                      <strong>Phone Number:</strong>{" "}
-                      {order.mobileDevice.simCard.phoneNumber}
+                      <strong>Hostname:</strong> {order.mobileDevice.hostname}
                     </li>
                     <li className="list-group-item">
-                      <strong>Call Control Group:</strong>{" "}
-                      {order.mobileDevice.simCard.simCallControlGroup.name}
+                      <strong>Category:</strong>{" "}
+                      {order.mobileDevice.mobileDeviceCategory.name}
                     </li>
                     <li className="list-group-item">
-                      <strong>Data Enabled:</strong>{" "}
-                      {order.mobileDevice.simCard.simCallControlGroup
-                        .isDataEnabled
-                        ? "Yes"
-                        : "No"}
+                      <strong>IMEI:</strong> {order.mobileDevice.imeiNumber}
+                    </li>
+                    <li className="list-group-item">
+                      <strong>Serial:</strong> {order.mobileDevice.serialNumber}
                     </li>
                   </ul>
                 </div>
               </>
             ) : (
               <>
-                <h2 className="mt-4">Allocate Sim Card</h2>
+                <h2>Allocate Device</h2>
                 <input
                   type="text"
                   className="form-control mb-3 mt-3"
-                  placeholder="Search by phone number..."
-                  value={simSearch}
-                  onChange={(e) => setSimSearch(e.target.value)}
+                  placeholder="Search by hostname..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
                 <div className="card shadow p-3">
-                  {filteredSimCards.length === 0 ? (
-                    <div>No sim cards available for allocation.</div>
+                  {filteredDevices.length === 0 ? (
+                    <div>No devices available for allocation.</div>
                   ) : (
                     <ul className="list-group">
-                      {filteredSimCards.map((sim) => (
+                      {filteredDevices.map((device) => (
                         <li
-                          key={sim.id}
+                          key={device.id}
                           className="list-group-item d-flex flex-column"
                         >
-                          <strong>{sim.phoneNumber}</strong>
+                          <strong>{device.hostname}</strong>
                           <span>
-                            Call Control Group: {sim.simCallControlGroup.name}
+                            Category: {device.mobileDeviceCategory.name}
                           </span>
-                          <span>
-                            Data Enabled:{" "}
-                            {sim.simCallControlGroup.isDataEnabled
-                              ? "Yes"
-                              : "No"}
-                          </span>
-                          <span>Status: {sim.status}</span>
+                          <span>IMEI: {device.imeiNumber}</span>
+                          <span>Serial: {device.serialNumber}</span>
+                          <span>Status: {device.status}</span>
                           <button
                             className="btn btn-success btn-sm mt-2 align-self-end"
-                            disabled={allocatingSim === sim.id}
-                            onClick={() => handleAllocateSim(sim.id)}
+                            disabled={allocating === device.id}
+                            onClick={() =>
+                              handleAllocateMobileDevice(device.id)
+                            }
                           >
-                            {allocatingSim === sim.id
+                            {allocating === device.id
                               ? "Allocating..."
                               : "Allocate"}
                           </button>
@@ -343,8 +347,81 @@ function MobileOrderView() {
                   )}
                 </div>
               </>
-            ))}
-        </div>
+            )}
+            {/* Allocated Sim Card or Allocation Section */}
+            {order.mobileDevice &&
+              (order.mobileDevice.simCard ? (
+                <>
+                  <h2 className="mt-4">Allocated Sim Card</h2>
+                  <div className="card shadow p-4 mt-3">
+                    <ul className="list-group">
+                      <li className="list-group-item">
+                        <strong>Phone Number:</strong>{" "}
+                        {order.mobileDevice.simCard.phoneNumber}
+                      </li>
+                      <li className="list-group-item">
+                        <strong>Call Control Group:</strong>{" "}
+                        {order.mobileDevice.simCard.simCallControlGroup.name}
+                      </li>
+                      <li className="list-group-item">
+                        <strong>Data Enabled:</strong>{" "}
+                        {order.mobileDevice.simCard.simCallControlGroup
+                          .isDataEnabled
+                          ? "Yes"
+                          : "No"}
+                      </li>
+                    </ul>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h2 className="mt-4">Allocate Sim Card</h2>
+                  <input
+                    type="text"
+                    className="form-control mb-3 mt-3"
+                    placeholder="Search by phone number..."
+                    value={simSearch}
+                    onChange={(e) => setSimSearch(e.target.value)}
+                  />
+                  <div className="card shadow p-3">
+                    {filteredSimCards.length === 0 ? (
+                      <div>No sim cards available for allocation.</div>
+                    ) : (
+                      <ul className="list-group">
+                        {filteredSimCards.map((sim) => (
+                          <li
+                            key={sim.id}
+                            className="list-group-item d-flex flex-column"
+                          >
+                            <strong>{sim.phoneNumber}</strong>
+                            <span>
+                              Call Control Group: {sim.simCallControlGroup.name}
+                            </span>
+                            <span>
+                              Data Enabled:{" "}
+                              {sim.simCallControlGroup.isDataEnabled
+                                ? "Yes"
+                                : "No"}
+                            </span>
+                            <span>Status: {sim.status}</span>
+                            <button
+                              className="btn btn-success btn-sm mt-2 align-self-end"
+                              disabled={allocatingSim === sim.id}
+                              onClick={() => handleAllocateSim(sim.id)}
+                            >
+                              {allocatingSim === sim.id
+                                ? "Allocating..."
+                                : "Allocate"}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </>
+              ))}
+          </div>
+        )}
       </div>
     </div>
   );

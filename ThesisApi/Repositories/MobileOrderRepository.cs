@@ -29,6 +29,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.SimCallControlGroup)
                 .Include(x => x.MobileDevice)
                 .Include(x => x.SimCard)
+                .Include(x => x.Approver)
                 .AsNoTracking()
                 .AsSplitQuery()
                 .ToListAsync();
@@ -42,6 +43,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.SimCallControlGroup)
                 .Include(x => x.MobileDevice)
                 .Include(x => x.SimCard)
+                .Include(x => x.Approver)
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
@@ -54,6 +56,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.SimCallControlGroup)
                 .Include(x => x.MobileDevice)
                 .Include(x => x.SimCard)
+                .Include(x => x.Approver)
                 .AsSplitQuery()
                 .Where(x => x.Customer.Username == username)
                 .ToListAsync();
@@ -123,6 +126,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.SimCallControlGroup)
                 .Include(x => x.MobileDevice)
                 .Include(x => x.SimCard)
+                .Include(x => x.Approver)
                 .AsSplitQuery()
                 .Where(x => x.Approver.Username == username && x.Status == "Waiting for approval")
                 .ToListAsync();
