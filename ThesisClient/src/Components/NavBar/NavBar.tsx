@@ -85,6 +85,10 @@ export default function NavBar() {
                       title="Computer orders"
                       to="/computer-orders/approval"
                     />
+                    <NavItem
+                      title="Mobile orders"
+                      to="/mobile-orders/approval"
+                    />
                   </DropDown>
                 )}
                 <DropDown title={`👤 ${user.displayname ?? "User"}`}>

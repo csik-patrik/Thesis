@@ -38,7 +38,8 @@ import ComputersCreateBulk from "./Components/Computers/ComputersCreateBulk.tsx"
 import NotFound from "./Pages/NotFound.tsx";
 import MyComputerOrdersTable from "./Components/ComputerOrders/MyComputerOrdersTable.tsx";
 import MyMobileOrdersTable from "./Components/MobileOrders/MyMobileOrdersTable.tsx";
-import ComputerOrderWaitingForApprovalTable from "./Components/ComputerOrders/ComputerOrderWaitingfForApprovalTable.tsx";
+import ComputerOrderWaitingForApprovalTable from "./Components/ComputerOrders/ComputerOrderWaitingForApprovalTable.tsx";
+import MobileOrderWaitingForApprovalTable from "./Components/MobileOrders/MobileOrderWaitingForApprovalTable.tsx";
 
 function App() {
   return (
@@ -191,6 +192,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <SimCardsEdit />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/mobile-orders/approval"
+                element={
+                  <ProtectedRoute>
+                    <MobileOrderWaitingForApprovalTable />
                   </ProtectedRoute>
                 }
               ></Route>
