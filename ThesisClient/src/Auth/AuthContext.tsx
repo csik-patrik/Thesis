@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 interface JwtPayload {
   sub: string;
-  displayname?: string;
+  displayname: string;
   email?: string;
   name?: string;
   role?: string | string[]; // ✅ can be one or many
@@ -23,7 +23,7 @@ interface JwtPayload {
 
 interface User {
   id: string;
-  displayname?: string;
+  displayname: string;
   email?: string;
   name?: string;
   roles: string[]; // ✅ plural roles
