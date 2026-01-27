@@ -76,7 +76,7 @@ export default function NavBar() {
           )}
 
           {/* Right side — user info / login */}
-          <ul className="navbar-nav ms-auto align-items-center">
+          <ul className="navbar-nav ms-auto">
             {user ? (
               <>
                 {user.roles.includes("Group leader") && (
