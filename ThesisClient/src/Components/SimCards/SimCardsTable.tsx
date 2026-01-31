@@ -24,52 +24,69 @@ function SimCardsTable() {
     }
   };
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bd-light vh-100">
-      <h1>Sim cards</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <Link className="btn btn-success me-2" to="/sim-cards/create">
-          Create
-        </Link>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">PhoneNumber</th>
-              <th scope="col">CallControlGroup</th>
-              <th scope="col">IsDataEnabled</th>
-              <th scope="col">Status</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((d) => (
-              <tr key={d.id}>
-                <td scope="row">{d.id}</td>
-                <td>{d.phoneNumber}</td>
-                <td>{d.simCallControlGroup.name}</td>
-                <td>
-                  {d.simCallControlGroup.isDataEnabled ? "True" : "False"}
-                </td>
-                <td>{d.status}</td>
-                <td>
-                  <button className="btn btn-sm btn-primary me-2">View</button>
-                  <Link
-                    to={`/sim-cards/${d.id}`}
-                    className="btn btn-warning btn-sm me-2"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    className="btn btn-sm btn-danger me-2"
-                    onClick={() => handleDelete(d.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold mb-6">Sim Cards</h1>
+
+      <div className="w-full max-w-4xl bg-white border rounded-lg shadow-md p-6">
+        {/* Create Button */}
+        <div className="mb-4">
+          <Link
+            to="/sim-cards/create"
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+          >
+            Create
+          </Link>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse border border-gray-300">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="border px-4 py-2 text-left">Id</th>
+                <th className="border px-4 py-2 text-left">Phone Number</th>
+                <th className="border px-4 py-2 text-left">
+                  Call Control Group
+                </th>
+                <th className="border px-4 py-2 text-left">Is Data Enabled</th>
+                <th className="border px-4 py-2 text-left">Status</th>
+                <th className="border px-4 py-2 text-left">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((d) => (
+                <tr key={d.id} className="even:bg-gray-50">
+                  <td className="border px-4 py-2">{d.id}</td>
+                  <td className="border px-4 py-2">{d.phoneNumber}</td>
+                  <td className="border px-4 py-2">
+                    {d.simCallControlGroup.name}
+                  </td>
+                  <td className="border px-4 py-2">
+                    {d.simCallControlGroup.isDataEnabled ? "True" : "False"}
+                  </td>
+                  <td className="border px-4 py-2">{d.status}</td>
+                  <td className="border px-4 py-2 flex flex-wrap gap-2">
+                    <button className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition text-sm">
+                      View
+                    </button>
+                    <Link
+                      to={`/sim-cards/${d.id}`}
+                      className="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition text-sm"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition text-sm"
+                      onClick={() => handleDelete(d.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

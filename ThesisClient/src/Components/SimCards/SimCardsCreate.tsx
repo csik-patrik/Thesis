@@ -32,7 +32,7 @@ function SimCardsCreate() {
   const navigate = useNavigate();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -42,8 +42,8 @@ function SimCardsCreate() {
         name === "isDataEnabled"
           ? value === "true" // convert dropdown string -> boolean
           : name === "simCallControlGroupId"
-          ? Number(value) // convert select id string -> number
-          : value,
+            ? Number(value) // convert select id string -> number
+            : value,
     }));
   };
 
@@ -62,31 +62,47 @@ function SimCardsCreate() {
   };
 
   return (
-    <>
-      <Form title="Create a new Sim Card" handleSubmit={handleSubmit}>
-        <Input
-          title="Phone number:"
-          fieldName="phoneNumber"
-          placeHolder="+36208288073"
-          type="text"
-          value={formData.phoneNumber}
-          handleChange={handleChange}
-        />
-        <Select
-          title="Call control group:"
-          fieldName="simCallControlGroupId"
-          value={formData.simCallControlGroupId}
-          options={simCallControlGroups.map((g) => ({
-            label: g.name,
-            value: String(g.id),
-          }))}
-          handleChange={handleChange}
-        />
-        <Link to="/sim-cards" className="btn btn-primary">
+    <Form title="Create a new Sim Card" handleSubmit={handleSubmit}>
+      {/* Phone Number Input */}
+      <Input
+        title="Phone number:"
+        fieldName="phoneNumber"
+        placeHolder="+36208288073"
+        type="text"
+        value={formData.phoneNumber}
+        handleChange={handleChange}
+        classes="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+      />
+
+      {/* Call Control Group Select */}
+      <Select
+        title="Call control group:"
+        fieldName="simCallControlGroupId"
+        value={formData.simCallControlGroupId}
+        options={simCallControlGroups.map((g) => ({
+          label: g.name,
+          value: String(g.id),
+        }))}
+        handleChange={handleChange}
+        classes="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+      />
+
+      {/* Back Button */}
+      <div className="mt-4 flex gap-3">
+        <Link
+          to="/sim-cards"
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+        >
           Back
         </Link>
-      </Form>
-    </>
+        <button
+          type="submit"
+          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+        >
+          Submit
+        </button>
+      </div>
+    </Form>
   );
 }
 

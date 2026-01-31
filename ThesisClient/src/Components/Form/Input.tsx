@@ -4,6 +4,7 @@ interface InputProps {
   placeHolder: string;
   type: string;
   value: string;
+  classes: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -13,6 +14,7 @@ export default function Input({
   placeHolder,
   type,
   value,
+  classes,
   handleChange,
 }: InputProps) {
   return (
@@ -21,7 +23,7 @@ export default function Input({
       <input
         type={type}
         name={fieldName}
-        className="form-control"
+        className={classes}
         placeholder={placeHolder}
         value={value}
         onChange={handleChange}

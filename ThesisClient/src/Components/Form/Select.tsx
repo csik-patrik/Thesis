@@ -2,6 +2,7 @@ interface SelectProps {
   title: string;
   fieldName: string;
   value: string | number;
+  classes: string;
   options: { label: string; value: string }[];
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
@@ -11,6 +12,7 @@ export default function Select({
   fieldName,
   value,
   options,
+  classes,
   handleChange,
 }: SelectProps) {
   return (
@@ -18,7 +20,7 @@ export default function Select({
       <label htmlFor={fieldName}>{title}</label>
       <select
         name={fieldName}
-        className="form-control"
+        className={classes}
         value={value}
         onChange={handleChange}
       >
