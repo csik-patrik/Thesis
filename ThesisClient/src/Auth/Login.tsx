@@ -47,12 +47,18 @@ export default function Login() {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center min-vh-100 bg-light">
-      <div className="card shadow p-4" style={{ width: "350px" }}>
-        <h3 className="text-center mb-4">Sign In</h3>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label fw-bold">
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-[350px] rounded-lg bg-white p-6 shadow-md">
+        <h3 className="mb-6 text-center text-xl font-semibold text-neutral-800">
+          Sign In
+        </h3>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label
+              htmlFor="email"
+              className="mb-1 block font-medium text-neutral-700"
+            >
               Email address
             </label>
             <input
@@ -61,14 +67,21 @@ export default function Login() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="form-control"
               required
               disabled={loading}
+              className="
+              w-full rounded-md border border-neutral-300 px-3 py-2
+              focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500
+              disabled:bg-neutral-100 disabled:cursor-not-allowed
+            "
             />
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label fw-bold">
+          <div>
+            <label
+              htmlFor="password"
+              className="mb-1 block font-medium text-neutral-700"
+            >
               Password
             </label>
             <input
@@ -77,16 +90,24 @@ export default function Login() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="form-control"
               required
               disabled={loading}
+              className="
+              w-full rounded-md border border-neutral-300 px-3 py-2
+              focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500
+              disabled:bg-neutral-100 disabled:cursor-not-allowed
+            "
             />
           </div>
 
           <button
             type="submit"
-            className="btn btn-primary w-100 mt-2"
             disabled={loading}
+            className="
+            mt-2 w-full rounded-md bg-neutral-800 py-2 text-white
+            hover:bg-neutral-700 transition
+            disabled:opacity-60 disabled:cursor-not-allowed
+          "
           >
             {loading ? "Signing in..." : "Login"}
           </button>
