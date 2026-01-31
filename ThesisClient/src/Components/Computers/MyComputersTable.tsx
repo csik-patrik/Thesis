@@ -20,7 +20,7 @@ export default function MyComputersTable() {
           "http://localhost:5268/computers/my-devices",
           {
             headers: { Authorization: `Bearer ${user.token}` },
-          }
+          },
         );
         setData(res.data);
       } catch (err) {
@@ -32,32 +32,53 @@ export default function MyComputersTable() {
   }, [user]);
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
-      <h1>My computers</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <div className="table-responsive">
-          <table className="table table-striped">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-100 px-4">
+      <h1 className="mb-6 text-2xl font-semibold text-neutral-800">
+        My computers
+      </h1>
+
+      <div className="w-full max-w-6xl rounded-lg bg-white border border-neutral-200 shadow-md p-6">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-sm">
             <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Hostname</th>
-                <th scope="col">Category</th>
-                <th scope="col">Model</th>
-                <th scope="col">Serial number</th>
-                <th scope="col">Status</th>
-                <th scope="col">Status reason</th>
+              <tr className="border-b border-neutral-200 bg-neutral-50 text-left">
+                <th className="px-3 py-2 font-medium text-neutral-700">Id</th>
+                <th className="px-3 py-2 font-medium text-neutral-700">
+                  Hostname
+                </th>
+                <th className="px-3 py-2 font-medium text-neutral-700">
+                  Category
+                </th>
+                <th className="px-3 py-2 font-medium text-neutral-700">
+                  Model
+                </th>
+                <th className="px-3 py-2 font-medium text-neutral-700">
+                  Serial number
+                </th>
+                <th className="px-3 py-2 font-medium text-neutral-700">
+                  Status
+                </th>
+                <th className="px-3 py-2 font-medium text-neutral-700">
+                  Status reason
+                </th>
               </tr>
             </thead>
+
             <tbody>
               {data.map((d) => (
-                <tr key={d.id}>
-                  <td scope="row">{d.id}</td>
-                  <td>{d.hostname}</td>
-                  <td>{d.computerCategory.name}</td>
-                  <td>{d.model}</td>
-                  <td>{d.serialNumber}</td>
-                  <td>{d.status}</td>
-                  <td>{d.statusReason}</td>
+                <tr
+                  key={d.id}
+                  className="border-b border-neutral-100 even:bg-neutral-50 hover:bg-neutral-100 transition"
+                >
+                  <td className="px-3 py-2 font-medium text-neutral-700">
+                    {d.id}
+                  </td>
+                  <td className="px-3 py-2">{d.hostname}</td>
+                  <td className="px-3 py-2">{d.computerCategory.name}</td>
+                  <td className="px-3 py-2">{d.model}</td>
+                  <td className="px-3 py-2">{d.serialNumber}</td>
+                  <td className="px-3 py-2">{d.status}</td>
+                  <td className="px-3 py-2">{d.statusReason}</td>
                 </tr>
               ))}
             </tbody>
