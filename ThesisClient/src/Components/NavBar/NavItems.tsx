@@ -1,6 +1,7 @@
 import { useAuth } from "../../Auth/AuthContext";
 import AdminItems from "./AdminItems";
 import ApproverItems from "./ApproverItems";
+import OrderItems from "./OrderItems";
 import UserItems from "./UserItems";
 import { NavLink } from "react-router-dom";
 
@@ -18,6 +19,8 @@ export default function NavItems() {
       {user && (
         <>
           <div className="flex items-center gap-2">
+            <OrderItems />
+
             {user.roles.includes("Admin") && <AdminItems />}
 
             {user.roles.includes("Group leader") && <ApproverItems />}
