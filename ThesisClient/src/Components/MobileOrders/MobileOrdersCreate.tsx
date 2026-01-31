@@ -60,7 +60,7 @@ export default function MobileOrdersCreate() {
     const fetchGroupLeaders = async () => {
       try {
         const res = await axios.get<UserResponse[]>(
-          "http://localhost:5268/users/group-leader"
+          "http://localhost:5268/users/group-leader",
         );
         setGroupLeaders(res.data);
       } catch (err) {
@@ -85,7 +85,7 @@ export default function MobileOrdersCreate() {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -108,33 +108,51 @@ export default function MobileOrdersCreate() {
   };
 
   return (
-    <div className="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
-      <div className="col-12 col-md-8 col-lg-6 col-xl-5 border bg-white shadow px-4 py-5 rounded">
-        <h1 className="mb-4 text-center">Create a New Mobile Order</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="customerId" className="form-label">
-              Requester:
+    <div className="flex min-h-screen items-center justify-center bg-neutral-100 px-4">
+      <div className="w-full max-w-xl rounded-lg bg-white border border-neutral-200 shadow-md px-6 py-8">
+        <h1 className="mb-6 text-center text-2xl font-semibold text-neutral-800">
+          Create a New Mobile Order
+        </h1>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Requester */}
+          <div>
+            <label
+              htmlFor="customerId"
+              className="mb-1 block text-sm font-medium text-neutral-700"
+            >
+              Requester
             </label>
             <input
               type="text"
               id="customerId"
-              className="form-control"
               value={user?.displayname ?? ""}
               disabled
+              className="
+              w-full rounded-md border border-neutral-300 bg-neutral-100 px-3 py-2
+              text-neutral-600 cursor-not-allowed
+            "
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="mobileDeviceCategoryId" className="form-label">
-              Device category:
+
+          {/* Device category */}
+          <div>
+            <label
+              htmlFor="mobileDeviceCategoryId"
+              className="mb-1 block text-sm font-medium text-neutral-700"
+            >
+              Device category
             </label>
             <select
               id="mobileDeviceCategoryId"
               name="mobileDeviceCategoryId"
-              className="form-select"
               value={formData.mobileDeviceCategoryId}
               onChange={handleChange}
               required
+              className="
+              w-full rounded-md border border-neutral-300 px-3 py-2
+              focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500
+            "
             >
               <option value={0} disabled>
                 Select category...
@@ -146,17 +164,25 @@ export default function MobileOrdersCreate() {
               ))}
             </select>
           </div>
-          <div className="mb-3">
-            <label htmlFor="simCallControlGroupId" className="form-label">
-              Sim call control group:
+
+          {/* Sim call control group */}
+          <div>
+            <label
+              htmlFor="simCallControlGroupId"
+              className="mb-1 block text-sm font-medium text-neutral-700"
+            >
+              Sim call control group
             </label>
             <select
               id="simCallControlGroupId"
               name="simCallControlGroupId"
-              className="form-select"
               value={formData.simCallControlGroupId}
               onChange={handleChange}
               required
+              className="
+              w-full rounded-md border border-neutral-300 px-3 py-2
+              focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500
+            "
             >
               <option value={0} disabled>
                 Select call control group...
@@ -168,47 +194,71 @@ export default function MobileOrdersCreate() {
               ))}
             </select>
           </div>
-          <div className="mb-3">
-            <label htmlFor="pickupLocation" className="form-label">
-              Pickup location:
+
+          {/* Pickup location */}
+          <div>
+            <label
+              htmlFor="pickupLocation"
+              className="mb-1 block text-sm font-medium text-neutral-700"
+            >
+              Pickup location
             </label>
             <select
               id="pickupLocation"
               name="pickupLocation"
-              className="form-select"
               value={formData.pickupLocation}
               onChange={handleChange}
               required
+              className="
+              w-full rounded-md border border-neutral-300 px-3 py-2
+              focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500
+            "
             >
               <option value="HtvP">HtvP</option>
               <option value="cHub">cHub</option>
             </select>
           </div>
-          <div className="mb-3">
-            <label htmlFor="note" className="form-label">
-              Note:
+
+          {/* Note */}
+          <div>
+            <label
+              htmlFor="note"
+              className="mb-1 block text-sm font-medium text-neutral-700"
+            >
+              Note
             </label>
             <textarea
               id="note"
               name="note"
-              className="form-control"
+              rows={2}
               placeholder="Additional notes..."
               value={formData.note}
               onChange={handleChange}
-              rows={2}
+              className="
+              w-full rounded-md border border-neutral-300 px-3 py-2
+              focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500
+            "
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="approverId" className="form-label">
-              Approver:
+
+          {/* Approver */}
+          <div>
+            <label
+              htmlFor="approverId"
+              className="mb-1 block text-sm font-medium text-neutral-700"
+            >
+              Approver
             </label>
             <select
               id="approverId"
               name="approverId"
-              className="form-select"
               value={formData.approverId}
               onChange={handleChange}
               required
+              className="
+              w-full rounded-md border border-neutral-300 px-3 py-2
+              focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500
+            "
             >
               <option value={0} disabled>
                 Select an approver...
@@ -220,15 +270,28 @@ export default function MobileOrdersCreate() {
               ))}
             </select>
           </div>
-          <div className="d-flex flex-wrap justify-content-between align-items-center mt-4">
+
+          {/* Actions */}
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
             <button
               type="submit"
-              className="btn btn-success mb-2 mb-md-0"
               disabled={formData.mobileDeviceCategoryId === 0}
+              className="
+              rounded-md bg-green-600 px-5 py-2 text-white font-medium
+              hover:bg-green-500 transition
+              disabled:opacity-60 disabled:cursor-not-allowed
+            "
             >
               Submit
             </button>
-            <Link to="/mobile-orders" className="btn btn-primary ms-md-3">
+
+            <Link
+              to="/mobile-orders"
+              className="
+              rounded-md bg-neutral-800 px-5 py-2 text-white font-medium
+              hover:bg-neutral-700 transition
+            "
+            >
               Back
             </Link>
           </div>

@@ -53,22 +53,39 @@ function MobileOrdersTable() {
       : data.filter((order) => order.status === statusFilter);
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
-      <h1>Mobile Orders</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <Link className="btn btn-success me-2" to="/mobile-orders/create">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-100 px-4">
+      <h1 className="mb-6 text-2xl font-semibold text-neutral-800">
+        Mobile Orders
+      </h1>
+
+      <div className="w-full max-w-6xl rounded-lg bg-white border border-neutral-200 shadow-md p-6">
+        {/* Top controls */}
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <Link
+            to="/mobile-orders/create"
+            className="
+            rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white
+            hover:bg-green-500 transition
+          "
+          >
             Create
           </Link>
-          <div>
-            <label htmlFor="statusFilter" className="me-2">
+
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="statusFilter"
+              className="text-sm font-medium text-neutral-700"
+            >
               Filter by Status:
             </label>
             <select
               id="statusFilter"
-              className="form-select d-inline-block w-auto"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
+              className="
+              rounded-md border border-neutral-300 px-3 py-2 text-sm
+              focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500
+            "
             >
               <option value="All">All</option>
               {statuses.map((status) => (
@@ -79,49 +96,75 @@ function MobileOrdersTable() {
             </select>
           </div>
         </div>
+
+        {/* Content */}
         {loading ? (
-          <div>Loading...</div>
+          <div className="py-6 text-center text-neutral-500">Loading...</div>
         ) : filteredData.length === 0 ? (
-          <div>No mobile orders found.</div>
+          <div className="py-6 text-center text-neutral-500">
+            No mobile orders found.
+          </div>
         ) : (
-          <div className="table-responsive">
-            <table className="table table-striped">
-              <caption className="visually-hidden">
-                List of mobile orders
-              </caption>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-sm">
+              <caption className="sr-only">List of mobile orders</caption>
+
               <thead>
-                <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Customer Name</th>
-                  <th scope="col">Device Type</th>
-                  <th scope="col">Pickup Location</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Actions</th>
+                <tr className="border-b border-neutral-200 bg-neutral-50 text-left">
+                  <th className="px-3 py-2 font-medium text-neutral-700">ID</th>
+                  <th className="px-3 py-2 font-medium text-neutral-700">
+                    Customer Name
+                  </th>
+                  <th className="px-3 py-2 font-medium text-neutral-700">
+                    Device Type
+                  </th>
+                  <th className="px-3 py-2 font-medium text-neutral-700">
+                    Pickup Location
+                  </th>
+                  <th className="px-3 py-2 font-medium text-neutral-700">
+                    Status
+                  </th>
+                  <th className="px-3 py-2 font-medium text-neutral-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
+
               <tbody>
                 {filteredData.map((d) => (
-                  <tr key={d.id}>
-                    <td>{d.id}</td>
-                    <td>{d.customer.displayName}</td>
-                    <td>{d.mobileDeviceCategory.name}</td>
-                    <td>{d.pickupLocation}</td>
-                    <td>{d.status}</td>
-                    <td>
-                      <Link
-                        to={`/mobile-orders/${d.id}`}
-                        className="btn btn-primary btn-sm me-2 text-light"
-                      >
-                        View
-                      </Link>
-                      {d.status !== "Delivered" && (
-                        <button
-                          className="btn btn-danger btn-sm text-light"
-                          onClick={() => handleDelete(d.id)}
+                  <tr
+                    key={d.id}
+                    className="border-b border-neutral-100 even:bg-neutral-50 hover:bg-neutral-100 transition"
+                  >
+                    <td className="px-3 py-2">{d.id}</td>
+                    <td className="px-3 py-2">{d.customer.displayName}</td>
+                    <td className="px-3 py-2">{d.mobileDeviceCategory.name}</td>
+                    <td className="px-3 py-2">{d.pickupLocation}</td>
+                    <td className="px-3 py-2">{d.status}</td>
+                    <td className="px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <Link
+                          to={`/mobile-orders/${d.id}`}
+                          className="
+                          rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white
+                          hover:bg-blue-500 transition
+                        "
                         >
-                          Delete
-                        </button>
-                      )}
+                          View
+                        </Link>
+
+                        {d.status !== "Delivered" && (
+                          <button
+                            onClick={() => handleDelete(d.id)}
+                            className="
+                            rounded-md bg-red-600 px-3 py-1.5 text-xs font-medium text-white
+                            hover:bg-red-500 transition
+                          "
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
