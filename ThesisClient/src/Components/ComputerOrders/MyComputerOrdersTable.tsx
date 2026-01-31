@@ -20,7 +20,7 @@ export default function MyComputerOrdersTable() {
           "http://localhost:5268/computer-orders/my-orders",
           {
             headers: { Authorization: `Bearer ${user.token}` },
-          }
+          },
         );
         setData(res.data);
       } catch (err) {
@@ -51,20 +51,25 @@ export default function MyComputerOrdersTable() {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-        <h3>Loading your computer orders...</h3>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <h3 className="text-lg font-medium">Loading your computer orders...</h3>
       </div>
     );
   }
 
   if (data.length === 0) {
     return (
-      <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light text-center">
-        <h1 className="text-muted mb-3">💻 No computer orders found</h1>
-        <p className="text-secondary">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-center p-4">
+        <h1 className="text-3xl text-gray-400 mb-3">
+          💻 No computer orders found
+        </h1>
+        <p className="text-gray-500 mb-4">
           It looks like you don't have any computer orders yet.
         </p>
-        <Link to="/computer-orders/create" className="btn btn-success mt-3">
+        <Link
+          to="/computer-orders/create"
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
           Create a new computer order
         </Link>
       </div>
@@ -78,22 +83,27 @@ export default function MyComputerOrdersTable() {
       : data.filter((order) => order.status === statusFilter);
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
-      <h1>My Computer Orders</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <Link className="btn btn-success me-2" to="/computer-orders/create">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold mb-6">My Computer Orders</h1>
+
+      <div className="w-full max-w-5xl bg-white border rounded-lg shadow-md p-6">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
+          <Link
+            to="/computer-orders/create"
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-2 md:mb-0"
+          >
             Create
           </Link>
-          <div>
-            <label htmlFor="statusFilter" className="me-2">
+
+          <div className="flex items-center">
+            <label htmlFor="statusFilter" className="mr-2">
               Filter by Status:
             </label>
             <select
               id="statusFilter"
-              className="form-select d-inline-block w-auto"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
+              className="border rounded px-2 py-1 text-sm"
             >
               <option value="All">All</option>
               {statuses.map((status) => (
@@ -105,37 +115,39 @@ export default function MyComputerOrdersTable() {
           </div>
         </div>
 
-        <div className="table-responsive">
-          <table className="table table-striped">
-            <thead>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse border border-gray-300">
+            <thead className="bg-gray-200">
               <tr>
-                <th>ID</th>
-                <th>Customer Name</th>
-                <th>Device Type</th>
-                <th>Pickup Location</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th className="border px-4 py-2 text-left">ID</th>
+                <th className="border px-4 py-2 text-left">Customer Name</th>
+                <th className="border px-4 py-2 text-left">Device Type</th>
+                <th className="border px-4 py-2 text-left">Pickup Location</th>
+                <th className="border px-4 py-2 text-left">Status</th>
+                <th className="border px-4 py-2 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredData.map((d) => (
-                <tr key={d.id}>
-                  <td>{d.id}</td>
-                  <td>{d.customer.displayName}</td>
-                  <td>{d.computerCategory.name}</td>
-                  <td>{d.pickupLocation}</td>
-                  <td>{d.status}</td>
-                  <td>
+                <tr key={d.id} className="even:bg-gray-50">
+                  <td className="border px-4 py-2">{d.id}</td>
+                  <td className="border px-4 py-2">{d.customer.displayName}</td>
+                  <td className="border px-4 py-2">
+                    {d.computerCategory.name}
+                  </td>
+                  <td className="border px-4 py-2">{d.pickupLocation}</td>
+                  <td className="border px-4 py-2">{d.status}</td>
+                  <td className="border px-4 py-2 flex space-x-2">
                     <Link
                       to={`/computer-orders/${d.id}`}
-                      className="btn btn-primary btn-sm me-2 text-light"
+                      className="bg-blue-600 text-white px-2 py-1 rounded text-sm hover:bg-blue-700"
                     >
                       View
                     </Link>
                     {d.status !== "Delivered" &&
                       d.status !== "Rejected by group leader" && (
                         <button
-                          className="btn btn-danger btn-sm text-light"
+                          className="bg-red-600 text-white px-2 py-1 rounded text-sm hover:bg-red-700"
                           onClick={() => handleDelete(d.id)}
                         >
                           Cancel
