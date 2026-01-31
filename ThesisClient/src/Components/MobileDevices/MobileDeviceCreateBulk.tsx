@@ -38,13 +38,13 @@ export default function MobileDeviceCreateBulk() {
         mobileDeviceCategoryId: 0,
         imeiNumber: "",
         serialNumber: "",
-      }))
+      })),
     );
   }, [deviceCount]);
 
   const handleDeviceChange = (
     idx: number,
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setDevices((prev) =>
@@ -54,8 +54,8 @@ export default function MobileDeviceCreateBulk() {
               ...dev,
               [name]: name === "mobileDeviceCategoryId" ? Number(value) : value,
             }
-          : dev
-      )
+          : dev,
+      ),
     );
   };
 
@@ -87,7 +87,7 @@ export default function MobileDeviceCreateBulk() {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
-        }
+        },
       );
 
       toast.success("Mobile devices created successfully!");
@@ -99,12 +99,16 @@ export default function MobileDeviceCreateBulk() {
   };
 
   return (
-    <div className="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
-      <div className="col-12 col-xl-10 border bg-white shadow px-4 py-5 rounded">
-        <h1 className="mb-4 text-center">Bulk Create Mobile Devices</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4 d-flex align-items-center">
-            <label htmlFor="deviceCount" className="form-label me-2 mb-0">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-6xl bg-white border shadow-lg rounded-lg px-6 py-8">
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          Bulk Create Mobile Devices
+        </h1>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Device Count */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="deviceCount" className="text-sm font-medium">
               Number of devices:
             </label>
             <input
@@ -112,45 +116,47 @@ export default function MobileDeviceCreateBulk() {
               id="deviceCount"
               min={1}
               max={100}
-              className="form-control w-auto"
               value={deviceCount}
               onChange={(e) => setDeviceCount(Number(e.target.value))}
               required
+              className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
             />
           </div>
-          <div className="table-responsive mb-4">
-            <table className="table table-bordered align-middle">
-              <thead>
+
+          {/* Devices Table */}
+          <div className="overflow-x-auto">
+            <table className="min-w-full border-collapse border border-gray-300">
+              <thead className="bg-gray-200">
                 <tr>
-                  <th>#</th>
-                  <th>Hostname</th>
-                  <th>Category</th>
-                  <th>IMEI Number</th>
-                  <th>Serial Number</th>
+                  <th className="border px-3 py-2 text-left">#</th>
+                  <th className="border px-3 py-2 text-left">Hostname</th>
+                  <th className="border px-3 py-2 text-left">Category</th>
+                  <th className="border px-3 py-2 text-left">IMEI Number</th>
+                  <th className="border px-3 py-2 text-left">Serial Number</th>
                 </tr>
               </thead>
               <tbody>
                 {devices.map((dev, idx) => (
-                  <tr key={idx}>
-                    <td>{idx + 1}</td>
-                    <td>
+                  <tr key={idx} className="even:bg-gray-50">
+                    <td className="border px-3 py-2">{idx + 1}</td>
+                    <td className="border px-3 py-2">
                       <input
                         type="text"
                         name="hostname"
-                        className="form-control"
                         placeholder="HTV-M-00001"
                         value={dev.hostname}
                         onChange={(e) => handleDeviceChange(idx, e)}
                         required
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       />
                     </td>
-                    <td>
+                    <td className="border px-3 py-2">
                       <select
                         name="mobileDeviceCategoryId"
-                        className="form-select"
                         value={dev.mobileDeviceCategoryId}
                         onChange={(e) => handleDeviceChange(idx, e)}
                         required
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       >
                         <option value={0} disabled>
                           Select category...
@@ -162,26 +168,26 @@ export default function MobileDeviceCreateBulk() {
                         ))}
                       </select>
                     </td>
-                    <td>
+                    <td className="border px-3 py-2">
                       <input
                         type="text"
                         name="imeiNumber"
-                        className="form-control"
                         placeholder="3525..."
                         value={dev.imeiNumber}
                         onChange={(e) => handleDeviceChange(idx, e)}
                         required
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       />
                     </td>
-                    <td>
+                    <td className="border px-3 py-2">
                       <input
                         type="text"
                         name="serialNumber"
-                        className="form-control"
                         placeholder="SFZ213"
                         value={dev.serialNumber}
                         onChange={(e) => handleDeviceChange(idx, e)}
                         required
+                        className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       />
                     </td>
                   </tr>
@@ -189,11 +195,19 @@ export default function MobileDeviceCreateBulk() {
               </tbody>
             </table>
           </div>
-          <div className="d-flex flex-wrap">
-            <Link to="/mobiles" className="btn btn-primary me-2">
+
+          {/* Buttons */}
+          <div className="flex flex-wrap gap-3">
+            <Link
+              to="/mobiles"
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            >
               Back
             </Link>
-            <button type="submit" className="btn btn-success">
+            <button
+              type="submit"
+              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+            >
               Submit
             </button>
           </div>

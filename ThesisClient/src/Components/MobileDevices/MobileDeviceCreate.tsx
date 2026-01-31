@@ -37,7 +37,7 @@ export default function MobileDeviceCreate() {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -62,7 +62,7 @@ export default function MobileDeviceCreate() {
           headers: {
             Authorization: `Bearer ${user.token}`,
           },
-        }
+        },
       );
 
       toast.success("Mobile device created successfully!");
@@ -75,36 +75,47 @@ export default function MobileDeviceCreate() {
   };
 
   return (
-    <div className="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
-      <div className="col-12 col-md-8 col-lg-6 col-xl-5 border bg-white shadow px-4 py-5 rounded">
-        <h1 className="mb-4 text-center">Create a New Mobile Device</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="hostname" className="form-label">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-lg bg-white border shadow-lg rounded-lg px-6 py-8">
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          Create a New Mobile Device
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Hostname */}
+          <div>
+            <label
+              htmlFor="hostname"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Hostname
             </label>
             <input
               type="text"
-              name="hostname"
               id="hostname"
-              className="form-control"
+              name="hostname"
               placeholder="HTV-M-00001"
               value={formData.hostname}
               onChange={handleChange}
               required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="mobileDeviceCategoryId" className="form-label">
+
+          {/* Category */}
+          <div>
+            <label
+              htmlFor="mobileDeviceCategoryId"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Category
             </label>
             <select
-              name="mobileDeviceCategoryId"
               id="mobileDeviceCategoryId"
-              className="form-select"
+              name="mobileDeviceCategoryId"
               value={formData.mobileDeviceCategoryId}
               onChange={handleChange}
               required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
             >
               <option value={0} disabled>
                 Select category...
@@ -116,41 +127,59 @@ export default function MobileDeviceCreate() {
               ))}
             </select>
           </div>
-          <div className="mb-3">
-            <label htmlFor="imeiNumber" className="form-label">
+
+          {/* IMEI Number */}
+          <div>
+            <label
+              htmlFor="imeiNumber"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               IMEI Number
             </label>
             <input
               type="text"
-              name="imeiNumber"
               id="imeiNumber"
-              className="form-control"
+              name="imeiNumber"
               placeholder="3525..."
               value={formData.imeiNumber}
               onChange={handleChange}
               required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="serialNumber" className="form-label">
+
+          {/* Serial Number */}
+          <div>
+            <label
+              htmlFor="serialNumber"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Serial Number
             </label>
             <input
               type="text"
-              name="serialNumber"
               id="serialNumber"
-              className="form-control"
+              name="serialNumber"
               placeholder="SFZ213"
               value={formData.serialNumber}
               onChange={handleChange}
               required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
             />
           </div>
-          <div className="d-flex flex-wrap">
-            <Link to="/mobiles" className="btn btn-primary me-2">
+
+          {/* Buttons */}
+          <div className="flex flex-wrap gap-3 mt-4">
+            <Link
+              to="/mobiles"
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            >
               Back
             </Link>
-            <button type="submit" className="btn btn-success ">
+            <button
+              type="submit"
+              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+            >
               Submit
             </button>
           </div>

@@ -29,7 +29,7 @@ export default function MobileDevicesTable() {
           "http://localhost:5268/mobile-devices/",
           {
             headers: { Authorization: `Bearer ${user.token}` },
-          }
+          },
         );
         setData(res.data);
       } catch (err) {
@@ -58,11 +58,11 @@ export default function MobileDevicesTable() {
 
   // Get unique device categories for the filter dropdown
   const categories = Array.from(
-    new Set(data.map((device) => device.mobileDeviceCategory.name))
+    new Set(data.map((device) => device.mobileDeviceCategory.name)),
   );
   const statuses = Array.from(new Set(data.map((device) => device.status)));
   const statusReasons = Array.from(
-    new Set(data.map((device) => device.statusReason))
+    new Set(data.map((device) => device.statusReason)),
   );
 
   // Filter data by device category, status, and status reason
@@ -78,28 +78,40 @@ export default function MobileDevicesTable() {
   });
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
-      <h1>Mobile devices</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <Link className="btn btn-success me-2" to="/mobiles/create">
-          Create
-        </Link>
-        <Link className="btn btn-success" to="/mobiles/create-bulk">
-          Create bulk
-        </Link>
-        <div className="table-responsive">
-          <table className="table table-striped">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold mb-6">Mobile Devices</h1>
+
+      <div className="w-3/4 bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        {/* Action Buttons */}
+        <div className="mb-4 flex gap-4">
+          <Link
+            to="/mobiles/create"
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+          >
+            Create
+          </Link>
+          <Link
+            to="/mobiles/create-bulk"
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+          >
+            Create Bulk
+          </Link>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse">
             <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Hostname</th>
-                <th scope="col">
+              <tr className="bg-gray-200">
+                <th className="text-left px-4 py-2 border-b">Id</th>
+                <th className="text-left px-4 py-2 border-b">Hostname</th>
+                <th className="text-left px-4 py-2 border-b">
                   Category
+                  <br />
                   <select
-                    id="categoryFilter"
-                    className="form-select form-select-sm mt-2"
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
+                    className="mt-2 px-2 py-1 border rounded text-sm"
                   >
                     <option value="">All</option>
                     {categories.map((cat) => (
@@ -109,15 +121,15 @@ export default function MobileDevicesTable() {
                     ))}
                   </select>
                 </th>
-                <th scope="col">Imei number</th>
-                <th scope="col">Serial number</th>
-                <th scope="col">
+                <th className="text-left px-4 py-2 border-b">IMEI Number</th>
+                <th className="text-left px-4 py-2 border-b">Serial Number</th>
+                <th className="text-left px-4 py-2 border-b">
                   Status
+                  <br />
                   <select
-                    id="statusFilter"
-                    className="form-select form-select-sm mt-2"
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
+                    className="mt-2 px-2 py-1 border rounded text-sm"
                   >
                     <option value="">All</option>
                     {statuses.map((status) => (
@@ -127,13 +139,13 @@ export default function MobileDevicesTable() {
                     ))}
                   </select>
                 </th>
-                <th scope="col">
-                  Status reason
+                <th className="text-left px-4 py-2 border-b">
+                  Status Reason
+                  <br />
                   <select
-                    id="statusReasonFilter"
-                    className="form-select form-select-sm mt-2"
                     value={statusReasonFilter}
                     onChange={(e) => setStatusReasonFilter(e.target.value)}
+                    className="mt-2 px-2 py-1 border rounded text-sm"
                   >
                     <option value="">All</option>
                     {statusReasons.map((reason) => (
@@ -143,23 +155,26 @@ export default function MobileDevicesTable() {
                     ))}
                   </select>
                 </th>
-                <th scope="col">Actions</th>
+                <th className="text-left px-4 py-2 border-b">Actions</th>
               </tr>
             </thead>
+
             <tbody>
               {filteredData.map((d) => (
-                <tr key={d.id}>
-                  <td scope="row">{d.id}</td>
-                  <td>{d.hostname}</td>
-                  <td>{d.mobileDeviceCategory.name}</td>
-                  <td>{d.imeiNumber}</td>
-                  <td>{d.serialNumber}</td>
-                  <td>{d.status}</td>
-                  <td>{d.statusReason}</td>
-                  <td>
+                <tr key={d.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 border-b">{d.id}</td>
+                  <td className="px-4 py-2 border-b">{d.hostname}</td>
+                  <td className="px-4 py-2 border-b">
+                    {d.mobileDeviceCategory.name}
+                  </td>
+                  <td className="px-4 py-2 border-b">{d.imeiNumber}</td>
+                  <td className="px-4 py-2 border-b">{d.serialNumber}</td>
+                  <td className="px-4 py-2 border-b">{d.status}</td>
+                  <td className="px-4 py-2 border-b">{d.statusReason}</td>
+                  <td className="px-4 py-2 border-b">
                     <button
-                      className="btn btn-danger btn-sm text-light"
                       onClick={() => handleDelete(d.id)}
+                      className="bg-red-600 text-white px-2 py-1 rounded text-sm hover:bg-red-700 transition"
                     >
                       Delete
                     </button>
