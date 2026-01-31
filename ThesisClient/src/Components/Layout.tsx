@@ -5,7 +5,7 @@ function Layout() {
   return (
     <>
       <NavBar />
-      <div className="container-fluid mt-5 pt-4">
+      <div>
         <Outlet />
       </div>
     </>
