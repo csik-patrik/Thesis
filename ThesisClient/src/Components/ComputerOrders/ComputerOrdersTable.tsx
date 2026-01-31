@@ -60,12 +60,17 @@ export default function ComputerOrdersTable() {
 
   if (data.length === 0) {
     return (
-      <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light text-center">
-        <h1 className="text-muted mb-3">💻 No computer orders found</h1>
-        <p className="text-secondary">
+      <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-center px-4">
+        <h1 className="text-gray-400 text-2xl mb-3">
+          💻 No computer orders found
+        </h1>
+        <p className="text-gray-500 mb-4">
           It looks like you don't have any computer orders yet.
         </p>
-        <Link to="/computer-orders/create" className="btn btn-success mt-3">
+        <Link
+          to="/computer-orders/create"
+          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500 transition"
+        >
           Create a new computer order
         </Link>
       </div>
@@ -73,22 +78,33 @@ export default function ComputerOrdersTable() {
   }
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
-      <h1>Computer Orders</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <Link className="btn btn-success me-2" to="/computer-orders/create">
+    <div className="flex flex-col items-center bg-gray-100 min-h-screen px-4 py-6">
+      <h1 className="text-2xl font-semibold text-neutral-800 mb-4">
+        Computer Orders
+      </h1>
+
+      <div className="w-full max-w-4xl bg-white border border-gray-200 rounded-lg shadow p-6">
+        {/* Top controls */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+          <Link
+            to="/computer-orders/create"
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500 transition"
+          >
             Create
           </Link>
-          <div>
-            <label htmlFor="statusFilter" className="me-2">
+
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="statusFilter"
+              className="text-neutral-700 font-medium"
+            >
               Filter by Status:
             </label>
             <select
               id="statusFilter"
-              className="form-select d-inline-block w-auto"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-1 focus:ring-neutral-400"
             >
               <option value="All">All</option>
               {statuses.map((status) => (
@@ -99,45 +115,65 @@ export default function ComputerOrdersTable() {
             </select>
           </div>
         </div>
+
+        {/* Table */}
         {loading ? (
-          <div>Loading...</div>
+          <p className="text-center text-neutral-500 mt-4">Loading...</p>
         ) : filteredData.length === 0 ? (
-          <div>No computer orders found.</div>
+          <p className="text-center text-neutral-500 mt-4">
+            No computer orders found.
+          </p>
         ) : (
-          <div className="table-responsive">
-            <table className="table table-striped">
-              <caption className="visually-hidden">
-                List of computer orders
-              </caption>
-              <thead>
+          <div className="overflow-x-auto">
+            <table className="min-w-full border border-gray-200 divide-y divide-gray-200">
+              <caption className="sr-only">List of computer orders</caption>
+              <thead className="bg-gray-50">
                 <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Customer Name</th>
-                  <th scope="col">Device Type</th>
-                  <th scope="col">Pickup Location</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Actions</th>
+                  {[
+                    "ID",
+                    "Customer Name",
+                    "Device Type",
+                    "Pickup Location",
+                    "Status",
+                    "Actions",
+                  ].map((th) => (
+                    <th
+                      key={th}
+                      scope="col"
+                      className="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                    >
+                      {th}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-200">
                 {filteredData.map((d) => (
                   <tr key={d.id}>
-                    <td>{d.id}</td>
-                    <td>{d.customer.displayName}</td>
-                    <td>{d.computerCategory.name}</td>
-                    <td>{d.pickupLocation}</td>
-                    <td>{d.status}</td>
-                    <td>
+                    <td className="px-4 py-2 text-sm text-gray-800">{d.id}</td>
+                    <td className="px-4 py-2 text-sm text-gray-800">
+                      {d.customer.displayName}
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-800">
+                      {d.computerCategory.name}
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-800">
+                      {d.pickupLocation}
+                    </td>
+                    <td className="px-4 py-2 text-sm text-gray-800">
+                      {d.status}
+                    </td>
+                    <td className="px-4 py-2 flex gap-2">
                       <Link
                         to={`/computer-orders/${d.id}`}
-                        className="btn btn-primary btn-sm me-2 text-light"
+                        className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-500 transition"
                       >
                         View
                       </Link>
                       {d.status !== "Delivered" && (
                         <button
-                          className="btn btn-danger btn-sm text-light"
                           onClick={() => handleDelete(d.id)}
+                          className="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-500 transition"
                         >
                           Delete
                         </button>

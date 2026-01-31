@@ -30,7 +30,7 @@ export default function ComputerOrderCreate() {
     const fetchComputerCategories = async () => {
       try {
         const res = await axios.get<ComputerCategoryResponse[]>(
-          "http://localhost:5268/computer-categories"
+          "http://localhost:5268/computer-categories",
         );
         setComputerCategories(res.data);
       } catch (err) {
@@ -45,7 +45,7 @@ export default function ComputerOrderCreate() {
     const fetchGroupLeaders = async () => {
       try {
         const res = await axios.get<UserResponse[]>(
-          "http://localhost:5268/users/group-leader"
+          "http://localhost:5268/users/group-leader",
         );
         setGroupLeaders(res.data);
       } catch (err) {
@@ -70,7 +70,7 @@ export default function ComputerOrderCreate() {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -96,33 +96,45 @@ export default function ComputerOrderCreate() {
   };
 
   return (
-    <div className="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
-      <div className="col-12 col-md-8 col-lg-6 col-xl-5 border bg-white shadow px-4 py-5 rounded">
-        <h1 className="mb-4 text-center">Create a new computer order</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="customerId" className="form-label">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white border border-gray-200 shadow-lg rounded-lg p-6">
+        <h1 className="text-2xl font-semibold text-center mb-6">
+          Create a new computer order
+        </h1>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Requester */}
+          <div>
+            <label
+              htmlFor="customerId"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Requester:
             </label>
             <input
               type="text"
               id="customerId"
-              className="form-control"
               value={user?.displayname ?? ""}
               disabled
+              className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="computerCategoryId" className="form-label">
+
+          {/* Device Category */}
+          <div>
+            <label
+              htmlFor="computerCategoryId"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Device category:
             </label>
             <select
               id="computerCategoryId"
               name="computerCategoryId"
-              className="form-select"
               value={formData.computerCategoryId}
               onChange={handleChange}
               required
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
             >
               <option value={0} disabled>
                 Select category...
@@ -134,47 +146,62 @@ export default function ComputerOrderCreate() {
               ))}
             </select>
           </div>
-          <div className="mb-3">
-            <label htmlFor="pickupLocation" className="form-label">
+
+          {/* Pickup Location */}
+          <div>
+            <label
+              htmlFor="pickupLocation"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Pickup location:
             </label>
             <select
               id="pickupLocation"
               name="pickupLocation"
-              className="form-select"
               value={formData.pickupLocation}
               onChange={handleChange}
               required
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
             >
               <option value="HtvP">HtvP</option>
               <option value="cHub">cHub</option>
             </select>
           </div>
-          <div className="mb-3">
-            <label htmlFor="note" className="form-label">
+
+          {/* Note */}
+          <div>
+            <label
+              htmlFor="note"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Note:
             </label>
             <textarea
               id="note"
               name="note"
-              className="form-control"
               placeholder="Additional notes..."
               value={formData.note}
               onChange={handleChange}
               rows={2}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="approverId" className="form-label">
+
+          {/* Approver */}
+          <div>
+            <label
+              htmlFor="approverId"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Approver:
             </label>
             <select
               id="approverId"
               name="approverId"
-              className="form-select"
               value={formData.approverId}
               onChange={handleChange}
               required
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
             >
               <option value={0} disabled>
                 Select an approver...
@@ -186,15 +213,24 @@ export default function ComputerOrderCreate() {
               ))}
             </select>
           </div>
-          <div className="d-flex flex-wrap justify-content-between align-items-center mt-4">
+
+          {/* Buttons */}
+          <div className="flex flex-wrap justify-between items-center mt-4 gap-2">
             <button
               type="submit"
-              className="btn btn-success mb-2 mb-md-0"
               disabled={formData.computerCategoryId === 0 || user == null}
+              className={`px-4 py-2 rounded-md text-white font-medium transition ${
+                formData.computerCategoryId === 0 || user == null
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-500"
+              }`}
             >
               Submit
             </button>
-            <Link to="/computer-orders" className="btn btn-primary ms-md-3">
+            <Link
+              to="/computer-orders"
+              className="px-4 py-2 rounded-md text-white font-medium bg-blue-600 hover:bg-blue-500 transition"
+            >
               Back
             </Link>
           </div>

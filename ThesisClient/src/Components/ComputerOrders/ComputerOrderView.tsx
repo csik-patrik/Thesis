@@ -27,7 +27,7 @@ export default function ComputerOrderView() {
           `http://localhost:5268/computer-orders/${id}`,
           {
             headers: { Authorization: `Bearer ${user.token}` },
-          }
+          },
         );
         setOrder(res.data);
       } catch (err) {
@@ -49,7 +49,7 @@ export default function ComputerOrderView() {
         `http://localhost:5268/computers/allocation/${order?.computerCategory.id}`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
-        }
+        },
       )
       .then((res) => setDevices(res.data))
       .catch((err) => {
@@ -75,7 +75,7 @@ export default function ComputerOrderView() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user.token}`,
           },
-        }
+        },
       );
 
       toast.success("Device allocated successfully!");
@@ -86,7 +86,7 @@ export default function ComputerOrderView() {
         `http://localhost:5268/computer-orders/${id}`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
-        }
+        },
       );
 
       setOrder(res.data);
@@ -105,7 +105,7 @@ export default function ComputerOrderView() {
         {},
         {
           headers: { Authorization: `Bearer ${user.token}` },
-        }
+        },
       );
 
       toast.success("Order marked as delivered!");
@@ -115,7 +115,7 @@ export default function ComputerOrderView() {
         `http://localhost:5268/computer-orders/${id}`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
-        }
+        },
       );
 
       setOrder(res.data);
@@ -142,7 +142,7 @@ export default function ComputerOrderView() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user.token}`,
           },
-        }
+        },
       );
 
       // 🔹 Refresh order
@@ -150,12 +150,12 @@ export default function ComputerOrderView() {
         `http://localhost:5268/computer-orders/${id}`,
         {
           headers: { Authorization: `Bearer ${user.token}` },
-        }
+        },
       );
 
       setOrder(res.data);
       toast.success(
-        `Order ${decision ? "approved" : "rejected"} successfully!`
+        `Order ${decision ? "approved" : "rejected"} successfully!`,
       );
     } catch (err: any) {
       console.error("Error updating computer order:", err);
@@ -168,76 +168,86 @@ export default function ComputerOrderView() {
 
   // Filter devices by hostname
   const filteredDevices = devices.filter((device) =>
-    device.hostname.toLowerCase().includes(search.toLowerCase())
+    device.hostname.toLowerCase().includes(search.toLowerCase()),
   );
 
   if (loading)
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="spinner-border text-primary" role="status"></div>
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
 
   if (!order)
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <p className="text-danger fs-4">Order not found.</p>
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-red-600 text-lg">Order not found.</p>
       </div>
     );
 
   return (
-    <div className="container m-5">
-      <div className="row g-4">
+    <div className="container mx-auto p-6">
+      <div className="grid lg:grid-cols-12 gap-6">
         {/* 🧾 Order Details Section */}
-        <div className="col-lg-8">
-          <h2 className="mb-3">🧾 Order Details</h2>
-          <div className="card shadow-sm border-0 p-4">
-            <dl className="row mb-0">
-              <dt className="col-sm-4">Order ID:</dt>
-              <dd className="col-sm-8">{order.id}</dd>
-
-              <dt className="col-sm-4">Customer Name:</dt>
-              <dd className="col-sm-8">{order.customer.displayName}</dd>
-
-              <dt className="col-sm-4">Cost Center:</dt>
-              <dd className="col-sm-8">{order.customer.costCenter}</dd>
-
-              <dt className="col-sm-4">Device Category:</dt>
-              <dd className="col-sm-8">{order.computerCategory.name}</dd>
-
-              <dt className="col-sm-4">Pickup Location:</dt>
-              <dd className="col-sm-8">{order.pickupLocation}</dd>
-
-              <dt className="col-sm-4">Note:</dt>
-              <dd className="col-sm-8">{order.note || "—"}</dd>
-
-              <dt className="col-sm-4">Status:</dt>
-              <dd className="col-sm-8">
-                <span
-                  className={`badge ${
-                    order.status === "Approved"
-                      ? "bg-success"
-                      : order.status === "Rejected by group leader"
-                      ? "bg-danger"
-                      : "bg-warning text-dark"
-                  }`}
-                >
-                  {order.status}
-                </span>
-              </dd>
-              <dt className="col-sm-4">Approver:</dt>
-              <dd className="col-sm-8">
-                {order.approver.displayName} - {order.approver.department}
-              </dd>
+        <div className="lg:col-span-8">
+          <h2 className="text-2xl font-semibold mb-4">🧾 Order Details</h2>
+          <div className="bg-white shadow-md rounded-lg p-6">
+            <dl className="grid grid-cols-1 gap-3">
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-700">Order ID:</dt>
+                <dd>{order.id}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-700">Customer Name:</dt>
+                <dd>{order.customer.displayName}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-700">Cost Center:</dt>
+                <dd>{order.customer.costCenter}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-700">Device Category:</dt>
+                <dd>{order.computerCategory.name}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-700">Pickup Location:</dt>
+                <dd>{order.pickupLocation}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-700">Note:</dt>
+                <dd>{order.note || "—"}</dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-700">Status:</dt>
+                <dd>
+                  <span
+                    className={`px-2 py-1 rounded-full text-sm font-semibold ${
+                      order.status === "Approved"
+                        ? "bg-green-200 text-green-800"
+                        : order.status === "Rejected by group leader"
+                          ? "bg-red-200 text-red-800"
+                          : "bg-yellow-200 text-yellow-800"
+                    }`}
+                  >
+                    {order.status}
+                  </span>
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="font-medium text-gray-700">Approver:</dt>
+                <dd>
+                  {order.approver.displayName} - {order.approver.department}
+                </dd>
+              </div>
             </dl>
           </div>
 
           {/* Actions */}
-          <div className="mt-4">
+          <div className="mt-4 flex flex-wrap gap-2">
             {user?.roles.includes("Admin") && (
               <Link
                 to="/computer-orders"
-                className="btn btn-outline-primary me-2"
+                className="px-4 py-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-50 transition"
               >
                 ⬅ Back to Orders
               </Link>
@@ -247,22 +257,21 @@ export default function ComputerOrderView() {
               <>
                 <Link
                   to="/computer-orders/approval"
-                  className="btn btn-outline-primary me-2"
+                  className="px-4 py-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-50 transition"
                 >
                   ⬅ Back to Orders
                 </Link>
 
-                {order.status == "Waiting for approval" && (
+                {order.status === "Waiting for approval" && (
                   <>
                     <button
-                      className="btn btn-success me-2"
+                      className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
                       onClick={() => handleDecision(order.id, true)}
                     >
                       ✅ Approve
                     </button>
-
                     <button
-                      className="btn btn-danger"
+                      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500"
                       onClick={() => handleDecision(order.id, false)}
                     >
                       ❌ Reject
@@ -275,7 +284,10 @@ export default function ComputerOrderView() {
             {user?.roles.includes("Admin") &&
               order.computer &&
               order.status !== "Delivered" && (
-                <button className="btn btn-success" onClick={handleDeliver}>
+                <button
+                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
+                  onClick={handleDeliver}
+                >
                   🚚 Deliver Device
                 </button>
               )}
@@ -284,23 +296,25 @@ export default function ComputerOrderView() {
 
         {/* 💻 Device Allocation Section */}
         {user?.roles.includes("Admin") && (
-          <div className="col-lg-4">
+          <div className="lg:col-span-4">
             {order.computer ? (
               <>
-                <h2 className="mb-3">💻 Allocated Device</h2>
-                <div className="card shadow-sm border-0 p-3">
-                  <ul className="list-group list-group-flush">
-                    <li className="list-group-item">
+                <h2 className="text-xl font-semibold mb-3">
+                  💻 Allocated Device
+                </h2>
+                <div className="bg-white shadow-md rounded-lg p-4">
+                  <ul className="space-y-2">
+                    <li>
                       <strong>Hostname:</strong> {order.computer.hostname}
                     </li>
-                    <li className="list-group-item">
+                    <li>
                       <strong>Category:</strong>{" "}
                       {order.computer.computerCategory.name}
                     </li>
-                    <li className="list-group-item">
+                    <li>
                       <strong>Model:</strong> {order.computer.model}
                     </li>
-                    <li className="list-group-item">
+                    <li>
                       <strong>Serial:</strong> {order.computer.serialNumber}
                     </li>
                   </ul>
@@ -308,25 +322,25 @@ export default function ComputerOrderView() {
               </>
             ) : (
               <>
-                <h2 className="mb-3">🧩 Allocate Device</h2>
+                <h2 className="text-xl font-semibold mb-3">
+                  🧩 Allocate Device
+                </h2>
                 <input
                   type="text"
-                  className="form-control mb-3"
                   placeholder="🔍 Search by hostname..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 mb-3 focus:outline-none focus:ring-1 focus:ring-gray-400"
                 />
-                <div className="card shadow-sm border-0 p-3">
+                <div className="bg-white shadow-md rounded-lg p-3">
                   {filteredDevices.length === 0 ? (
-                    <p className="text-muted mb-0">
-                      No available devices found.
-                    </p>
+                    <p className="text-gray-500">No available devices found.</p>
                   ) : (
-                    <ul className="list-group list-group-flush">
+                    <ul className="space-y-2">
                       {filteredDevices.map((device) => (
                         <li
                           key={device.id}
-                          className="list-group-item d-flex flex-column"
+                          className="flex flex-col border-b border-gray-200 pb-2"
                         >
                           <strong>{device.hostname}</strong>
                           <small>
@@ -336,9 +350,13 @@ export default function ComputerOrderView() {
                           <small>Serial: {device.serialNumber}</small>
                           <small>Status: {device.status}</small>
                           <button
-                            className="btn btn-outline-success btn-sm mt-2 align-self-end"
                             disabled={allocating === device.id}
                             onClick={() => handleAllocateComputer(device.id)}
+                            className={`mt-2 self-end px-3 py-1 rounded text-white ${
+                              allocating === device.id
+                                ? "bg-gray-400 cursor-not-allowed"
+                                : "bg-green-600 hover:bg-green-500"
+                            } text-sm`}
                           >
                             {allocating === device.id
                               ? "Allocating..."
