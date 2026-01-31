@@ -32,7 +32,7 @@ export default function ComputersCreate() {
           "http://localhost:5268/computer-categories",
           {
             headers: { Authorization: `Bearer ${user.token}` },
-          }
+          },
         );
         setComputerCategories(res.data);
       } catch (err) {
@@ -44,7 +44,7 @@ export default function ComputersCreate() {
   }, [user]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -72,36 +72,47 @@ export default function ComputersCreate() {
   };
 
   return (
-    <div className="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
-      <div className="col-12 col-md-8 col-lg-6 col-xl-5 border bg-white shadow px-4 py-5 rounded">
-        <h1 className="mb-4 text-center">Create a new computer</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="hostname" className="form-label">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+      <div className="w-full max-w-md bg-white shadow rounded-lg p-6">
+        <h1 className="text-2xl font-semibold text-center mb-6">
+          Create a new computer
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Hostname */}
+          <div>
+            <label
+              htmlFor="hostname"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Hostname
             </label>
             <input
               type="text"
               name="hostname"
               id="hostname"
-              className="form-control"
               placeholder="HTV-C-00001"
               value={formData.hostname}
               onChange={handleChange}
               required
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="computerCategoryId" className="form-label">
+
+          {/* Category */}
+          <div>
+            <label
+              htmlFor="computerCategoryId"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Category
             </label>
             <select
               name="computerCategoryId"
               id="computerCategoryId"
-              className="form-select"
               value={formData.computerCategoryId}
               onChange={handleChange}
               required
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value={0} disabled>
                 Select category...
@@ -113,41 +124,59 @@ export default function ComputersCreate() {
               ))}
             </select>
           </div>
-          <div className="mb-3">
-            <label htmlFor="model" className="form-label">
+
+          {/* Model */}
+          <div>
+            <label
+              htmlFor="model"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Model
             </label>
             <input
               type="text"
               name="model"
               id="model"
-              className="form-control"
               placeholder="Lenovo T14 G2"
               value={formData.model}
               onChange={handleChange}
               required
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="mb-3">
-            <label htmlFor="serialNumber" className="form-label">
+
+          {/* Serial Number */}
+          <div>
+            <label
+              htmlFor="serialNumber"
+              className="block text-gray-700 font-medium mb-1"
+            >
               Serial Number
             </label>
             <input
               type="text"
               name="serialNumber"
               id="serialNumber"
-              className="form-control"
               placeholder="SFZ213"
               value={formData.serialNumber}
               onChange={handleChange}
               required
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="d-flex flex-wrap">
-            <Link to="/computers" className="btn btn-primary me-2">
+
+          {/* Actions */}
+          <div className="flex gap-3 mt-4">
+            <Link
+              to="/computers"
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500"
+            >
               Back
             </Link>
-            <button type="submit" className="btn btn-success ">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
+            >
               Submit
             </button>
           </div>

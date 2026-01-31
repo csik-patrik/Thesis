@@ -28,7 +28,7 @@ export default function ComputersCreateBulk() {
           "http://localhost:5268/computer-categories",
           {
             headers: { Authorization: `Bearer ${user.token}` },
-          }
+          },
         );
         setComputerCategories(res.data);
       } catch (err) {
@@ -46,13 +46,13 @@ export default function ComputersCreateBulk() {
         computerCategoryId: 0,
         model: "",
         serialNumber: "",
-      }))
+      })),
     );
   }, [deviceCount]);
 
   const handleDeviceChange = (
     idx: number,
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setDevices((prev) =>
@@ -62,8 +62,8 @@ export default function ComputersCreateBulk() {
               ...dev,
               [name]: name === "computerCategoryId" ? Number(value) : value,
             }
-          : dev
-      )
+          : dev,
+      ),
     );
   };
 
@@ -88,105 +88,119 @@ export default function ComputersCreateBulk() {
   };
 
   return (
-    <div className="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
-      <div className="col-12 col-xl-10 border bg-white shadow px-4 py-5 rounded">
-        <h1 className="mb-4 text-center">Bulk create computers</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4 d-flex align-items-center">
-            <label htmlFor="deviceCount" className="form-label me-2 mb-0">
-              Number of devices:
-            </label>
-            <input
-              type="number"
-              id="deviceCount"
-              min={1}
-              max={100}
-              className="form-control w-auto"
-              value={deviceCount}
-              onChange={(e) => setDeviceCount(Number(e.target.value))}
-              required
-            />
-          </div>
-          <div className="table-responsive mb-4">
-            <table className="table table-bordered align-middle">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Hostname</th>
-                  <th>Category</th>
-                  <th>Model</th>
-                  <th>Serial Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                {devices.map((dev, idx) => (
-                  <tr key={idx}>
-                    <td>{idx + 1}</td>
-                    <td>
-                      <input
-                        type="text"
-                        name="hostname"
-                        className="form-control"
-                        placeholder="HTV-C-00001"
-                        value={dev.hostname}
-                        onChange={(e) => handleDeviceChange(idx, e)}
-                        required
-                      />
-                    </td>
-                    <td>
-                      <select
-                        name="computerCategoryId"
-                        className="form-select"
-                        value={dev.computerCategoryId}
-                        onChange={(e) => handleDeviceChange(idx, e)}
-                        required
-                      >
-                        <option value={0} disabled>
-                          Select category...
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+      <div className="w-full max-w-6xl bg-white shadow rounded-lg p-6">
+        <h1 className="text-2xl font-semibold text-center mb-6">
+          Bulk create computers
+        </h1>
+
+        {/* Number of devices */}
+        <div className="mb-6 flex items-center gap-3">
+          <label htmlFor="deviceCount" className="font-medium text-gray-700">
+            Number of devices:
+          </label>
+          <input
+            type="number"
+            id="deviceCount"
+            min={1}
+            max={100}
+            value={deviceCount}
+            onChange={(e) => setDeviceCount(Number(e.target.value))}
+            required
+            className="w-24 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Devices table */}
+        <div className="overflow-x-auto mb-6">
+          <table className="min-w-full border border-gray-200 divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-2 text-left text-gray-600">#</th>
+                <th className="px-4 py-2 text-left text-gray-600">Hostname</th>
+                <th className="px-4 py-2 text-left text-gray-600">Category</th>
+                <th className="px-4 py-2 text-left text-gray-600">Model</th>
+                <th className="px-4 py-2 text-left text-gray-600">
+                  Serial Number
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {devices.map((dev, idx) => (
+                <tr key={idx} className="hover:bg-gray-50">
+                  <td className="px-4 py-2">{idx + 1}</td>
+                  <td className="px-4 py-2">
+                    <input
+                      type="text"
+                      name="hostname"
+                      placeholder="HTV-C-00001"
+                      value={dev.hostname}
+                      onChange={(e) => handleDeviceChange(idx, e)}
+                      required
+                      className="w-full px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </td>
+                  <td className="px-4 py-2">
+                    <select
+                      name="computerCategoryId"
+                      value={dev.computerCategoryId}
+                      onChange={(e) => handleDeviceChange(idx, e)}
+                      required
+                      className="w-full px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value={0} disabled>
+                        Select category...
+                      </option>
+                      {computerCategories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
                         </option>
-                        {computerCategories.map((cat) => (
-                          <option key={cat.id} value={cat.id}>
-                            {cat.name}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name="model"
-                        className="form-control"
-                        placeholder="Lenovo T14 G2"
-                        value={dev.model}
-                        onChange={(e) => handleDeviceChange(idx, e)}
-                        required
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name="serialNumber"
-                        className="form-control"
-                        placeholder="SFZ213"
-                        value={dev.serialNumber}
-                        onChange={(e) => handleDeviceChange(idx, e)}
-                        required
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="d-flex flex-wrap">
-            <Link to="/computers" className="btn btn-primary me-2">
-              Back
-            </Link>
-            <button type="submit" className="btn btn-success">
-              Submit
-            </button>
-          </div>
-        </form>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="px-4 py-2">
+                    <input
+                      type="text"
+                      name="model"
+                      placeholder="Lenovo T14 G2"
+                      value={dev.model}
+                      onChange={(e) => handleDeviceChange(idx, e)}
+                      required
+                      className="w-full px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </td>
+                  <td className="px-4 py-2">
+                    <input
+                      type="text"
+                      name="serialNumber"
+                      placeholder="SFZ213"
+                      value={dev.serialNumber}
+                      onChange={(e) => handleDeviceChange(idx, e)}
+                      required
+                      className="w-full px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-3">
+          <Link
+            to="/computers"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500"
+          >
+            Back
+          </Link>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );
