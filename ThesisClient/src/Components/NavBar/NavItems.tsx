@@ -21,8 +21,6 @@ export default function NavItems() {
             {user.roles.includes("Admin") && <AdminItems />}
 
             {user.roles.includes("Group leader") && <ApproverItems />}
-
-            {/* <NavItem title="My Computers" to="/computers/my-computers" />*/}
           </div>
           <div className="ms-auto flex items-center gap-2">
             <UserItems displayname={user.displayname} />
