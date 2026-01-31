@@ -14,8 +14,8 @@ export default function MyMobileDeviceTable() {
   console.log(user);
 
   useEffect(() => {
-    if (!user) return; // ⛔ no user yet — skip until restored
-    if (!user.token) return; // ⛔ user exists but missing token
+    if (!user) return;
+    if (!user.token) return;
 
     const fetchDevices = async () => {
       try {
@@ -23,7 +23,7 @@ export default function MyMobileDeviceTable() {
           "http://localhost:5268/mobile-devices/my-devices",
           {
             headers: { Authorization: `Bearer ${user.token}` },
-          }
+          },
         );
         setData(res.data);
       } catch (err) {
@@ -36,11 +36,11 @@ export default function MyMobileDeviceTable() {
 
   // Get unique device categories for the filter dropdown
   const categories = Array.from(
-    new Set(data.map((device) => device.mobileDeviceCategory.name))
+    new Set(data.map((device) => device.mobileDeviceCategory.name)),
   );
   const statuses = Array.from(new Set(data.map((device) => device.status)));
   const statusReasons = Array.from(
-    new Set(data.map((device) => device.statusReason))
+    new Set(data.map((device) => device.statusReason)),
   );
 
   // Filter data by device category, status, and status reason
@@ -56,22 +56,23 @@ export default function MyMobileDeviceTable() {
   });
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
-      <h1>My mobile devices</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <div className="table-responsive">
-          <table className="table table-striped">
-            <thead>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold mb-6">My Mobile Devices</h1>
+
+      <div className="w-full max-w-5xl bg-white border rounded-lg shadow-md p-6">
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse border border-gray-300">
+            <thead className="bg-gray-200">
               <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Hostname</th>
-                <th scope="col">
+                <th className="border px-4 py-2 text-left">Id</th>
+                <th className="border px-4 py-2 text-left">Hostname</th>
+                <th className="border px-4 py-2 text-left">
                   Category
                   <select
                     id="categoryFilter"
-                    className="form-select form-select-sm mt-2"
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
+                    className="block mt-1 w-full border-gray-300 rounded-md text-sm p-1"
                   >
                     <option value="">All</option>
                     {categories.map((cat) => (
@@ -81,15 +82,15 @@ export default function MyMobileDeviceTable() {
                     ))}
                   </select>
                 </th>
-                <th scope="col">Imei number</th>
-                <th scope="col">Serial number</th>
-                <th scope="col">
+                <th className="border px-4 py-2 text-left">IMEI Number</th>
+                <th className="border px-4 py-2 text-left">Serial Number</th>
+                <th className="border px-4 py-2 text-left">
                   Status
                   <select
                     id="statusFilter"
-                    className="form-select form-select-sm mt-2"
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
+                    className="block mt-1 w-full border-gray-300 rounded-md text-sm p-1"
                   >
                     <option value="">All</option>
                     {statuses.map((status) => (
@@ -99,13 +100,13 @@ export default function MyMobileDeviceTable() {
                     ))}
                   </select>
                 </th>
-                <th scope="col">
-                  Status reason
+                <th className="border px-4 py-2 text-left">
+                  Status Reason
                   <select
                     id="statusReasonFilter"
-                    className="form-select form-select-sm mt-2"
                     value={statusReasonFilter}
                     onChange={(e) => setStatusReasonFilter(e.target.value)}
+                    className="block mt-1 w-full border-gray-300 rounded-md text-sm p-1"
                   >
                     <option value="">All</option>
                     {statusReasons.map((reason) => (
@@ -115,19 +116,24 @@ export default function MyMobileDeviceTable() {
                     ))}
                   </select>
                 </th>
-                <th scope="col">Actions</th>
+                <th className="border px-4 py-2 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredData.map((d) => (
-                <tr key={d.id}>
-                  <td scope="row">{d.id}</td>
-                  <td>{d.hostname}</td>
-                  <td>{d.mobileDeviceCategory.name}</td>
-                  <td>{d.imeiNumber}</td>
-                  <td>{d.serialNumber}</td>
-                  <td>{d.status}</td>
-                  <td>{d.statusReason}</td>
+                <tr key={d.id} className="even:bg-gray-50">
+                  <td className="border px-4 py-2">{d.id}</td>
+                  <td className="border px-4 py-2">{d.hostname}</td>
+                  <td className="border px-4 py-2">
+                    {d.mobileDeviceCategory.name}
+                  </td>
+                  <td className="border px-4 py-2">{d.imeiNumber}</td>
+                  <td className="border px-4 py-2">{d.serialNumber}</td>
+                  <td className="border px-4 py-2">{d.status}</td>
+                  <td className="border px-4 py-2">{d.statusReason}</td>
+                  <td className="border px-4 py-2">
+                    {/* Add action buttons here if needed */}
+                  </td>
                 </tr>
               ))}
             </tbody>
