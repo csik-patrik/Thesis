@@ -1,16 +1,11 @@
 import { NavLink } from "react-router-dom";
 
 export default function NavItem({ to, title }: { to: string; title: string }) {
+  const classes =
+    "py-2 px-3 mx-2 text-neutral-700 hover:text-neutral-800 whitespace-nowrap";
   return (
-    <li className="nav-item">
-      <NavLink
-        to={to}
-        className={({ isActive }) =>
-          `nav-link px-3 fw-semibold ${isActive ? "text-dark" : "text-dark"}`
-        }
-      >
-        {title}
-      </NavLink>
-    </li>
+    <NavLink to={to} className={classes}>
+      {title}
+    </NavLink>
   );
 }

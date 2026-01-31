@@ -2,36 +2,48 @@ import { useAuth } from "../../Auth/AuthContext";
 import AdminItems from "./AdminItems";
 import ApproverItems from "./ApproverItems";
 import UserItems from "./UserItems";
-import NavItem from "./NavItem";
-import NavButton from "./NavButton";
+import { NavLink } from "react-router-dom";
 
 export default function NavItems() {
   const { user, logout } = useAuth();
 
   return (
-    <div className="collapse navbar-collapse" id="navbarNav">
+    <div className="flex items-center gap-3 w-full">
+      <NavLink
+        to="/"
+        className="py-1 px-2  text-white bg-neutral-500 hover:bg-neutral-700 text-center"
+      >
+        Home
+      </NavLink>
       {user && (
-        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-          {user.roles.includes("Admin") && <AdminItems />}
+        <>
+          <div className="flex items-center gap-2">
+            {user.roles.includes("Admin") && <AdminItems />}
 
-          {user.roles.includes("Group leader") && <ApproverItems />}
+            {user.roles.includes("Group leader") && <ApproverItems />}
 
-          <UserItems displayname={user.displayname} />
-
-          {/* <NavItem title="My Computers" to="/computers/my-computers" />
-
-          <li className="nav-item ms-2">
-            <button
-              className="btn btn-outline-light btn-sm px-3"
+            {/* <NavItem title="My Computers" to="/computers/my-computers" />*/}
+          </div>
+          <div className="ms-auto flex items-center gap-2">
+            <UserItems displayname={user.displayname} />
+            <NavLink
+              to="/"
               onClick={logout}
+              className="py-1 px-2  text-white rounded-4xl bg-neutral-800 hover:bg-neutral-700 text-center"
             >
               Logout
-            </button>
-          </li> */}
-        </ul>
+            </NavLink>
+          </div>
+        </>
       )}
-      {!user && <NavButton>Login</NavButton>}
-      {/* {!user && <NavItem title="Login" to="/login" />} */}
+      {!user && (
+        <NavLink
+          to="/login"
+          className="py-1 px-2 ms-auto text-white rounded-4xl bg-neutral-800 hover:bg-neutral-700 text-center"
+        >
+          Login
+        </NavLink>
+      )}
     </div>
   );
 }

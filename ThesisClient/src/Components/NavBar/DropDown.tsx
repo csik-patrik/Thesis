@@ -5,30 +5,14 @@ export default function DropDown({
   title: string;
   children: React.ReactNode;
 }) {
+  const btnClasses =
+    "group relative border border-gray-300 bg-white text-gray-500 text-lg px-3 py-1 rounded";
   return (
-    <li className="nav-item dropdown">
-      <a
-        className="nav-link dropdown-toggle text-light fw-semibold px-3"
-        href="#"
-        role="button"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-        style={{
-          textShadow: "0 1px 2px rgba(0, 0, 0, 0.4)",
-        }}
-      >
-        {title}
-      </a>
-      <ul
-        className="dropdown-menu shadow border-0"
-        style={{
-          backgroundColor: "#ffffff",
-          borderRadius: "0.5rem",
-          minWidth: "12rem",
-        }}
-      >
+    <button className={btnClasses}>
+      {title}
+      <div className="absolute bg-white top-full right-0 rounded-lg p-3 mt-1 shadow-md scale-y-0 group-focus:scale-y-100 origin-top duration-200 flex flex-col">
         {children}
-      </ul>
-    </li>
+      </div>
+    </button>
   );
 }
