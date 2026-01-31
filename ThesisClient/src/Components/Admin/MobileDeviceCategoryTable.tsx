@@ -19,40 +19,48 @@ export default function MobileDeviceCategoryTable() {
   }, []);
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bd-light">
-      <h1>Mobile device categories</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <Link
-          className="btn btn-success me-2"
-          to="/admin/mobile-device-categories/create"
-        >
-          Create
-        </Link>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Name</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mobileDeviceCategories.map((d) => (
-              <tr key={d.id}>
-                <td scope="row">{d.id}</td>
-                <td>{d.name}</td>
-                <td>
-                  <Link
-                    to={`/admin/mobile-device-categories/${d.id}`}
-                    className="btn btn-warning btn-sm me-2"
-                  >
-                    Edit
-                  </Link>
-                </td>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold mb-6">Mobile Device Categories</h1>
+
+      <div className="w-full max-w-3xl bg-white border rounded-lg shadow-md p-6">
+        {/* Create Button */}
+        <div className="mb-4">
+          <Link
+            to="/admin/mobile-device-categories/create"
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+          >
+            Create
+          </Link>
+        </div>
+
+        {/* Categories Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse border border-gray-300">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="border px-4 py-2 text-left">Id</th>
+                <th className="border px-4 py-2 text-left">Name</th>
+                <th className="border px-4 py-2 text-left">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {mobileDeviceCategories.map((d) => (
+                <tr key={d.id} className="even:bg-gray-50">
+                  <td className="border px-4 py-2">{d.id}</td>
+                  <td className="border px-4 py-2">{d.name}</td>
+                  <td className="border px-4 py-2">
+                    <Link
+                      to={`/admin/mobile-device-categories/${d.id}`}
+                      className="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition text-sm"
+                    >
+                      Edit
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
