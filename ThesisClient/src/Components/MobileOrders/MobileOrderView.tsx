@@ -346,7 +346,7 @@ function MobileOrderView() {
 
         {/* Device / Sim Allocation Section */}
         {user?.roles.includes("Admin") && (
-          <div className="md:w-80 flex-shrink-0 space-y-6">
+          <div className="md:w-80 shrink-0 space-y-6">
             {/* Allocated Device */}
             {order.mobileDevice ? (
               <>
