@@ -26,7 +26,7 @@ export default function ComputersDeployedTable() {
           "http://localhost:5268/computers/deployed",
           {
             headers: { Authorization: `Bearer ${user.token}` },
-          }
+          },
         );
         setData(res.data);
       } catch (err) {
@@ -47,7 +47,7 @@ export default function ComputersDeployedTable() {
   const handleReturn = async (
     deviceId: number,
     status: string,
-    statusReason: string
+    statusReason: string,
   ) => {
     if (!user?.token) {
       toast.error("Unauthorized — please log in again.");
@@ -63,7 +63,7 @@ export default function ComputersDeployedTable() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user.token}`,
           },
-        }
+        },
       );
 
       toast.success(`Device returned to "${statusReason}" successfully!`);
@@ -74,7 +74,7 @@ export default function ComputersDeployedTable() {
         "http://localhost:5268/computers/deployed",
         {
           headers: { Authorization: `Bearer ${user.token}` },
-        }
+        },
       );
 
       setData(res.data);
@@ -85,122 +85,143 @@ export default function ComputersDeployedTable() {
   };
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
+    <div className="flex flex-col justify-center items-center bg-gray-100 min-h-screen p-6">
+      {/* Return Device Modal */}
       {showReturnModal && (
-        <div
-          className="modal fade show d-block"
-          tabIndex={-1}
-          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Return Device</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setShowReturnModal(false)}
-                ></button>
-              </div>
-              <div className="modal-body">
-                <div className="mb-3">
-                  <label className="form-label fw-bold">Status</label>
-                  <select
-                    className="form-select"
-                    value={returnData.status}
-                    onChange={(e) =>
-                      setReturnData((prev) => ({
-                        ...prev,
-                        status: e.target.value,
-                      }))
-                    }
-                  >
-                    <option>In inventory</option>
-                  </select>
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label fw-bold">Status Reason</label>
-                  <select
-                    className="form-select"
-                    value={returnData.statusReason}
-                    onChange={(e) =>
-                      setReturnData((prev) => ({
-                        ...prev,
-                        statusReason: e.target.value,
-                      }))
-                    }
-                  >
-                    <option>In inventory</option>
-                    <option>In repair</option>
-                    <option>Pending disposal</option>
-                  </select>
-                </div>
+        <div className="fixed inset-0 bg-stone-50 bg-opacity-80 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+            <div className="flex justify-between items-center px-4 py-3 border-b">
+              <h5 className="text-lg font-semibold">Return Device</h5>
+              <button
+                className="text-gray-500 hover:text-gray-700"
+                onClick={() => setShowReturnModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="px-4 py-4">
+              <div className="mb-4">
+                <label className="block font-semibold mb-1">Status</label>
+                <select
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                  value={returnData.status}
+                  onChange={(e) =>
+                    setReturnData((prev) => ({
+                      ...prev,
+                      status: e.target.value,
+                    }))
+                  }
+                >
+                  <option>In inventory</option>
+                </select>
               </div>
 
-              <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setShowReturnModal(false)}
+              <div className="mb-4">
+                <label className="block font-semibold mb-1">
+                  Status Reason
+                </label>
+                <select
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                  value={returnData.statusReason}
+                  onChange={(e) =>
+                    setReturnData((prev) => ({
+                      ...prev,
+                      statusReason: e.target.value,
+                    }))
+                  }
                 >
-                  Cancel
-                </button>
-                <button
-                  className="btn btn-success"
-                  onClick={() => {
-                    if (selectedDeviceId) {
-                      handleReturn(
-                        selectedDeviceId,
-                        returnData.status,
-                        returnData.statusReason
-                      );
-                    }
-                    setShowReturnModal(false);
-                  }}
-                >
-                  Confirm Return
-                </button>
+                  <option>In inventory</option>
+                  <option>In repair</option>
+                  <option>Pending disposal</option>
+                </select>
               </div>
+            </div>
+
+            <div className="flex justify-end gap-2 px-4 py-3 border-t">
+              <button
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                onClick={() => setShowReturnModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
+                onClick={() => {
+                  if (selectedDeviceId) {
+                    handleReturn(
+                      selectedDeviceId,
+                      returnData.status,
+                      returnData.statusReason,
+                    );
+                  }
+                  setShowReturnModal(false);
+                }}
+              >
+                Confirm Return
+              </button>
             </div>
           </div>
         </div>
       )}
-      <h1>Deployed computers</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <div className="table-responsive">
-          <div className="d-flex align-items-center mb-3">
-            <input
-              type="text"
-              className="form-control form-control-sm w-auto"
-              placeholder="Search by hostname"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <table className="table table-striped">
-            <thead>
+
+      <h1 className="text-2xl font-semibold mb-6">Deployed Computers</h1>
+
+      <div className="w-full max-w-6xl bg-white shadow-md rounded-lg p-4">
+        {/* Search */}
+        <div className="flex mb-4">
+          <input
+            type="text"
+            placeholder="Search by hostname"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border border-gray-300 rounded-md px-3 py-2 w-auto focus:outline-none focus:ring-1 focus:ring-gray-400"
+          />
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto border-collapse">
+            <thead className="bg-gray-100">
               <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Hostname</th>
-                <th scope="col">Category</th>
-                <th scope="col">Model</th>
-                <th scope="col">Serial number</th>
-                <th scope="col">User</th>
-                <th scope="col">Actions</th>
+                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
+                  Id
+                </th>
+                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
+                  Hostname
+                </th>
+                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
+                  Category
+                </th>
+                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
+                  Model
+                </th>
+                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
+                  Serial number
+                </th>
+                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
+                  User
+                </th>
+                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {filteredData.map((d) => (
-                <tr key={d.id}>
-                  <td scope="row">{d.id}</td>
-                  <td>{d.hostname}</td>
-                  <td>{d.computerCategory.name}</td>
-                  <td>{d.model}</td>
-                  <td>{d.serialNumber}</td>
-                  <td>{d.user?.userName}</td>
-                  <td>
+                <tr key={d.id} className="hover:bg-gray-50">
+                  <td className="px-3 py-2 border-b">{d.id}</td>
+                  <td className="px-3 py-2 border-b">{d.hostname}</td>
+                  <td className="px-3 py-2 border-b">
+                    {d.computerCategory.name}
+                  </td>
+                  <td className="px-3 py-2 border-b">{d.model}</td>
+                  <td className="px-3 py-2 border-b">{d.serialNumber}</td>
+                  <td className="px-3 py-2 border-b">
+                    {d.user?.userName || "—"}
+                  </td>
+                  <td className="px-3 py-2 border-b">
                     <button
-                      className="btn btn-warning btn-sm"
+                      className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-400 text-sm"
                       onClick={() => {
                         setSelectedDeviceId(d.id);
                         setShowReturnModal(true);
