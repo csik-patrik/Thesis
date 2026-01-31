@@ -23,13 +23,15 @@ export default function SelectMultiple({
   options,
   handleChange,
 }: SelectMultipleProps) {
-  // Helper to convert string[] back to original types
   const parseValues = (selected: string[]): (string | number)[] => {
     return selected.map((val) => {
       const opt = options.find((o) => String(o.value) === val);
       return opt ? opt.value : val;
     });
   };
+
+  const classes =
+    "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500";
 
   return (
     <div className="mb-2">
@@ -38,12 +40,12 @@ export default function SelectMultiple({
         id={fieldName}
         name={fieldName}
         multiple
-        className="form-control"
+        className={classes}
         value={value.map(String)}
         onChange={(e) => {
           const selectedValues = Array.from(
             e.target.selectedOptions,
-            (opt) => opt.value
+            (opt) => opt.value,
           );
           handleChange({
             target: {

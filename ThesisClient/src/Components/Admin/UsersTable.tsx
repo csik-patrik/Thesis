@@ -26,50 +26,64 @@ export default function Users() {
   };
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bd-light vh-100">
-      <h1>Users</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <Link className="btn btn-success me-2" to="/admin/users/create">
-          Create
-        </Link>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Username</th>
-              <th scope="col">Displayname</th>
-              <th scope="col">Email</th>
-              <th scope="col">Department</th>
-              <th scope="col">Cost center</th>
-              <th scope="col">Roles</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((u) => (
-              <tr key={u.id}>
-                <td scope="row">{u.id}</td>
-                <td>{u.username}</td>
-                <td>{u.displayName}</td>
-                <td>{u.email}</td>
-                <td>{u.department}</td>
-                <td>{u.costCenter}</td>
-                <td>
-                  {u.userRoles.map((r) => (
-                    <span key={r.id}>{r.name} </span>
-                  ))}
-                </td>
-                <td>
-                  <button
-                    className="btn btn-danger btn-sm text-light"
-                    onClick={() => handleDelete(u.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold mb-6">Users</h1>
+
+      <div className="w-full max-w-5xl bg-white border rounded-lg shadow-md p-6">
+        {/* Create Button */}
+        <div className="mb-4">
+          <Link
+            to="/admin/users/create"
+            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
+          >
+            Create
+          </Link>
+        </div>
+
+        {/* Users Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse border border-gray-300">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="border px-4 py-2 text-left">Id</th>
+                <th className="border px-4 py-2 text-left">Username</th>
+                <th className="border px-4 py-2 text-left">Display Name</th>
+                <th className="border px-4 py-2 text-left">Email</th>
+                <th className="border px-4 py-2 text-left">Department</th>
+                <th className="border px-4 py-2 text-left">Cost Center</th>
+                <th className="border px-4 py-2 text-left">Roles</th>
+                <th className="border px-4 py-2 text-left">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((u) => (
+                <tr key={u.id} className="even:bg-gray-50">
+                  <td className="border px-4 py-2">{u.id}</td>
+                  <td className="border px-4 py-2">{u.username}</td>
+                  <td className="border px-4 py-2">{u.displayName}</td>
+                  <td className="border px-4 py-2">{u.email}</td>
+                  <td className="border px-4 py-2">{u.department}</td>
+                  <td className="border px-4 py-2">{u.costCenter}</td>
+                  <td className="border px-4 py-2">
+                    {u.userRoles.map((r) => (
+                      <span key={r.id} className="mr-1">
+                        {r.name}
+                      </span>
+                    ))}
+                  </td>
+                  <td className="border px-4 py-2">
+                    <button
+                      className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition text-sm"
+                      onClick={() => handleDelete(u.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Form from "../Form/Form";
 import Input from "../Form/Input";
@@ -39,7 +39,7 @@ export default function UserCreate() {
   const handleChange = (
     e:
       | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-      | { target: { name: string; value: any } }
+      | { target: { name: string; value: any } },
   ) => {
     const { name, value } = e.target;
 
@@ -63,70 +63,71 @@ export default function UserCreate() {
   };
 
   return (
-    <>
-      <Form title="Create user" handleSubmit={handleSubmit}>
-        <Input
-          title="Username:"
-          fieldName="username"
-          placeHolder=""
-          type="text"
-          value={formData.username}
-          handleChange={handleChange}
-        />
-        <Input
-          title="Displayname:"
-          fieldName="displayName"
-          placeHolder=""
-          type="text"
-          value={formData.displayName}
-          handleChange={handleChange}
-        />
-        <Input
-          title="Email address:"
-          fieldName="email"
-          placeHolder="patrik.csik@bosch.com"
-          type="text"
-          value={formData.email}
-          handleChange={handleChange}
-        />
-        <Input
-          title="Password:"
-          fieldName="password"
-          placeHolder="********"
-          type="password"
-          value={formData.password}
-          handleChange={handleChange}
-        />
-        <Input
-          title="Department:"
-          fieldName="department"
-          placeHolder="BD/SLE-EET3"
-          type="text"
-          value={formData.department}
-          handleChange={handleChange}
-        />
-        <Input
-          title="Cost center:"
-          fieldName="costCenter"
-          placeHolder="658091"
-          type="text"
-          value={formData.costCenter}
-          handleChange={handleChange}
-        />
-        <SelectMultiple
-          title="Roles:"
-          fieldName="userRoleIds"
-          value={formData.userRoleIds} // e.g. ["1", "3"]
-          options={userRoles.map((r) => ({
-            label: r.name,
-            value: r.id,
-          }))}
-          handleChange={handleChange}
-        />
-        <Link to="/admin/users" className="btn btn-primary">
-          Back
-        </Link>
-      </Form>
-    </>
+    <Form title="Create user" handleSubmit={handleSubmit}>
+      <Input
+        title="Username:"
+        fieldName="username"
+        placeHolder=""
+        type="text"
+        value={formData.username}
+        handleChange={handleChange}
+      />
+
+      <Input
+        title="Displayname:"
+        fieldName="displayName"
+        placeHolder=""
+        type="text"
+        value={formData.displayName}
+        handleChange={handleChange}
+      />
+
+      <Input
+        title="Email address:"
+        fieldName="email"
+        placeHolder="patrik.csik@bosch.com"
+        type="text"
+        value={formData.email}
+        handleChange={handleChange}
+      />
+
+      <Input
+        title="Password:"
+        fieldName="password"
+        placeHolder="********"
+        type="password"
+        value={formData.password}
+        handleChange={handleChange}
+      />
+
+      <Input
+        title="Department:"
+        fieldName="department"
+        placeHolder="BD/SLE-EET3"
+        type="text"
+        value={formData.department}
+        handleChange={handleChange}
+      />
+
+      <Input
+        title="Cost center:"
+        fieldName="costCenter"
+        placeHolder="658091"
+        type="text"
+        value={formData.costCenter}
+        handleChange={handleChange}
+      />
+
+      <SelectMultiple
+        title="Roles:"
+        fieldName="userRoleIds"
+        value={formData.userRoleIds}
+        options={userRoles.map((r) => ({
+          label: r.name,
+          value: r.id,
+        }))}
+        handleChange={handleChange}
+      />
+    </Form>
   );
 }
