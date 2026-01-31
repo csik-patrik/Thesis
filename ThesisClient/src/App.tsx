@@ -12,8 +12,6 @@ import MobileDeviceCreate from "./Components/MobileDevices/MobileDeviceCreate.ts
 import MobileDeviceCategoryTable from "./Components/Admin/MobileDeviceCategoryTable.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
 import SimCardsEdit from "./Components/SimCards/SimCardsEdit.tsx";
 import CreateMobileDeviceCategory from "./Components/Admin/CreateMobileDeviceCategory.tsx";
 import EditMobileDeviceCategory from "./Components/Admin/EditMobileDeviceCategory.tsx";
