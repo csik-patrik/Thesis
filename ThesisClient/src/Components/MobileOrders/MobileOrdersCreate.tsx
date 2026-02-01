@@ -1,128 +1,79 @@
-import { useState, useEffect } from "react";
+import { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import type { MobileDeviceCategoryResponse } from "../../Types/MobileTypes";
+
 import { useAuth } from "../../Auth/AuthContext";
 import Form from "../Form/Form";
 import Input from "../Form/Input";
+import Select from "../Form/Select";
 
 import {
   GetMobileDeviceCategories,
   GetSimCallControlGroups,
 } from "../../Services/MobileDeviceServices";
 
-import type {
-  CreateMobileOrderRequest,
-  SimCallControlGroupResponse,
-} from "../../Types/MobileTypes";
+import type { CreateMobileOrderRequest } from "../../Types/MobileTypes";
 import type { UserResponse } from "../../Types/UserTypes";
-import Select from "../Form/Select";
+
+import { mobileOrderReducer } from "./MobileOrder.reducer";
+import { mobileOrderInitialState } from "./MobileOrder.initialState";
 
 export default function MobileOrdersCreate() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
-  const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
-    MobileDeviceCategoryResponse[]
-  >([]);
+  const [state, dispatch] = useReducer(
+    mobileOrderReducer,
+    mobileOrderInitialState,
+  );
 
-  const [simCallControlGroups, setSimCallControlGroups] = useState<
-    SimCallControlGroupResponse[]
-  >([]);
+  const {
+    formData,
+    mobileDeviceCategories,
+    simCallControlGroups,
+    groupLeaders,
+  } = state;
 
-  const [groupLeaders, setGroupLeaders] = useState<UserResponse[]>([]);
-
-  const [formData, setFormData] = useState<CreateMobileOrderRequest>({
-    customerId: 0,
-    mobileDeviceCategoryId: 0,
-    simCallControlGroupId: 0,
-    pickupLocation: "HtvP",
-    note: undefined,
-    approverId: 0,
-  });
+  /* -------------------- Load data -------------------- */
 
   useEffect(() => {
     GetMobileDeviceCategories()
-      .then((response) => setMobileDeviceCategories(response.data))
-      .catch((error) => {
-        toast.error("Error fetching categories");
-        console.error("Error fetching categories:", error);
-      });
+      .then((res) => dispatch({ type: "SET_CATEGORIES", payload: res.data }))
+      .catch(() => toast.error("Error fetching device categories"));
   }, []);
-
-  useEffect(() => {
-    if (
-      mobileDeviceCategories.length > 0 &&
-      formData.mobileDeviceCategoryId === 0
-    ) {
-      setFormData((prev) => ({
-        ...prev,
-        mobileDeviceCategoryId: mobileDeviceCategories[0].id,
-      }));
-    }
-  }, [mobileDeviceCategories]);
 
   useEffect(() => {
     GetSimCallControlGroups()
-      .then((response) => setSimCallControlGroups(response.data))
-      .catch((error) => {
-        toast.error("Error fetching categories");
-        console.error("Error fetching categories:", error);
-      });
+      .then((res) => dispatch({ type: "SET_SIM_GROUPS", payload: res.data }))
+      .catch(() => toast.error("Error fetching SIM call control groups"));
   }, []);
 
   useEffect(() => {
-    if (
-      simCallControlGroups.length > 0 &&
-      formData.simCallControlGroupId === 0
-    ) {
-      setFormData((prev) => ({
-        ...prev,
-        simCallControlGroupId: simCallControlGroups[0].id,
-      }));
-    }
-  }, [simCallControlGroups]);
-
-  useEffect(() => {
-    const fetchGroupLeaders = async () => {
-      try {
-        const res = await axios.get<UserResponse[]>(
-          "http://localhost:5268/users/group-leader",
-        );
-        setGroupLeaders(res.data);
-      } catch (err) {
-        console.error("Failed to fetch device categories:", err);
-      }
-    };
-
-    fetchGroupLeaders();
+    axios
+      .get<UserResponse[]>("http://localhost:5268/users/group-leader")
+      .then((res) => dispatch({ type: "SET_GROUP_LEADERS", payload: res.data }))
+      .catch(() => toast.error("Error fetching approvers"));
   }, []);
 
-  useEffect(() => {
-    if (groupLeaders.length > 0 && formData.approverId === 0) {
-      setFormData((prev) => ({
-        ...prev,
-        approverId: groupLeaders[0].id,
-      }));
-    }
-  }, [groupLeaders]);
+  /* -------------------- Set customer -------------------- */
 
   useEffect(() => {
     if (user) {
-      setFormData((prev) => ({
-        ...prev,
-        customerId: Number(user.id),
-      }));
+      dispatch({
+        type: "SET_CUSTOMER",
+        payload: Number(user.id),
+      });
     }
   }, [user]);
 
-  const navigate = useNavigate();
+  /* -------------------- Handlers -------------------- */
 
-  const numericFields = [
+  const numericFields: (keyof CreateMobileOrderRequest)[] = [
+    "customerId",
     "mobileDeviceCategoryId",
     "simCallControlGroupId",
     "approverId",
-    "customerId",
   ];
 
   const handleChange = (
@@ -132,10 +83,13 @@ export default function MobileOrdersCreate() {
   ) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: numericFields.includes(name) ? Number(value) : value,
-    }));
+    dispatch({
+      type: "SET_FIELD",
+      field: name as keyof CreateMobileOrderRequest,
+      value: numericFields.includes(name as keyof CreateMobileOrderRequest)
+        ? Number(value)
+        : value,
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -144,30 +98,34 @@ export default function MobileOrdersCreate() {
     try {
       await axios.post("http://localhost:5268/mobile-orders", formData);
       toast.success("Mobile order created successfully!");
-      navigate("/mobile-orders/my-orders");
+      navigate("/mobile-orders");
     } catch (err) {
-      console.error("Error creating mobile order:", err);
-      toast.error("Failed to create mobile order.");
+      console.error(err);
+      toast.error("Failed to create mobile order");
     }
   };
 
+  /* -------------------- Render -------------------- */
+
   return (
     <Form title="Create a new mobile order" handleSubmit={handleSubmit}>
+      {/* Requester (display only) */}
       <Input
         title="Requester"
-        fieldName="customerId"
-        placeHolder=""
+        fieldName="requester"
         type="text"
         value={user?.displayname ?? ""}
-        handleChange={handleChange}
+        handleChange={() => {}}
+        placeHolder=""
       />
+
       <Select
         title="Device category"
         fieldName="mobileDeviceCategoryId"
         value={formData.mobileDeviceCategoryId}
-        options={mobileDeviceCategories.map((category) => ({
-          label: category.name,
-          value: category.id,
+        options={mobileDeviceCategories.map((c) => ({
+          label: c.name,
+          value: c.id,
         }))}
         handleChange={handleChange}
       />
@@ -176,9 +134,9 @@ export default function MobileOrdersCreate() {
         title="Sim call control group"
         fieldName="simCallControlGroupId"
         value={formData.simCallControlGroupId}
-        options={simCallControlGroups.map((category) => ({
-          label: category.name,
-          value: category.id,
+        options={simCallControlGroups.map((g) => ({
+          label: g.name,
+          value: g.id,
         }))}
         handleChange={handleChange}
       />
@@ -188,14 +146,8 @@ export default function MobileOrdersCreate() {
         fieldName="pickupLocation"
         value={formData.pickupLocation}
         options={[
-          {
-            label: "HtvP",
-            value: "HtvP",
-          },
-          {
-            label: "cHub",
-            value: "cHub",
-          },
+          { label: "HtvP", value: "HtvP" },
+          { label: "cHub", value: "cHub" },
         ]}
         handleChange={handleChange}
       />
@@ -203,10 +155,10 @@ export default function MobileOrdersCreate() {
       <Input
         title="Note"
         fieldName="note"
-        placeHolder=""
         type="text"
         value={formData?.note ?? ""}
         handleChange={handleChange}
+        placeHolder=""
       />
 
       <Select
