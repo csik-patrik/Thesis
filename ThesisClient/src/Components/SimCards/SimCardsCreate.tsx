@@ -62,7 +62,11 @@ function SimCardsCreate() {
   };
 
   return (
-    <Form title="Create a new Sim Card" handleSubmit={handleSubmit}>
+    <Form
+      title="Create a new Sim Card"
+      handleSubmit={handleSubmit}
+      returnUri="/sim-cards"
+    >
       {/* Phone Number Input */}
       <Input
         title="Phone number:"
@@ -71,7 +75,6 @@ function SimCardsCreate() {
         type="text"
         value={formData.phoneNumber}
         handleChange={handleChange}
-        classes="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
       />
 
       {/* Call Control Group Select */}
@@ -84,7 +87,6 @@ function SimCardsCreate() {
           value: String(g.id),
         }))}
         handleChange={handleChange}
-        classes="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
       />
 
       {/* Back Button */}

@@ -14,7 +14,7 @@ export default function CreateMobileDeviceCategory() {
   const navigate = useNavigate();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -31,7 +31,7 @@ export default function CreateMobileDeviceCategory() {
       await axios.post(
         "http://localhost:5268/mobile-device-categories",
         { name: formData.name },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" } },
       );
       toast.success("Category created successfully!");
       navigate("/admin/mobile-device-categories");
@@ -42,7 +42,11 @@ export default function CreateMobileDeviceCategory() {
   };
 
   return (
-    <Form title="Create mobile device category" handleSubmit={handleSubmit}>
+    <Form
+      title="Create mobile device category"
+      handleSubmit={handleSubmit}
+      returnUri="/admin/mobile-device-categories"
+    >
       <Input
         title="Name:"
         fieldName="name"

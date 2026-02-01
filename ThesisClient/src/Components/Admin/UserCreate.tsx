@@ -63,7 +63,11 @@ export default function UserCreate() {
   };
 
   return (
-    <Form title="Create user" handleSubmit={handleSubmit}>
+    <Form
+      title="Create user"
+      handleSubmit={handleSubmit}
+      returnUri="/admin/users"
+    >
       <Input
         title="Username:"
         fieldName="username"

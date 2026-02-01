@@ -98,7 +98,7 @@ export default function MobileOrdersCreate() {
     try {
       await axios.post("http://localhost:5268/mobile-orders", formData);
       toast.success("Mobile order created successfully!");
-      navigate("/mobile-orders");
+      navigate("/mobile-orders/my-orders");
     } catch (err) {
       console.error(err);
       toast.error("Failed to create mobile order");
@@ -108,7 +108,11 @@ export default function MobileOrdersCreate() {
   /* -------------------- Render -------------------- */
 
   return (
-    <Form title="Create a new mobile order" handleSubmit={handleSubmit}>
+    <Form
+      title="Create a new mobile order"
+      handleSubmit={handleSubmit}
+      returnUri="/mobile-orders/my-orders"
+    >
       {/* Requester (display only) */}
       <Input
         title="Requester"

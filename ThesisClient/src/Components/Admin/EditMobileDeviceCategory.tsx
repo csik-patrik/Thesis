@@ -25,7 +25,7 @@ export default function EditMobileDeviceCategory() {
     const fetch = async () => {
       try {
         const res = await axios.get<MobileDeviceCategory>(
-          `http://localhost:5268/api/admin/mobile-device-categories/${id}`
+          `http://localhost:5268/api/admin/mobile-device-categories/${id}`,
         );
         setCategory(res.data);
         setFormData({
@@ -41,7 +41,7 @@ export default function EditMobileDeviceCategory() {
   }, [id]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -58,7 +58,7 @@ export default function EditMobileDeviceCategory() {
       await axios.put(
         `http://localhost:5268/api/admin/mobile-device-categories/${id}`,
         JSON.stringify(formData.name),
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" } },
       );
       toast.success("Category updated successfully!");
       navigate("/admin/mobile-device-categories");
@@ -74,7 +74,11 @@ export default function EditMobileDeviceCategory() {
     return <p className="text-center text-danger mt-5">Category not found.</p>;
 
   return (
-    <Form title="Create mobile device category" handleSubmit={handleSubmit}>
+    <Form
+      title="Create mobile device category"
+      handleSubmit={handleSubmit}
+      returnUri="/admin/mobile-device-categories"
+    >
       <Input
         title="Name:"
         fieldName="name"

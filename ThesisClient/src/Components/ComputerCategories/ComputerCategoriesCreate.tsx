@@ -14,7 +14,7 @@ export default function ComputerCategoriesCreate() {
   const navigate = useNavigate();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
 
@@ -31,7 +31,7 @@ export default function ComputerCategoriesCreate() {
       await axios.post(
         "http://localhost:5268/computer-categories",
         { name: formData.name },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" } },
       );
       toast.success("Category created successfully!");
       navigate("/admin/computers/categories");
@@ -42,7 +42,11 @@ export default function ComputerCategoriesCreate() {
   };
 
   return (
-    <Form title="Create computer category" handleSubmit={handleSubmit}>
+    <Form
+      title="Create computer category"
+      handleSubmit={handleSubmit}
+      returnUri="/admin/computers/categories"
+    >
       <Input
         title="Name:"
         fieldName="name"
