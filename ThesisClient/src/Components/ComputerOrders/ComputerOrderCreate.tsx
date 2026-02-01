@@ -1,74 +1,64 @@
-import { useEffect, useState } from "react";
-import type {
-  ComputerCategoryResponse,
-  CreateComputerOrderRequest,
-} from "../../Types/ComputerTypes";
+import { useEffect, useReducer } from "react";
 import axios from "axios";
-import { useAuth } from "../../Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import type { UserResponse } from "../../Types/UserTypes";
+
+import { useAuth } from "../../Auth/AuthContext";
 import Form from "../Form/Form";
 import Input from "../Form/Input";
 import Select from "../Form/Select";
 
+import type { CreateComputerOrderRequest } from "../../Types/ComputerTypes";
+import type { UserResponse } from "../../Types/UserTypes";
+
+import { computerOrderReducer } from "./ComputerOrder.reducer";
+import { computerOrderInitialState } from "./ComputerOrder.initialState";
+
 export default function ComputerOrderCreate() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
-  const [computerCategories, setComputerCategories] = useState<
-    ComputerCategoryResponse[]
-  >([]);
+  const [state, dispatch] = useReducer(
+    computerOrderReducer,
+    computerOrderInitialState,
+  );
 
-  const [groupLeaders, setGroupLeaders] = useState<UserResponse[]>([]);
+  const { formData, computerCategories, groupLeaders } = state;
 
-  const [formData, setFormData] = useState<CreateComputerOrderRequest>({
-    customerId: 0,
-    computerCategoryId: 0,
-    pickupLocation: "HtvP",
-    note: undefined,
-    approverId: 0,
-  });
+  /* -------------------- Load data -------------------- */
 
   useEffect(() => {
-    const fetchComputerCategories = async () => {
-      try {
-        const res = await axios.get<ComputerCategoryResponse[]>(
-          "http://localhost:5268/computer-categories",
-        );
-        setComputerCategories(res.data);
-      } catch (err) {
-        console.error("Failed to fetch device categories:", err);
-      }
-    };
-
-    fetchComputerCategories();
+    axios
+      .get("http://localhost:5268/computer-categories")
+      .then((res) => dispatch({ type: "SET_CATEGORIES", payload: res.data }))
+      .catch(() => toast.error("Failed to fetch computer categories"));
   }, []);
 
   useEffect(() => {
-    const fetchGroupLeaders = async () => {
-      try {
-        const res = await axios.get<UserResponse[]>(
-          "http://localhost:5268/users/group-leader",
-        );
-        setGroupLeaders(res.data);
-      } catch (err) {
-        console.error("Failed to fetch device categories:", err);
-      }
-    };
-
-    fetchGroupLeaders();
+    axios
+      .get<UserResponse[]>("http://localhost:5268/users/group-leader")
+      .then((res) => dispatch({ type: "SET_GROUP_LEADERS", payload: res.data }))
+      .catch(() => toast.error("Failed to fetch approvers"));
   }, []);
+
+  /* -------------------- Set customer -------------------- */
 
   useEffect(() => {
     if (user) {
-      setFormData((prev) => ({
-        ...prev,
-        customerId: Number(user.id),
-      }));
+      dispatch({
+        type: "SET_CUSTOMER",
+        payload: Number(user.id),
+      });
     }
   }, [user]);
 
-  const navigate = useNavigate();
+  /* -------------------- Handlers -------------------- */
+
+  const numericFields: (keyof CreateComputerOrderRequest)[] = [
+    "customerId",
+    "computerCategoryId",
+    "approverId",
+  ];
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -76,88 +66,93 @@ export default function ComputerOrderCreate() {
     >,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "computerCategoryId" ? Number(value) : value,
-    }));
+
+    dispatch({
+      type: "SET_FIELD",
+      field: name as keyof CreateComputerOrderRequest,
+      value: numericFields.includes(name as keyof CreateComputerOrderRequest)
+        ? Number(value)
+        : value,
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      if (!user || !user.token) return;
+      if (!user?.token) return;
+
       await axios.post("http://localhost:5268/computer-orders", formData, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
+
       toast.success("Computer order created successfully!");
       navigate("/computer-orders/my-orders");
     } catch (err) {
-      console.error("Error creating computer order:", err);
+      console.error(err);
       toast.error("Failed to create computer order.");
     }
   };
 
+  /* -------------------- Render -------------------- */
+
   return (
-    <>
-      <Form
-        title="Create a new computer order"
-        handleSubmit={handleSubmit}
-        returnUri="/computer-orders/my-orders"
-      >
-        <Input
-          title="Requester"
-          fieldName="customerId"
-          placeHolder=""
-          type="text"
-          value={user?.displayname ?? ""}
-          handleChange={handleChange}
-        />
-        <Select
-          title="Device category"
-          fieldName="computerCategoryId"
-          value={formData.computerCategoryId}
-          options={computerCategories.map((category) => ({
-            label: category.name,
-            value: category.id,
-          }))}
-          handleChange={handleChange}
-        />
-        <Select
-          title="Pickup location"
-          fieldName="pickupLocation"
-          value={formData.pickupLocation}
-          options={[
-            {
-              label: "HtvP",
-              value: "HtvP",
-            },
-            {
-              label: "cHub",
-              value: "cHub",
-            },
-          ]}
-          handleChange={handleChange}
-        />
-        <Input
-          title="Note"
-          fieldName="note"
-          placeHolder=""
-          type="text"
-          value={formData?.note ?? ""}
-          handleChange={handleChange}
-        />
-        <Select
-          title="Approver"
-          fieldName="approverId"
-          value={formData.approverId}
-          options={groupLeaders.map((leader) => ({
-            label: leader.displayName,
-            value: leader.id,
-          }))}
-          handleChange={handleChange}
-        />
-      </Form>
-    </>
+    <Form
+      title="Create a new computer order"
+      handleSubmit={handleSubmit}
+      returnUri="/computer-orders/my-orders"
+    >
+      {/* Requester (display only) */}
+      <Input
+        title="Requester"
+        fieldName="requester"
+        type="text"
+        value={user?.displayname ?? ""}
+        handleChange={() => {}}
+        placeHolder=""
+      />
+
+      <Select
+        title="Device category"
+        fieldName="computerCategoryId"
+        value={formData.computerCategoryId}
+        options={computerCategories.map((c) => ({
+          label: c.name,
+          value: c.id,
+        }))}
+        handleChange={handleChange}
+      />
+
+      <Select
+        title="Pickup location"
+        fieldName="pickupLocation"
+        value={formData.pickupLocation}
+        options={[
+          { label: "HtvP", value: "HtvP" },
+          { label: "cHub", value: "cHub" },
+        ]}
+        handleChange={handleChange}
+      />
+
+      <Input
+        title="Note"
+        fieldName="note"
+        type="text"
+        value={formData?.note ?? ""}
+        handleChange={handleChange}
+        placeHolder=""
+      />
+
+      <Select
+        title="Approver"
+        fieldName="approverId"
+        value={formData.approverId}
+        options={groupLeaders.map((leader) => ({
+          label: leader.displayName,
+          value: leader.id,
+        }))}
+        handleChange={handleChange}
+      />
+    </Form>
   );
 }
