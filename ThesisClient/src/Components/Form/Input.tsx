@@ -4,6 +4,7 @@ interface InputProps {
   placeHolder: string;
   type: string;
   value: string;
+  required?: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -13,6 +14,7 @@ export default function Input({
   placeHolder,
   type,
   value,
+  required,
   handleChange,
 }: InputProps) {
   const classes =
@@ -27,6 +29,7 @@ export default function Input({
         placeholder={placeHolder}
         value={value}
         onChange={handleChange}
+        required={required}
       />
     </div>
   );
