@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import type { ComputerResponse } from "../../Types/ComputerTypes";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "../../Auth/AuthContext";
+import CustomLink from "../Shared/CustomLink";
 
 export default function ComputersInInventoryTable() {
+  const { user } = useAuth();
   const [data, setData] = useState<ComputerResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [statusReasonFilter, setStatusReasonFilter] = useState<string>("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("");
 
   useEffect(() => {
     if (!user || !user.token) return;
@@ -47,6 +51,27 @@ export default function ComputersInInventoryTable() {
     }
   };
 
+  // Get unique device categories for the filter dropdown
+  const categories = Array.from(
+    new Set(data.map((device) => device.computerCategory.name)),
+  );
+  const statuses = Array.from(new Set(data.map((device) => device.status)));
+  const statusReasons = Array.from(
+    new Set(data.map((device) => device.statusReason)),
+  );
+
+  // Filter data by device category, status, and status reason
+  const filteredData = data.filter((device) => {
+    const categoryMatch = categoryFilter
+      ? device.computerCategory.name === categoryFilter
+      : true;
+    const statusMatch = statusFilter ? device.status === statusFilter : true;
+    const reasonMatch = statusReasonFilter
+      ? device.statusReason === statusReasonFilter
+      : true;
+    return categoryMatch && statusMatch && reasonMatch;
+  });
+
   // Loading state
   if (loading) {
     return (
@@ -65,76 +90,102 @@ export default function ComputersInInventoryTable() {
         <p className="text-gray-500 mb-4">
           It looks like there are no computers yet.
         </p>
-        <Link
-          to="/computers/create"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500"
-        >
-          Create a new computer
-        </Link>
+        <CustomLink to="/computers/create" label="Create" />
       </div>
     );
   }
 
-  // ✅ Data loaded state
   return (
-    <div className="flex flex-col justify-center items-center bg-gray-100 min-h-screen p-4">
-      <h1 className="text-2xl font-semibold mb-6">Computers in inventory</h1>
-
-      <div className="w-full max-w-6xl bg-white rounded-lg shadow p-4">
-        <div className="flex gap-2 mb-4">
-          <Link
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500"
-            to="/computers/create"
-          >
-            Create
-          </Link>
-          <Link
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-500"
-            to="/computers/create-bulk"
-          >
-            Create bulk
-          </Link>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border-collapse">
-            <thead className="bg-gray-100">
-              <tr>
-                {[
-                  "Id",
-                  "Hostname",
-                  "Category",
-                  "Model",
-                  "Serial number",
-                  "Status",
-                  "Status reason",
-                  "Actions",
-                ].map((header) => (
-                  <th
-                    key={header}
-                    className={`px-3 py-2 text-left text-gray-700 font-medium border-b`}
-                  >
-                    {header}
-                  </th>
+    <div className="flex flex-col items-center justify-center min-h-screen p-6">
+      <h1 className="text-3xl font-bold mb-6">Computers</h1>
+      <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <div className="flex gap-2 mb-4  flex-col">
+          <div className="flex gap-2">
+            <CustomLink to="/computers/create" label="Create" />
+            <CustomLink to="/computers/create-bulk" label="Create bulk" />
+          </div>
+          <div className="flex gap-6">
+            <div className="flex flex-col">
+              <span>Category</span>
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="px-2 py-1 border rounded text-sm"
+              >
+                <option value="">All</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
                 ))}
+              </select>
+            </div>
+            <div className="flex flex-col">
+              <span>Status</span>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-2 py-1 border rounded text-sm"
+              >
+                <option value="">All</option>
+                {statuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col">
+              <span>Status reason</span>
+              <select
+                value={statusReasonFilter}
+                onChange={(e) => setStatusReasonFilter(e.target.value)}
+                className="px-2 py-1 border rounded text-sm"
+              >
+                <option value="">All</option>
+                {statusReasons.map((reason) => (
+                  <option key={reason} value={reason}>
+                    {reason}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div>
+          <table className="min-w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="text-left px-4 py-2 border-b">Id</th>
+                <th className="text-left px-4 py-2 border-b">Hostname</th>
+                <th className="text-left px-4 py-2 border-b">Category</th>
+                <th className="text-left px-4 py-2 border-b">Model</th>
+                <th className="text-left px-4 py-2 border-b">Serial number</th>
+                <th className="text-left px-4 py-2 border-b">Status</th>
+                <th className="text-left px-4 py-2 border-b">Status reason</th>
+                <th className="text-left px-4 py-2 border-b">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {data.map((d) => (
-                <tr key={d.id} className="hover:bg-gray-50">
-                  <td className="px-3 py-2 border-b">{d.id}</td>
-                  <td className="px-3 py-2 border-b">{d.hostname}</td>
-                  <td className="px-3 py-2 border-b">
-                    {d.computerCategory.name}
+              {filteredData.map((computer) => (
+                <tr key={computer.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 border-b">{computer.id}</td>
+                  <td className="px-4 py-2 border-b">{computer.hostname}</td>
+                  <td className="px-4 py-2 border-b">
+                    {computer.computerCategory.name}
                   </td>
-                  <td className="px-3 py-2 border-b">{d.model}</td>
-                  <td className="px-3 py-2 border-b">{d.serialNumber}</td>
-                  <td className="px-3 py-2 border-b">{d.status}</td>
-                  <td className="px-3 py-2 border-b">{d.statusReason}</td>
-                  <td className="px-3 py-2 border-b text-center">
+                  <td className="px-4 py-2 border-b">{computer.model}</td>
+                  <td className="px-4 py-2 border-b">
+                    {computer.serialNumber}
+                  </td>
+                  <td className="px-4 py-2 border-b">{computer.status}</td>
+                  <td className="px-4 py-2 border-b">
+                    {computer.statusReason}
+                  </td>
+                  <td className="px-4 py-2 border-b">
                     <button
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-400 text-sm"
-                      onClick={() => handleDelete(d.id)}
+                      className="bg-red-600 text-white px-2 py-1 rounded text-sm hover:bg-red-700 transition"
+                      onClick={() => handleDelete(computer.id)}
                     >
                       Delete
                     </button>

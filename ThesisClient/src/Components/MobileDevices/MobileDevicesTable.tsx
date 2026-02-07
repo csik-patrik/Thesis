@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
+import CustomLink from "../Shared/CustomLink";
 
 export default function MobileDevicesTable() {
   const { user } = useAuth();
@@ -83,18 +84,8 @@ export default function MobileDevicesTable() {
       <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
         <div className="mb-4 flex gap-4 flex-col">
           <div className="flex gap-2">
-            <Link
-              to="/mobiles/create"
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-            >
-              Create
-            </Link>
-            <Link
-              to="/mobiles/create-bulk"
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-            >
-              Create bulk
-            </Link>
+            <CustomLink to="/mobiles/create" label="Create" />
+            <CustomLink to="/mobiles/create-bulk" label="Create bulk" />
           </div>
           <div className="flex gap-6">
             <div className="flex flex-col">
@@ -144,7 +135,7 @@ export default function MobileDevicesTable() {
             </div>
           </div>
         </div>
-        <div className="">
+        <div>
           <table className="min-w-full border-collapse">
             <thead>
               <tr>
@@ -158,22 +149,21 @@ export default function MobileDevicesTable() {
                 <th className="text-left px-4 py-2 border-b">Actions</th>
               </tr>
             </thead>
-
             <tbody>
-              {filteredData.map((d) => (
-                <tr key={d.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border-b">{d.id}</td>
-                  <td className="px-4 py-2 border-b">{d.hostname}</td>
+              {filteredData.map((mobile) => (
+                <tr key={mobile.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 border-b">{mobile.id}</td>
+                  <td className="px-4 py-2 border-b">{mobile.hostname}</td>
                   <td className="px-4 py-2 border-b">
-                    {d.mobileDeviceCategory.name}
+                    {mobile.mobileDeviceCategory.name}
                   </td>
-                  <td className="px-4 py-2 border-b">{d.imeiNumber}</td>
-                  <td className="px-4 py-2 border-b">{d.serialNumber}</td>
-                  <td className="px-4 py-2 border-b">{d.status}</td>
-                  <td className="px-4 py-2 border-b">{d.statusReason}</td>
+                  <td className="px-4 py-2 border-b">{mobile.imeiNumber}</td>
+                  <td className="px-4 py-2 border-b">{mobile.serialNumber}</td>
+                  <td className="px-4 py-2 border-b">{mobile.status}</td>
+                  <td className="px-4 py-2 border-b">{mobile.statusReason}</td>
                   <td className="px-4 py-2 border-b">
                     <button
-                      onClick={() => handleDelete(d.id)}
+                      onClick={() => handleDelete(mobile.id)}
                       className="bg-red-600 text-white px-2 py-1 rounded text-sm hover:bg-red-700 transition"
                     >
                       Delete
