@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { SimCardResponse } from "../../Types/MobileTypes";
+import CustomLink from "../Shared/CustomLink";
 
 function SimCardsTable() {
   const [data, setData] = useState<SimCardResponse[]>([]);
@@ -23,49 +24,43 @@ function SimCardsTable() {
       alert("Failed to delete sim card.");
     }
   };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen p-6">
       <h1 className="text-3xl font-bold mb-6">Sim Cards</h1>
-
-      <div className="w-full max-w-4xl bg-white border rounded-lg shadow-md p-6">
-        {/* Create Button */}
-        <div className="mb-4">
-          <Link
-            to="/sim-cards/create"
-            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
-          >
-            Create
-          </Link>
+      <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <div className="mb-4 flex gap-4 flex-col">
+          <div className="flex gap-2">
+            <CustomLink to="/sim-cards/create" label="Create" />
+          </div>
         </div>
-
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse border border-gray-300">
-            <thead className="bg-gray-200">
+        <div>
+          <table className="min-w-full border-collapse">
+            <thead>
               <tr>
-                <th className="border px-4 py-2 text-left">Id</th>
-                <th className="border px-4 py-2 text-left">Phone Number</th>
-                <th className="border px-4 py-2 text-left">
+                <th className="text-left px-4 py-2 border-b">Id</th>
+                <th className="text-left px-4 py-2 border-b">Phone Number</th>
+                <th className="text-left px-4 py-2 border-b">
                   Call Control Group
                 </th>
-                <th className="border px-4 py-2 text-left">Is Data Enabled</th>
-                <th className="border px-4 py-2 text-left">Status</th>
-                <th className="border px-4 py-2 text-left">Actions</th>
+                <th className="text-left px-4 py-2 border-b">Data Enabled</th>
+                <th className="text-left px-4 py-2 border-b">Status</th>
+                <th className="text-left px-4 py-2 border-b">Actions</th>
               </tr>
             </thead>
             <tbody>
               {data.map((d) => (
-                <tr key={d.id} className="even:bg-gray-50">
-                  <td className="border px-4 py-2">{d.id}</td>
-                  <td className="border px-4 py-2">{d.phoneNumber}</td>
-                  <td className="border px-4 py-2">
+                <tr key={d.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 border-b">{d.id}</td>
+                  <td className="px-4 py-2 border-b">{d.phoneNumber}</td>
+                  <td className="px-4 py-2 border-b">
                     {d.simCallControlGroup.name}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="px-4 py-2 border-b">
                     {d.simCallControlGroup.isDataEnabled ? "True" : "False"}
                   </td>
-                  <td className="border px-4 py-2">{d.status}</td>
-                  <td className="border px-4 py-2 flex flex-wrap gap-2">
+                  <td className="px-4 py-2 border-b">{d.status}</td>
+                  <td className="px-4 py-2 border-b flex gap-1">
                     <button className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition text-sm">
                       View
                     </button>
@@ -76,7 +71,7 @@ function SimCardsTable() {
                       Edit
                     </Link>
                     <button
-                      className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition text-sm"
+                      className="bg-red-600 text-white px-2 py-1 rounded text-sm hover:bg-red-700 transition"
                       onClick={() => handleDelete(d.id)}
                     >
                       Delete

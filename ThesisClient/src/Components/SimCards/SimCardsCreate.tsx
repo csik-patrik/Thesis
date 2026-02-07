@@ -67,7 +67,6 @@ function SimCardsCreate() {
       handleSubmit={handleSubmit}
       returnUri="/sim-cards"
     >
-      {/* Phone Number Input */}
       <Input
         title="Phone number:"
         fieldName="phoneNumber"
@@ -77,7 +76,6 @@ function SimCardsCreate() {
         handleChange={handleChange}
       />
 
-      {/* Call Control Group Select */}
       <Select
         title="Call control group:"
         fieldName="simCallControlGroupId"
@@ -88,22 +86,6 @@ function SimCardsCreate() {
         }))}
         handleChange={handleChange}
       />
-
-      {/* Back Button */}
-      <div className="mt-4 flex gap-3">
-        <Link
-          to="/sim-cards"
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
-        >
-          Back
-        </Link>
-        <button
-          type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
-        >
-          Submit
-        </button>
-      </div>
     </Form>
   );
 }
