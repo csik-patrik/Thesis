@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { SimCardResponse } from "../../Types/MobileTypes";
 import CustomLink from "../Shared/CustomLink";
+import Table from "../Shared/Table";
+import DeleteButton from "../Shared/DeleteButton";
 
 export default function SimCardsTable() {
   const [data, setData] = useState<SimCardResponse[]>([]);
@@ -85,52 +87,42 @@ export default function SimCardsTable() {
           </div>
         </div>
         <div>
-          <table className="min-w-full border-collapse">
-            <thead>
-              <tr>
-                <th className="text-left px-4 py-2 border-b">Id</th>
-                <th className="text-left px-4 py-2 border-b">Phone Number</th>
-                <th className="text-left px-4 py-2 border-b">
-                  Call Control Group
-                </th>
-                <th className="text-left px-4 py-2 border-b">Data Enabled</th>
-                <th className="text-left px-4 py-2 border-b">Status</th>
-                <th className="text-left px-4 py-2 border-b">Actions</th>
+          <Table
+            headerItems={[
+              "Id",
+              "Phone number",
+              "Call control group",
+              "Data enabled",
+              "Status",
+              "Actions",
+            ]}
+          >
+            {filteredData.map((d) => (
+              <tr key={d.id} className="hover:bg-gray-50">
+                <td className="px-4 py-2 border-b">{d.id}</td>
+                <td className="px-4 py-2 border-b">{d.phoneNumber}</td>
+                <td className="px-4 py-2 border-b">
+                  {d.simCallControlGroup.name}
+                </td>
+                <td className="px-4 py-2 border-b">
+                  {d.simCallControlGroup.isDataEnabled ? "True" : "False"}
+                </td>
+                <td className="px-4 py-2 border-b">{d.status}</td>
+                <td className="px-4 py-2 border-b flex gap-1">
+                  <button className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition text-sm">
+                    View
+                  </button>
+                  <Link
+                    to={`/sim-cards/${d.id}`}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition text-sm"
+                  >
+                    Edit
+                  </Link>
+                  <DeleteButton handleDelete={() => handleDelete(d.id)} />
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((d) => (
-                <tr key={d.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border-b">{d.id}</td>
-                  <td className="px-4 py-2 border-b">{d.phoneNumber}</td>
-                  <td className="px-4 py-2 border-b">
-                    {d.simCallControlGroup.name}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    {d.simCallControlGroup.isDataEnabled ? "True" : "False"}
-                  </td>
-                  <td className="px-4 py-2 border-b">{d.status}</td>
-                  <td className="px-4 py-2 border-b flex gap-1">
-                    <button className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition text-sm">
-                      View
-                    </button>
-                    <Link
-                      to={`/sim-cards/${d.id}`}
-                      className="bg-yellow-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600 transition text-sm"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      className="bg-red-600 text-white px-2 py-1 rounded text-sm hover:bg-red-700 transition"
-                      onClick={() => handleDelete(d.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))}
+          </Table>
         </div>
       </div>
     </div>
