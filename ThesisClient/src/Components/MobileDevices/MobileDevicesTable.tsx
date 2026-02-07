@@ -11,11 +11,11 @@ export default function MobileDevicesTable() {
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [statusReasonFilter, setStatusReasonFilter] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
-  const [updateData, setUpdateData] = useState({
-    statusReason: "In inventory",
-  });
+  // const [showUpdateModal, setShowUpdateModal] = useState(false);
+  // const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
+  // const [updateData, setUpdateData] = useState({
+  //   statusReason: "In inventory",
+  // });
 
   console.log(user);
 
@@ -78,83 +78,83 @@ export default function MobileDevicesTable() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen p-6">
       <h1 className="text-3xl font-bold mb-6">Mobile Devices</h1>
-
-      <div className="w-3/4 bg-white rounded-lg shadow-md border border-gray-200 p-6">
-        {/* Action Buttons */}
-        <div className="mb-4 flex gap-4">
-          <Link
-            to="/mobiles/create"
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-          >
-            Create
-          </Link>
-          <Link
-            to="/mobiles/create-bulk"
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
-          >
-            Create Bulk
-          </Link>
+      <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <div className="mb-4 flex gap-4 flex-col">
+          <div className="flex gap-2">
+            <Link
+              to="/mobiles/create"
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+            >
+              Create
+            </Link>
+            <Link
+              to="/mobiles/create-bulk"
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+            >
+              Create bulk
+            </Link>
+          </div>
+          <div className="flex gap-6">
+            <div className="flex flex-col">
+              <span>Category</span>
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="px-2 py-1 border rounded text-sm"
+              >
+                <option value="">All</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col">
+              <span>Status</span>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-2 py-1 border rounded text-sm"
+              >
+                <option value="">All</option>
+                {statuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col">
+              <span>Status reason</span>
+              <select
+                value={statusReasonFilter}
+                onChange={(e) => setStatusReasonFilter(e.target.value)}
+                className="px-2 py-1 border rounded text-sm"
+              >
+                <option value="">All</option>
+                {statusReasons.map((reason) => (
+                  <option key={reason} value={reason}>
+                    {reason}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
-
-        {/* Table */}
-        <div className="overflow-x-auto">
+        <div className="">
           <table className="min-w-full border-collapse">
             <thead>
-              <tr className="bg-gray-200">
+              <tr>
                 <th className="text-left px-4 py-2 border-b">Id</th>
                 <th className="text-left px-4 py-2 border-b">Hostname</th>
-                <th className="text-left px-4 py-2 border-b">
-                  Category
-                  <br />
-                  <select
-                    value={categoryFilter}
-                    onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="mt-2 px-2 py-1 border rounded text-sm"
-                  >
-                    <option value="">All</option>
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                </th>
+                <th className="text-left px-4 py-2 border-b">Category</th>
                 <th className="text-left px-4 py-2 border-b">IMEI Number</th>
                 <th className="text-left px-4 py-2 border-b">Serial Number</th>
-                <th className="text-left px-4 py-2 border-b">
-                  Status
-                  <br />
-                  <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="mt-2 px-2 py-1 border rounded text-sm"
-                  >
-                    <option value="">All</option>
-                    {statuses.map((status) => (
-                      <option key={status} value={status}>
-                        {status}
-                      </option>
-                    ))}
-                  </select>
-                </th>
-                <th className="text-left px-4 py-2 border-b">
-                  Status Reason
-                  <br />
-                  <select
-                    value={statusReasonFilter}
-                    onChange={(e) => setStatusReasonFilter(e.target.value)}
-                    className="mt-2 px-2 py-1 border rounded text-sm"
-                  >
-                    <option value="">All</option>
-                    {statusReasons.map((reason) => (
-                      <option key={reason} value={reason}>
-                        {reason}
-                      </option>
-                    ))}
-                  </select>
-                </th>
+                <th className="text-left px-4 py-2 border-b">Status</th>
+                <th className="text-left px-4 py-2 border-b">Status Reason</th>
                 <th className="text-left px-4 py-2 border-b">Actions</th>
               </tr>
             </thead>
