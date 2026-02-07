@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
 import CustomLink from "../Shared/CustomLink";
+import Table from "../Shared/Table";
+import DeleteButton from "../Shared/DeleteButton";
 
 export default function MobileDevicesTable() {
   const { user } = useAuth();
@@ -135,43 +137,35 @@ export default function MobileDevicesTable() {
           </div>
         </div>
         <div>
-          <table className="min-w-full border-collapse">
-            <thead>
-              <tr>
-                <th className="text-left px-4 py-2 border-b">Id</th>
-                <th className="text-left px-4 py-2 border-b">Hostname</th>
-                <th className="text-left px-4 py-2 border-b">Category</th>
-                <th className="text-left px-4 py-2 border-b">IMEI Number</th>
-                <th className="text-left px-4 py-2 border-b">Serial Number</th>
-                <th className="text-left px-4 py-2 border-b">Status</th>
-                <th className="text-left px-4 py-2 border-b">Status Reason</th>
-                <th className="text-left px-4 py-2 border-b">Actions</th>
+          <Table
+            headerItems={[
+              "Id",
+              "Hostname",
+              "Category",
+              "IMEI Number",
+              "Serial Number",
+              "Status",
+              "Status Reason",
+              "Actions",
+            ]}
+          >
+            {filteredData.map((mobile) => (
+              <tr key={mobile.id} className="hover:bg-gray-50">
+                <td className="px-4 py-2 border-b">{mobile.id}</td>
+                <td className="px-4 py-2 border-b">{mobile.hostname}</td>
+                <td className="px-4 py-2 border-b">
+                  {mobile.mobileDeviceCategory.name}
+                </td>
+                <td className="px-4 py-2 border-b">{mobile.imeiNumber}</td>
+                <td className="px-4 py-2 border-b">{mobile.serialNumber}</td>
+                <td className="px-4 py-2 border-b">{mobile.status}</td>
+                <td className="px-4 py-2 border-b">{mobile.statusReason}</td>
+                <td className="px-4 py-2 border-b">
+                  <DeleteButton handleDelete={() => handleDelete(mobile.id)} />
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((mobile) => (
-                <tr key={mobile.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border-b">{mobile.id}</td>
-                  <td className="px-4 py-2 border-b">{mobile.hostname}</td>
-                  <td className="px-4 py-2 border-b">
-                    {mobile.mobileDeviceCategory.name}
-                  </td>
-                  <td className="px-4 py-2 border-b">{mobile.imeiNumber}</td>
-                  <td className="px-4 py-2 border-b">{mobile.serialNumber}</td>
-                  <td className="px-4 py-2 border-b">{mobile.status}</td>
-                  <td className="px-4 py-2 border-b">{mobile.statusReason}</td>
-                  <td className="px-4 py-2 border-b">
-                    <button
-                      onClick={() => handleDelete(mobile.id)}
-                      className="bg-red-600 text-white px-2 py-1 rounded text-sm hover:bg-red-700 transition"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))}
+          </Table>
         </div>
       </div>
     </div>
