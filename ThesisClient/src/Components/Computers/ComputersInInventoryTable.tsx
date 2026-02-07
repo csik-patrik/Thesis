@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "../../Auth/AuthContext";
 import CustomLink from "../Shared/CustomLink";
+import Table from "../Shared/Table";
+import DeleteButton from "../Shared/DeleteButton";
 
 export default function ComputersInInventoryTable() {
   const { user } = useAuth();
@@ -153,47 +155,37 @@ export default function ComputersInInventoryTable() {
           </div>
         </div>
         <div>
-          <table className="min-w-full border-collapse">
-            <thead>
-              <tr>
-                <th className="text-left px-4 py-2 border-b">Id</th>
-                <th className="text-left px-4 py-2 border-b">Hostname</th>
-                <th className="text-left px-4 py-2 border-b">Category</th>
-                <th className="text-left px-4 py-2 border-b">Model</th>
-                <th className="text-left px-4 py-2 border-b">Serial number</th>
-                <th className="text-left px-4 py-2 border-b">Status</th>
-                <th className="text-left px-4 py-2 border-b">Status reason</th>
-                <th className="text-left px-4 py-2 border-b">Actions</th>
+          <Table
+            headerItems={[
+              "Id",
+              "Hostname",
+              "Category",
+              "Model",
+              "Serial number",
+              "Status",
+              "Status reason",
+              "Actions",
+            ]}
+          >
+            {filteredData.map((computer) => (
+              <tr key={computer.id} className="hover:bg-gray-50">
+                <td className="px-4 py-2 border-b">{computer.id}</td>
+                <td className="px-4 py-2 border-b">{computer.hostname}</td>
+                <td className="px-4 py-2 border-b">
+                  {computer.computerCategory.name}
+                </td>
+                <td className="px-4 py-2 border-b">{computer.model}</td>
+                <td className="px-4 py-2 border-b">{computer.serialNumber}</td>
+                <td className="px-4 py-2 border-b">{computer.status}</td>
+                <td className="px-4 py-2 border-b">{computer.statusReason}</td>
+                <td className="px-4 py-2 border-b">
+                  <DeleteButton
+                    handleDelete={() => handleDelete(computer.id)}
+                  />
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((computer) => (
-                <tr key={computer.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2 border-b">{computer.id}</td>
-                  <td className="px-4 py-2 border-b">{computer.hostname}</td>
-                  <td className="px-4 py-2 border-b">
-                    {computer.computerCategory.name}
-                  </td>
-                  <td className="px-4 py-2 border-b">{computer.model}</td>
-                  <td className="px-4 py-2 border-b">
-                    {computer.serialNumber}
-                  </td>
-                  <td className="px-4 py-2 border-b">{computer.status}</td>
-                  <td className="px-4 py-2 border-b">
-                    {computer.statusReason}
-                  </td>
-                  <td className="px-4 py-2 border-b">
-                    <button
-                      className="bg-red-600 text-white px-2 py-1 rounded text-sm hover:bg-red-700 transition"
-                      onClick={() => handleDelete(computer.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))}
+          </Table>
         </div>
       </div>
     </div>
