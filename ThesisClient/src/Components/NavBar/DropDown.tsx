@@ -10,7 +10,7 @@ export default function DropDown({
       {/* Trigger */}
       <button
         type="button"
-        className="border border-gray-300 bg-white text-gray-500 text-lg px-3 py-1 rounded"
+        className="border border-gray-300 bg-white text-gray-500 text-lg px-3 py-1 rounded-2xl"
       >
         {title}
       </button>

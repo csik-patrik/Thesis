@@ -7,13 +7,11 @@ import { NavLink } from "react-router-dom";
 
 export default function NavItems() {
   const { user, logout } = useAuth();
-
+  const btnClasses =
+    "py-1 px-2 rounded-2xl text-center text-white bg-amber-500 hover:bg-amber-300";
   return (
     <div className="flex items-center gap-3 w-full">
-      <NavLink
-        to="/"
-        className="py-1 px-2  text-white bg-neutral-500 hover:bg-neutral-700 text-center"
-      >
+      <NavLink to="/" className={btnClasses}>
         Home
       </NavLink>
       {user && (
@@ -27,21 +25,14 @@ export default function NavItems() {
           </div>
           <div className="ms-auto flex items-center gap-2">
             <UserItems displayname={user.displayname} />
-            <NavLink
-              to="/"
-              onClick={logout}
-              className="py-1 px-2  text-white rounded-4xl bg-neutral-800 hover:bg-neutral-700 text-center"
-            >
+            <NavLink to="/" onClick={logout} className={btnClasses}>
               Logout
             </NavLink>
           </div>
         </>
       )}
       {!user && (
-        <NavLink
-          to="/login"
-          className="py-1 px-2 ms-auto text-white rounded-4xl bg-neutral-800 hover:bg-neutral-700 text-center"
-        >
+        <NavLink to="/login" className={btnClasses}>
           Login
         </NavLink>
       )}
