@@ -14,8 +14,8 @@ export default function Form({
   children,
 }: InputProps) {
   return (
-    <div className="flex w-full min-h-screen items-center justify-center bg-gray-100 p-6">
-      <div className="w-full max-w-lg bg-white rounded-lg shadow-md px-8 pt-6 pb-8">
+    <div className="flex w-full  items-center justify-center p-6">
+      <div className="w-full max-w-lg  rounded-lg shadow-md px-8 pt-6 pb-8">
         <h1 className="text-2xl font-bold mb-6">{title}</h1>
         <form onSubmit={handleSubmit} className="flex flex-col">
           {children}
