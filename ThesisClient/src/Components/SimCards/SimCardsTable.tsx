@@ -5,8 +5,12 @@ import { toast } from "react-toastify";
 import type { SimCardResponse } from "../../Types/MobileTypes";
 import CustomLink from "../Shared/CustomLink";
 
-function SimCardsTable() {
+export default function SimCardsTable() {
   const [data, setData] = useState<SimCardResponse[]>([]);
+  const [callControlGroupfilter, setcallControlGroupfilter] =
+    useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
+
   useEffect(() => {
     axios
       .get<SimCardResponse[]>("http://localhost:5268/sim-cards")
@@ -25,6 +29,20 @@ function SimCardsTable() {
     }
   };
 
+  const callControlGroups = Array.from(
+    new Set(data.map((device) => device.simCallControlGroup.name)),
+  );
+  const statuses = Array.from(new Set(data.map((device) => device.status)));
+
+  const filteredData = data.filter((device) => {
+    const callControlGroupMatch = callControlGroupfilter
+      ? device.simCallControlGroup.name === callControlGroupfilter
+      : true;
+
+    const statusMatch = statusFilter ? device.status === statusFilter : true;
+    return callControlGroupMatch && statusMatch;
+  });
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
       <h1 className="text-3xl font-bold mb-6">Sim Cards</h1>
@@ -32,6 +50,38 @@ function SimCardsTable() {
         <div className="mb-4 flex gap-4 flex-col">
           <div className="flex gap-2">
             <CustomLink to="/sim-cards/create" label="Create" />
+          </div>
+          <div className="flex gap-6">
+            <div className="flex flex-col">
+              <span>Call control group</span>
+              <select
+                value={callControlGroupfilter}
+                onChange={(e) => setcallControlGroupfilter(e.target.value)}
+                className="px-2 py-1 border rounded text-sm"
+              >
+                <option value="">All</option>
+                {callControlGroups.map((callControlGroup) => (
+                  <option key={callControlGroup} value={callControlGroup}>
+                    {callControlGroup}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex flex-col">
+              <span>Status</span>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-2 py-1 border rounded text-sm"
+              >
+                <option value="">All</option>
+                {statuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
         <div>
@@ -49,7 +99,7 @@ function SimCardsTable() {
               </tr>
             </thead>
             <tbody>
-              {data.map((d) => (
+              {filteredData.map((d) => (
                 <tr key={d.id} className="hover:bg-gray-50">
                   <td className="px-4 py-2 border-b">{d.id}</td>
                   <td className="px-4 py-2 border-b">{d.phoneNumber}</td>
@@ -86,5 +136,3 @@ function SimCardsTable() {
     </div>
   );
 }
-
-export default SimCardsTable;
