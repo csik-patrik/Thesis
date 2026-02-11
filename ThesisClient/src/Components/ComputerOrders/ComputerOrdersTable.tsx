@@ -60,7 +60,7 @@ export default function ComputerOrdersTable() {
 
   if (data.length === 0) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-center px-4">
+      <div className="flex flex-col justify-center items-center bg-gray-100 text-center px-4">
         <h1 className="text-gray-400 text-2xl mb-3">
           💻 No computer orders found
         </h1>
@@ -78,7 +78,7 @@ export default function ComputerOrdersTable() {
   }
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 min-h-screen px-4 py-6">
+    <div className="flex flex-col items-center bg-gray-100 px-4 py-6">
       <h1 className="text-2xl font-semibold text-neutral-800 mb-4">
         Computer Orders
       </h1>

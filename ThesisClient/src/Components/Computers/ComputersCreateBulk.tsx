@@ -88,7 +88,7 @@ export default function ComputersCreateBulk() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+    <div className="flex justify-center items-center bg-gray-100 p-4">
       <div className="w-full max-w-6xl bg-white shadow rounded-lg p-6">
         <h1 className="text-2xl font-semibold text-center mb-6">
           Bulk create computers

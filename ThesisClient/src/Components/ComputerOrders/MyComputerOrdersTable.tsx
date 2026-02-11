@@ -51,7 +51,7 @@ export default function MyComputerOrdersTable() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="flex items-center justify-center bg-gray-100">
         <h3 className="text-lg font-medium">Loading your computer orders...</h3>
       </div>
     );
@@ -59,7 +59,7 @@ export default function MyComputerOrdersTable() {
 
   if (data.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-center p-4">
+      <div className="flex flex-col items-center justify-center bg-gray-100 text-center p-4">
         <h1 className="text-3xl text-gray-400 mb-3">
           💻 No computer orders found
         </h1>
@@ -83,7 +83,7 @@ export default function MyComputerOrdersTable() {
       : data.filter((order) => order.status === statusFilter);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+    <div className="flex flex-col items-center justify-center bg-gray-100 p-6">
       <h1 className="text-3xl font-bold mb-6">My Computer Orders</h1>
 
       <div className="w-full max-w-5xl bg-white border rounded-lg shadow-md p-6">

@@ -87,7 +87,7 @@ export default function DeployedMobileDevicesTable() {
   });
 
   return (
-    <div className="flex flex-col justify-center items-center bg-gray-100 min-h-screen p-6">
+    <div className="flex flex-col justify-center items-center bg-gray-100 p-6">
       {/* Return Device Modal */}
       {showReturnModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">

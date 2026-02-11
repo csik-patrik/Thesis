@@ -53,7 +53,7 @@ function MobileOrdersTable() {
       : data.filter((order) => order.status === statusFilter);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-100 px-4">
+    <div className="flex flex-col items-center justify-center bg-neutral-100 px-4">
       <h1 className="mb-6 text-2xl font-semibold text-neutral-800">
         Mobile Orders
       </h1>

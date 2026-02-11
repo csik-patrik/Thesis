@@ -77,7 +77,7 @@ export default function ComputersInInventoryTable() {
   // Loading state
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="flex justify-center items-center bg-gray-100">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
         <span className="sr-only">Loading...</span>
       </div>
@@ -87,7 +87,7 @@ export default function ComputersInInventoryTable() {
   // No data state
   if (!data || data.length === 0) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 text-center px-4">
+      <div className="flex flex-col justify-center items-center bg-gray-100 text-center px-4">
         <h1 className="text-gray-400 text-3xl mb-3">💻 No computers found</h1>
         <p className="text-gray-500 mb-4">
           It looks like there are no computers yet.
@@ -98,7 +98,7 @@ export default function ComputersInInventoryTable() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6">
+    <div className="flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-6">Computers</h1>
       <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
         <div className="flex gap-2 mb-4  flex-col">

@@ -173,14 +173,14 @@ export default function ComputerOrderView() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center">
         <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
 
   if (!order)
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center">
         <p className="text-red-600 text-lg">Order not found.</p>
       </div>
     );

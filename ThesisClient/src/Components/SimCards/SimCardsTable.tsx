@@ -46,7 +46,7 @@ export default function SimCardsTable() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6">
+    <div className="flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-6">Sim Cards</h1>
       <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
         <div className="mb-4 flex gap-4 flex-col">
