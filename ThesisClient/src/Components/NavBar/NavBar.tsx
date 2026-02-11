@@ -3,7 +3,7 @@ import NavItems from "./NavItems";
 export default function NavBar() {
   return (
     <header className="w-full px-4 ">
-      <nav className="mx-auto mt-2 max-w-5xl">
+      <nav className="mx-auto mt-2 max-w-7xl">
         <div
           className="
             flex items-center justify-between
