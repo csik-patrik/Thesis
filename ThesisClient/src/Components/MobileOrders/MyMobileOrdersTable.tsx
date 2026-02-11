@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
+import Table from "../Shared/Table";
+import CustomLink from "../Shared/CustomLink";
+import DeleteButton from "../Shared/DeleteButton";
 
 export default function MyMobileOrdersTable() {
   const { user } = useAuth();
@@ -64,92 +67,66 @@ export default function MyMobileOrdersTable() {
       : data.filter((order) => order.status === statusFilter);
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6">Mobile Orders</h1>
-
-      <div className="w-full max-w-5xl bg-white border rounded-lg shadow-md p-6">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-          <Link
-            to="/mobile-orders/create"
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-2 md:mb-0"
-          >
-            Create
-          </Link>
-
-          <div className="flex items-center">
-            <label htmlFor="statusFilter" className="mr-2">
-              Filter by Status:
-            </label>
-            <select
-              id="statusFilter"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="border rounded px-2 py-1 text-sm"
-            >
-              <option value="All">All</option>
-              {statuses.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
+    <div className="flex flex-col items-center justify-center p-6">
+      <h1 className="text-3xl font-bold mb-6">My mobile orders</h1>
+      <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <div className="flex gap-2 mb-4 flex-col">
+          <div className="flex gap-2">
+            <CustomLink to="/mobile-orders/create" label="Create" />
+          </div>
+          <div className="flex gap-6">
+            <div className="flex flex-col">
+              <span>Status</span>
+              <select
+                id="statusFilter"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="border rounded px-2 py-1 text-sm"
+              >
+                <option value="All">All</option>
+                {statuses.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
-        {loading ? (
-          <div className="text-center py-4">Loading...</div>
-        ) : filteredData.length === 0 ? (
-          <div className="text-center py-4">No mobile orders found.</div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse border border-gray-300">
-              <caption className="sr-only">List of mobile orders</caption>
-              <thead className="bg-gray-200">
-                <tr>
-                  <th className="border px-4 py-2 text-left">ID</th>
-                  <th className="border px-4 py-2 text-left">Customer Name</th>
-                  <th className="border px-4 py-2 text-left">Device Type</th>
-                  <th className="border px-4 py-2 text-left">
-                    Pickup Location
-                  </th>
-                  <th className="border px-4 py-2 text-left">Status</th>
-                  <th className="border px-4 py-2 text-left">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.map((d) => (
-                  <tr key={d.id} className="even:bg-gray-50">
-                    <td className="border px-4 py-2">{d.id}</td>
-                    <td className="border px-4 py-2">
-                      {d.customer.displayName}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {d.mobileDeviceCategory.name}
-                    </td>
-                    <td className="border px-4 py-2">{d.pickupLocation}</td>
-                    <td className="border px-4 py-2">{d.status}</td>
-                    <td className="border px-4 py-2 flex space-x-2">
-                      <Link
-                        to={`/mobile-orders/${d.id}`}
-                        className="bg-blue-600 text-white px-2 py-1 rounded text-sm hover:bg-blue-700"
-                      >
-                        View
-                      </Link>
-                      {d.status !== "Delivered" && (
-                        <button
-                          className="bg-red-600 text-white px-2 py-1 rounded text-sm hover:bg-red-700"
-                          onClick={() => handleDelete(d.id)}
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <Table
+          headerItems={[
+            "Id",
+            "Customer name",
+            "Device type",
+            "Pickup location",
+            "Status",
+            "Actions",
+          ]}
+        >
+          {filteredData.map((d) => (
+            <tr key={d.id} className="hover:bg-gray-50">
+              <td className="px-4 py-2 border-b">{d.id}</td>
+              <td className="px-4 py-2 border-b">{d.customer.displayName}</td>
+              <td className="px-4 py-2 border-b">
+                {d.mobileDeviceCategory.name}
+              </td>
+              <td className="px-4 py-2 border-b">{d.pickupLocation}</td>
+              <td className="px-4 py-2 border-b">{d.status}</td>
+              <td className="px-4 py-2 border-b gap-2 flex">
+                <Link
+                  to={`/mobile-orders/${d.id}`}
+                  className="bg-blue-600 text-white px-2 py-1 rounded text-sm hover:bg-blue-700"
+                >
+                  View
+                </Link>
+                {d.status !== "Delivered" && (
+                  <DeleteButton handleDelete={() => handleDelete(d.id)} />
+                )}
+              </td>
+            </tr>
+          ))}
+        </Table>
       </div>
     </div>
   );

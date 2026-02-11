@@ -101,7 +101,7 @@ export default function ComputersInInventoryTable() {
     <div className="flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-6">Computers</h1>
       <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
-        <div className="flex gap-2 mb-4  flex-col">
+        <div className="flex gap-2 mb-4 flex-col">
           <div className="flex gap-2">
             <CustomLink to="/computers/create" label="Create" />
             <CustomLink to="/computers/create-bulk" label="Create bulk" />
