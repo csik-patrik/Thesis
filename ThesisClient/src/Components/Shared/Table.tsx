@@ -14,7 +14,6 @@ export default function Table({
           ))}
         </tr>
       </thead>
-      {children}
       <tbody>{children}</tbody>
     </table>
   );

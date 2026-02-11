@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import CustomLink from "../Shared/CustomLink";
 
 interface InputProps {
   title: string;
@@ -20,12 +20,7 @@ export default function Form({
         <form onSubmit={handleSubmit} className="flex flex-col">
           {children}
           <div className="flex flex-row gap-2">
-            <button
-              type="button"
-              className="mt-4 bg-stone-600 text-white px-4 py-2 rounded-md hover:bg-stone-700 transition self-start"
-            >
-              <Link to={returnUri}>Back</Link>
-            </button>
+            <CustomLink color="gray" label="Back" to={returnUri} />
             <button
               type="submit"
               className="mt-4 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition self-start"
