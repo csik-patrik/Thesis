@@ -51,7 +51,7 @@ export default function SimCardsTable() {
       <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
         <div className="mb-4 flex gap-4 flex-col">
           <div className="flex gap-2">
-            <CustomLink to="/sim-cards/create" label="Create" />
+            <CustomLink color="green" to="/sim-cards/create" label="Create" />
           </div>
           <div className="flex gap-6">
             <div className="flex flex-col">
@@ -118,7 +118,7 @@ export default function SimCardsTable() {
                   >
                     Edit
                   </Link>
-                  <Button handleDelete={() => handleDelete(d.id)} />
+                  <Button color="red" handleClick={() => handleDelete(d.id)} />
                 </td>
               </tr>
             ))}

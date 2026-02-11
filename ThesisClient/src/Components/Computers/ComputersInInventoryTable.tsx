@@ -92,7 +92,7 @@ export default function ComputersInInventoryTable() {
         <p className="text-gray-500 mb-4">
           It looks like there are no computers yet.
         </p>
-        <CustomLink to="/computers/create" label="Create" />
+        <CustomLink color="green" to="/computers/create" label="Create" />
       </div>
     );
   }
@@ -103,8 +103,12 @@ export default function ComputersInInventoryTable() {
       <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
         <div className="flex gap-2 mb-4 flex-col">
           <div className="flex gap-2">
-            <CustomLink to="/computers/create" label="Create" />
-            <CustomLink to="/computers/create-bulk" label="Create bulk" />
+            <CustomLink color="green" to="/computers/create" label="Create" />
+            <CustomLink
+              color="green"
+              to="/computers/create-bulk"
+              label="Create bulk"
+            />
           </div>
           <div className="flex gap-6">
             <div className="flex flex-col">
@@ -179,7 +183,10 @@ export default function ComputersInInventoryTable() {
                 <td className="px-4 py-2 border-b">{computer.status}</td>
                 <td className="px-4 py-2 border-b">{computer.statusReason}</td>
                 <td className="px-4 py-2 border-b">
-                  <Button handleDelete={() => handleDelete(computer.id)} />
+                  <Button
+                    color="red"
+                    handleClick={() => handleDelete(computer.id)}
+                  />
                 </td>
               </tr>
             ))}

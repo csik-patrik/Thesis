@@ -85,8 +85,12 @@ export default function MobileDevicesTable() {
       <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
         <div className="mb-4 flex gap-4 flex-col">
           <div className="flex gap-2">
-            <CustomLink to="/mobiles/create" label="Create" />
-            <CustomLink to="/mobiles/create-bulk" label="Create bulk" />
+            <CustomLink color="green" to="/mobiles/create" label="Create" />
+            <CustomLink
+              color="green"
+              to="/mobiles/create-bulk"
+              label="Create bulk"
+            />
           </div>
           <div className="flex gap-6">
             <div className="flex flex-col">
@@ -161,7 +165,10 @@ export default function MobileDevicesTable() {
                 <td className="px-4 py-2 border-b">{mobile.status}</td>
                 <td className="px-4 py-2 border-b">{mobile.statusReason}</td>
                 <td className="px-4 py-2 border-b">
-                  <Button handleDelete={() => handleDelete(mobile.id)} />
+                  <Button
+                    color="red"
+                    handleClick={() => handleDelete(mobile.id)}
+                  />
                 </td>
               </tr>
             ))}
