@@ -5,7 +5,7 @@ import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
 import CustomLink from "../Shared/CustomLink";
 import Table from "../Shared/Table";
-import DeleteButton from "../Shared/DeleteButton";
+import Button from "../Shared/Button";
 
 export default function MobileDevicesTable() {
   const { user } = useAuth();
@@ -161,7 +161,7 @@ export default function MobileDevicesTable() {
                 <td className="px-4 py-2 border-b">{mobile.status}</td>
                 <td className="px-4 py-2 border-b">{mobile.statusReason}</td>
                 <td className="px-4 py-2 border-b">
-                  <DeleteButton handleDelete={() => handleDelete(mobile.id)} />
+                  <Button handleDelete={() => handleDelete(mobile.id)} />
                 </td>
               </tr>
             ))}

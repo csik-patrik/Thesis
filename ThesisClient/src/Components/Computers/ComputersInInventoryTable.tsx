@@ -5,7 +5,7 @@ import axios from "axios";
 import { useAuth } from "../../Auth/AuthContext";
 import CustomLink from "../Shared/CustomLink";
 import Table from "../Shared/Table";
-import DeleteButton from "../Shared/DeleteButton";
+import Button from "../Shared/Button";
 
 export default function ComputersInInventoryTable() {
   const { user } = useAuth();
@@ -179,9 +179,7 @@ export default function ComputersInInventoryTable() {
                 <td className="px-4 py-2 border-b">{computer.status}</td>
                 <td className="px-4 py-2 border-b">{computer.statusReason}</td>
                 <td className="px-4 py-2 border-b">
-                  <DeleteButton
-                    handleDelete={() => handleDelete(computer.id)}
-                  />
+                  <Button handleDelete={() => handleDelete(computer.id)} />
                 </td>
               </tr>
             ))}

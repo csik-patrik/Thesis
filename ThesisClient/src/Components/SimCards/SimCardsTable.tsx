@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import type { SimCardResponse } from "../../Types/MobileTypes";
 import CustomLink from "../Shared/CustomLink";
 import Table from "../Shared/Table";
-import DeleteButton from "../Shared/DeleteButton";
+import Button from "../Shared/Button";
 
 export default function SimCardsTable() {
   const [data, setData] = useState<SimCardResponse[]>([]);
@@ -118,7 +118,7 @@ export default function SimCardsTable() {
                   >
                     Edit
                   </Link>
-                  <DeleteButton handleDelete={() => handleDelete(d.id)} />
+                  <Button handleDelete={() => handleDelete(d.id)} />
                 </td>
               </tr>
             ))}
