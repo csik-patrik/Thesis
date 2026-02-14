@@ -118,7 +118,11 @@ export default function SimCardsTable() {
                   >
                     Edit
                   </Link>
-                  <Button color="red" handleClick={() => handleDelete(d.id)} />
+                  <Button
+                    color="red"
+                    label="Delete"
+                    handleClick={() => handleDelete(d.id)}
+                  />
                 </td>
               </tr>
             ))}

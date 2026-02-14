@@ -3,10 +3,9 @@ import type {
   ComputerCategoryResponse,
   CreateComputerRequest,
 } from "../../Types/ComputerTypes";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../Auth/AuthContext";
 import axios from "axios";
-import { toast } from "react-toastify";
 
 export default function ComputersCreateBulk() {
   const [computerCategories, setComputerCategories] = useState<
@@ -17,7 +16,6 @@ export default function ComputersCreateBulk() {
 
   const [devices, setDevices] = useState<CreateComputerRequest[]>([]);
 
-  const navigate = useNavigate();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -67,25 +65,25 @@ export default function ComputersCreateBulk() {
     );
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
 
-    if (!user || !user.token) return;
+  //   if (!user || !user.token) return;
 
-    try {
-      await axios.post("http://localhost:5268/computers/bulk", devices, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+  //   try {
+  //     await axios.post("http://localhost:5268/computers/bulk", devices, {
+  //       headers: {
+  //         Authorization: `Bearer ${user.token}`,
+  //       },
+  //     });
 
-      toast.success("Computers created successfully!");
-      navigate("/computers");
-    } catch (err) {
-      console.error("Error creating computers:", err);
-      toast.error("Failed to create computers.");
-    }
-  };
+  //     toast.success("Computers created successfully!");
+  //     navigate("/computers");
+  //   } catch (err) {
+  //     console.error("Error creating computers:", err);
+  //     toast.error("Failed to create computers.");
+  //   }
+  // };
 
   return (
     <div className="flex justify-center items-center bg-gray-100 p-4">

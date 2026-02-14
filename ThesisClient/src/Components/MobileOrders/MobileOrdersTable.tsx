@@ -135,7 +135,11 @@ export default function MobileOrdersTable() {
                   label="View"
                 />
                 {d.status !== "Delivered" && (
-                  <Button color="red" handleClick={() => handleDelete(d.id)} />
+                  <Button
+                    color="red"
+                    label="Delete"
+                    handleClick={() => handleDelete(d.id)}
+                  />
                 )}
               </td>
             </tr>

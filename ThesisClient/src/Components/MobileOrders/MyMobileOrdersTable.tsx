@@ -142,7 +142,11 @@ export default function MyMobileOrdersTable() {
                   to={`/mobile-orders/${d.id}`}
                 />
                 {d.status !== "Delivered" && (
-                  <Button color="red" handleClick={() => handleDelete(d.id)} />
+                  <Button
+                    label="Delete"
+                    color="red"
+                    handleClick={() => handleDelete(d.id)}
+                  />
                 )}
               </td>
             </tr>

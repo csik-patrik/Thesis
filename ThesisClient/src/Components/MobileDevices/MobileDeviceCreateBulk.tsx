@@ -80,15 +80,11 @@ export default function MobileDeviceCreateBulk() {
     }
 
     try {
-      const res = await axios.post(
-        "http://localhost:5268/mobile-devices/bulk",
-        devices,
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
+      await axios.post("http://localhost:5268/mobile-devices/bulk", devices, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
         },
-      );
+      });
 
       toast.success("Mobile devices created successfully!");
       navigate("/mobiles");

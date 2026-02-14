@@ -167,6 +167,7 @@ export default function MobileDevicesTable() {
                 <td className="px-4 py-2 border-b">
                   <Button
                     color="red"
+                    label="Delete"
                     handleClick={() => handleDelete(mobile.id)}
                   />
                 </td>

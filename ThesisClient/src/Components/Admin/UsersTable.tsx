@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import type { UserResponse } from "../../Types/UserTypes";
+import CustomLink from "../Shared/CustomLink";
+import Table from "../Shared/Table";
+import Button from "../Shared/Button";
 
 export default function Users() {
   const [data, setData] = useState<UserResponse[]>([]);
@@ -26,64 +28,51 @@ export default function Users() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-gray-100 p-6">
+    <div className="flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-6">Users</h1>
-
-      <div className="w-full max-w-5xl bg-white border rounded-lg shadow-md p-6">
-        {/* Create Button */}
-        <div className="mb-4">
-          <Link
-            to="/admin/users/create"
-            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
-          >
-            Create
-          </Link>
+      <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <div className="flex gap-2 mb-4 flex-col">
+          <div className="flex gap-2">
+            <CustomLink color="green" to="/admin/users/create" label="Create" />
+          </div>
         </div>
-
-        {/* Users Table */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse border border-gray-300">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="border px-4 py-2 text-left">Id</th>
-                <th className="border px-4 py-2 text-left">Username</th>
-                <th className="border px-4 py-2 text-left">Display Name</th>
-                <th className="border px-4 py-2 text-left">Email</th>
-                <th className="border px-4 py-2 text-left">Department</th>
-                <th className="border px-4 py-2 text-left">Cost Center</th>
-                <th className="border px-4 py-2 text-left">Roles</th>
-                <th className="border px-4 py-2 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((u) => (
-                <tr key={u.id} className="even:bg-gray-50">
-                  <td className="border px-4 py-2">{u.id}</td>
-                  <td className="border px-4 py-2">{u.username}</td>
-                  <td className="border px-4 py-2">{u.displayName}</td>
-                  <td className="border px-4 py-2">{u.email}</td>
-                  <td className="border px-4 py-2">{u.department}</td>
-                  <td className="border px-4 py-2">{u.costCenter}</td>
-                  <td className="border px-4 py-2">
-                    {u.userRoles.map((r) => (
-                      <span key={r.id} className="mr-1">
-                        {r.name}
-                      </span>
-                    ))}
-                  </td>
-                  <td className="border px-4 py-2">
-                    <button
-                      className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition text-sm"
-                      onClick={() => handleDelete(u.id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          headerItems={[
+            "Id",
+            "Username",
+            "Displayname",
+            "E-mail address",
+            "Department",
+            "Cost center",
+            "Roles",
+            "Actions",
+          ]}
+        >
+          {data.map((u) => (
+            <tr key={u.id} className="even:bg-gray-50 border-b">
+              <td className="px-4 py-2">{u.id}</td>
+              <td className="px-4 py-2">{u.username}</td>
+              <td className="px-4 py-2">{u.displayName}</td>
+              <td className="px-4 py-2">{u.email}</td>
+              <td className="px-4 py-2">{u.department}</td>
+              <td className="px-4 py-2">{u.costCenter}</td>
+              <td className="px-4 py-2">
+                {u.userRoles.map((r) => (
+                  <span key={r.id} className="mr-1">
+                    {r.name}
+                  </span>
+                ))}
+              </td>
+              <td className="px-4 py-2">
+                <Button
+                  color="red"
+                  label="Delete"
+                  handleClick={() => handleDelete(u.id)}
+                />
+              </td>
+            </tr>
+          ))}
+        </Table>
       </div>
     </div>
   );

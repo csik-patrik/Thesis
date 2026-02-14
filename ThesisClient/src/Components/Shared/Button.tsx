@@ -1,9 +1,11 @@
 export default function Button({
   handleClick,
   color,
+  label,
 }: {
   handleClick: () => void;
   color: "red" | "green" | "gray" | "blue";
+  label: string;
 }) {
   let classes = "text-white px-2 py-1 rounded transition";
 
@@ -13,7 +15,7 @@ export default function Button({
 
   return (
     <button onClick={handleClick} className={classes}>
-      Delete
+      {label}
     </button>
   );
 }

@@ -147,6 +147,7 @@ export default function MyComputerOrdersTable() {
                     d.status !== "Rejected by group leader" && (
                       <Button
                         color="red"
+                        label="Delete"
                         handleClick={() => handleDelete(d.id)}
                       />
                     )}
