@@ -63,7 +63,8 @@ export default function Users() {
                   </span>
                 ))}
               </td>
-              <td className="px-4 py-2">
+              <td className="px-4 py-2 flex gap-2">
+                <CustomLink color="yellow" label="Edit" to="" />
                 <Button
                   color="red"
                   label="Delete"
