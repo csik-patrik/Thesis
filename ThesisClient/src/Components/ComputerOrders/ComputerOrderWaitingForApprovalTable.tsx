@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import type { ComputerOrderResponse } from "../../Types/ComputerTypes";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../Auth/AuthContext";
+import Table from "../Shared/Table";
+import CustomLink from "../Shared/CustomLink";
 
 export default function ComputerOrderWaitingForApprovalTable() {
   const { user } = useAuth();
@@ -20,7 +21,7 @@ export default function ComputerOrderWaitingForApprovalTable() {
           "http://localhost:5268/computer-orders/approval",
           {
             headers: { Authorization: `Bearer ${user.token}` },
-          }
+          },
         );
         setData(res.data);
       } catch (err) {
@@ -59,21 +60,21 @@ export default function ComputerOrderWaitingForApprovalTable() {
       : data.filter((order) => order.status === statusFilter);
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
-      <h1>Computer orders waiting for approval</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <label htmlFor="statusFilter" className="me-2">
-              Filter by Status:
-            </label>
+    <div className="flex flex-col items-center justify-center p-6">
+      <h1 className="text-3xl font-bold mb-6">
+        Computer orders waiting for approval
+      </h1>
+      <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <div className="flex gap-6">
+          <div className="flex flex-col">
+            <span>Status</span>
             <select
               id="statusFilter"
               className="form-select d-inline-block w-auto"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
-              <option value="">All</option>
+              <option value="All">All</option>
               {statuses.map((status) => (
                 <option key={status} value={status}>
                   {status}
@@ -82,40 +83,33 @@ export default function ComputerOrderWaitingForApprovalTable() {
             </select>
           </div>
         </div>
-
-        <div className="table-responsive">
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Customer Name</th>
-                <th>Device Type</th>
-                <th>Pickup Location</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((d) => (
-                <tr key={d.id}>
-                  <td>{d.id}</td>
-                  <td>{d.customer.displayName}</td>
-                  <td>{d.computerCategory.name}</td>
-                  <td>{d.pickupLocation}</td>
-                  <td>{d.status}</td>
-                  <td>
-                    <Link
-                      to={`/computer-orders/${d.id}`}
-                      className="btn btn-primary btn-sm me-2 text-light"
-                    >
-                      View
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          headerItems={[
+            "Id",
+            "Customer name",
+            "Device type",
+            "Pickup location",
+            "Status",
+            "Actions",
+          ]}
+        >
+          {filteredData.map((d) => (
+            <tr key={d.id} className="hover:bg-gray-50 border-b">
+              <td className="px-4 py-2">{d.id}</td>
+              <td className="px-4 py-2">{d.customer.displayName}</td>
+              <td className="px-4 py-2">{d.computerCategory.name}</td>
+              <td className="px-4 py-2">{d.pickupLocation}</td>
+              <td className="px-4 py-2">{d.status}</td>
+              <td>
+                <CustomLink
+                  color="blue"
+                  to={`/computer-orders/${d.id}`}
+                  label="View"
+                />
+              </td>
+            </tr>
+          ))}
+        </Table>
       </div>
     </div>
   );
