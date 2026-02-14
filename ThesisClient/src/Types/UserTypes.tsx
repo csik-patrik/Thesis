@@ -17,6 +17,16 @@ export type CreateUserRequest = {
   userRoleIds: number[];
 };
 
+export type UpdateUserRequest = {
+  id: number;
+  username: string;
+  displayName: string;
+  email: string;
+  department: string;
+  costCenter: string;
+  userRoleIds: number[];
+};
+
 export type UserResponse = {
   id: number;
   username: string;

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using ThesisApi.Contracts.Requests.Users;
 using ThesisApi.Data;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
@@ -38,6 +39,31 @@ namespace ThesisApi.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<User>> GetGroupLeadersAsync()
+        {
+            return await _context.Users
+                .Include(x => x.UserRoles)
+                .Where(u => u.UserRoles.Any(r => r.Name == "Group leader"))
+                .ToListAsync();
+        }
+
+        public async Task<User> UpdateUserAsync(User user, UpdateUserRequest request)
+        {
+            user.Username = request.Username;
+            user.DisplayName = request.DisplayName;
+            user.Email = request.Email;
+            user.Department = request.Department;
+            user.CostCenter = request.CostCenter;
+
+            var newRoles = await _context.UserRoles.Where(x => request.UserRoleIds.Contains(x.Id)).ToListAsync();
+
+            user.UserRoles = newRoles;
+
+            await _context.SaveChangesAsync();
+
+            return user;
+        }
+
         public async Task<bool> DeleteById(User user)
         {
             _context.Users.Remove(user);
@@ -47,12 +73,6 @@ namespace ThesisApi.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<User>> GetGroupLeadersAsync()
-        {
-            return await _context.Users
-                .Include(x => x.UserRoles)
-                .Where(u => u.UserRoles.Any(r => r.Name == "Group leader"))
-                .ToListAsync();
-        }
+
     }
 }

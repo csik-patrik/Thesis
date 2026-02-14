@@ -38,6 +38,7 @@ import MyComputerOrdersTable from "./Components/ComputerOrders/MyComputerOrdersT
 import MyMobileOrdersTable from "./Components/MobileOrders/MyMobileOrdersTable.tsx";
 import ComputerOrderWaitingForApprovalTable from "./Components/ComputerOrders/ComputerOrderWaitingForApprovalTable.tsx";
 import MobileOrderWaitingForApprovalTable from "./Components/MobileOrders/MobileOrderWaitingForApprovalTable.tsx";
+import UsersEdit from "./Components/Admin/UsersEdit.tsx";
 
 function App() {
   return (
@@ -286,6 +287,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <UserCreate />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/users/:id"
+                element={
+                  <ProtectedRoute>
+                    <UsersEdit />
                   </ProtectedRoute>
                 }
               ></Route>

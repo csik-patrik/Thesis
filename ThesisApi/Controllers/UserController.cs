@@ -147,6 +147,28 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpPut("/users")]
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
+        {
+            try
+            {
+                var user = await _userRepository.GetByIdAsync(request.Id);
+
+                if (user == null)
+                    return NotFound();
+
+                var updatedUser = await _userRepository.UpdateUserAsync(user, request);
+
+                var response = _mapper.Map<UserResponse>(updatedUser);
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpDelete("/users/{id:int}")]
         public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {

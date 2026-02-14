@@ -1,3 +1,4 @@
+using ThesisApi.Contracts.Requests.Users;
 using ThesisApi.Models;
 
 namespace ThesisApi.Interfaces
@@ -8,7 +9,8 @@ namespace ThesisApi.Interfaces
         Task<IEnumerable<User>> GetAllAsync();
         Task<User?> GetByIdAsync(int id);
         Task<List<User>> GetByDisplayNameAsync(string displayName);
-        Task<bool> DeleteById(User user);
         Task<IEnumerable<User>> GetGroupLeadersAsync();
+        Task<User> UpdateUserAsync(User user, UpdateUserRequest request);
+        Task<bool> DeleteById(User user);
     }
 }

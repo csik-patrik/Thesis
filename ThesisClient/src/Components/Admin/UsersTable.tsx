@@ -48,27 +48,31 @@ export default function Users() {
             "Actions",
           ]}
         >
-          {data.map((u) => (
-            <tr key={u.id} className="even:bg-gray-50 border-b">
-              <td className="px-4 py-2">{u.id}</td>
-              <td className="px-4 py-2">{u.username}</td>
-              <td className="px-4 py-2">{u.displayName}</td>
-              <td className="px-4 py-2">{u.email}</td>
-              <td className="px-4 py-2">{u.department}</td>
-              <td className="px-4 py-2">{u.costCenter}</td>
+          {data.map((user) => (
+            <tr key={user.id} className="even:bg-gray-50 border-b">
+              <td className="px-4 py-2">{user.id}</td>
+              <td className="px-4 py-2">{user.username}</td>
+              <td className="px-4 py-2">{user.displayName}</td>
+              <td className="px-4 py-2">{user.email}</td>
+              <td className="px-4 py-2">{user.department}</td>
+              <td className="px-4 py-2">{user.costCenter}</td>
               <td className="px-4 py-2">
-                {u.userRoles.map((r) => (
+                {user.userRoles.map((r) => (
                   <span key={r.id} className="mr-1">
                     {r.name}
                   </span>
                 ))}
               </td>
               <td className="px-4 py-2 flex gap-2">
-                <CustomLink color="yellow" label="Edit" to="" />
+                <CustomLink
+                  color="yellow"
+                  label="Edit"
+                  to={`/admin/users/${user.id}`}
+                />
                 <Button
                   color="red"
                   label="Delete"
-                  handleClick={() => handleDelete(u.id)}
+                  handleClick={() => handleDelete(user.id)}
                 />
               </td>
             </tr>
