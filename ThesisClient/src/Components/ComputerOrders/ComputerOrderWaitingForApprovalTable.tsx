@@ -10,7 +10,6 @@ export default function ComputerOrderWaitingForApprovalTable() {
   const { user } = useAuth();
   const [data, setData] = useState<ComputerOrderResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>("All");
 
   useEffect(() => {
     if (!user?.token) return;
@@ -53,36 +52,12 @@ export default function ComputerOrderWaitingForApprovalTable() {
     );
   }
 
-  const statuses = Array.from(new Set(data.map((order) => order.status)));
-  const filteredData =
-    statusFilter === "All"
-      ? data
-      : data.filter((order) => order.status === statusFilter);
-
   return (
     <div className="flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl font-bold mb-6">
         Computer orders waiting for approval
       </h1>
-      <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
-        <div className="flex gap-6">
-          <div className="flex flex-col">
-            <span>Status</span>
-            <select
-              id="statusFilter"
-              className="form-select d-inline-block w-auto"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="All">All</option>
-              {statuses.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+      <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
         <Table
           headerItems={[
             "Id",
@@ -93,7 +68,7 @@ export default function ComputerOrderWaitingForApprovalTable() {
             "Actions",
           ]}
         >
-          {filteredData.map((d) => (
+          {data.map((d) => (
             <tr key={d.id} className="hover:bg-gray-50 border-b">
               <td className="px-4 py-2">{d.id}</td>
               <td className="px-4 py-2">{d.customer.displayName}</td>

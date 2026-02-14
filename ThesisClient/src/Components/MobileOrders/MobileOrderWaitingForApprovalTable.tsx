@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../Auth/AuthContext";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
+import Table from "../Shared/Table";
+import CustomLink from "../Shared/CustomLink";
 
 export default function MobileOrderWaitingForApprovalTable() {
   const { user } = useAuth();
@@ -19,7 +20,7 @@ export default function MobileOrderWaitingForApprovalTable() {
           "http://localhost:5268/mobile-orders/approval",
           {
             headers: { Authorization: `Bearer ${user.token}` },
-          }
+          },
         );
 
         setData(res.data);
@@ -54,44 +55,38 @@ export default function MobileOrderWaitingForApprovalTable() {
   }
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center bg-light vh-100">
-      <h1>Mobile orders waiting for approval</h1>
-      <div className="w-75 rounded bg-white border shadow p-4">
-        <div className="d-flex justify-content-between align-items-center mb-3"></div>
-
-        <div className="table-responsive">
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Customer Name</th>
-                <th scope="col">Device Type</th>
-                <th scope="col">Pickup Location</th>
-                <th scope="col">Status</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((d) => (
-                <tr key={d.id}>
-                  <td>{d.id}</td>
-                  <td>{d.customer.displayName}</td>
-                  <td>{d.mobileDeviceCategory.name}</td>
-                  <td>{d.pickupLocation}</td>
-                  <td>{d.status}</td>
-                  <td>
-                    <Link
-                      to={`/mobile-orders/${d.id}`}
-                      className="btn btn-primary btn-sm me-2 text-light"
-                    >
-                      View
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+    <div className="flex flex-col items-center justify-center p-6">
+      <h1 className="text-3xl font-bold mb-6">
+        Mobile orders waiting for approval
+      </h1>
+      <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <Table
+          headerItems={[
+            "Id",
+            "Customer name",
+            "Device type",
+            "Pickup location",
+            "Status",
+            "Actions",
+          ]}
+        >
+          {data.map((d) => (
+            <tr key={d.id} className="hover:bg-gray-50 border-b">
+              <td className="px-4 py-2">{d.id}</td>
+              <td className="px-4 py-2">{d.customer.displayName}</td>
+              <td className="px-4 py-2">{d.mobileDeviceCategory.name}</td>
+              <td className="px-4 py-2">{d.pickupLocation}</td>
+              <td className="px-4 py-2">{d.status}</td>
+              <td className="px-4 py-2">
+                <CustomLink
+                  color="blue"
+                  to={`/mobile-orders/${d.id}`}
+                  label="View"
+                />
+              </td>
+            </tr>
+          ))}
+        </Table>
       </div>
     </div>
   );
