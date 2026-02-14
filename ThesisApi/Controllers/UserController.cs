@@ -73,6 +73,27 @@ namespace ThesisApi.Controllers
             }
         }
 
+        [HttpGet("/users/{id:int}")]
+        public async Task<IActionResult> GetUserById([FromRoute] int id)
+        {
+            try
+            {
+                var user = await _userRepository.GetByIdAsync(id);
+
+                if (user == null)
+                    return NotFound();
+
+                var response = _mapper.Map<UserResponse>(user);
+
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+
         [HttpGet("/users/{name}")]
         public async Task<IActionResult> GetUsersByDisplayName([FromRoute] string name)
         {
@@ -100,8 +121,6 @@ namespace ThesisApi.Controllers
                     return BadRequest("User roles are not valid!");
 
                 var passwordHasher = new PasswordHasher<User>();
-
-
 
                 var user = new User()
                 {
