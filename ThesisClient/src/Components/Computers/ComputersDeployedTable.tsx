@@ -3,6 +3,8 @@ import type { ComputerResponse } from "../../Types/ComputerTypes";
 import axios from "axios";
 import { useAuth } from "../../Auth/AuthContext";
 import { toast } from "react-toastify";
+import Table from "../Shared/Table";
+import Button from "../Shared/Button";
 
 export default function ComputersDeployedTable() {
   const { user } = useAuth();
@@ -85,7 +87,7 @@ export default function ComputersDeployedTable() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center bg-gray-100 p-6">
+    <div className="flex flex-col items-center justify-center p-6">
       {/* Return Device Modal */}
       {showReturnModal && (
         <div className="fixed inset-0 bg-stone-50 bg-opacity-80 flex justify-center items-center z-50">
@@ -163,78 +165,52 @@ export default function ComputersDeployedTable() {
           </div>
         </div>
       )}
-
-      <h1 className="text-2xl font-semibold mb-6">Deployed Computers</h1>
-
-      <div className="w-full max-w-6xl bg-white shadow-md rounded-lg p-4">
-        {/* Search */}
-        <div className="flex mb-4">
-          <input
-            type="text"
-            placeholder="Search by hostname"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 w-auto focus:outline-none focus:ring-1 focus:ring-gray-400"
-          />
+      <h1 className="text-3xl font-bold mb-6">Deployed Computers</h1>
+      <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
+        <div className="flex gap-2 mb-4 flex-col">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Search by hostname"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="border border-gray-300 rounded-md px-3 py-2 w-auto focus:outline-none focus:ring-1 focus:ring-gray-400"
+            />
+          </div>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border-collapse">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
-                  Id
-                </th>
-                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
-                  Hostname
-                </th>
-                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
-                  Category
-                </th>
-                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
-                  Model
-                </th>
-                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
-                  Serial number
-                </th>
-                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
-                  User
-                </th>
-                <th className="px-3 py-2 text-left text-gray-700 font-medium border-b">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((d) => (
-                <tr key={d.id} className="hover:bg-gray-50">
-                  <td className="px-3 py-2 border-b">{d.id}</td>
-                  <td className="px-3 py-2 border-b">{d.hostname}</td>
-                  <td className="px-3 py-2 border-b">
-                    {d.computerCategory.name}
-                  </td>
-                  <td className="px-3 py-2 border-b">{d.model}</td>
-                  <td className="px-3 py-2 border-b">{d.serialNumber}</td>
-                  <td className="px-3 py-2 border-b">
-                    {d.user?.userName || "—"}
-                  </td>
-                  <td className="px-3 py-2 border-b">
-                    <button
-                      className="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-400 text-sm"
-                      onClick={() => {
-                        setSelectedDeviceId(d.id);
-                        setShowReturnModal(true);
-                      }}
-                    >
-                      Return
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table
+          headerItems={[
+            "Id",
+            "Hostname",
+            "Category",
+            "Model",
+            "Serial number",
+            "User",
+            "Actions",
+          ]}
+        >
+          {filteredData.map((d) => (
+            <tr key={d.id} className="hover:bg-gray-50 border-b">
+              <td className="px-4 py-2">{d.id}</td>
+              <td className="px-4 py-2">{d.hostname}</td>
+              <td className="px-4 py-2">{d.computerCategory.name}</td>
+              <td className="px-4 py-2">{d.model}</td>
+              <td className="px-4 py-2">{d.serialNumber}</td>
+              <td className="px-4 py-2">{d.user?.userName || "—"}</td>
+              <td className="px-4 py-2">
+                <Button
+                  color="green"
+                  handleClick={() => {
+                    setSelectedDeviceId(d.id);
+                    setShowReturnModal(true);
+                  }}
+                  label="Return"
+                />
+              </td>
+            </tr>
+          ))}
+        </Table>
       </div>
     </div>
   );
