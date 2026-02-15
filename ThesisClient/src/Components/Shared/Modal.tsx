@@ -10,8 +10,9 @@ const Modal = forwardRef<
   {
     title: string;
     handleSubmit: () => void;
+    children?: React.ReactNode;
   }
->(({ title, handleSubmit }, ref) => {
+>(({ title, handleSubmit, children }, ref) => {
   const dialog = useRef<HTMLDialogElement>(null);
 
   useImperativeHandle(ref, () => {
@@ -29,6 +30,7 @@ const Modal = forwardRef<
     >
       <div className="p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-2">{title}</h2>
+        {children}
         <form method="dialog" className="flex gap-3 justify-end">
           <button
             type="submit"
