@@ -1,0 +1,46 @@
+import { forwardRef, useRef, useImperativeHandle } from "react";
+import Button from "./Button";
+
+export type ModalHandle = {
+  open: () => void;
+};
+
+const Modal = forwardRef<
+  ModalHandle,
+  {
+    title: string;
+    handleSubmit: () => void;
+  }
+>(({ title, handleSubmit }, ref) => {
+  const dialog = useRef<HTMLDialogElement>(null);
+
+  useImperativeHandle(ref, () => {
+    return {
+      open() {
+        dialog.current?.showModal();
+      },
+    };
+  });
+
+  return (
+    <dialog
+      ref={dialog}
+      className="backdrop:bg-black/50 rounded-lg shadow-xl p-0 m-auto"
+    >
+      <div className="p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">{title}</h2>
+        <form method="dialog" className="flex gap-3 justify-end">
+          <button
+            type="submit"
+            className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+          >
+            Cancel
+          </button>
+          <Button color="red" handleClick={handleSubmit} label="Delete" />
+        </form>
+      </div>
+    </dialog>
+  );
+});
+
+export default Modal;
