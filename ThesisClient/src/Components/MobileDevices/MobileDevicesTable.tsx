@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import type { MobileDeviceResponse } from "../../Types/MobileTypes";
@@ -6,20 +6,27 @@ import { useAuth } from "../../Auth/AuthContext";
 import CustomLink from "../Shared/CustomLink";
 import Table from "../Shared/Table";
 import Button from "../Shared/Button";
+import type { ModalHandle } from "../Shared/Modal";
+import Modal from "../Shared/Modal";
 
 export default function MobileDevicesTable() {
   const { user } = useAuth();
   const [data, setData] = useState<MobileDeviceResponse[]>([]);
+  const [selectedMobileDeviceId, setSelectedMobileDeviceId] = useState(0);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [statusReasonFilter, setStatusReasonFilter] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const dialog = useRef<ModalHandle>(null);
+
+  function showModal(id: number) {
+    setSelectedMobileDeviceId(id);
+    dialog.current?.open();
+  }
   // const [showUpdateModal, setShowUpdateModal] = useState(false);
   // const [selectedDeviceId, setSelectedDeviceId] = useState<number | null>(null);
   // const [updateData, setUpdateData] = useState({
   //   statusReason: "In inventory",
   // });
-
-  console.log(user);
 
   useEffect(() => {
     if (!user) return;
@@ -80,102 +87,109 @@ export default function MobileDevicesTable() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center p-6">
-      <h1 className="text-3xl font-bold mb-6">Mobile Devices</h1>
-      <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
-        <div className="mb-4 flex gap-4 flex-col">
-          <div className="flex gap-2">
-            <CustomLink color="green" to="/mobiles/create" label="Create" />
-            <CustomLink
-              color="green"
-              to="/mobiles/create-bulk"
-              label="Create bulk"
-            />
+    <>
+      <Modal
+        ref={dialog}
+        title="Do you want to delete the selected mobile device?"
+        handleSubmit={() => handleDelete(selectedMobileDeviceId)}
+      />
+      <div className="flex flex-col items-center justify-center p-6">
+        <h1 className="text-3xl font-bold mb-6">Mobile Devices</h1>
+        <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
+          <div className="mb-4 flex gap-4 flex-col">
+            <div className="flex gap-2">
+              <CustomLink color="green" to="/mobiles/create" label="Create" />
+              <CustomLink
+                color="green"
+                to="/mobiles/create-bulk"
+                label="Create bulk"
+              />
+            </div>
+            <div className="flex gap-6">
+              <div className="flex flex-col">
+                <span>Category</span>
+                <select
+                  value={categoryFilter}
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className="px-2 py-1 border rounded text-sm"
+                >
+                  <option value="">All</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col">
+                <span>Status</span>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="px-2 py-1 border rounded text-sm"
+                >
+                  <option value="">All</option>
+                  {statuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col">
+                <span>Status reason</span>
+                <select
+                  value={statusReasonFilter}
+                  onChange={(e) => setStatusReasonFilter(e.target.value)}
+                  className="px-2 py-1 border rounded text-sm"
+                >
+                  <option value="">All</option>
+                  {statusReasons.map((reason) => (
+                    <option key={reason} value={reason}>
+                      {reason}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
-          <div className="flex gap-6">
-            <div className="flex flex-col">
-              <span>Category</span>
-              <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-                className="px-2 py-1 border rounded text-sm"
-              >
-                <option value="">All</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex flex-col">
-              <span>Status</span>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-2 py-1 border rounded text-sm"
-              >
-                <option value="">All</option>
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex flex-col">
-              <span>Status reason</span>
-              <select
-                value={statusReasonFilter}
-                onChange={(e) => setStatusReasonFilter(e.target.value)}
-                className="px-2 py-1 border rounded text-sm"
-              >
-                <option value="">All</option>
-                {statusReasons.map((reason) => (
-                  <option key={reason} value={reason}>
-                    {reason}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div>
+            <Table
+              headerItems={[
+                "Id",
+                "Hostname",
+                "Category",
+                "IMEI Number",
+                "Serial Number",
+                "Status",
+                "Status Reason",
+                "Actions",
+              ]}
+            >
+              {filteredData.map((mobile) => (
+                <tr key={mobile.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 border-b">{mobile.id}</td>
+                  <td className="px-4 py-2 border-b">{mobile.hostname}</td>
+                  <td className="px-4 py-2 border-b">
+                    {mobile.mobileDeviceCategory.name}
+                  </td>
+                  <td className="px-4 py-2 border-b">{mobile.imeiNumber}</td>
+                  <td className="px-4 py-2 border-b">{mobile.serialNumber}</td>
+                  <td className="px-4 py-2 border-b">{mobile.status}</td>
+                  <td className="px-4 py-2 border-b">{mobile.statusReason}</td>
+                  <td className="px-4 py-2 border-b">
+                    <Button
+                      color="red"
+                      label="Delete"
+                      handleClick={() => showModal(mobile.id)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </Table>
           </div>
-        </div>
-        <div>
-          <Table
-            headerItems={[
-              "Id",
-              "Hostname",
-              "Category",
-              "IMEI Number",
-              "Serial Number",
-              "Status",
-              "Status Reason",
-              "Actions",
-            ]}
-          >
-            {filteredData.map((mobile) => (
-              <tr key={mobile.id} className="hover:bg-gray-50">
-                <td className="px-4 py-2 border-b">{mobile.id}</td>
-                <td className="px-4 py-2 border-b">{mobile.hostname}</td>
-                <td className="px-4 py-2 border-b">
-                  {mobile.mobileDeviceCategory.name}
-                </td>
-                <td className="px-4 py-2 border-b">{mobile.imeiNumber}</td>
-                <td className="px-4 py-2 border-b">{mobile.serialNumber}</td>
-                <td className="px-4 py-2 border-b">{mobile.status}</td>
-                <td className="px-4 py-2 border-b">{mobile.statusReason}</td>
-                <td className="px-4 py-2 border-b">
-                  <Button
-                    color="red"
-                    label="Delete"
-                    handleClick={() => handleDelete(mobile.id)}
-                  />
-                </td>
-              </tr>
-            ))}
-          </Table>
         </div>
       </div>
-    </div>
+    </>
   );
 }
