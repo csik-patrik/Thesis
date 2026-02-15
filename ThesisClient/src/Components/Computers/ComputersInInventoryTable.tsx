@@ -12,8 +12,6 @@ export default function ComputersInInventoryTable() {
   const [data, setData] = useState<ComputerResponse[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [statusReasonFilter, setStatusReasonFilter] = useState<string>("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
 
   useEffect(() => {
@@ -57,21 +55,14 @@ export default function ComputersInInventoryTable() {
   const categories = Array.from(
     new Set(data.map((device) => device.computerCategory.name)),
   );
-  const statuses = Array.from(new Set(data.map((device) => device.status)));
-  const statusReasons = Array.from(
-    new Set(data.map((device) => device.statusReason)),
-  );
 
-  // Filter data by device category, status, and status reason
+  // Filter data by device category
   const filteredData = data.filter((device) => {
     const categoryMatch = categoryFilter
       ? device.computerCategory.name === categoryFilter
       : true;
-    const statusMatch = statusFilter ? device.status === statusFilter : true;
-    const reasonMatch = statusReasonFilter
-      ? device.statusReason === statusReasonFilter
-      : true;
-    return categoryMatch && statusMatch && reasonMatch;
+
+    return categoryMatch;
   });
 
   // Loading state
@@ -122,36 +113,6 @@ export default function ComputersInInventoryTable() {
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>
                     {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex flex-col">
-              <span>Status</span>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-2 py-1 border rounded text-sm"
-              >
-                <option value="">All</option>
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex flex-col">
-              <span>Status reason</span>
-              <select
-                value={statusReasonFilter}
-                onChange={(e) => setStatusReasonFilter(e.target.value)}
-                className="px-2 py-1 border rounded text-sm"
-              >
-                <option value="">All</option>
-                {statusReasons.map((reason) => (
-                  <option key={reason} value={reason}>
-                    {reason}
                   </option>
                 ))}
               </select>
