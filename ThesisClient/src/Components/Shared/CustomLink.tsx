@@ -9,7 +9,7 @@ export default function CustomLink({
   label: string;
   color: "green" | "gray" | "blue" | "yellow";
 }) {
-  let classes = "text-white px-2 py-1 rounded transition";
+  let classes = "text-white px-2 py-1 rounded transition cursor-pointer";
 
   if (color == "green") classes += " bg-green-600";
   else if (color == "gray") classes += " bg-gray-300";
