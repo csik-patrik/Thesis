@@ -18,7 +18,7 @@ import EditMobileDeviceCategory from "./Components/Admin/EditMobileDeviceCategor
 import { AuthProvider } from "../src/Auth/AuthContext.tsx";
 import UsersTable from "./Components/Admin/UsersTable.tsx";
 import UserCreate from "./Components/Admin/UserCreate.tsx";
-import DeployedMobileDevicesTable from "./Components/MobileDevices/DeployedMobileDevicesTable.tsx";
+import MobileDevicesDeployedTable from "./Components/MobileDevices/MobileDevicesDeployedTable.tsx";
 import MobileDeviceCreateBulk from "./Components/MobileDevices/MobileDeviceCreateBulk.tsx";
 import MyMobileDeviceTable from "./Components/MobileDevices/MyMobileDevicesTable.tsx";
 import ComputersInInventoryTable from "./Components/Computers/ComputersInInventoryTable.tsx";
@@ -150,7 +150,7 @@ function App() {
                 path="/mobiles/deployed"
                 element={
                   <ProtectedRoute>
-                    <DeployedMobileDevicesTable />
+                    <MobileDevicesDeployedTable />
                   </ProtectedRoute>
                 }
               ></Route>
