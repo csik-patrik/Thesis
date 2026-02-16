@@ -3,7 +3,7 @@ import { useAuth } from "../../Auth/AuthContext";
 
 export default function Home() {
   const { user } = useAuth();
-  const token = localStorage.getItem("user.token");
+  //const token = localStorage.getItem("user.token");
   console.log(user);
 
   return (
@@ -35,7 +35,7 @@ export default function Home() {
         {/* Mobile Orders */}
         <div className="bg-white shadow rounded-lg p-6 flex flex-col h-full">
           <h5 className="text-xl font-semibold mb-2">Mobile Orders</h5>
-          <p className="text-gray-700 mb-4 flex-grow">
+          <p className="text-gray-700 mb-4 grow">
             View, create, and manage mobile device orders.
           </p>
           <Link
@@ -49,7 +49,7 @@ export default function Home() {
         {/* Devices Inventory */}
         <div className="bg-white shadow rounded-lg p-6 flex flex-col h-full">
           <h5 className="text-xl font-semibold mb-2">Devices Inventory</h5>
-          <p className="text-gray-700 mb-4 flex-grow">
+          <p className="text-gray-700 mb-4 grow">
             Browse, add, and allocate mobile devices in inventory.
           </p>
           <Link
@@ -63,7 +63,7 @@ export default function Home() {
         {/* User Management */}
         <div className="bg-white shadow rounded-lg p-6 flex flex-col h-full">
           <h5 className="text-xl font-semibold mb-2">User Management</h5>
-          <p className="text-gray-700 mb-4 flex-grow">
+          <p className="text-gray-700 mb-4 grow">
             Manage users and roles for the system.
           </p>
           <Link
