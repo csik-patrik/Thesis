@@ -4,6 +4,7 @@ import {
   useState,
   type ReactNode,
   useEffect,
+  useCallback,
 } from "react";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
@@ -13,7 +14,7 @@ interface JwtPayload {
   displayname: string;
   email?: string;
   name?: string;
-  role?: string | string[]; // ✅ can be one or many
+  role?: string | string[];
   username?: string;
   department?: string;
   costCenter?: string;
@@ -26,7 +27,7 @@ interface User {
   displayname: string;
   email?: string;
   name?: string;
-  roles: string[]; // ✅ plural roles
+  roles: string[];
   username?: string;
   department?: string;
   costCenter?: string;
@@ -37,28 +38,35 @@ interface AuthContextType {
   user: User | null;
   login: (token: string) => void;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const login = (token: string) => {
+  // Wrap logout in useCallback to stabilize the function reference
+  const logout = useCallback(() => {
+    setUser(null);
+    localStorage.removeItem("user");
+  }, []);
+
+  // Wrap login in useCallback too
+  const login = useCallback((token: string) => {
     const decoded = jwtDecode<JwtPayload>(token);
 
-    // ✅ Handle different possible role claim keys
     const rolesRaw =
       decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ??
       decoded.role ??
       [];
 
-    // ✅ Normalize to array
     const roles = Array.isArray(rolesRaw)
       ? rolesRaw
       : rolesRaw
-      ? [rolesRaw]
-      : [];
+        ? [rolesRaw]
+        : [];
 
     const userData: User = {
       id: decoded.sub,
@@ -74,17 +82,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
-  };
+  }, []);
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-  };
-
-  // ✅ Restore user & auto logout on token expiry
+  // Restore user & auto logout on token expiry
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (!storedUser) return;
+
+    if (!storedUser) {
+      setIsLoading(false); // ✅ Done loading
+      return;
+    }
 
     try {
       const parsedUser = JSON.parse(storedUser);
@@ -106,6 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             logout();
           }, msUntilExpiry);
 
+          setIsLoading(false);
           return () => clearTimeout(timeout);
         }
       }
@@ -113,10 +121,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Error restoring user:", err);
       logout();
     }
-  }, []);
+
+    setIsLoading(false);
+  }, [logout]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
