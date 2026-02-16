@@ -9,10 +9,12 @@ const Modal = forwardRef<
   ModalHandle,
   {
     title: string;
+    buttonText: string;
+    buttonColor: "red" | "yellow";
     handleSubmit: () => void;
     children?: React.ReactNode;
   }
->(({ title, handleSubmit, children }, ref) => {
+>(({ title, buttonText, buttonColor, handleSubmit, children }, ref) => {
   const dialog = useRef<HTMLDialogElement>(null);
 
   useImperativeHandle(ref, () => {
@@ -38,7 +40,11 @@ const Modal = forwardRef<
           >
             Cancel
           </button>
-          <Button color="red" handleClick={handleSubmit} label="Delete" />
+          <Button
+            color={buttonColor}
+            handleClick={handleSubmit}
+            label={buttonText}
+          />
         </form>
       </div>
     </dialog>

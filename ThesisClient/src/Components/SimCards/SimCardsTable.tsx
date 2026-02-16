@@ -57,8 +57,10 @@ export default function SimCardsTable() {
     <>
       <Modal
         ref={dialog}
-        handleSubmit={() => handleDelete(selectedSimCardId)}
         title="Do you want to delete the selected sim card?"
+        buttonColor="red"
+        buttonText="Delete"
+        handleSubmit={() => handleDelete(selectedSimCardId)}
       />
       <div className="flex flex-col items-center justify-center p-6">
         <h1 className="text-3xl font-bold mb-6">Sim Cards</h1>

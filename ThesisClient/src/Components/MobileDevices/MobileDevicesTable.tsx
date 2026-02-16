@@ -91,6 +91,8 @@ export default function MobileDevicesTable() {
       <Modal
         ref={dialog}
         title="Do you want to delete the selected mobile device?"
+        buttonText="Delete"
+        buttonColor="red"
         handleSubmit={() => handleDelete(selectedMobileDeviceId)}
       />
       <div className="flex flex-col items-center justify-center p-6">

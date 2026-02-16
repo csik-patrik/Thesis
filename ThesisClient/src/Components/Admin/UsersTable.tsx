@@ -40,6 +40,8 @@ export default function Users() {
       <Modal
         ref={dialog}
         title="Do you want to delete the selected user?"
+        buttonText="Delete"
+        buttonColor="red"
         handleSubmit={() => handleDelete(selectedUserId)}
       ></Modal>
       <div className="flex flex-col items-center justify-center p-6">
