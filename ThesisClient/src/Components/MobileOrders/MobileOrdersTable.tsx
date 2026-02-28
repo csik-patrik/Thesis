@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
 import Table from "../Shared/Table";
+import Spinner from "../Shared/Spinner";
 import CustomLink from "../Shared/CustomLink";
 import Button from "../Shared/Button";
 
@@ -58,7 +59,7 @@ export default function MobileOrdersTable() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center p-6">
-        <h1 className="text-3xl font-bold mb-6">Loading...</h1>
+        <Spinner />
       </div>
     );
   }

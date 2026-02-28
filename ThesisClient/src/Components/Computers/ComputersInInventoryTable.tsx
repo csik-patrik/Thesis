@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "../../Auth/AuthContext";
 import CustomLink from "../Shared/CustomLink";
+import Spinner from "../Shared/Spinner";
 import Table from "../Shared/Table";
 import Button from "../Shared/Button";
 import type { ModalHandle } from "../Shared/Modal";
@@ -75,14 +76,9 @@ export default function ComputersInInventoryTable() {
     return categoryMatch;
   });
 
-  // Loading state
   if (loading) {
     return (
-      <div className="flex justify-center items-center bg-gray-100">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
-        <span className="sr-only">Loading...</span>
-      </div>
-    );
+      <Spinner />
   }
 
   // No data state

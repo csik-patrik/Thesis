@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
+import Spinner from "../Shared/Spinner";
 
 import type {
   MobileOrderResponse,
@@ -201,7 +202,7 @@ function MobileOrderView() {
   );
 
   if (loading)
-    return <p className="text-center mt-10 text-neutral-600">Loading...</p>;
+    return <Spinner />;
 
   if (!order)
     return (

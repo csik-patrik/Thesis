@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import Spinner from "../Components/Shared/Spinner";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -9,18 +10,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        Loading...
-      </div>
-    );
+    return <Spinner fullPage />;
   }
 
   if (!user || !user.token) {
