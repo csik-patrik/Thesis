@@ -1,5 +1,12 @@
 import { Link } from "react-router-dom";
 
+const styles: Record<string, string> = {
+  green:  "px-5 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm",
+  gray:   "px-5 py-2.5 text-sm font-medium text-gray-600 hover:text-gray-900 bg-white hover:bg-gray-50 border border-gray-200 rounded-xl transition-colors",
+  blue:   "px-5 py-2.5 text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-colors shadow-sm",
+  yellow: "px-5 py-2.5 text-sm font-semibold bg-amber-500 hover:bg-amber-400 text-white rounded-xl transition-colors shadow-sm",
+};
+
 export default function CustomLink({
   to,
   label,
@@ -9,15 +16,8 @@ export default function CustomLink({
   label: string;
   color: "green" | "gray" | "blue" | "yellow";
 }) {
-  let classes = "text-white px-2 py-1 rounded transition cursor-pointer";
-
-  if (color == "green") classes += " bg-green-600";
-  else if (color == "gray") classes += " bg-gray-300";
-  else if (color == "blue") classes += " bg-blue-600";
-  else if (color == "yellow") classes += " bg-yellow-500";
-
   return (
-    <Link to={to} className={classes}>
+    <Link to={to} className={styles[color]}>
       {label}
     </Link>
   );

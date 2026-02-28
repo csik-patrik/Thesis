@@ -17,19 +17,20 @@ export default function Input({
   required,
   handleChange,
 }: InputProps) {
-  const classes =
-    "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500";
   return (
-    <div className="mb-2">
-      <label htmlFor={fieldName}>{title}</label>
+    <div className="flex flex-col gap-1.5 mb-4">
+      <label htmlFor={fieldName} className="text-sm font-medium text-gray-700">
+        {title}
+      </label>
       <input
+        id={fieldName}
         type={type}
         name={fieldName}
-        className={classes}
         placeholder={placeHolder}
         value={value}
         onChange={handleChange}
         required={required}
+        className="w-full px-3 py-2.5 text-sm bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors placeholder:text-gray-400 disabled:bg-gray-50 disabled:text-gray-500"
       />
     </div>
   );
