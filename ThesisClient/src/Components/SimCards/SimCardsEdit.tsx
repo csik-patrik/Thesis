@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Spinner from "../Shared/Spinner";
 
 interface SimCard {
   id: number;
@@ -88,7 +89,7 @@ export default function SimCardsEdit() {
     }
   };
 
-  if (loading) return <p className="text-center mt-5">Loading...</p>;
+  if (loading) return <Spinner />;
 
   if (!simCard)
     return <p className="text-center text-danger mt-5">Sim card not found.</p>;

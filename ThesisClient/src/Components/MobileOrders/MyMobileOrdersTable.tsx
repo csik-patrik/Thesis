@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
 import Table from "../Shared/Table";
+import Spinner from "../Shared/Spinner";
 import CustomLink from "../Shared/CustomLink";
 import Button from "../Shared/Button";
 
@@ -66,7 +67,7 @@ export default function MyMobileOrdersTable() {
       : orders.filter((order) => order.status === statusFilter);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Spinner />;
   }
 
   if (orders.length == 0) {

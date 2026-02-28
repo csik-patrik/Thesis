@@ -4,6 +4,7 @@ import type { MobileDeviceCategory } from "../../Types/MobileDeviceCategory";
 import axios from "axios";
 import Input from "../Form/Input";
 import { toast } from "react-toastify";
+import Spinner from "../Shared/Spinner";
 import Form from "../Form/Form";
 
 interface CreateMobileDeviceCategory {
@@ -68,7 +69,7 @@ export default function EditMobileDeviceCategory() {
     }
   };
 
-  if (loading) return <p className="text-center mt-5">Loading...</p>;
+  if (loading) return <Spinner />;
 
   if (!category)
     return <p className="text-center text-danger mt-5">Category not found.</p>;
