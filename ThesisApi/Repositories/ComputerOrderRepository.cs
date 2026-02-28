@@ -89,14 +89,14 @@ namespace ThesisApi.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<ComputerOrder?>> GetAllWaitingForApprovalAsync(string username)
+        public async Task<IEnumerable<ComputerOrder?>> GetAllForApprovalAsync(string username)
         {
             return await _context.ComputerOrders
                 .Include(x => x.Customer)
                 .Include(x => x.ComputerCategory)
                 .Include(x => x.Computer)
                 .Include(x => x.Approver)
-                .Where(x => x.Approver.Username == username && x.Status == "Waiting for approval")
+                .Where(x => x.Approver.Username == username)
                 .ToListAsync();
         }
 

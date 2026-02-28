@@ -113,7 +113,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computer-orders/approval")]
-        public async Task<IActionResult> GetAllWaitingForApproval()
+        public async Task<IActionResult> GetAllForApproval()
         {
             try
             {
@@ -122,7 +122,7 @@ namespace ThesisApi.Controllers
                 if (string.IsNullOrEmpty(username))
                     return Unauthorized("User is not logged in.");
 
-                var orders = await _computerOrderRepository.GetAllWaitingForApprovalAsync(username);
+                var orders = await _computerOrderRepository.GetAllForApprovalAsync(username);
 
                 var response = orders.Select(_mapper.Map<ComputerOrderResponse>).ToList();
 

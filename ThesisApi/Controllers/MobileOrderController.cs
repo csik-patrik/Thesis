@@ -216,7 +216,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-orders/approval")]
-        public async Task<IActionResult> GetAllWaitingForApproval()
+        public async Task<IActionResult> GetAllForApproval()
         {
             try
             {
@@ -225,7 +225,7 @@ namespace ThesisApi.Controllers
                 if (string.IsNullOrEmpty(username))
                     return Unauthorized("User is not logged in.");
 
-                var orders = await _mobileOrderRepository.GetAllWaitingForApprovalAsync(username);
+                var orders = await _mobileOrderRepository.GetAllForApprovalAsync(username);
 
                 var response = orders.Select(_mapper.Map<MobileOrderResponse>).ToList();
 
