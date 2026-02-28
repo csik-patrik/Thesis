@@ -10,8 +10,8 @@ export default function NavItem({
   mobile?: boolean;
 }) {
   const classes = mobile
-    ? "py-1.5 px-2 text-white hover:text-amber-300 whitespace-nowrap block"
-    : "py-2 px-3 mx-2 text-neutral-700 hover:text-neutral-800 whitespace-nowrap";
+    ? "block py-1.5 px-2 text-sm text-white/90 hover:text-white transition-colors whitespace-nowrap"
+    : "block px-4 py-2 text-sm text-gray-600 hover:text-teal-700 hover:bg-teal-50 rounded-lg transition-colors whitespace-nowrap";
   return (
     <NavLink to={to} className={classes}>
       {title}
