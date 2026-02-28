@@ -17,6 +17,7 @@ namespace ThesisApi.Data
         public DbSet<UserRole> UserRoles { get; set; }
 
         public DbSet<MobileDeviceCategory> MobileDeviceCategories { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,6 +57,12 @@ namespace ThesisApi.Data
                 .HasOne(o => o.Approver)
                 .WithMany(u => u.ApproverMobileOrders)
                 .HasForeignKey(o => o.ApproverId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.User)
+                .WithMany()
+                .HasForeignKey(n => n.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

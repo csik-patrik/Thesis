@@ -17,6 +17,8 @@ namespace ThesisApi.Services
             services.AddScoped<IComputerCategoryRepository, ComputerCategoryRepository>();
             services.AddScoped<IComputerRepository, ComputerRepository>();
             services.AddScoped<IComputerOrderRepository, ComputerOrderRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<INotificationService, NotificationService>();
             services.AddSingleton<TokenGenerator>();
             return services;
         }

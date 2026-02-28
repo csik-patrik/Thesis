@@ -3,6 +3,7 @@ import AdminItems from "./AdminItems";
 import ApproverItems from "./ApproverItems";
 import OrderItems from "./OrderItems";
 import UserItems from "./UserItems";
+import NotificationBell from "./NotificationBell";
 import { NavLink } from "react-router-dom";
 
 export default function NavItems() {
@@ -24,6 +25,7 @@ export default function NavItems() {
             {user.roles.includes("Group leader") && <ApproverItems />}
           </div>
           <div className="ms-auto flex items-center gap-2">
+            <NotificationBell />
             <UserItems displayname={user.displayname} />
             <NavLink to="/" onClick={logout} className={btnClasses}>
               Logout

@@ -18,6 +18,7 @@ namespace ThesisApi.Controllers
         private readonly IMobileDeviceCategoryRepository _mobileDeviceCategoryRepository;
         private readonly ISimCallControlGroupRepository _simCallControlGroupRepository;
         private readonly ISimCardRepository _simCardRepository;
+        private readonly INotificationService _notificationService;
         private readonly IMapper _mapper;
         public MobileOrderController(
             IUserRepository userRepository,
@@ -26,6 +27,7 @@ namespace ThesisApi.Controllers
             IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
             ISimCallControlGroupRepository simCallControlGroupRepository,
             ISimCardRepository simCardRepository,
+            INotificationService notificationService,
             IMapper mapper)
         {
             _userRepository = userRepository;
@@ -34,6 +36,7 @@ namespace ThesisApi.Controllers
             _mobileDeviceCategoryRepository = mobileDeviceCategoryRepository;
             _simCallControlGroupRepository = simCallControlGroupRepository;
             _simCardRepository = simCardRepository;
+            _notificationService = notificationService;
             _mapper = mapper;
         }
 
@@ -49,6 +52,10 @@ namespace ThesisApi.Controllers
                     _simCallControlGroupRepository);
 
                 await _mobileOrderRepository.CreateAsync(order);
+
+                await _notificationService.SendAsync(
+                    order.ApproverId,
+                    $"New mobile order from {order.Customer.DisplayName} is waiting for your approval.");
 
                 return Ok();
             }
@@ -133,6 +140,10 @@ namespace ThesisApi.Controllers
 
                 await _mobileOrderRepository.AllocateMobileDeviceToOrderAsync(mobileOrder, mobileDevice);
 
+                await _notificationService.SendAsync(
+                    mobileOrder.CustomerId,
+                    "A mobile device has been allocated to your order.");
+
                 return Ok();
             }
             catch (Exception e)
@@ -186,6 +197,10 @@ namespace ThesisApi.Controllers
                     return StatusCode(400, "Allocate a sim card first!");
 
                 await _mobileOrderRepository.DeliverOrderAsync(mobileOrder);
+
+                await _notificationService.SendAsync(
+                    mobileOrder.CustomerId,
+                    "Your mobile order has been delivered.");
 
                 return Ok();
             }
@@ -258,7 +273,12 @@ namespace ThesisApi.Controllers
                 if (order.Status != "Waiting for approval")
                     throw new ValidationException("This order already has a decision!");
 
-                var orders = await _mobileOrderRepository.MakeDecisionAsGroupLeaderAsync(order, decision);
+                await _mobileOrderRepository.MakeDecisionAsGroupLeaderAsync(order, decision);
+
+                var message = decision
+                    ? "Your mobile order has been approved."
+                    : "Your mobile order has been rejected.";
+                await _notificationService.SendAsync(order.CustomerId, message);
 
                 return Ok();
             }

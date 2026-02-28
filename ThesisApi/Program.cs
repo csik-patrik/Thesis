@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ThesisApi.Data;
+using ThesisApi.Hubs;
 using ThesisApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +48,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddSignalR();
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddAutoMapper(typeof(AutomapperProfiles));
@@ -71,4 +74,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+app.MapHub<NotificationHub>("/hubs/notifications");
 app.Run();

@@ -16,6 +16,7 @@ import SimCardsEdit from "./Components/SimCards/SimCardsEdit.tsx";
 import CreateMobileDeviceCategory from "./Components/Admin/CreateMobileDeviceCategory.tsx";
 import EditMobileDeviceCategory from "./Components/Admin/EditMobileDeviceCategory.tsx";
 import { AuthProvider } from "../src/Auth/AuthContext.tsx";
+import { NotificationProvider } from "../src/Auth/NotificationContext.tsx";
 import UsersTable from "./Components/Admin/UsersTable.tsx";
 import UserCreate from "./Components/Admin/UserCreate.tsx";
 import MobileDevicesDeployedTable from "./Components/MobileDevices/MobileDevicesDeployedTable.tsx";
@@ -44,6 +45,7 @@ function App() {
   return (
     <>
       <AuthProvider>
+        <NotificationProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
@@ -302,6 +304,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+        </NotificationProvider>
         <ToastContainer position="top-right" autoClose={3000} />
       </AuthProvider>
     </>

@@ -18,6 +18,7 @@ namespace ThesisApi.Controllers
         private readonly IComputerOrderRepository _computerOrderRepository;
         private readonly IUserRepository _userRepository;
         private readonly IComputerCategoryRepository _computerCategoryRepository;
+        private readonly INotificationService _notificationService;
         private readonly IMapper _mapper;
 
         public ComputerOrderController(
@@ -25,6 +26,7 @@ namespace ThesisApi.Controllers
             IComputerOrderRepository computerOrderRepository,
             IUserRepository userRepository,
             IComputerCategoryRepository computerCategoryRepository,
+            INotificationService notificationService,
             IMapper mapper
         )
         {
@@ -32,6 +34,7 @@ namespace ThesisApi.Controllers
             _computerOrderRepository = computerOrderRepository;
             _userRepository = userRepository;
             _computerCategoryRepository = computerCategoryRepository;
+            _notificationService = notificationService;
             _mapper = mapper;
         }
 
@@ -46,6 +49,10 @@ namespace ThesisApi.Controllers
                     _computerCategoryRepository);
 
                 await _computerOrderRepository.CreateAsync(order);
+
+                await _notificationService.SendAsync(
+                    order.ApproverId,
+                    $"New computer order from {order.Customer.DisplayName} is waiting for your approval.");
 
                 return Ok();
             }
@@ -155,7 +162,12 @@ namespace ThesisApi.Controllers
                 if (order.Status != "Waiting for approval")
                     throw new ValidationException("This order already has a decision!");
 
-                var orders = await _computerOrderRepository.MakeDecisionAsGroupLeaderAsync(order, decision);
+                await _computerOrderRepository.MakeDecisionAsGroupLeaderAsync(order, decision);
+
+                var message = decision
+                    ? "Your computer order has been approved."
+                    : "Your computer order has been rejected.";
+                await _notificationService.SendAsync(order.CustomerId, message);
 
                 return Ok();
             }
@@ -183,6 +195,10 @@ namespace ThesisApi.Controllers
 
                 await _computerOrderRepository.AllocateComputerToOrder(computerOrder, computer);
 
+                await _notificationService.SendAsync(
+                    computerOrder.CustomerId,
+                    "A computer has been allocated to your order.");
+
                 return Ok();
             }
             catch (Exception e)
@@ -204,6 +220,10 @@ namespace ThesisApi.Controllers
                     return StatusCode(400, "Allocate a computer first!");
 
                 await _computerOrderRepository.DeliverOrderAsync(order);
+
+                await _notificationService.SendAsync(
+                    order.CustomerId,
+                    "Your computer order has been delivered.");
 
                 return Ok();
             }
