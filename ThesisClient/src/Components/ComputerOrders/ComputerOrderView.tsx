@@ -39,7 +39,7 @@ export default function ComputerOrderView() {
     };
 
     fetchOrder();
-  }, [id]);
+  }, [id, user]);
 
   useEffect(() => {
     if (!user || !user.token) return;
@@ -56,7 +56,7 @@ export default function ComputerOrderView() {
         toast.error("Error fetching allocable devices.");
         console.error("Error fetching allocable devices:", err);
       });
-  }, [order]);
+  }, [order, user]);
 
   const handleAllocateComputer = async (deviceId: number) => {
     try {
@@ -93,6 +93,8 @@ export default function ComputerOrderView() {
     } catch (err) {
       toast.error("Failed to allocate device.");
       console.error("Allocation error:", err);
+    } finally {
+      setAllocating(null);
     }
   };
 
@@ -173,25 +175,25 @@ export default function ComputerOrderView() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+      <div className="flex items-center justify-center">
+        <div className="size-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
 
   if (!order)
     return (
-      <div className="flex justify-center items-center">
-        <p className="text-red-600 text-lg">Order not found.</p>
+      <div className="flex items-center justify-center">
+        <p className="text-lg text-red-600">Order not found.</p>
       </div>
     );
 
   return (
     <div className="container mx-auto p-6">
-      <div className="grid lg:grid-cols-12 gap-6">
+      <div className="grid gap-6 lg:grid-cols-12">
         {/* 🧾 Order Details Section */}
         <div className="lg:col-span-8">
-          <h2 className="text-2xl font-semibold mb-4">🧾 Order Details</h2>
-          <div className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="mb-4 text-2xl font-semibold">🧾 Order Details</h2>
+          <div className="rounded-lg bg-white p-6 shadow-md">
             <dl className="grid grid-cols-1 gap-3">
               <div className="flex justify-between">
                 <dt className="font-medium text-gray-700">Order ID:</dt>
@@ -221,7 +223,7 @@ export default function ComputerOrderView() {
                 <dt className="font-medium text-gray-700">Status:</dt>
                 <dd>
                   <span
-                    className={`px-2 py-1 rounded-full text-sm font-semibold ${
+                    className={`rounded-full px-2 py-1 text-sm font-semibold ${
                       order.status === "Approved"
                         ? "bg-green-200 text-green-800"
                         : order.status === "Rejected by group leader"
@@ -247,7 +249,7 @@ export default function ComputerOrderView() {
             {user?.roles.includes("Admin") && (
               <Link
                 to="/computer-orders"
-                className="px-4 py-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-50 transition"
+                className="rounded border border-blue-500 px-4 py-2 text-blue-500 transition hover:bg-blue-50"
               >
                 ⬅ Back to Orders
               </Link>
@@ -257,7 +259,7 @@ export default function ComputerOrderView() {
               <>
                 <Link
                   to="/computer-orders/approval"
-                  className="px-4 py-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-50 transition"
+                  className="rounded border border-blue-500 px-4 py-2 text-blue-500 transition hover:bg-blue-50"
                 >
                   ⬅ Back to Orders
                 </Link>
@@ -265,13 +267,13 @@ export default function ComputerOrderView() {
                 {order.status === "Waiting for approval" && (
                   <>
                     <button
-                      className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
+                      className="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500"
                       onClick={() => handleDecision(order.id, true)}
                     >
                       ✅ Approve
                     </button>
                     <button
-                      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500"
+                      className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-500"
                       onClick={() => handleDecision(order.id, false)}
                     >
                       ❌ Reject
@@ -285,7 +287,7 @@ export default function ComputerOrderView() {
               order.computer &&
               order.status !== "Delivered" && (
                 <button
-                  className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
+                  className="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500"
                   onClick={handleDeliver}
                 >
                   🚚 Deliver Device
@@ -299,10 +301,10 @@ export default function ComputerOrderView() {
           <div className="lg:col-span-4">
             {order.computer ? (
               <>
-                <h2 className="text-xl font-semibold mb-3">
+                <h2 className="mb-3 text-xl font-semibold">
                   💻 Allocated Device
                 </h2>
-                <div className="bg-white shadow-md rounded-lg p-4">
+                <div className="rounded-lg bg-white p-4 shadow-md">
                   <ul className="space-y-2">
                     <li>
                       <strong>Hostname:</strong> {order.computer.hostname}
@@ -322,7 +324,7 @@ export default function ComputerOrderView() {
               </>
             ) : (
               <>
-                <h2 className="text-xl font-semibold mb-3">
+                <h2 className="mb-3 text-xl font-semibold">
                   🧩 Allocate Device
                 </h2>
                 <input
@@ -330,9 +332,9 @@ export default function ComputerOrderView() {
                   placeholder="🔍 Search by hostname..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 mb-3 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                  className="mb-3 w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gray-400"
                 />
-                <div className="bg-white shadow-md rounded-lg p-3">
+                <div className="rounded-lg bg-white p-3 shadow-md">
                   {filteredDevices.length === 0 ? (
                     <p className="text-gray-500">No available devices found.</p>
                   ) : (
@@ -352,11 +354,11 @@ export default function ComputerOrderView() {
                           <button
                             disabled={allocating === device.id}
                             onClick={() => handleAllocateComputer(device.id)}
-                            className={`mt-2 self-end px-3 py-1 rounded text-white ${
+                            className={`mt-2 self-end rounded px-3 py-1 text-sm text-white ${
                               allocating === device.id
-                                ? "bg-gray-400 cursor-not-allowed"
+                                ? "cursor-not-allowed bg-gray-400"
                                 : "bg-green-600 hover:bg-green-500"
-                            } text-sm`}
+                            }`}
                           >
                             {allocating === device.id
                               ? "Allocating..."
