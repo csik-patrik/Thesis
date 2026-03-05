@@ -5,6 +5,7 @@ import axios from "axios";
 import { useAuth } from "../../Auth/AuthContext";
 import CustomLink from "../Shared/CustomLink";
 import Spinner from "../Shared/Spinner";
+import Spinner from "../Shared/Spinner";
 import Table from "../Shared/Table";
 import Button from "../Shared/Button";
 import type { ModalHandle } from "../Shared/Modal";
@@ -77,6 +78,8 @@ export default function ComputersInInventoryTable() {
   });
 
   if (loading) {
+    return (
+      <Spinner />
     return <Spinner />;
   }
 

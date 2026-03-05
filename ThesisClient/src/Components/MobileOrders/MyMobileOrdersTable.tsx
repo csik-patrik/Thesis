@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
+<<<<<<< HEAD
 import Spinner from "../Shared/Spinner";
 
 // ── Status badge ──────────────────────────────────────────────────────────
@@ -25,6 +26,12 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 // ── Component ─────────────────────────────────────────────────────────────
+=======
+import Table from "../Shared/Table";
+import Spinner from "../Shared/Spinner";
+import CustomLink from "../Shared/CustomLink";
+import Button from "../Shared/Button";
+>>>>>>> b5b8d170148db73a3d99658052c237c45d4b3a8f
 
 export default function MyMobileOrdersTable() {
   const { user } = useAuth();
@@ -73,7 +80,28 @@ export default function MyMobileOrdersTable() {
       ? orders
       : orders.filter((o) => o.status === statusFilter);
 
+<<<<<<< HEAD
   if (isLoading) return <Spinner />;
+=======
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (orders.length == 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-6">
+        <h1 className="text-3xl font-bold mb-6">
+          You haven't started an order yet!
+        </h1>
+        <CustomLink
+          color="green"
+          to="/mobile-orders/create"
+          label="Create an order"
+        />
+      </div>
+    );
+  }
+>>>>>>> b5b8d170148db73a3d99658052c237c45d4b3a8f
 
   return (
     <div className="min-h-screen bg-gray-50">
