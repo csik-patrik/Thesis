@@ -87,29 +87,9 @@ export default function ComputerOrdersTable() {
               Computer Orders
             </h1>
             <p className="text-sm text-gray-500 mt-1">
-              Track and manage your computer requests
+              Track and manage computer requests
             </p>
           </div>
-          <Link
-            to="/computer-orders/create"
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            New Order
-          </Link>
         </div>
         {/* ── Empty state ── */}
         {orders.length === 0 ? (
