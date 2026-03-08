@@ -179,7 +179,7 @@ export default function MyMobileOrdersTable() {
                   <thead>
                     <tr className="border-b border-gray-100 bg-gray-50/70">
                       {[
-                        "#",
+                        "Id",
                         "Customer",
                         "Device type",
                         "Pickup location",
