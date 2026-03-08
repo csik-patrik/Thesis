@@ -6,7 +6,6 @@ import axios from "axios";
 import type { ModalHandle } from "../Shared/Modal";
 import Modal from "../Shared/Modal";
 import Spinner from "../Shared/Spinner";
-import { Link } from "react-router-dom";
 import Button from "../Shared/Button";
 
 export default function MobileDevicesDeployedTable() {
@@ -184,18 +183,11 @@ export default function MobileDevicesDeployedTable() {
                 </svg>
               </div>
               <h3 className="text-base font-semibold text-gray-900 mb-1">
-                No orders yet
+                Not found any deployed mobiles
               </h3>
               <p className="text-sm text-gray-500 mb-6 max-w-xs">
-                You haven't submitted any mobile device requests. Create your
-                first one to get started.
+                There aren't any deployed mobiles yet.
               </p>
-              <Link
-                to="/mobile-orders/create"
-                className="px-5 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
-              >
-                Create your first order
-              </Link>
             </div>
           ) : (
             <>
