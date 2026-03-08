@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.MobileOrders;
 using ThesisApi.Contracts.Responses.MobileOrders;
@@ -10,6 +11,7 @@ namespace ThesisApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class MobileOrderController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
