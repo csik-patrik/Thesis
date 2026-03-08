@@ -4,34 +4,23 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
-<<<<<<< HEAD
 import Spinner from "../Shared/Spinner";
-
-// ── Status badge ──────────────────────────────────────────────────────────
-
-const statusStyles: Record<string, string> = {
-  Pending:   "bg-amber-50 text-amber-700 border border-amber-200",
-  Approved:  "bg-blue-50 text-blue-700 border border-blue-200",
-  Delivered: "bg-teal-50 text-teal-700 border border-teal-200",
-  Rejected:  "bg-red-50 text-red-700 border border-red-200",
-};
+import CustomLink from "../Shared/CustomLink";
 
 function StatusBadge({ status }: { status: string }) {
-  const cls = statusStyles[status] ?? "bg-gray-50 text-gray-600 border border-gray-200";
+  const colorMap: Record<string, string> = {
+    Pending: "bg-yellow-100 text-yellow-700",
+    Approved: "bg-blue-100 text-blue-700",
+    Delivered: "bg-green-100 text-green-700",
+    Rejected: "bg-red-100 text-red-700",
+  };
+  const colors = colorMap[status] ?? "bg-gray-100 text-gray-600";
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${cls}`}>
+    <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${colors}`}>
       {status}
     </span>
   );
 }
-
-// ── Component ─────────────────────────────────────────────────────────────
-=======
-import Table from "../Shared/Table";
-import Spinner from "../Shared/Spinner";
-import CustomLink from "../Shared/CustomLink";
-import Button from "../Shared/Button";
->>>>>>> b5b8d170148db73a3d99658052c237c45d4b3a8f
 
 export default function MyMobileOrdersTable() {
   const { user } = useAuth();
@@ -80,9 +69,6 @@ export default function MyMobileOrdersTable() {
       ? orders
       : orders.filter((o) => o.status === statusFilter);
 
-<<<<<<< HEAD
-  if (isLoading) return <Spinner />;
-=======
   if (isLoading) {
     return <Spinner />;
   }
@@ -101,13 +87,10 @@ export default function MyMobileOrdersTable() {
       </div>
     );
   }
->>>>>>> b5b8d170148db73a3d99658052c237c45d4b3a8f
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-5xl mx-auto px-6 py-10">
-
-        {/* ── Page header ── */}
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-6xl mx-auto">
         <div className="flex items-start justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">My Mobile Orders</h1>
@@ -125,7 +108,6 @@ export default function MyMobileOrdersTable() {
             New Order
           </Link>
         </div>
-
         {/* ── Empty state ── */}
         {orders.length === 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center py-20 text-center px-6">
