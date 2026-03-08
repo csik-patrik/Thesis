@@ -6,21 +6,7 @@ import type { MobileOrderResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
 import Spinner from "../Shared/Spinner";
 import CustomLink from "../Shared/CustomLink";
-
-function StatusBadge({ status }: { status: string }) {
-  const colorMap: Record<string, string> = {
-    Pending: "bg-yellow-100 text-yellow-700",
-    Approved: "bg-blue-100 text-blue-700",
-    Delivered: "bg-green-100 text-green-700",
-    Rejected: "bg-red-100 text-red-700",
-  };
-  const colors = colorMap[status] ?? "bg-gray-100 text-gray-600";
-  return (
-    <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${colors}`}>
-      {status}
-    </span>
-  );
-}
+import StatusBadge from "../Shared/StatusBadge";
 
 export default function MyMobileOrdersTable() {
   const { user } = useAuth();
@@ -29,24 +15,30 @@ export default function MyMobileOrdersTable() {
   const [statusFilter, setStatusFilter] = useState<string>("All");
 
   useEffect(() => {
-    try {
-      if (!user || !user.token) return;
-      setIsLoading(true);
-      axios
-        .get<MobileOrderResponse[]>(
+    if (!user || !user.token) return;
+
+    setIsLoading(true);
+
+    const fetchOrders = async () => {
+      try {
+        const res = await axios.get<MobileOrderResponse[]>(
           "http://localhost:5268/mobile-orders/my-orders",
-          { headers: { Authorization: `Bearer ${user.token}` } },
-        )
-        .then((res) => setOrders(res.data))
-        .catch((err) => {
-          toast.error("Failed to fetch mobile orders.");
-          console.log(err);
-        })
-        .finally(() => setIsLoading(false));
-    } catch (err) {
-      console.error("Error loading mobile orders:", err);
-      toast.error("Error loading mobile orders:");
-    }
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          },
+        );
+
+        setOrders(res.data);
+      } catch (err) {
+        console.error("Error loading mobile orders:", err);
+
+        toast.error("Failed to load mobile orders.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrders();
   }, [user]);
 
   const handleDelete = async (id: number) => {
@@ -93,7 +85,9 @@ export default function MyMobileOrdersTable() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">My Mobile Orders</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              My Mobile Orders
+            </h1>
             <p className="text-sm text-gray-500 mt-1">
               Track and manage your mobile device requests
             </p>
@@ -102,8 +96,19 @@ export default function MyMobileOrdersTable() {
             to="/mobile-orders/create"
             className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             New Order
           </Link>
@@ -112,13 +117,27 @@ export default function MyMobileOrdersTable() {
         {orders.length === 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center py-20 text-center px-6">
             <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-7 w-7 text-teal-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.8}
+                  d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                />
               </svg>
             </div>
-            <h3 className="text-base font-semibold text-gray-900 mb-1">No orders yet</h3>
+            <h3 className="text-base font-semibold text-gray-900 mb-1">
+              No orders yet
+            </h3>
             <p className="text-sm text-gray-500 mb-6 max-w-xs">
-              You haven't submitted any mobile device requests. Create your first one to get started.
+              You haven't submitted any mobile device requests. Create your
+              first one to get started.
             </p>
             <Link
               to="/mobile-orders/create"
@@ -142,7 +161,9 @@ export default function MyMobileOrdersTable() {
                   }`}
                 >
                   {s}
-                  <span className={`ml-1.5 text-xs ${statusFilter === s ? "text-teal-200" : "text-gray-400"}`}>
+                  <span
+                    className={`ml-1.5 text-xs ${statusFilter === s ? "text-teal-200" : "text-gray-400"}`}
+                  >
                     {s === "All"
                       ? orders.length
                       : orders.filter((o) => o.status === s).length}
@@ -157,7 +178,14 @@ export default function MyMobileOrdersTable() {
                 <table className="min-w-full">
                   <thead>
                     <tr className="border-b border-gray-100 bg-gray-50/70">
-                      {["#", "Customer", "Device type", "Pickup location", "Status", "Actions"].map((h) => (
+                      {[
+                        "#",
+                        "Customer",
+                        "Device type",
+                        "Pickup location",
+                        "Status",
+                        "Actions",
+                      ].map((h) => (
                         <th
                           key={h}
                           className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-widest text-gray-400"
@@ -173,10 +201,18 @@ export default function MyMobileOrdersTable() {
                         key={d.id}
                         className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60 transition-colors"
                       >
-                        <td className="px-5 py-3.5 text-sm text-gray-400 font-mono">{d.id}</td>
-                        <td className="px-5 py-3.5 text-sm text-gray-700 font-medium">{d.customer.displayName}</td>
-                        <td className="px-5 py-3.5 text-sm text-gray-600">{d.mobileDeviceCategory.name}</td>
-                        <td className="px-5 py-3.5 text-sm text-gray-600">{d.pickupLocation}</td>
+                        <td className="px-5 py-3.5 text-sm text-gray-400 font-mono">
+                          {d.id}
+                        </td>
+                        <td className="px-5 py-3.5 text-sm text-gray-700 font-medium">
+                          {d.customer.displayName}
+                        </td>
+                        <td className="px-5 py-3.5 text-sm text-gray-600">
+                          {d.mobileDeviceCategory.name}
+                        </td>
+                        <td className="px-5 py-3.5 text-sm text-gray-600">
+                          {d.pickupLocation}
+                        </td>
                         <td className="px-5 py-3.5">
                           <StatusBadge status={d.status} />
                         </td>
