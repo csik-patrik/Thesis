@@ -6,8 +6,9 @@ import { useAuth } from "../../Auth/AuthContext";
 import Spinner from "../Shared/Spinner";
 import type { ModalHandle } from "../Shared/Modal";
 import Modal from "../Shared/Modal";
-import { Link } from "react-router-dom";
 import StatusBadge from "../Shared/StatusBadge";
+import CustomLink2 from "../Shared/CustomLink2";
+import Button from "../Shared/Button";
 
 export default function ComputersInInventoryTable() {
   const { user } = useAuth();
@@ -83,30 +84,6 @@ export default function ComputersInInventoryTable() {
     return <Spinner />;
   }
 
-  if (computers.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center p-6">
-        <h1 className="text-3xl font-bold mb-6">
-          There aren't any computers in the database yet!
-        </h1>
-        <div className="flex gap-2">
-          <Link
-            to="/computers/create"
-            className="px-5 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
-          >
-            Create
-          </Link>
-          <Link
-            to="/computers/create-bulk"
-            className="px-5 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
-          >
-            Create bulk
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       <Modal
@@ -126,84 +103,28 @@ export default function ComputersInInventoryTable() {
               <p className="text-sm text-gray-500 mt-1">Manage computers</p>
             </div>
             <div className="flex gap-2">
-              <Link
-                to="/computers/create"
-                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                Create new
-              </Link>
-              <Link
-                to="/computers/create-bulk"
-                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                Create bulk
-              </Link>
+              <CustomLink2 to="/computers/create" label="Create" />
+              <CustomLink2 to="/computers/create-bulk" label="Create bulk" />
             </div>
           </div>
           {/* ── Empty state ── */}
           {computers.length === 0 ? (
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center py-20 text-center px-6">
-              <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-7 w-7 text-teal-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.8}
-                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
+              <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4"></div>
               <h3 className="text-base font-semibold text-gray-900 mb-1">
-                No orders yet
+                No computers yet!
               </h3>
               <p className="text-sm text-gray-500 mb-6 max-w-xs">
-                You haven't submitted any computer requests. Create your first
-                one to get started.
+                There aren't any computers in the database yet! Create your
+                first one!
               </p>
-              <Link
+              <CustomLink2
                 to="/computer-orders/create"
-                className="px-5 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
-              >
-                Create your first order
-              </Link>
+                label="Create a new computer"
+              />
             </div>
           ) : (
             <>
-              {/* ── Status filter tabs ── */}
               <div className="flex flex-wrap gap-2 mb-5">
                 {["All", ...categories].map((s) => (
                   <button
@@ -228,7 +149,6 @@ export default function ComputersInInventoryTable() {
                 ))}
               </div>
 
-              {/* ── Table card ── */}
               <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="min-w-full">
@@ -282,12 +202,11 @@ export default function ComputersInInventoryTable() {
                           </td>
                           <td className="px-5 py-3.5">
                             <div className="flex items-center gap-3">
-                              <button
-                                onClick={() => showModal(d.id)}
-                                className="text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition-colors"
-                              >
-                                Delete
-                              </button>
+                              <Button
+                                color="red"
+                                handleClick={() => showModal(d.id)}
+                                label="Delete"
+                              />
                             </div>
                           </td>
                         </tr>
