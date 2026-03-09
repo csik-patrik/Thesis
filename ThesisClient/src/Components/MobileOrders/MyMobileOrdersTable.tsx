@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
 import Spinner from "../Shared/Spinner";
-import CustomLink from "../Shared/CustomLink";
 import StatusBadge from "../Shared/StatusBadge";
+import CustomLink2 from "../Shared/CustomLink2";
 
 export default function MyMobileOrdersTable() {
   const { user } = useAuth();
@@ -65,21 +65,6 @@ export default function MyMobileOrdersTable() {
     return <Spinner />;
   }
 
-  if (orders.length == 0) {
-    return (
-      <div className="flex flex-col items-center justify-center p-6">
-        <h1 className="text-3xl font-bold mb-6">
-          You haven't started an order yet!
-        </h1>
-        <CustomLink
-          color="green"
-          to="/mobile-orders/create"
-          label="Create an order"
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
@@ -92,26 +77,7 @@ export default function MyMobileOrdersTable() {
               Track and manage your mobile device requests
             </p>
           </div>
-          <Link
-            to="/mobile-orders/create"
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            New Order
-          </Link>
+          <CustomLink2 to="/mobile-orders/create" label="New order" />
         </div>
         {/* ── Empty state ── */}
         {orders.length === 0 ? (
@@ -139,12 +105,10 @@ export default function MyMobileOrdersTable() {
               You haven't submitted any mobile device requests. Create your
               first one to get started.
             </p>
-            <Link
+            <CustomLink2
               to="/mobile-orders/create"
-              className="px-5 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
-            >
-              Create your first order
-            </Link>
+              label="Create your first order"
+            />
           </div>
         ) : (
           <>

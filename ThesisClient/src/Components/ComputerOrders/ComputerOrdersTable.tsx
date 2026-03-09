@@ -68,16 +68,6 @@ export default function ComputerOrdersTable() {
     return <Spinner />;
   }
 
-  if (orders.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center p-6">
-        <h1 className="text-3xl font-bold mb-6">
-          There aren't any orders yet!
-        </h1>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
@@ -117,12 +107,6 @@ export default function ComputerOrdersTable() {
               You haven't submitted any computer requests. Create your first one
               to get started.
             </p>
-            <Link
-              to="/computer-orders/create"
-              className="px-5 py-2.5 text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-xl transition-colors shadow-sm"
-            >
-              Create your first order
-            </Link>
           </div>
         ) : (
           <>
