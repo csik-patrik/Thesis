@@ -7,6 +7,7 @@ import { useAuth } from "../../Auth/AuthContext";
 import Spinner from "../Shared/Spinner";
 import StatusBadge from "../Shared/StatusBadge";
 import CustomLink2 from "../Shared/CustomLink2";
+import { FaComputer } from "react-icons/fa6";
 
 export default function MyComputerOrdersTable() {
   const { user } = useAuth();
@@ -84,20 +85,7 @@ export default function MyComputerOrdersTable() {
         {orders.length === 0 ? (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center py-20 text-center px-6">
             <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-7 w-7 text-teal-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.8}
-                  d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-                />
-              </svg>
+              <FaComputer />
             </div>
             <h3 className="text-base font-semibold text-gray-900 mb-1">
               No orders yet
