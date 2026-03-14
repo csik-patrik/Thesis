@@ -10,6 +10,11 @@ import {
   DeleteMobileOrder,
   FetchMyMobileOrders,
 } from "../../Services/MobileOrderServices";
+import Tr from "../Shared/Table/Tr";
+import Td from "../Shared/Table/Td";
+import Thead from "../Shared/Table/Thead";
+import Table2 from "../Shared/Table/Table2";
+import FilterTabs from "../Shared/Table/FilterTabs";
 
 export default function MyMobileOrdersTable() {
   const { user } = useAuth();
@@ -110,104 +115,60 @@ export default function MyMobileOrdersTable() {
           </div>
         ) : (
           <>
-            {/* ── Status filter tabs ── */}
-            <div className="flex flex-wrap gap-2 mb-5">
-              {["All", ...statuses].map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setStatusFilter(s)}
-                  className={`px-3 py-1.5 text-sm rounded-xl font-medium transition-colors ${
-                    statusFilter === s
-                      ? "bg-teal-600 text-white shadow-sm"
-                      : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
-                  }`}
-                >
-                  {s}
-                  <span
-                    className={`ml-1.5 text-xs ${statusFilter === s ? "text-teal-200" : "text-gray-400"}`}
-                  >
-                    {s === "All"
-                      ? orders.length
-                      : orders.filter((o) => o.status === s).length}
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            {/* ── Table card ── */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50/70">
-                      {[
-                        "Id",
-                        "Customer",
-                        "Device type",
-                        "Pickup location",
-                        "Status",
-                        "Actions",
-                      ].map((h) => (
-                        <th
-                          key={h}
-                          className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-widest text-gray-400"
+            <FilterTabs
+              statuses={statuses}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              orders={orders}
+            />
+            <Table2>
+              <Thead
+                headers={[
+                  "Id",
+                  "Customer",
+                  "Device type",
+                  "Pickup location",
+                  "Status",
+                  "Actions",
+                ]}
+              />
+              <tbody>
+                {filteredData.map((d) => (
+                  <Tr key={d.id}>
+                    <Td>{d.id}</Td>
+                    <Td>{d.customer.displayName}</Td>
+                    <Td>{d.mobileDeviceCategory.name}</Td>
+                    <Td>{d.pickupLocation}</Td>
+                    <Td>
+                      <StatusBadge status={d.status} />
+                    </Td>
+                    <Td>
+                      <div className="flex items-center gap-3">
+                        <Link
+                          to={`/mobile-orders/${d.id}`}
+                          className="text-sm font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1 rounded-lg transition-colors"
                         >
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredData.map((d) => (
-                      <tr
-                        key={d.id}
-                        className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60 transition-colors"
-                      >
-                        <td className="px-5 py-3.5 text-sm text-gray-400 font-mono">
-                          {d.id}
-                        </td>
-                        <td className="px-5 py-3.5 text-sm text-gray-700 font-medium">
-                          {d.customer.displayName}
-                        </td>
-                        <td className="px-5 py-3.5 text-sm text-gray-600">
-                          {d.mobileDeviceCategory.name}
-                        </td>
-                        <td className="px-5 py-3.5 text-sm text-gray-600">
-                          {d.pickupLocation}
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <StatusBadge status={d.status} />
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <div className="flex items-center gap-3">
-                            <Link
-                              to={`/mobile-orders/${d.id}`}
-                              className="text-sm font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1 rounded-lg transition-colors"
-                            >
-                              View
-                            </Link>
-                            {d.status !== "Delivered" && (
-                              <button
-                                onClick={() => handleDelete(d.id)}
-                                className="text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition-colors"
-                              >
-                                Delete
-                              </button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {filteredData.length === 0 && (
-                <div className="py-12 text-center text-sm text-gray-400">
-                  No orders match the selected filter.
-                </div>
-              )}
-            </div>
+                          View
+                        </Link>
+                        {d.status !== "Delivered" && (
+                          <button
+                            onClick={() => handleDelete(d.id)}
+                            className="text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition-colors"
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </Td>
+                  </Tr>
+                ))}
+                {filteredData.length === 0 && (
+                  <div className="py-12 text-center text-sm text-gray-400">
+                    No orders match the selected filter.
+                  </div>
+                )}
+              </tbody>
+            </Table2>
           </>
         )}
       </div>
