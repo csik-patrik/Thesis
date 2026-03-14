@@ -28,3 +28,18 @@ export async function ReturnComputer(
     },
   );
 }
+
+export async function GetComputersInInventory(user: User) {
+  return await axios.get<ComputerResponse[]>(
+    "http://localhost:5268/computers/inventory",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
+}
+
+export async function DeleteComputer(id: number, user: User) {
+  return await axios.delete(`http://localhost:5268/computers/${id}`, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
+}

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ComputerResponse } from "../../Types/ComputerTypes";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { useAuth } from "../../Auth/AuthContext";
 import Spinner from "../Shared/Spinner";
 import type { ModalHandle } from "../Shared/Modal";
@@ -9,6 +8,10 @@ import Modal from "../Shared/Modal";
 import StatusBadge from "../Shared/StatusBadge";
 import CustomLink2 from "../Shared/CustomLink2";
 import Button from "../Shared/Button";
+import {
+  DeleteComputer,
+  GetComputersInInventory,
+} from "../../Services/ComputerServices";
 
 export default function ComputersInInventoryTable() {
   const { user } = useAuth();
@@ -27,12 +30,7 @@ export default function ComputersInInventoryTable() {
 
     const fetchDevices = async () => {
       try {
-        const res = await axios.get<ComputerResponse[]>(
-          "http://localhost:5268/computers/inventory",
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
+        const res = await GetComputersInInventory(user);
         setComputers(res.data);
       } catch (err) {
         console.error("Failed to fetch devices:", err);
@@ -50,10 +48,10 @@ export default function ComputersInInventoryTable() {
     try {
       if (!user || !user.token) return;
 
-      (await axios.delete(`http://localhost:5268/computers/${id}`, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      }),
-        setComputers((prev) => prev.filter((item) => item.id !== id)));
+      await DeleteComputer(id, user);
+
+      setComputers((prev) => prev.filter((item) => item.id !== id));
+
       toast.success("Computer deleted!");
     } catch (err) {
       console.error("Error deleting computer: ", err);
