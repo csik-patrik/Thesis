@@ -64,12 +64,10 @@ export default function ComputersInInventoryTable() {
     dialog.current?.open();
   }
 
-  // Get unique device categories for the filter dropdown
   const categories = Array.from(
     new Set(computers.map((device) => device.computerCategory.name)),
   );
 
-  // Filter data by device category
   const filteredData = computers.filter((device) => {
     const categoryMatch = categoryFilter
       ? device.computerCategory.name === categoryFilter
