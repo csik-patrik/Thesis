@@ -1,23 +1,21 @@
 import { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
-
 import { useAuth } from "../../Auth/AuthContext";
 import Form from "../Form/Form";
 import Input from "../Form/Input";
 import Select from "../Form/Select";
-
 import {
+  CreateNewMobileOrder,
   GetMobileDeviceCategories,
   GetSimCallControlGroups,
 } from "../../Services/MobileDeviceServices";
 
 import type { CreateMobileOrderRequest } from "../../Types/MobileTypes";
-import type { UserResponse } from "../../Types/UserTypes";
 
 import { mobileOrderReducer } from "./MobileOrder.reducer";
 import { mobileOrderInitialState } from "./MobileOrder.initialState";
+import { GetGroupLeaders } from "../../Services/UserServices";
 
 export default function MobileOrdersCreate() {
   const { user } = useAuth();
@@ -35,28 +33,23 @@ export default function MobileOrdersCreate() {
     groupLeaders,
   } = state;
 
-  /* -------------------- Load data -------------------- */
-
   useEffect(() => {
     GetMobileDeviceCategories()
       .then((res) => dispatch({ type: "SET_CATEGORIES", payload: res.data }))
       .catch(() => toast.error("Error fetching device categories"));
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     GetSimCallControlGroups()
       .then((res) => dispatch({ type: "SET_SIM_GROUPS", payload: res.data }))
       .catch(() => toast.error("Error fetching SIM call control groups"));
-  }, []);
+  }, [user]);
 
   useEffect(() => {
-    axios
-      .get<UserResponse[]>("http://localhost:5268/users/group-leader")
+    GetGroupLeaders()
       .then((res) => dispatch({ type: "SET_GROUP_LEADERS", payload: res.data }))
       .catch(() => toast.error("Error fetching approvers"));
-  }, []);
-
-  /* -------------------- Set customer -------------------- */
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -66,8 +59,6 @@ export default function MobileOrdersCreate() {
       });
     }
   }, [user]);
-
-  /* -------------------- Handlers -------------------- */
 
   const numericFields: (keyof CreateMobileOrderRequest)[] = [
     "customerId",
@@ -95,8 +86,10 @@ export default function MobileOrdersCreate() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (user == null) return;
+
     try {
-      await axios.post("http://localhost:5268/mobile-orders", formData);
+      await CreateNewMobileOrder(formData, user);
       toast.success("Mobile order created successfully!");
       navigate("/mobile-orders/my-orders");
     } catch (err) {
@@ -105,15 +98,12 @@ export default function MobileOrdersCreate() {
     }
   };
 
-  /* -------------------- Render -------------------- */
-
   return (
     <Form
       title="Create a new mobile order"
       handleSubmit={handleSubmit}
       returnUri="/mobile-orders/my-orders"
     >
-      {/* Requester (display only) */}
       <Input
         title="Requester"
         fieldName="requester"

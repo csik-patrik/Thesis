@@ -41,3 +41,35 @@ export type UserRoleResponse = {
   id: number;
   name: string;
 };
+
+export interface User {
+  id: string;
+  displayname: string;
+  email?: string;
+  name?: string;
+  roles: string[];
+  username?: string;
+  department?: string;
+  costCenter?: string;
+  token: string;
+}
+
+export interface JwtPayload {
+  sub: string;
+  displayname: string;
+  email?: string;
+  name?: string;
+  role?: string | string[];
+  username?: string;
+  department?: string;
+  costCenter?: string;
+  exp?: number;
+  [key: string]: any;
+}
+
+export interface AuthContextType {
+  user: User | null;
+  login: (token: string) => void;
+  logout: () => void;
+  isLoading: boolean;
+}
