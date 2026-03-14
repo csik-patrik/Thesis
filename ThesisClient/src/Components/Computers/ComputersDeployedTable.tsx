@@ -11,6 +11,12 @@ import {
   GetDeployedComputers,
   ReturnComputer,
 } from "../../Services/ComputerServices";
+import TableLayout from "../../Layouts/TableLayout";
+import EmptyState from "../Shared/Table/EmptyState";
+import Table2 from "../Shared/Table/Table2";
+import Thead from "../Shared/Table/Thead";
+import Tr from "../Shared/Table/Tr";
+import Td from "../Shared/Table/Td";
 
 export default function ComputersDeployedTable() {
   const { user } = useAuth();
@@ -129,112 +135,60 @@ export default function ComputersDeployedTable() {
           </select>
         </div>
       </Modal>
-      <div className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-start justify-between mb-8">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Deployed computers
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">
-                Track and manage deployed computers
-              </p>
-            </div>
-          </div>
-          {/* ── Empty state ── */}
-          {computers.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center py-20 text-center px-6">
-              <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4">
-                <FaComputer />
-              </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-1">
-                Not found any deployed computers
-              </h3>
-              <p className="text-sm text-gray-500 mb-6 max-w-xs">
-                There aren't any deployed computers yet.
-              </p>
-            </div>
-          ) : (
-            <>
-              <input
-                type="text"
-                placeholder="Search by hostname"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2 mb-2 w-auto focus:outline-none focus:ring-1 focus:ring-gray-400"
+      <TableLayout
+        title="Deployed computers"
+        subtitle="Track and manage deployed computers"
+      >
+        {computers.length === 0 ? (
+          <EmptyState
+            icon={<FaComputer />}
+            title="Not found any deployed computers"
+            description="There aren't any deployed computers yet."
+          />
+        ) : (
+          <>
+            <Table2>
+              <Thead
+                headers={[
+                  "Id",
+                  "Hostname",
+                  "Category",
+                  "Model",
+                  "Serial number",
+                  "User",
+                  "Actions",
+                ]}
               />
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full">
-                    <thead>
-                      <tr className="border-b border-gray-100 bg-gray-50/70">
-                        {[
-                          "Id",
-                          "Hostname",
-                          "Category",
-                          "Model",
-                          "Serial number",
-                          "User",
-                          "Actions",
-                        ].map((h) => (
-                          <th
-                            key={h}
-                            className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-widest text-gray-400"
-                          >
-                            {h}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredData.map((d) => (
-                        <tr
-                          key={d.id}
-                          className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60 transition-colors"
-                        >
-                          <td className="px-5 py-3.5 text-sm text-gray-400 font-mono">
-                            {d.id}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-700 font-medium">
-                            {d.hostname}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-600">
-                            {d.computerCategory.name}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-600">
-                            {d.model}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-600">
-                            {d.serialNumber}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-600">
-                            {d.user?.displayName || "—"}
-                          </td>
-                          <td className="px-5 py-3.5">
-                            <div className="flex items-center gap-3">
-                              <Button
-                                color="yellow"
-                                handleClick={() => showModal(d.id)}
-                                label="Return"
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
+              <tbody>
+                {filteredData.map((d) => (
+                  <Tr key={d.id}>
+                    <Td>{d.id}</Td>
+                    <Td>{d.hostname}</Td>
+                    <Td>{d.computerCategory.name}</Td>
+                    <Td>{d.model}</Td>
+                    <Td>{d.serialNumber}</Td>
+                    <Td>{d.user.displayName}</Td>
+                    <Td>
+                      <div className="flex items-center gap-3">
+                        <Button
+                          color="yellow"
+                          handleClick={() => showModal(d.id)}
+                          label="Return"
+                        />
+                      </div>
+                    </Td>
+                  </Tr>
+                ))}
                 {filteredData.length === 0 && (
                   <div className="py-12 text-center text-sm text-gray-400">
                     No orders match the selected filter.
                   </div>
                 )}
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+              </tbody>
+            </Table2>
+          </>
+        )}
+      </TableLayout>
     </>
   );
 }
