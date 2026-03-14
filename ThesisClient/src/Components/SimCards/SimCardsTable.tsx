@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import type { SimCardResponse } from "../../Types/MobileTypes";
@@ -7,6 +6,11 @@ import Table from "../Shared/Table";
 import Button from "../Shared/Button";
 import type { ModalHandle } from "../Shared/Modal";
 import Modal from "../Shared/Modal";
+import {
+  DeleteSimCard,
+  GetSimCardsInInventory,
+} from "../../Services/SimCardServices";
+import Spinner from "../Shared/Spinner";
 
 export default function SimCardsTable() {
   const [data, setData] = useState<SimCardResponse[]>([]);
@@ -15,6 +19,7 @@ export default function SimCardsTable() {
   const [statusFilter, setStatusFilter] = useState<string>("");
   const dialog = useRef<ModalHandle>(null);
   const [selectedSimCardId, setSelectedSimCardId] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   function showModal(id: number) {
     setSelectedSimCardId(id);
@@ -22,15 +27,27 @@ export default function SimCardsTable() {
   }
 
   useEffect(() => {
-    axios
-      .get<SimCardResponse[]>("http://localhost:5268/sim-cards")
-      .then((res) => setData(res.data))
-      .catch((err) => console.log(err));
+    setIsLoading(true);
+
+    const fetchSimCards = async () => {
+      try {
+        const res = await GetSimCardsInInventory();
+        setData(res.data);
+      } catch (err) {
+        console.error("Failed to fetch sim cards:", err);
+
+        toast.error("Failed to load sim cards.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSimCards();
   }, []);
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:5268/sim-cards/${id}`);
+      await DeleteSimCard(id);
       setData((prev) => prev.filter((item) => item.id !== id));
       toast.success("Sim card deleted successfully!");
     } catch (err) {
@@ -52,6 +69,10 @@ export default function SimCardsTable() {
     const statusMatch = statusFilter ? device.status === statusFilter : true;
     return callControlGroupMatch && statusMatch;
   });
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
