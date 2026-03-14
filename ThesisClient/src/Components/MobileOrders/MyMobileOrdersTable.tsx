@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
@@ -7,6 +6,10 @@ import { useAuth } from "../../Auth/AuthContext";
 import Spinner from "../Shared/Spinner";
 import StatusBadge from "../Shared/StatusBadge";
 import CustomLink2 from "../Shared/CustomLink2";
+import {
+  DeleteMobileOrder,
+  FetchMyMobileOrders,
+} from "../../Services/MobileOrderServices";
 
 export default function MyMobileOrdersTable() {
   const { user } = useAuth();
@@ -21,17 +24,10 @@ export default function MyMobileOrdersTable() {
 
     const fetchOrders = async () => {
       try {
-        const res = await axios.get<MobileOrderResponse[]>(
-          "http://localhost:5268/mobile-orders/my-orders",
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
-
+        const res = await FetchMyMobileOrders(user);
         setOrders(res.data);
       } catch (err) {
         console.error("Error loading mobile orders:", err);
-
         toast.error("Failed to load mobile orders.");
       } finally {
         setIsLoading(false);
@@ -44,13 +40,15 @@ export default function MyMobileOrdersTable() {
   const handleDelete = async (id: number) => {
     try {
       if (!user || !user.token) return;
-      await axios.delete(`http://localhost:5268/mobile-orders/${id}`, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
+
+      await DeleteMobileOrder(id, user);
+
       setOrders((prev) => prev.filter((item) => item.id !== id));
+
       toast.success("Mobile order deleted successfully!");
     } catch (err) {
       console.error("Error deleting mobile order:", err);
+
       toast.error("Failed to delete mobile order.");
     }
   };
