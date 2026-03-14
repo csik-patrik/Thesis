@@ -32,3 +32,12 @@ export async function DeleteComputerOrder(id: number, user: User) {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
+
+export async function GetComputerOrders(user: User) {
+  return await axios.get<ComputerOrderResponse[]>(
+    "http://localhost:5268/computer-orders",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
+}
