@@ -8,7 +8,6 @@ import Select from "../Form/Select";
 import {
   CreateNewMobileOrder,
   GetMobileDeviceCategories,
-  GetSimCallControlGroups,
 } from "../../Services/MobileDeviceServices";
 
 import type { CreateMobileOrderRequest } from "../../Types/MobileTypes";
@@ -16,6 +15,7 @@ import type { CreateMobileOrderRequest } from "../../Types/MobileTypes";
 import { mobileOrderReducer } from "./MobileOrder.reducer";
 import { mobileOrderInitialState } from "./MobileOrder.initialState";
 import { GetGroupLeaders } from "../../Services/UserServices";
+import { GetSimCallControlGroups } from "../../Services/SimCardServices";
 
 export default function MobileOrdersCreate() {
   const { user } = useAuth();
