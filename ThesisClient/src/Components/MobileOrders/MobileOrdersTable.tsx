@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
 import Spinner from "../Shared/Spinner";
 import { Link } from "react-router-dom";
 import StatusBadge from "../Shared/StatusBadge";
+import {
+  DeleteMobileOrder,
+  FetchMobileOrders,
+} from "../../Services/MobileOrderServices";
 
 export default function MobileOrdersTable() {
   const { user } = useAuth();
@@ -20,12 +23,7 @@ export default function MobileOrdersTable() {
 
     const fetchOrders = async () => {
       try {
-        const res = await axios.get<MobileOrderResponse[]>(
-          "http://localhost:5268/mobile-orders",
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
+        const res = await FetchMobileOrders(user);
 
         setOrders(res.data);
       } catch (err) {
@@ -44,11 +42,7 @@ export default function MobileOrdersTable() {
     try {
       if (!user || !user.token) return;
 
-      await axios.delete(`http://localhost:5268/mobile-orders/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      await DeleteMobileOrder(id, user);
 
       setOrders((prev) => prev.filter((item) => item.id !== id));
 

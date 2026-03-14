@@ -16,3 +16,12 @@ export async function DeleteMobileOrder(id: number, user: User) {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
+
+export async function FetchMobileOrders(user: User) {
+  return await axios.get<MobileOrderResponse[]>(
+    "http://localhost:5268/mobile-orders",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
+}
