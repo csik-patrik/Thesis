@@ -1,5 +1,8 @@
 import axios from "axios";
-import type { CreateComputerOrderRequest } from "../Types/ComputerTypes";
+import type {
+  ComputerOrderResponse,
+  CreateComputerOrderRequest,
+} from "../Types/ComputerTypes";
 import type { User } from "../Types/UserTypes";
 
 export async function GetComputerCategories() {
@@ -11,6 +14,21 @@ export async function CreateComputerOrder(
   user: User,
 ) {
   await axios.post("http://localhost:5268/computer-orders", formData, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
+}
+
+export async function GetMyComputerOrders(user: User) {
+  return await axios.get<ComputerOrderResponse[]>(
+    "http://localhost:5268/computer-orders/my-orders",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
+}
+
+export async function DeleteComputerOrder(id: number, user: User) {
+  return await axios.delete(`http://localhost:5268/computer-orders/${id}`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }

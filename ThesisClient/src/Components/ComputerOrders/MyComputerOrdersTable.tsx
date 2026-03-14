@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import type { ComputerOrderResponse } from "../../Types/ComputerTypes";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../Auth/AuthContext";
@@ -8,6 +7,10 @@ import Spinner from "../Shared/Spinner";
 import StatusBadge from "../Shared/StatusBadge";
 import CustomLink2 from "../Shared/CustomLink2";
 import { FaComputer } from "react-icons/fa6";
+import {
+  DeleteComputerOrder,
+  GetMyComputerOrders,
+} from "../../Services/ComputerOrderServices";
 
 export default function MyComputerOrdersTable() {
   const { user } = useAuth();
@@ -22,13 +25,7 @@ export default function MyComputerOrdersTable() {
 
     const fetchOrders = async () => {
       try {
-        const res = await axios.get<ComputerOrderResponse[]>(
-          "http://localhost:5268/computer-orders/my-orders",
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
-
+        const res = await GetMyComputerOrders(user);
         setOrders(res.data);
       } catch (err) {
         console.error("Error loading computer orders:", err);
@@ -46,9 +43,7 @@ export default function MyComputerOrdersTable() {
     if (!user?.token) return;
 
     try {
-      await axios.delete(`http://localhost:5268/computer-orders/${id}`, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
+      await DeleteComputerOrder(id, user);
       setOrders((prev) => prev.filter((item) => item.id !== id));
       toast.success("Computer order deleted successfully!");
     } catch (err) {
