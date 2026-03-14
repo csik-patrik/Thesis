@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
 import type { MobileDeviceResponse } from "../../Types/MobileTypes";
-import axios from "axios";
 import type { ModalHandle } from "../Shared/Modal";
 import Modal from "../Shared/Modal";
 import Spinner from "../Shared/Spinner";
 import Button from "../Shared/Button";
+import {
+  GetDeployedMobileDevices,
+  ReturnMobileDevice,
+} from "../../Services/MobileServices";
 
 export default function MobileDevicesDeployedTable() {
   const { user } = useAuth();
@@ -36,12 +39,7 @@ export default function MobileDevicesDeployedTable() {
 
     const fetchDevices = async () => {
       try {
-        const res = await axios.get<MobileDeviceResponse[]>(
-          "http://localhost:5268/mobile-devices/deployed",
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
+        const res = await GetDeployedMobileDevices(user);
 
         setMobiles(res.data);
       } catch (err) {
@@ -74,29 +72,11 @@ export default function MobileDevicesDeployedTable() {
     }
 
     try {
-      await axios.put(
-        `http://localhost:5268/mobile-devices/return/${deviceId}`,
-        { status, statusReason },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        },
-      );
+      await ReturnMobileDevice(deviceId, status, statusReason, user);
 
       toast.success(`Device returned to "${statusReason}" successfully!`);
 
       setMobiles((prev) => prev.filter((mobile) => mobile.id !== deviceId));
-
-      const res = await axios.get<MobileDeviceResponse[]>(
-        "http://localhost:5268/mobile-devices/deployed",
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        },
-      );
-
-      setMobiles(res.data);
     } catch (err) {
       console.error("Return error:", err);
       toast.error("Failed to return device.");
