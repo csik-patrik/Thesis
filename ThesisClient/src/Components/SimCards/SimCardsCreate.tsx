@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Form from "../Form/Form";
 import Input from "../Form/Input";
 import Select from "../Form/Select";
@@ -9,7 +8,10 @@ import type {
   CreateSimCardRequest,
   SimCallControlGroupResponse,
 } from "../../Types/MobileTypes";
-import { GetSimCallControlGroups } from "../../Services/MobileDeviceServices";
+import {
+  CreateSimCard,
+  GetSimCallControlGroups,
+} from "../../Services/SimCardServices";
 
 function SimCardsCreate() {
   const [simCallControlGroups, setSimCallControlGroups] = useState<
@@ -51,7 +53,7 @@ function SimCardsCreate() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5268/sim-cards", formData);
+      await CreateSimCard(formData);
       toast.success("Sim card created successfully!");
       navigate("/sim-cards");
     } catch (err) {
