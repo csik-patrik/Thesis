@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import type { MobileDeviceResponse } from "../../Types/MobileTypes";
 import { useAuth } from "../../Auth/AuthContext";
@@ -8,6 +7,10 @@ import Table from "../Shared/Table";
 import Button from "../Shared/Button";
 import type { ModalHandle } from "../Shared/Modal";
 import Modal from "../Shared/Modal";
+import {
+  DeleteMobileDevice,
+  GetMobileDevices,
+} from "../../Services/MobileServices";
 
 export default function MobileDevicesTable() {
   const { user } = useAuth();
@@ -34,12 +37,7 @@ export default function MobileDevicesTable() {
 
     const fetchDevices = async () => {
       try {
-        const res = await axios.get<MobileDeviceResponse[]>(
-          "http://localhost:5268/mobile-devices/",
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
+        const res = await GetMobileDevices(user);
         setData(res.data);
       } catch (err) {
         console.error("Failed to fetch devices:", err);
@@ -51,12 +49,9 @@ export default function MobileDevicesTable() {
 
   const handleDelete = async (id: number) => {
     if (!user) return;
-    if (!user.token) return;
 
     try {
-      await axios.delete(`http://localhost:5268/mobile-devices/${id}`, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
+      await DeleteMobileDevice(id, user);
       setData((prev) => prev.filter((item) => item.id !== id));
       toast.success("Mobile deleted successfully!");
     } catch (err) {

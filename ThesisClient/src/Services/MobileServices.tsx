@@ -28,3 +28,18 @@ export async function ReturnMobileDevice(
     },
   );
 }
+
+export async function GetMobileDevices(user: User) {
+  return await axios.get<MobileDeviceResponse[]>(
+    "http://localhost:5268/mobile-devices/",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
+}
+
+export async function DeleteMobileDevice(id: number, user: User) {
+  return await axios.delete(`http://localhost:5268/mobile-devices/${id}`, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
+}
