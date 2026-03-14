@@ -11,6 +11,13 @@ import {
   DeleteComputerOrder,
   GetMyComputerOrders,
 } from "../../Services/ComputerOrderServices";
+import FilterTabs from "../Shared/Table/FilterTabs";
+import Table2 from "../Shared/Table/Table2";
+import Thead from "../Shared/Table/Thead";
+import Tr from "../Shared/Table/Tr";
+import Td from "../Shared/Table/Td";
+import TableLayout from "../../Layouts/TableLayout";
+import EmptyState from "../Shared/Table/EmptyState";
 
 export default function MyComputerOrdersTable() {
   const { user } = useAuth();
@@ -63,140 +70,82 @@ export default function MyComputerOrdersTable() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-start justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              My Computer Orders
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Track and manage your computer requests
-            </p>
-          </div>
-          <CustomLink2 to="/computer-orders/create" label="New Order" />
-        </div>
-        {/* ── Empty state ── */}
-        {orders.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center py-20 text-center px-6">
-            <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4">
-              <FaComputer />
-            </div>
-            <h3 className="text-base font-semibold text-gray-900 mb-1">
-              No orders yet
-            </h3>
-            <p className="text-sm text-gray-500 mb-6 max-w-xs">
-              You haven't submitted any computer requests. Create your first one
-              to get started.
-            </p>
+    <TableLayout
+      title="My Computer Orders"
+      subtitle="Track and manage your computer requests"
+      links={[{ to: "/computer-orders/create", label: "New Order" }]}
+    >
+      {orders.length === 0 ? (
+        <EmptyState
+          icon={<FaComputer />}
+          title="No orders yet"
+          description="You haven't submitted any computer requests. Create your first one to get started."
+          action={
             <CustomLink2
               to="/computer-orders/create"
               label="Create your first order"
             />
-          </div>
-        ) : (
-          <>
-            {/* ── Status filter tabs ── */}
-            <div className="flex flex-wrap gap-2 mb-5">
-              {["All", ...statuses].map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setStatusFilter(s)}
-                  className={`px-3 py-1.5 text-sm rounded-xl font-medium transition-colors ${
-                    statusFilter === s
-                      ? "bg-teal-600 text-white shadow-sm"
-                      : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
-                  }`}
-                >
-                  {s}
-                  <span
-                    className={`ml-1.5 text-xs ${statusFilter === s ? "text-teal-200" : "text-gray-400"}`}
-                  >
-                    {s === "All"
-                      ? orders.length
-                      : orders.filter((o) => o.status === s).length}
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            {/* ── Table card ── */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50/70">
-                      {[
-                        "Id",
-                        "Customer",
-                        "Device type",
-                        "Pickup location",
-                        "Status",
-                        "Actions",
-                      ].map((h) => (
-                        <th
-                          key={h}
-                          className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-widest text-gray-400"
-                        >
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredData.map((d) => (
-                      <tr
-                        key={d.id}
-                        className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60 transition-colors"
+          }
+        />
+      ) : (
+        <>
+          <FilterTabs
+            statuses={statuses}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            orders={orders}
+          />
+          <Table2>
+            <Thead
+              headers={[
+                "Id",
+                "Customer",
+                "Device type",
+                "Pickup location",
+                "Status",
+                "Actions",
+              ]}
+            />
+            <tbody>
+              {filteredData.map((d) => (
+                <Tr key={d.id}>
+                  <Td>{d.id}</Td>
+                  <Td>{d.customer.displayName}</Td>
+                  <Td>{d.computerCategory.name}</Td>
+                  <Td>{d.pickupLocation}</Td>
+                  <Td>
+                    <StatusBadge status={d.status} />
+                  </Td>
+                  <Td>
+                    {" "}
+                    <div className="flex items-center gap-3">
+                      <Link
+                        to={`/computer-orders/${d.id}`}
+                        className="text-sm font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1 rounded-lg transition-colors"
                       >
-                        <td className="px-5 py-3.5 text-sm text-gray-400 font-mono">
-                          {d.id}
-                        </td>
-                        <td className="px-5 py-3.5 text-sm text-gray-700 font-medium">
-                          {d.customer.displayName}
-                        </td>
-                        <td className="px-5 py-3.5 text-sm text-gray-600">
-                          {d.computerCategory.name}
-                        </td>
-                        <td className="px-5 py-3.5 text-sm text-gray-600">
-                          {d.pickupLocation}
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <StatusBadge status={d.status} />
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <div className="flex items-center gap-3">
-                            <Link
-                              to={`/computer-orders/${d.id}`}
-                              className="text-sm font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1 rounded-lg transition-colors"
-                            >
-                              View
-                            </Link>
-                            {d.status !== "Delivered" && (
-                              <button
-                                onClick={() => handleDelete(d.id)}
-                                className="text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition-colors"
-                              >
-                                Delete
-                              </button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                        View
+                      </Link>
+                      {d.status !== "Delivered" && (
+                        <button
+                          onClick={() => handleDelete(d.id)}
+                          className="text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition-colors"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </Td>
+                </Tr>
+              ))}
+            </tbody>
+            {filteredData.length === 0 && (
+              <div className="py-12 text-center text-sm text-gray-400">
+                No orders match the selected filter.
               </div>
-
-              {filteredData.length === 0 && (
-                <div className="py-12 text-center text-sm text-gray-400">
-                  No orders match the selected filter.
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+            )}
+          </Table2>
+        </>
+      )}
+    </TableLayout>
   );
 }
