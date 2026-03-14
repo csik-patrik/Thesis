@@ -2,38 +2,37 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import type { UserResponse } from "../../Types/UserTypes";
-import CustomLink from "../Shared/CustomLink";
-import Table from "../Shared/Table";
-import Button from "../Shared/Button";
 import Modal, { type ModalHandle } from "../Shared/Modal";
+import CustomLink2 from "../Shared/CustomLink2";
+import { Link } from "react-router-dom";
 
 export default function Users() {
-  const [data, setData] = useState<UserResponse[]>([]);
+  const [users, setUsers] = useState<UserResponse[]>([]);
   const [selectedUserId, setSelectedUserId] = useState(0);
   const dialog = useRef<ModalHandle>(null);
-
-  function showModal(id: number) {
-    setSelectedUserId(id);
-    dialog.current?.open();
-  }
 
   useEffect(() => {
     axios
       .get<UserResponse[]>("http://localhost:5268/users")
-      .then((res) => setData(res.data))
+      .then((res) => setUsers(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   const handleDelete = async (id: number) => {
     try {
       await axios.delete(`http://localhost:5268/users/${id}`);
-      setData((prev) => prev.filter((item) => item.id !== id));
+      setUsers((prev) => prev.filter((item) => item.id !== id));
       toast.success("User deleted successfully!");
     } catch (err) {
       console.error("Error deleting user:", err);
       alert("Failed to delete user.");
     }
   };
+
+  function showModal(id: number) {
+    setSelectedUserId(id);
+    dialog.current?.open();
+  }
 
   return (
     <>
@@ -44,60 +43,89 @@ export default function Users() {
         buttonColor="red"
         handleSubmit={() => handleDelete(selectedUserId)}
       ></Modal>
-      <div className="flex flex-col items-center justify-center p-6">
-        <h1 className="text-3xl font-bold mb-6">Users</h1>
-        <div className=" bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex gap-2 mb-4 flex-col">
-            <div className="flex gap-2">
-              <CustomLink
-                color="green"
-                to="/admin/users/create"
-                label="Create"
-              />
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-start justify-between mb-8">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Users</h1>
+              <p className="text-sm text-gray-500 mt-1">Manage users</p>
+            </div>
+            <CustomLink2 to="/admin/users/create" label="Create new user" />
+          </div>
+          {/* ── Table card ── */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead>
+                  <tr className="border-b border-gray-100 bg-gray-50/70">
+                    {[
+                      "Id",
+                      "Username",
+                      "Displayname",
+                      "E-mail address",
+                      "Department",
+                      "Cost center",
+                      "Roles",
+                      "Actions",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-widest text-gray-400"
+                      >
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((user) => (
+                    <tr
+                      key={user.id}
+                      className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60 transition-colors"
+                    >
+                      <td className="px-5 py-3.5 text-sm text-gray-400 font-mono">
+                        {user.id}
+                      </td>
+                      <td className="px-5 py-3.5 text-sm text-gray-700 font-medium">
+                        {user.username}
+                      </td>
+                      <td className="px-5 py-3.5 text-sm text-gray-600">
+                        {user.displayName}
+                      </td>
+                      <td className="px-5 py-3.5 text-sm text-gray-600">
+                        {user.email}
+                      </td>
+                      <td className="px-5 py-3.5 text-sm text-gray-600">
+                        {user.department}
+                      </td>
+                      <td className="px-5 py-3.5 text-sm text-gray-600">
+                        {user.costCenter}
+                      </td>
+                      <td className="px-5 py-3.5 text-sm text-gray-600">
+                        {user.userRoles.map((role) => role.name + " ")}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <div className="flex items-center gap-3">
+                          <Link
+                            to={`/admin/users/${user.id}`}
+                            className="text-sm font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1 rounded-lg transition-colors"
+                          >
+                            Edit
+                          </Link>
+                          <button
+                            onClick={() => showModal(user.id)}
+                            className="text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-lg transition-colors"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
-          <Table
-            headerItems={[
-              "Id",
-              "Username",
-              "Displayname",
-              "E-mail address",
-              "Department",
-              "Cost center",
-              "Roles",
-              "Actions",
-            ]}
-          >
-            {data.map((user) => (
-              <tr key={user.id} className="even:bg-gray-50 border-b">
-                <td className="px-4 py-2">{user.id}</td>
-                <td className="px-4 py-2">{user.username}</td>
-                <td className="px-4 py-2">{user.displayName}</td>
-                <td className="px-4 py-2">{user.email}</td>
-                <td className="px-4 py-2">{user.department}</td>
-                <td className="px-4 py-2">{user.costCenter}</td>
-                <td className="px-4 py-2">
-                  {user.userRoles.map((r) => (
-                    <span key={r.id} className="mr-1">
-                      {r.name}
-                    </span>
-                  ))}
-                </td>
-                <td className="px-4 py-2 flex gap-2">
-                  <CustomLink
-                    color="yellow"
-                    label="Edit"
-                    to={`/admin/users/${user.id}`}
-                  />
-                  <Button
-                    color="red"
-                    label="Delete"
-                    handleClick={() => showModal(user.id)}
-                  />
-                </td>
-              </tr>
-            ))}
-          </Table>
         </div>
       </div>
     </>
