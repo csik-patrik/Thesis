@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import type { ComputerResponse } from "../../Types/ComputerTypes";
-import axios from "axios";
 import { useAuth } from "../../Auth/AuthContext";
 import { toast } from "react-toastify";
 import Button from "../Shared/Button";
@@ -8,6 +7,10 @@ import type { ModalHandle } from "../Shared/Modal";
 import Modal from "../Shared/Modal";
 import Spinner from "../Shared/Spinner";
 import { FaComputer } from "react-icons/fa6";
+import {
+  GetDeployedComputers,
+  ReturnComputer,
+} from "../../Services/ComputerServices";
 
 export default function ComputersDeployedTable() {
   const { user } = useAuth();
@@ -35,12 +38,7 @@ export default function ComputersDeployedTable() {
 
     const fetchDevices = async () => {
       try {
-        const res = await axios.get<ComputerResponse[]>(
-          "http://localhost:5268/computers/deployed",
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
+        const res = await GetDeployedComputers(user);
         setComputers(res.data);
       } catch (err) {
         console.error("Error loading deployed computers:", err);
@@ -72,29 +70,11 @@ export default function ComputersDeployedTable() {
     }
 
     try {
-      await axios.put(
-        `http://localhost:5268/computers/return/${deviceId}`,
-        { status, statusReason },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        },
-      );
+      await ReturnComputer(deviceId, status, statusReason, user);
 
       toast.success(`Device returned to "${statusReason}" successfully!`);
 
       setComputers((prev) => prev.filter((d) => d.id !== deviceId));
-
-      const res = await axios.get<ComputerResponse[]>(
-        "http://localhost:5268/computers/deployed",
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        },
-      );
-
-      setComputers(res.data);
     } catch (err) {
       console.error("Return error:", err);
       toast.error("Failed to return device.");
