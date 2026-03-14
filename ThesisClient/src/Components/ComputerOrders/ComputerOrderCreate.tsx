@@ -1,5 +1,4 @@
 import { useEffect, useReducer } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -9,10 +8,14 @@ import Input from "../Form/Input";
 import Select from "../Form/Select";
 
 import type { CreateComputerOrderRequest } from "../../Types/ComputerTypes";
-import type { UserResponse } from "../../Types/UserTypes";
 
 import { computerOrderReducer } from "./ComputerOrder.reducer";
 import { computerOrderInitialState } from "./ComputerOrder.initialState";
+import {
+  CreateComputerOrder,
+  GetComputerCategories,
+} from "../../Services/ComputerOrderServices";
+import { GetGroupLeaders } from "../../Services/UserServices";
 
 export default function ComputerOrderCreate() {
   const { user } = useAuth();
@@ -25,23 +28,17 @@ export default function ComputerOrderCreate() {
 
   const { formData, computerCategories, groupLeaders } = state;
 
-  /* -------------------- Load data -------------------- */
-
   useEffect(() => {
-    axios
-      .get("http://localhost:5268/computer-categories")
+    GetComputerCategories()
       .then((res) => dispatch({ type: "SET_CATEGORIES", payload: res.data }))
       .catch(() => toast.error("Failed to fetch computer categories"));
-  }, []);
+  }, [user]);
 
   useEffect(() => {
-    axios
-      .get<UserResponse[]>("http://localhost:5268/users/group-leader")
+    GetGroupLeaders()
       .then((res) => dispatch({ type: "SET_GROUP_LEADERS", payload: res.data }))
       .catch(() => toast.error("Failed to fetch approvers"));
-  }, []);
-
-  /* -------------------- Set customer -------------------- */
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -51,8 +48,6 @@ export default function ComputerOrderCreate() {
       });
     }
   }, [user]);
-
-  /* -------------------- Handlers -------------------- */
 
   const numericFields: (keyof CreateComputerOrderRequest)[] = [
     "customerId",
@@ -82,9 +77,7 @@ export default function ComputerOrderCreate() {
     try {
       if (!user?.token) return;
 
-      await axios.post("http://localhost:5268/computer-orders", formData, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
+      CreateComputerOrder(formData, user);
 
       toast.success("Computer order created successfully!");
       navigate("/computer-orders/my-orders");
