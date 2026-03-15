@@ -43,3 +43,12 @@ export async function DeleteComputer(id: number, user: User) {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
+
+export async function GetMyComputers(user: User) {
+  return await axios.get<ComputerResponse[]>(
+    "http://localhost:5268/computers/my-devices",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
+}
