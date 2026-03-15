@@ -46,8 +46,8 @@ export default function MyComputersTable() {
       {computers.length === 0 ? (
         <EmptyState
           icon={<FaComputer />}
-          title="No mobile devices yet"
-          description="You don't have any mobile device yet!"
+          title="No computers yet"
+          description="You don't have any computers yet!"
         />
       ) : (
         <Table>

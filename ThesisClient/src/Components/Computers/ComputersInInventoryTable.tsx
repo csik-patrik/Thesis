@@ -6,12 +6,19 @@ import Spinner from "../Shared/Spinner";
 import type { ModalHandle } from "../Shared/Modal";
 import Modal from "../Shared/Modal";
 import StatusBadge from "../Shared/StatusBadge";
-import CustomLink2 from "../Shared/CustomLink2";
 import Button from "../Shared/Button";
 import {
   DeleteComputer,
   GetComputersInInventory,
 } from "../../Services/ComputerServices";
+import TableLayout from "../../Layouts/TableLayout";
+import EmptyState from "../Shared/Table/EmptyState";
+import { FaComputer } from "react-icons/fa6";
+import FilterTabs from "../Shared/Table/FilterTabs";
+import Table from "../Shared/Table/Table";
+import Thead from "../Shared/Table/Thead";
+import Tr from "../Shared/Table/Tr";
+import Td from "../Shared/Table/Td";
 
 export default function ComputersInInventoryTable() {
   const { user } = useAuth();
@@ -89,138 +96,76 @@ export default function ComputersInInventoryTable() {
         buttonColor="red"
         handleSubmit={() => handleDelete(selectedComputerId)}
       ></Modal>
-      <div className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-start justify-between mb-8">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Computers in inventory
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">Manage computers</p>
-            </div>
-            <div className="flex gap-2">
-              <CustomLink2 to="/computers/create" label="Create" />
-              <CustomLink2 to="/computers/create-bulk" label="Create bulk" />
-            </div>
-          </div>
-          {/* ── Empty state ── */}
-          {computers.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center py-20 text-center px-6">
-              <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4"></div>
-              <h3 className="text-base font-semibold text-gray-900 mb-1">
-                No computers yet!
-              </h3>
-              <p className="text-sm text-gray-500 mb-6 max-w-xs">
-                There aren't any computers in the database yet! Create your
-                first one!
-              </p>
-              <CustomLink2
-                to="/computer-orders/create"
-                label="Create a new computer"
+      <TableLayout
+        title="Computers in inventory"
+        subtitle="Manage computers"
+        links={[
+          { to: "/computers/create", label: "Create" },
+          { to: "/computers/create-bulk", label: "Create bulk" },
+        ]}
+      >
+        {computers.length === 0 ? (
+          <EmptyState
+            icon={<FaComputer />}
+            title="No computers yet"
+            description="You don't have any computers yet!"
+          />
+        ) : (
+          <>
+            <FilterTabs
+              statuses={categories}
+              statusFilter={categoryFilter}
+              setStatusFilter={setCategoryFilter}
+              orders={computers}
+            />
+            <Table>
+              <Thead
+                headers={[
+                  "Id",
+                  "Hostname",
+                  "Category",
+                  "Model",
+                  "Serial number",
+                  "Status",
+                  "Status reason",
+                  "Actions",
+                ]}
               />
-            </div>
-          ) : (
-            <>
-              <div className="flex flex-wrap gap-2 mb-5">
-                {["All", ...categories].map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setCategoryFilter(s)}
-                    className={`px-3 py-1.5 text-sm rounded-xl font-medium transition-colors ${
-                      categoryFilter === s
-                        ? "bg-teal-600 text-white shadow-sm"
-                        : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    {s}
-                    <span
-                      className={`ml-1.5 text-xs ${categoryFilter === s ? "text-teal-200" : "text-gray-400"}`}
-                    >
-                      {s === "All"
-                        ? computers.length
-                        : computers.filter((c) => c.computerCategory.name === s)
-                            .length}
-                    </span>
-                  </button>
+              <tbody>
+                {filteredData.map((computer) => (
+                  <Tr key={computer.id}>
+                    <Td>{computer.id}</Td>
+                    <Td>{computer.hostname}</Td>
+                    <Td>{computer.computerCategory.name}</Td>
+                    <Td>{computer.model}</Td>
+                    <Td>{computer.serialNumber}</Td>
+                    <Td>
+                      <StatusBadge status={computer.status} />
+                    </Td>
+                    <Td>
+                      <StatusBadge status={computer.statusReason} />
+                    </Td>
+                    <Td>
+                      <div className="flex items-center gap-3">
+                        <Button
+                          color="red"
+                          handleClick={() => showModal(computer.id)}
+                          label="Delete"
+                        />
+                      </div>
+                    </Td>
+                  </Tr>
                 ))}
-              </div>
-
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full">
-                    <thead>
-                      <tr className="border-b border-gray-100 bg-gray-50/70">
-                        {[
-                          "Id",
-                          "Hostname",
-                          "Category",
-                          "Model",
-                          "Serial number",
-                          "Status",
-                          "Status reason",
-                          "Actions",
-                        ].map((h) => (
-                          <th
-                            key={h}
-                            className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-widest text-gray-400"
-                          >
-                            {h}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredData.map((d) => (
-                        <tr
-                          key={d.id}
-                          className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60 transition-colors"
-                        >
-                          <td className="px-5 py-3.5 text-sm text-gray-400 font-mono">
-                            {d.id}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-700 font-medium">
-                            {d.hostname}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-600">
-                            {d.computerCategory.name}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-600">
-                            {d.model}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-600">
-                            {d.serialNumber}
-                          </td>
-                          <td className="px-5 py-3.5">
-                            <StatusBadge status={d.status} />
-                          </td>
-                          <td className="px-5 py-3.5">
-                            <StatusBadge status={d.statusReason} />
-                          </td>
-                          <td className="px-5 py-3.5">
-                            <div className="flex items-center gap-3">
-                              <Button
-                                color="red"
-                                handleClick={() => showModal(d.id)}
-                                label="Delete"
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
                 {filteredData.length === 0 && (
                   <div className="py-12 text-center text-sm text-gray-400">
                     No computers match the selected filter.
                   </div>
                 )}
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+              </tbody>
+            </Table>
+          </>
+        )}
+      </TableLayout>
     </>
   );
 }
