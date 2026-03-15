@@ -25,3 +25,12 @@ export async function FetchMobileOrders(user: User) {
     },
   );
 }
+
+export async function GetMobileOrdersWaitingForApproval(user: User) {
+  return await axios.get<MobileOrderResponse[]>(
+    "http://localhost:5268/mobile-orders/approval",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
+}

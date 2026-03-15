@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
 import type { MobileOrderResponse } from "../../Types/MobileTypes";
 import Table from "../Shared/Table";
 import CustomLink from "../Shared/CustomLink";
+import { GetMobileOrdersWaitingForApproval } from "../../Services/MobileOrderServices";
 
 export default function MobileOrderWaitingForApprovalTable() {
   const { user } = useAuth();
@@ -24,13 +24,7 @@ export default function MobileOrderWaitingForApprovalTable() {
 
     const fetchOrders = async () => {
       try {
-        const res = await axios.get<MobileOrderResponse[]>(
-          "http://localhost:5268/mobile-orders/approval",
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
-
+        const res = await GetMobileOrdersWaitingForApproval(user);
         setOrdersApproved(
           res.data.filter((order) => order.status != "Waiting for approval"),
         );
