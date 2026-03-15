@@ -11,6 +11,14 @@ import {
 import Spinner from "../Shared/Spinner";
 import CustomLink2 from "../Shared/CustomLink2";
 import StatusBadge from "../Shared/StatusBadge";
+import TableLayout from "../../Layouts/TableLayout";
+import EmptyState from "../Shared/Table/EmptyState";
+import { FaMobile } from "react-icons/fa6";
+import FilterTabs from "../Shared/Table/FilterTabs";
+import Table from "../Shared/Table/Table";
+import Thead from "../Shared/Table/Thead";
+import Tr from "../Shared/Table/Tr";
+import Td from "../Shared/Table/Td";
 
 export default function SimCardsTable() {
   const [simCards, setSimCards] = useState<SimCardResponse[]>([]);
@@ -86,157 +94,87 @@ export default function SimCardsTable() {
         buttonText="Delete"
         handleSubmit={() => handleDelete(selectedSimCardId)}
       />
-      <div className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-start justify-between mb-8">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Sim cards</h1>
-              <p className="text-sm text-gray-500 mt-1">Manage sim cards</p>
-            </div>
-            <div className="flex gap-2">
-              <CustomLink2 to="/sim-cards/create" label="Create" />
-              <CustomLink2 to="/sim-cards/create-bulk" label="Create bulk" />
-            </div>
-          </div>
-          {/* ── Empty state ── */}
-          {simCards.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center py-20 text-center px-6">
-              <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4"></div>
-              <h3 className="text-base font-semibold text-gray-900 mb-1">
-                No sim cards yet!
-              </h3>
-              <p className="text-sm text-gray-500 mb-6 max-w-xs">
-                There aren't any sim cards in the database yet! Create your
-                first one!
-              </p>
+      <TableLayout
+        title="Sim cards"
+        subtitle="Manage sim cards"
+        links={[
+          { to: "/sim-cards/create", label: "Create" },
+          { to: "/sim-cards/create-bulk", label: "Create bulk" },
+        ]}
+      >
+        {simCards.length === 0 ? (
+          <EmptyState
+            icon={<FaMobile />}
+            title="No sim cards yet"
+            description="There aren't any sim cards in the database yet! Create your
+                first one!"
+            action={
               <CustomLink2
                 to="/sim-cards/create"
-                label="Create a new computer"
+                label="Create your first sim card"
               />
-            </div>
-          ) : (
-            <>
-              <div className="flex flex-wrap gap-2 mb-5">
-                {["All", ...callControlGroups].map((callControlGroup) => (
-                  <button
-                    key={callControlGroup}
-                    onClick={() => setCallControlGroupFilter(callControlGroup)}
-                    className={`px-3 py-1.5 text-sm rounded-xl font-medium transition-colors ${
-                      callControlGroupFilter === callControlGroup
-                        ? "bg-teal-600 text-white shadow-sm"
-                        : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    {callControlGroup}
-                    <span
-                      className={`ml-1.5 text-xs ${callControlGroupFilter === callControlGroup ? "text-teal-200" : "text-gray-400"}`}
-                    >
-                      {callControlGroup === "All"
-                        ? simCards.length
-                        : simCards.filter(
-                            (simCard) =>
-                              simCard.simCallControlGroup.name ===
-                              callControlGroup,
-                          ).length}
-                    </span>
-                  </button>
+            }
+          />
+        ) : (
+          <>
+            <FilterTabs
+              statuses={callControlGroups}
+              statusFilter={callControlGroupFilter}
+              setStatusFilter={setCallControlGroupFilter}
+              orders={simCards}
+            />
+            <FilterTabs
+              statuses={statuses}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              orders={simCards}
+            />
+            <Table>
+              <Thead
+                headers={[
+                  "Id",
+                  "Phone number",
+                  "Call control group",
+                  "Data enabled",
+                  "Status",
+                  "Actions",
+                ]}
+              />
+              <tbody>
+                {filteredData.map((simCard) => (
+                  <Tr key={simCard.id}>
+                    <Td>{simCard.id}</Td>
+                    <Td>{simCard.phoneNumber}</Td>
+                    <Td>{simCard.simCallControlGroup.name}</Td>
+                    <Td>
+                      {simCard.simCallControlGroup.isDataEnabled
+                        ? "True"
+                        : "False"}
+                    </Td>
+                    <Td>
+                      <StatusBadge status={simCard.status} />
+                    </Td>
+                    <Td>
+                      <div className="flex items-center gap-3">
+                        <Button
+                          color="red"
+                          handleClick={() => showModal(simCard.id)}
+                          label="Delete"
+                        />
+                      </div>
+                    </Td>
+                  </Tr>
                 ))}
-              </div>
-              <div className="flex flex-wrap gap-2 mb-5">
-                {["All", ...statuses].map((status) => (
-                  <button
-                    key={status}
-                    onClick={() => setStatusFilter(status)}
-                    className={`px-3 py-1.5 text-sm rounded-xl font-medium transition-colors ${
-                      statusFilter === status
-                        ? "bg-teal-600 text-white shadow-sm"
-                        : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    {status}
-                    <span
-                      className={`ml-1.5 text-xs ${statusFilter === status ? "text-teal-200" : "text-gray-400"}`}
-                    >
-                      {status === "All"
-                        ? simCards.length
-                        : simCards.filter(
-                            (simCard) => simCard.status === status,
-                          ).length}
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="min-w-full">
-                    <thead>
-                      <tr className="border-b border-gray-100 bg-gray-50/70">
-                        {[
-                          "Id",
-                          "Phone number",
-                          "Call control group",
-                          "Data enabled",
-                          "Status",
-                          "Actions",
-                        ].map((h) => (
-                          <th
-                            key={h}
-                            className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-widest text-gray-400"
-                          >
-                            {h}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredData.map((d) => (
-                        <tr
-                          key={d.id}
-                          className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60 transition-colors"
-                        >
-                          <td className="px-5 py-3.5 text-sm text-gray-400 font-mono">
-                            {d.id}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-700 font-medium">
-                            {d.phoneNumber}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-600">
-                            {d.simCallControlGroup.name}
-                          </td>
-                          <td className="px-5 py-3.5 text-sm text-gray-600">
-                            {d.simCallControlGroup.isDataEnabled
-                              ? "True"
-                              : "False"}
-                          </td>
-                          <td className="px-5 py-3.5">
-                            <StatusBadge status={d.status} />
-                          </td>
-                          <td className="px-5 py-3.5">
-                            <div className="flex items-center gap-3">
-                              <Button
-                                color="red"
-                                handleClick={() => showModal(d.id)}
-                                label="Delete"
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
                 {filteredData.length === 0 && (
                   <div className="py-12 text-center text-sm text-gray-400">
                     No sim cards match the selected filter.
                   </div>
                 )}
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+              </tbody>
+            </Table>
+          </>
+        )}
+      </TableLayout>
     </>
   );
 }
