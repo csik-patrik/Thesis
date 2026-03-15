@@ -13,7 +13,7 @@ import {
 import TableLayout from "../../Layouts/TableLayout";
 import EmptyState from "../Shared/Table/EmptyState";
 import { FaMobile } from "react-icons/fa6";
-import Table2 from "../Shared/Table/Table2";
+import Table from "../Shared/Table/Table";
 import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
@@ -150,7 +150,7 @@ export default function MobileDevicesDeployedTable() {
           />
         ) : (
           <>
-            <Table2>
+            <Table>
               <Thead
                 headers={[
                   "Id",
@@ -198,7 +198,7 @@ export default function MobileDevicesDeployedTable() {
                   </div>
                 )}
               </tbody>
-            </Table2>
+            </Table>
           </>
         )}
       </TableLayout>

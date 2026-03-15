@@ -14,7 +14,7 @@ import TableLayout from "../../Layouts/TableLayout";
 import CustomLink2 from "../Shared/CustomLink2";
 import EmptyState from "../Shared/Table/EmptyState";
 import FilterTabs from "../Shared/Table/FilterTabs";
-import Table2 from "../Shared/Table/Table2";
+import Table from "../Shared/Table/Table";
 import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
@@ -99,7 +99,7 @@ export default function ComputerOrdersTable() {
             setStatusFilter={setStatusFilter}
             orders={orders}
           />
-          <Table2>
+          <Table>
             <Thead
               headers={[
                 "Id",
@@ -146,7 +146,7 @@ export default function ComputerOrdersTable() {
                 </div>
               )}
             </tbody>
-          </Table2>
+          </Table>
         </>
       )}
     </TableLayout>

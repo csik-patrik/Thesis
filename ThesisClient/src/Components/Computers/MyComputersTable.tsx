@@ -6,7 +6,7 @@ import Spinner from "../Shared/Spinner";
 import TableLayout from "../../Layouts/TableLayout";
 import EmptyState from "../Shared/Table/EmptyState";
 import { FaComputer } from "react-icons/fa6";
-import Table2 from "../Shared/Table/Table2";
+import Table from "../Shared/Table/Table";
 import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
@@ -50,7 +50,7 @@ export default function MyComputersTable() {
           description="You don't have any mobile device yet!"
         />
       ) : (
-        <Table2>
+        <Table>
           <Thead
             headers={[
               "Hostname",
@@ -75,7 +75,7 @@ export default function MyComputersTable() {
               </Td>
             </Tr>
           ))}
-        </Table2>
+        </Table>
       )}
     </TableLayout>
   );

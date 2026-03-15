@@ -13,7 +13,7 @@ import {
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
 import Thead from "../Shared/Table/Thead";
-import Table2 from "../Shared/Table/Table2";
+import Table from "../Shared/Table/Table";
 import FilterTabs from "../Shared/Table/FilterTabs";
 import TableLayout from "../../Layouts/TableLayout";
 import EmptyState from "../Shared/Table/EmptyState";
@@ -98,7 +98,7 @@ export default function MyMobileOrdersTable() {
             setStatusFilter={setStatusFilter}
             orders={orders}
           />
-          <Table2>
+          <Table>
             <Thead
               headers={[
                 "Id",
@@ -145,7 +145,7 @@ export default function MyMobileOrdersTable() {
                 </div>
               )}
             </tbody>
-          </Table2>
+          </Table>
         </>
       )}
     </TableLayout>

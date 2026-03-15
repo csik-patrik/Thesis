@@ -8,7 +8,7 @@ import Spinner from "../Shared/Spinner";
 import TableLayout from "../../Layouts/TableLayout";
 import EmptyState from "../Shared/Table/EmptyState";
 import { FaComputer } from "react-icons/fa6";
-import Table2 from "../Shared/Table/Table2";
+import Table from "../Shared/Table/Table";
 import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
@@ -64,7 +64,7 @@ export default function ComputerOrderWaitingForApprovalTable() {
             description="If there are orders waiting for your approval you can see them below."
           />
         ) : (
-          <Table2>
+          <Table>
             <Thead
               headers={[
                 "Id",
@@ -95,7 +95,7 @@ export default function ComputerOrderWaitingForApprovalTable() {
                 </Tr>
               ))}
             </tbody>
-          </Table2>
+          </Table>
         )}
       </TableLayout>
 
@@ -110,7 +110,7 @@ export default function ComputerOrderWaitingForApprovalTable() {
             description="If you made a decision about an order before, then you can see it below."
           />
         ) : (
-          <Table2>
+          <Table>
             <Thead
               headers={[
                 "Id",
@@ -141,7 +141,7 @@ export default function ComputerOrderWaitingForApprovalTable() {
                 </Tr>
               ))}
             </tbody>
-          </Table2>
+          </Table>
         )}
       </TableLayout>
     </div>

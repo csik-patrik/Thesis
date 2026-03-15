@@ -12,7 +12,7 @@ import {
   GetMyComputerOrders,
 } from "../../Services/ComputerOrderServices";
 import FilterTabs from "../Shared/Table/FilterTabs";
-import Table2 from "../Shared/Table/Table2";
+import Table from "../Shared/Table/Table";
 import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
@@ -95,7 +95,7 @@ export default function MyComputerOrdersTable() {
             setStatusFilter={setStatusFilter}
             orders={orders}
           />
-          <Table2>
+          <Table>
             <Thead
               headers={[
                 "Id",
@@ -143,7 +143,7 @@ export default function MyComputerOrdersTable() {
                 No orders match the selected filter.
               </div>
             )}
-          </Table2>
+          </Table>
         </>
       )}
     </TableLayout>

@@ -7,7 +7,7 @@ import { GetMobileOrdersWaitingForApproval } from "../../Services/MobileOrderSer
 import TableLayout from "../../Layouts/TableLayout";
 import EmptyState from "../Shared/Table/EmptyState";
 import { FaMobile } from "react-icons/fa6";
-import Table2 from "../Shared/Table/Table2";
+import Table from "../Shared/Table/Table";
 import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import StatusBadge from "../Shared/StatusBadge";
@@ -69,7 +69,7 @@ export default function MobileOrderWaitingForApprovalTable() {
             description="If there are orders waiting for your approval you can see them below."
           />
         ) : (
-          <Table2>
+          <Table>
             <Thead
               headers={[
                 "Id",
@@ -100,7 +100,7 @@ export default function MobileOrderWaitingForApprovalTable() {
                 </Tr>
               ))}
             </tbody>
-          </Table2>
+          </Table>
         )}
       </TableLayout>
 
@@ -115,7 +115,7 @@ export default function MobileOrderWaitingForApprovalTable() {
             description="If you made a decision about an order before, then you can see it below."
           />
         ) : (
-          <Table2>
+          <Table>
             <Thead
               headers={[
                 "Id",
@@ -146,7 +146,7 @@ export default function MobileOrderWaitingForApprovalTable() {
                 </Tr>
               ))}
             </tbody>
-          </Table2>
+          </Table>
         )}
       </TableLayout>
     </div>

@@ -13,7 +13,7 @@ import {
 } from "../../Services/ComputerServices";
 import TableLayout from "../../Layouts/TableLayout";
 import EmptyState from "../Shared/Table/EmptyState";
-import Table2 from "../Shared/Table/Table2";
+import Table from "../Shared/Table/Table";
 import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
@@ -147,7 +147,7 @@ export default function ComputersDeployedTable() {
           />
         ) : (
           <>
-            <Table2>
+            <Table>
               <Thead
                 headers={[
                   "Id",
@@ -185,7 +185,7 @@ export default function ComputersDeployedTable() {
                   </div>
                 )}
               </tbody>
-            </Table2>
+            </Table>
           </>
         )}
       </TableLayout>
