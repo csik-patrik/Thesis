@@ -41,3 +41,12 @@ export async function GetComputerOrders(user: User) {
     },
   );
 }
+
+export async function GetComputerOrdersWaitingForApproval(user: User) {
+  return await axios.get<ComputerOrderResponse[]>(
+    "http://localhost:5268/computer-orders/approval",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
+}

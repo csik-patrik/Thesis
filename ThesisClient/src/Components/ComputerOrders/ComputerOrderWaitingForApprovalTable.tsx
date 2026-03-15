@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import type { ComputerOrderResponse } from "../../Types/ComputerTypes";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
 import Table from "../Shared/Table";
 import CustomLink from "../Shared/CustomLink";
+import { GetComputerOrdersWaitingForApproval } from "../../Services/ComputerOrderServices";
 
 export default function ComputerOrderWaitingForApprovalTable() {
   const { user } = useAuth();
@@ -21,12 +21,7 @@ export default function ComputerOrderWaitingForApprovalTable() {
 
     const fetchOrders = async () => {
       try {
-        const res = await axios.get<ComputerOrderResponse[]>(
-          "http://localhost:5268/computer-orders/approval",
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
+        const res = await GetComputerOrdersWaitingForApproval(user);
         setOrdersApproved(
           res.data.filter((order) => order.status != "Waiting for approval"),
         );
