@@ -105,7 +105,7 @@ export default function MobileOrderWaitingForApprovalTable() {
       </TableLayout>
 
       <TableLayout
-        title="Approved mobile order"
+        title="Approved mobile orders"
         subtitle="Mobile orders which you already approved."
       >
         {ordersWaitingForApproval.length === 0 ? (

@@ -2,9 +2,17 @@ import { useEffect, useState } from "react";
 import type { ComputerOrderResponse } from "../../Types/ComputerTypes";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
-import Table from "../Shared/Table";
 import CustomLink from "../Shared/CustomLink";
 import { GetComputerOrdersWaitingForApproval } from "../../Services/ComputerOrderServices";
+import Spinner from "../Shared/Spinner";
+import TableLayout from "../../Layouts/TableLayout";
+import EmptyState from "../Shared/Table/EmptyState";
+import { FaComputer } from "react-icons/fa6";
+import Table2 from "../Shared/Table/Table2";
+import Thead from "../Shared/Table/Thead";
+import Tr from "../Shared/Table/Tr";
+import Td from "../Shared/Table/Td";
+import StatusBadge from "../Shared/StatusBadge";
 
 export default function ComputerOrderWaitingForApprovalTable() {
   const { user } = useAuth();
@@ -40,33 +48,25 @@ export default function ComputerOrderWaitingForApprovalTable() {
   }, [user]);
 
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-        <h3>Loading your computer orders...</h3>
-      </div>
-    );
-  }
-
-  if (ordersApproved.length === 0 && ordersWaitingForApproval.length === 0) {
-    return (
-      <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light text-center">
-        <h1 className="text-muted mb-3">
-          There aren't any orders waiting for approval
-        </h1>
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (
-    <div className="flex flex-col items-center justify-center p-6">
-      {ordersWaitingForApproval.length > 0 ? (
-        <>
-          <h1 className="text-3xl font-bold mb-6">
-            Computer orders waiting for approval
-          </h1>
-          <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-            <Table
-              headerItems={[
+    <div className="flex flex-row w-full justify-center">
+      <TableLayout
+        title="Computer orders waiting for approval"
+        subtitle="Computer orders are waiting for your decision."
+      >
+        {ordersWaitingForApproval.length === 0 ? (
+          <EmptyState
+            icon={<FaComputer />}
+            title="There aren't any orders waiting for your approval."
+            description="If there are orders waiting for your approval you can see them below."
+          />
+        ) : (
+          <Table2>
+            <Thead
+              headers={[
                 "Id",
                 "Customer name",
                 "Device type",
@@ -74,38 +74,45 @@ export default function ComputerOrderWaitingForApprovalTable() {
                 "Status",
                 "Actions",
               ]}
-            >
-              {ordersWaitingForApproval.map((d) => (
-                <tr key={d.id} className="hover:bg-gray-50 border-b">
-                  <td className="px-4 py-2">{d.id}</td>
-                  <td className="px-4 py-2">{d.customer.displayName}</td>
-                  <td className="px-4 py-2">{d.computerCategory.name}</td>
-                  <td className="px-4 py-2">{d.pickupLocation}</td>
-                  <td className="px-4 py-2">{d.status}</td>
-                  <td className="px-4 py-2">
+            />
+            <tbody>
+              {ordersWaitingForApproval.map((order) => (
+                <Tr key={order.id}>
+                  <Td>{order.id}</Td>
+                  <Td>{order.customer.displayName}</Td>
+                  <Td>{order.computerCategory.name}</Td>
+                  <Td>{order.pickupLocation}</Td>
+                  <Td>
+                    <StatusBadge status={order.status} />
+                  </Td>
+                  <Td>
                     <CustomLink
                       color="blue"
-                      to={`/computer-orders/${d.id}`}
+                      to={`/computer-orders/${order.id}`}
                       label="View"
                     />
-                  </td>
-                </tr>
+                  </Td>
+                </Tr>
               ))}
-            </Table>
-          </div>
-        </>
-      ) : (
-        <h1 className="text-3xl font-bold mb-6">
-          There aren't any orders waiting for approval
-        </h1>
-      )}
-      <div className="mt-10" />
-      {ordersApproved.length > 0 ? (
-        <>
-          <h1 className="text-3xl font-bold mb-6">Approved computer orders</h1>
-          <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-            <Table
-              headerItems={[
+            </tbody>
+          </Table2>
+        )}
+      </TableLayout>
+
+      <TableLayout
+        title="Approved computer orders"
+        subtitle="Computer orders which you already approved."
+      >
+        {ordersWaitingForApproval.length === 0 ? (
+          <EmptyState
+            icon={<FaComputer />}
+            title="There aren't any approved orders yet."
+            description="If you made a decision about an order before, then you can see it below."
+          />
+        ) : (
+          <Table2>
+            <Thead
+              headers={[
                 "Id",
                 "Customer name",
                 "Device type",
@@ -113,31 +120,30 @@ export default function ComputerOrderWaitingForApprovalTable() {
                 "Status",
                 "Actions",
               ]}
-            >
-              {ordersApproved.map((d) => (
-                <tr key={d.id} className="hover:bg-gray-50 border-b">
-                  <td className="px-4 py-2">{d.id}</td>
-                  <td className="px-4 py-2">{d.customer.displayName}</td>
-                  <td className="px-4 py-2">{d.computerCategory.name}</td>
-                  <td className="px-4 py-2">{d.pickupLocation}</td>
-                  <td className="px-4 py-2">{d.status}</td>
-                  <td className="px-4 py-2">
+            />
+            <tbody>
+              {ordersApproved.map((order) => (
+                <Tr key={order.id}>
+                  <Td>{order.id}</Td>
+                  <Td>{order.customer.displayName}</Td>
+                  <Td>{order.computerCategory.name}</Td>
+                  <Td>{order.pickupLocation}</Td>
+                  <Td>
+                    <StatusBadge status={order.status} />
+                  </Td>
+                  <Td>
                     <CustomLink
                       color="blue"
-                      to={`/computer-orders/${d.id}`}
+                      to={`/computer-orders/${order.id}`}
                       label="View"
                     />
-                  </td>
-                </tr>
+                  </Td>
+                </Tr>
               ))}
-            </Table>
-          </div>
-        </>
-      ) : (
-        <h1 className="text-3xl font-bold mb-6">
-          There aren't any approved orders
-        </h1>
-      )}
+            </tbody>
+          </Table2>
+        )}
+      </TableLayout>
     </div>
   );
 }
