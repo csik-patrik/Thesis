@@ -12,10 +12,7 @@ export async function GetMobileDeviceCategories() {
   );
 }
 
-export async function CreateNewMobileOrder(
-  formData: CreateMobileOrderRequest,
-  user: User,
-) {
+export async function CreateNewMobileOrder(formData: CreateMobileOrderRequest, user: User) {
   return await axios.post("http://localhost:5268/mobile-orders", formData, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
@@ -24,6 +21,15 @@ export async function CreateNewMobileOrder(
 export async function GetMyMobileDevices(user: User) {
   return await axios.get<MobileDeviceResponse[]>(
     "http://localhost:5268/mobile-devices/my-devices",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
+}
+
+export function GetMobileDevicesForAllocation(categoryId: number, user: User) {
+  return axios.get<MobileDeviceResponse[]>(
+    `http://localhost:5268/mobile-devices/allocation/${categoryId}`,
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },

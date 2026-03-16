@@ -12,6 +12,21 @@ export type MobileOrderState = {
   groupLeaders: UserResponse[];
 };
 
+export type CreateMobileDeviceAllocationRequest = {
+  orderId: number;
+  mobileDeviceId: number;
+};
+
+export type CreateSimCardAllocationRequest = {
+  orderId: number;
+  simCardId: number;
+};
+
+export type CreateOrderDecisionRequest = {
+  orderId: number;
+  decision: boolean;
+};
+
 export type MobileOrderAction =
   | {
       type: "SET_FIELD";

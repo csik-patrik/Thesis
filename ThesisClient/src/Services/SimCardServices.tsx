@@ -4,6 +4,7 @@ import type {
   SimCallControlGroupResponse,
   SimCardResponse,
 } from "../Types/MobileTypes";
+import type { User } from "../Types/UserTypes";
 
 export async function GetSimCardsInInventory() {
   return await axios.get<SimCardResponse[]>("http://localhost:5268/sim-cards");
@@ -21,4 +22,13 @@ export async function GetSimCallControlGroups() {
 
 export async function CreateSimCard(formData: CreateSimCardRequest) {
   return await axios.post("http://localhost:5268/sim-cards", formData);
+}
+
+export function GetSimCardsForAllocation(simCallControlGroupId: number, user: User) {
+  return axios.get<SimCardResponse[]>(
+    `http://localhost:5268/sim-cards/allocation/${simCallControlGroupId}`,
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
 }

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -10,6 +9,15 @@ import type {
   MobileDeviceResponse,
   SimCardResponse,
 } from "../../Types/MobileTypes";
+import {
+  AllocateMobileDeviceToOrder,
+  AllocateSimCardToOrder,
+  DeliverOrder,
+  GetOrderById,
+  MakeDecisionAsApprover,
+} from "../../Services/MobileOrderServices";
+import { GetMobileDevicesForAllocation } from "../../Services/MobileDeviceServices";
+import { GetSimCardsForAllocation } from "../../Services/SimCardServices";
 
 function MobileOrderView() {
   const { id } = useParams<{ id: string }>();
@@ -31,12 +39,7 @@ function MobileOrderView() {
 
     const fetchOrder = async () => {
       try {
-        const res = await axios.get<MobileOrderResponse>(
-          `http://localhost:5268/mobile-orders/${id}`,
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
+        const res = await GetOrderById(Number(id), user);
         setOrder(res.data);
       } catch (err) {
         toast.error("Error fetching mobile orders.");
@@ -53,13 +56,7 @@ function MobileOrderView() {
     if (!user || !user.token) return;
     if (!order || order.mobileDevice) return;
 
-    axios
-      .get<MobileDeviceResponse[]>(
-        `http://localhost:5268/mobile-devices/allocation/${order?.mobileDeviceCategory.id}`,
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        },
-      )
+    GetMobileDevicesForAllocation(order?.mobileDeviceCategory.id, user)
       .then((res) => setDevices(res.data))
       .catch((err) => {
         toast.error("Error fetching allocable devices.");
@@ -72,13 +69,7 @@ function MobileOrderView() {
     if (!user || !user.token) return;
     if (!order || !order.mobileDevice || order.mobileDevice.simCard) return;
 
-    axios
-      .get<SimCardResponse[]>(
-        `http://localhost:5268/sim-cards/allocation/${order.simCallControlGroup.id}`,
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        },
-      )
+    GetSimCardsForAllocation(order.simCallControlGroup.id, user)
       .then((res) => setSimCards(res.data))
       .catch((err) => {
         toast.error("Error fetching allocable sim cards.");
@@ -89,21 +80,11 @@ function MobileOrderView() {
   const handleAllocateMobileDevice = async (deviceId: number) => {
     setAllocating(deviceId);
     try {
-      await axios.put(
-        `http://localhost:5268/mobile-orders/allocate/device/`,
-        {
-          orderId: id,
-          mobileDeviceId: deviceId,
-        },
-        { headers: { "Content-Type": "application/json" } },
-      );
+      await AllocateMobileDeviceToOrder({ orderId: Number(id), mobileDeviceId: deviceId });
+
       toast.success("Device allocated successfully!");
+
       setDevices((prev) => prev.filter((d) => d.id !== deviceId));
-      // Refresh order to show allocated device
-      const res = await axios.get<MobileOrderResponse>(
-        `http://localhost:5268/mobile-orders/${id}`,
-      );
-      setOrder(res.data);
     } catch (err) {
       toast.error("Failed to allocate device.");
       console.error("Allocation error:", err);
@@ -113,21 +94,11 @@ function MobileOrderView() {
   const handleAllocateSim = async (simCardId: number) => {
     setAllocatingSim(simCardId);
     try {
-      await axios.put(
-        `http://localhost:5268/mobile-orders/allocate/sim-card`,
-        {
-          orderId: id,
-          simCardId: simCardId,
-        },
-        { headers: { "Content-Type": "application/json" } },
-      );
+      await AllocateSimCardToOrder({ orderId: Number(id), simCardId: simCardId });
+
       toast.success("Sim card allocated successfully!");
+
       setSimCards((prev) => prev.filter((s) => s.id !== simCardId));
-      // Refresh order to show allocated sim card
-      const res = await axios.get<MobileOrderResponse>(
-        `http://localhost:5268/mobile-orders/${id}`,
-      );
-      setOrder(res.data);
     } catch (err) {
       toast.error("Failed to allocate sim card.");
       console.error("Sim allocation error:", err);
@@ -138,13 +109,9 @@ function MobileOrderView() {
 
   const handleDeliver = async () => {
     try {
-      await axios.put(`http://localhost:5268/mobile-orders/deliver/${id}`);
+      await DeliverOrder(Number(id));
+
       toast.success("Order marked as delivered!");
-      // Optionally refresh order data
-      const res = await axios.get<MobileOrderResponse>(
-        `http://localhost:5268/mobile-orders/${id}`,
-      );
-      setOrder(res.data);
     } catch (err) {
       toast.error("Failed to deliver device.");
       console.error("Delivery error:", err);
@@ -158,35 +125,13 @@ function MobileOrderView() {
     }
 
     try {
-      // 🔹 Call approval endpoint
-      await axios.put(
-        `http://localhost:5268/mobile-orders/approval/${id}`,
-        decision,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        },
-      );
+      await MakeDecisionAsApprover({ orderId: Number(id), decision: decision }, user);
 
-      // 🔹 Refresh order
-      const res = await axios.get<MobileOrderResponse>(
-        `http://localhost:5268/mobile-orders/${id}`,
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        },
-      );
-
-      setOrder(res.data);
-      toast.success(
-        `Order ${decision ? "approved" : "rejected"} successfully!`,
-      );
+      toast.success(`Order ${decision ? "approved" : "rejected"} successfully!`);
     } catch (err: any) {
       console.error("Error updating computer order:", err);
 
-      const message =
-        err.response?.data?.message || "Failed to update computer order.";
+      const message = err.response?.data?.message || "Failed to update computer order.";
       toast.error(message);
     }
   };
@@ -201,24 +146,16 @@ function MobileOrderView() {
     sim.phoneNumber.toLowerCase().includes(simSearch.toLowerCase()),
   );
 
-  if (loading)
-    return <Spinner />;
+  if (loading) return <Spinner />;
 
-  if (!order)
-    return (
-      <p className="text-center mt-10 text-red-600 font-medium">
-        Order not found.
-      </p>
-    );
+  if (!order) return <p className="text-center mt-10 text-red-600 font-medium">Order not found.</p>;
 
   return (
     <div className="px-4 py-6">
       <div className="flex flex-col md:flex-row gap-6">
         {/* Order Details */}
         <div className="md:flex-1">
-          <h2 className="text-xl font-semibold text-neutral-800">
-            Mobile Order Details
-          </h2>
+          <h2 className="text-xl font-semibold text-neutral-800">Mobile Order Details</h2>
 
           <div className="mt-4 rounded-lg bg-white p-6 shadow">
             <dl className="space-y-2">
@@ -228,45 +165,27 @@ function MobileOrderView() {
               </div>
 
               <div className="flex justify-between">
-                <dt className="font-medium text-neutral-700">
-                  Customer's Name:
-                </dt>
-                <dd className="text-neutral-800">
-                  {order.customer.displayName}
-                </dd>
+                <dt className="font-medium text-neutral-700">Customer's Name:</dt>
+                <dd className="text-neutral-800">{order.customer.displayName}</dd>
               </div>
 
               <div className="flex justify-between">
-                <dt className="font-medium text-neutral-700">
-                  Customer's Cost Center:
-                </dt>
-                <dd className="text-neutral-800">
-                  {order.customer.costCenter}
-                </dd>
+                <dt className="font-medium text-neutral-700">Customer's Cost Center:</dt>
+                <dd className="text-neutral-800">{order.customer.costCenter}</dd>
               </div>
 
               <div className="flex justify-between">
-                <dt className="font-medium text-neutral-700">
-                  Device Category:
-                </dt>
-                <dd className="text-neutral-800">
-                  {order.mobileDeviceCategory.name}
-                </dd>
+                <dt className="font-medium text-neutral-700">Device Category:</dt>
+                <dd className="text-neutral-800">{order.mobileDeviceCategory.name}</dd>
               </div>
 
               <div className="flex justify-between">
-                <dt className="font-medium text-neutral-700">
-                  Call Control Group:
-                </dt>
-                <dd className="text-neutral-800">
-                  {order.simCallControlGroup.name}
-                </dd>
+                <dt className="font-medium text-neutral-700">Call Control Group:</dt>
+                <dd className="text-neutral-800">{order.simCallControlGroup.name}</dd>
               </div>
 
               <div className="flex justify-between">
-                <dt className="font-medium text-neutral-700">
-                  Pickup Location:
-                </dt>
+                <dt className="font-medium text-neutral-700">Pickup Location:</dt>
                 <dd className="text-neutral-800">{order.pickupLocation}</dd>
               </div>
 
@@ -276,9 +195,7 @@ function MobileOrderView() {
               </div>
 
               <div className="flex justify-between">
-                <dt className="font-medium text-neutral-700">
-                  Order's Status:
-                </dt>
+                <dt className="font-medium text-neutral-700">Order's Status:</dt>
                 <dd className="text-neutral-800">{order.status}</dd>
               </div>
 
@@ -351,17 +268,14 @@ function MobileOrderView() {
             {/* Allocated Device */}
             {order.mobileDevice ? (
               <>
-                <h2 className="text-lg font-semibold text-neutral-800">
-                  Allocated Device
-                </h2>
+                <h2 className="text-lg font-semibold text-neutral-800">Allocated Device</h2>
                 <div className="rounded-lg bg-white p-4 shadow">
                   <ul className="space-y-2">
                     <li>
                       <strong>Hostname:</strong> {order.mobileDevice.hostname}
                     </li>
                     <li>
-                      <strong>Category:</strong>{" "}
-                      {order.mobileDevice.mobileDeviceCategory.name}
+                      <strong>Category:</strong> {order.mobileDevice.mobileDeviceCategory.name}
                     </li>
                     <li>
                       <strong>IMEI:</strong> {order.mobileDevice.imeiNumber}
@@ -374,9 +288,7 @@ function MobileOrderView() {
               </>
             ) : (
               <>
-                <h2 className="text-lg font-semibold text-neutral-800">
-                  Allocate Device
-                </h2>
+                <h2 className="text-lg font-semibold text-neutral-800">Allocate Device</h2>
                 <input
                   type="text"
                   placeholder="Search by hostname..."
@@ -386,9 +298,7 @@ function MobileOrderView() {
                 />
                 <div className="rounded-lg bg-white p-3 shadow space-y-2">
                   {filteredDevices.length === 0 ? (
-                    <p className="text-neutral-500">
-                      No devices available for allocation.
-                    </p>
+                    <p className="text-neutral-500">No devices available for allocation.</p>
                   ) : (
                     <ul className="space-y-2">
                       {filteredDevices.map((device) => (
@@ -397,25 +307,19 @@ function MobileOrderView() {
                           className="flex flex-col rounded border border-neutral-200 p-2"
                         >
                           <strong>{device.hostname}</strong>
-                          <span>
-                            Category: {device.mobileDeviceCategory.name}
-                          </span>
+                          <span>Category: {device.mobileDeviceCategory.name}</span>
                           <span>IMEI: {device.imeiNumber}</span>
                           <span>Serial: {device.serialNumber}</span>
                           <span>Status: {device.status}</span>
                           <button
                             disabled={allocating === device.id}
-                            onClick={() =>
-                              handleAllocateMobileDevice(device.id)
-                            }
+                            onClick={() => handleAllocateMobileDevice(device.id)}
                             className="
                             mt-2 self-end rounded-md bg-green-600 px-3 py-1 text-white text-sm
                             hover:bg-green-500 transition disabled:opacity-60 disabled:cursor-not-allowed
                           "
                           >
-                            {allocating === device.id
-                              ? "Allocating..."
-                              : "Allocate"}
+                            {allocating === device.id ? "Allocating..." : "Allocate"}
                           </button>
                         </li>
                       ))}
@@ -435,8 +339,7 @@ function MobileOrderView() {
                   <div className="rounded-lg bg-white p-4 shadow space-y-2">
                     <ul className="space-y-1">
                       <li>
-                        <strong>Phone Number:</strong>{" "}
-                        {order.mobileDevice.simCard.phoneNumber}
+                        <strong>Phone Number:</strong> {order.mobileDevice.simCard.phoneNumber}
                       </li>
                       <li>
                         <strong>Call Control Group:</strong>{" "}
@@ -444,8 +347,7 @@ function MobileOrderView() {
                       </li>
                       <li>
                         <strong>Data Enabled:</strong>{" "}
-                        {order.mobileDevice.simCard.simCallControlGroup
-                          .isDataEnabled
+                        {order.mobileDevice.simCard.simCallControlGroup.isDataEnabled
                           ? "Yes"
                           : "No"}
                       </li>
@@ -454,9 +356,7 @@ function MobileOrderView() {
                 </>
               ) : (
                 <>
-                  <h2 className="text-lg font-semibold text-neutral-800 mt-4">
-                    Allocate Sim Card
-                  </h2>
+                  <h2 className="text-lg font-semibold text-neutral-800 mt-4">Allocate Sim Card</h2>
                   <input
                     type="text"
                     placeholder="Search by phone number..."
@@ -466,9 +366,7 @@ function MobileOrderView() {
                   />
                   <div className="rounded-lg bg-white p-3 shadow space-y-2">
                     {filteredSimCards.length === 0 ? (
-                      <p className="text-neutral-500">
-                        No sim cards available for allocation.
-                      </p>
+                      <p className="text-neutral-500">No sim cards available for allocation.</p>
                     ) : (
                       <ul className="space-y-2">
                         {filteredSimCards.map((sim) => (
@@ -477,14 +375,9 @@ function MobileOrderView() {
                             className="flex flex-col rounded border border-neutral-200 p-2"
                           >
                             <strong>{sim.phoneNumber}</strong>
+                            <span>Call Control Group: {sim.simCallControlGroup.name}</span>
                             <span>
-                              Call Control Group: {sim.simCallControlGroup.name}
-                            </span>
-                            <span>
-                              Data Enabled:{" "}
-                              {sim.simCallControlGroup.isDataEnabled
-                                ? "Yes"
-                                : "No"}
+                              Data Enabled: {sim.simCallControlGroup.isDataEnabled ? "Yes" : "No"}
                             </span>
                             <span>Status: {sim.status}</span>
                             <button
@@ -495,9 +388,7 @@ function MobileOrderView() {
                               hover:bg-green-500 transition disabled:opacity-60 disabled:cursor-not-allowed
                             "
                             >
-                              {allocatingSim === sim.id
-                                ? "Allocating..."
-                                : "Allocate"}
+                              {allocatingSim === sim.id ? "Allocating..." : "Allocate"}
                             </button>
                           </li>
                         ))}
