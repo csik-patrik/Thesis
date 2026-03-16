@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import type { UserResponse } from "../../Types/UserTypes";
 import Modal, { type ModalHandle } from "../Shared/Modal";
 import CustomLink2 from "../Shared/CustomLink2";
 import { Link } from "react-router-dom";
+import { DeleteUser, GetUsers } from "../../Services/UserServices";
 
 export default function Users() {
   const [users, setUsers] = useState<UserResponse[]>([]);
@@ -12,15 +12,14 @@ export default function Users() {
   const dialog = useRef<ModalHandle>(null);
 
   useEffect(() => {
-    axios
-      .get<UserResponse[]>("http://localhost:5268/users")
+    GetUsers()
       .then((res) => setUsers(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:5268/users/${id}`);
+      DeleteUser(id);
       setUsers((prev) => prev.filter((item) => item.id !== id));
       toast.success("User deleted successfully!");
     } catch (err) {
@@ -83,24 +82,14 @@ export default function Users() {
                       key={user.id}
                       className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/60 transition-colors"
                     >
-                      <td className="px-5 py-3.5 text-sm text-gray-400 font-mono">
-                        {user.id}
-                      </td>
+                      <td className="px-5 py-3.5 text-sm text-gray-400 font-mono">{user.id}</td>
                       <td className="px-5 py-3.5 text-sm text-gray-700 font-medium">
                         {user.username}
                       </td>
-                      <td className="px-5 py-3.5 text-sm text-gray-600">
-                        {user.displayName}
-                      </td>
-                      <td className="px-5 py-3.5 text-sm text-gray-600">
-                        {user.email}
-                      </td>
-                      <td className="px-5 py-3.5 text-sm text-gray-600">
-                        {user.department}
-                      </td>
-                      <td className="px-5 py-3.5 text-sm text-gray-600">
-                        {user.costCenter}
-                      </td>
+                      <td className="px-5 py-3.5 text-sm text-gray-600">{user.displayName}</td>
+                      <td className="px-5 py-3.5 text-sm text-gray-600">{user.email}</td>
+                      <td className="px-5 py-3.5 text-sm text-gray-600">{user.department}</td>
+                      <td className="px-5 py-3.5 text-sm text-gray-600">{user.costCenter}</td>
                       <td className="px-5 py-3.5 text-sm text-gray-600">
                         {user.userRoles.map((role) => role.name + " ")}
                       </td>
