@@ -43,9 +43,10 @@ export default function AllocateSimCard({ order }: { order: MobileOrderResponse 
   }, [order, user]);
 
   const handleAllocateSim = async (simCardId: number) => {
+    if (user == null) return;
     setIsLoading(true);
     try {
-      await AllocateSimCardToOrder({ orderId: order.id, simCardId: simCardId });
+      await AllocateSimCardToOrder({ orderId: order.id, simCardId: simCardId }, user);
 
       toast.success("Sim card allocated successfully!");
 

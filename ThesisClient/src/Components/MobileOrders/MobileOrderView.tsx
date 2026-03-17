@@ -47,7 +47,8 @@ export default function MobileOrderView() {
 
   const handleDeliver = async () => {
     try {
-      await DeliverOrder(Number(id));
+      if (user == null) return;
+      await DeliverOrder(Number(id), user);
 
       toast.success("Order marked as delivered!");
     } catch (err) {
@@ -78,17 +79,17 @@ export default function MobileOrderView() {
 
   if (!order) return <p className="text-center mt-10 text-red-600 font-medium">Order not found.</p>;
 
-  const isOrderReadyForDelivery =
+  const isDeliveryButtonVisible =
     order.mobileDevice &&
     user?.roles.includes("Admin") &&
     order.mobileDevice.simCard &&
     order.status !== "Delivered";
 
-  const isOrderReadyForSimAllocation =
-    user?.roles.includes("Admin") && order.status == "Approved" && order.mobileDevice;
+  const isMobileAllocationVisible =
+    user?.roles.includes("Admin") && order.status == "Approved" && !order.mobileDevice;
 
-  const isOrderReadyForMobileAllocation =
-    user?.roles.includes("Admin") && order.status == "Approved";
+  const isSimAllocationVisible =
+    user?.roles.includes("Admin") && order.mobileDevice && !order.mobileDevice.simCard;
 
   return (
     <div className="flex flex-row w-full justify-center">
@@ -161,7 +162,7 @@ export default function MobileOrderView() {
               </Td>
             </Tr>
           )}
-          {isOrderReadyForDelivery && (
+          {isDeliveryButtonVisible && (
             <Tr key="deliver">
               <Td>
                 <Button color="green" label="Deliver Device" handleClick={handleDeliver} />
@@ -171,9 +172,9 @@ export default function MobileOrderView() {
         </Table>
       </TableLayout>
 
-      {isOrderReadyForMobileAllocation && <AllocateMobileDevice order={order} />}
+      {isMobileAllocationVisible && <AllocateMobileDevice order={order} />}
 
-      {isOrderReadyForSimAllocation && <AllocateSimCard order={order} />}
+      {isSimAllocationVisible && <AllocateSimCard order={order} />}
     </div>
   );
 }

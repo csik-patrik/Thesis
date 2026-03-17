@@ -36,9 +36,10 @@ export default function AllocateMobileDevice({ order }: { order: MobileOrderResp
   }, [order, user]);
 
   const handleAllocateMobileDevice = async (deviceId: number) => {
+    if (user == null) return;
     setIsLoading(true);
     try {
-      await AllocateMobileDeviceToOrder({ orderId: order.id, mobileDeviceId: deviceId });
+      await AllocateMobileDeviceToOrder({ orderId: order.id, mobileDeviceId: deviceId }, user);
 
       toast.success("Device allocated successfully!");
 
@@ -60,11 +61,11 @@ export default function AllocateMobileDevice({ order }: { order: MobileOrderResp
   );
 
   return (
-    <TableLayout title="Allocate mobile device" subtitle="Select a SIM card for this order">
+    <TableLayout title="Allocate mobile device" subtitle="Select a mobile device for this order">
       {devices.length === 0 ? (
         <EmptyState
           icon={<FaMobile />}
-          title="There aren't mobile devices available"
+          title="There aren't any mobile devices available"
           description=""
         />
       ) : (

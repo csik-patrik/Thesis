@@ -37,30 +37,35 @@ export async function GetOrderById(id: number, user: User) {
   });
 }
 
-export async function AllocateMobileDeviceToOrder(request: CreateMobileDeviceAllocationRequest) {
+export async function AllocateMobileDeviceToOrder(
+  request: CreateMobileDeviceAllocationRequest,
+  user: User,
+) {
   return await axios.put(
     `http://localhost:5268/mobile-orders/allocate/device/`,
     {
       orderId: request.orderId,
       mobileDeviceId: request.mobileDeviceId,
     },
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json", Authorization: `Bearer ${user.token}` } },
   );
 }
 
-export async function AllocateSimCardToOrder(request: CreateSimCardAllocationRequest) {
+export async function AllocateSimCardToOrder(request: CreateSimCardAllocationRequest, user: User) {
   return await axios.put(
     `http://localhost:5268/mobile-orders/allocate/sim-card`,
     {
       orderId: request.orderId,
       simCardId: request.simCardId,
     },
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json", Authorization: `Bearer ${user.token}` } },
   );
 }
 
-export async function DeliverOrder(id: number) {
-  return await axios.put(`http://localhost:5268/mobile-orders/deliver/${id}`);
+export async function DeliverOrder(id: number, user: User) {
+  return await axios.put(`http://localhost:5268/mobile-orders/deliver/${id}`, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
 }
 
 export async function MakeDecisionAsApprover(request: CreateOrderDecisionRequest, user: User) {
