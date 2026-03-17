@@ -24,8 +24,8 @@ export async function CreateSimCard(formData: CreateSimCardRequest) {
   return await axios.post("http://localhost:5268/sim-cards", formData);
 }
 
-export function GetSimCardsForAllocation(simCallControlGroupId: number, user: User) {
-  return axios.get<SimCardResponse[]>(
+export async function GetSimCardsForAllocation(simCallControlGroupId: number, user: User) {
+  return await axios.get<SimCardResponse[]>(
     `http://localhost:5268/sim-cards/allocation/${simCallControlGroupId}`,
     {
       headers: { Authorization: `Bearer ${user.token}` },

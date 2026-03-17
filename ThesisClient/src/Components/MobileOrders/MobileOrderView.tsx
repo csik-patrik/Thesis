@@ -1,22 +1,16 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
 import Spinner from "../Shared/Spinner";
 
-import type {
-  MobileOrderResponse,
-  MobileDeviceResponse,
-  SimCardResponse,
-} from "../../Types/MobileTypes";
+import type { MobileOrderResponse, SimCardResponse } from "../../Types/MobileTypes";
 import {
-  AllocateMobileDeviceToOrder,
   AllocateSimCardToOrder,
   DeliverOrder,
   GetOrderById,
   MakeDecisionAsApprover,
 } from "../../Services/MobileOrderServices";
-import { GetMobileDevicesForAllocation } from "../../Services/MobileDeviceServices";
 import { GetSimCardsForAllocation } from "../../Services/SimCardServices";
 import TableLayout from "../../Layouts/TableLayout";
 import Tr from "../Shared/Table/Tr";
@@ -25,34 +19,32 @@ import StatusBadge from "../Shared/StatusBadge";
 import Button from "../Shared/Button";
 import AllocateSimCard from "./AllocateSimCard";
 import Table from "../Shared/Table/Table";
+import AllocateMobileDevice from "./AllocateMobileDevice";
 
 export default function MobileOrderView() {
+  const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<MobileOrderResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const [devices, setDevices] = useState<MobileDeviceResponse[]>([]);
-  const [allocating, setAllocating] = useState<number | null>(null);
-  const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const [simCards, setSimCards] = useState<SimCardResponse[]>([]);
   const [allocatingSim, setAllocatingSim] = useState<number | null>(null);
   const [simSearch, setSimSearch] = useState("");
 
-  const { user } = useAuth();
-
   useEffect(() => {
     if (!user || !user.token) return;
+
+    setIsLoading(true);
 
     const fetchOrder = async () => {
       try {
         const res = await GetOrderById(Number(id), user);
         setOrder(res.data);
       } catch (err) {
-        toast.error("Error fetching mobile orders.");
-        console.error("Error fetching mobile orders:", err);
+        console.error("Error loading mobile orders:", err);
+        toast.error("Failed to load mobile orders.");
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -61,42 +53,26 @@ export default function MobileOrderView() {
 
   useEffect(() => {
     if (!user || !user.token) return;
-    if (!order || order.mobileDevice) return;
-
-    GetMobileDevicesForAllocation(order?.mobileDeviceCategory.id, user)
-      .then((res) => setDevices(res.data))
-      .catch((err) => {
-        toast.error("Error fetching allocable devices.");
-        console.error("Error fetching allocable devices:", err);
-      });
-  }, [order, user]);
-
-  // Only fetch allocable sim cards if a device is allocated and no sim card is allocated
-  useEffect(() => {
-    if (!user || !user.token) return;
     if (!order || !order.mobileDevice || order.mobileDevice.simCard) return;
 
-    GetSimCardsForAllocation(order.simCallControlGroup.id, user)
-      .then((res) => setSimCards(res.data))
-      .catch((err) => {
-        toast.error("Error fetching allocable sim cards.");
-        console.error("Error fetching allocable sim cards:", err);
-      });
+    setIsLoading(true);
+
+    const fetchSimCards = async () => {
+      try {
+        const res = await GetSimCardsForAllocation(order.simCallControlGroup.id, user);
+
+        setSimCards(res.data);
+      } catch (err) {
+        console.error("Error loading mobile orders:", err);
+
+        toast.error("Failed to load mobile orders.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSimCards();
   }, [order, user]);
-
-  const handleAllocateMobileDevice = async (deviceId: number) => {
-    setAllocating(deviceId);
-    try {
-      await AllocateMobileDeviceToOrder({ orderId: Number(id), mobileDeviceId: deviceId });
-
-      toast.success("Device allocated successfully!");
-
-      setDevices((prev) => prev.filter((d) => d.id !== deviceId));
-    } catch (err) {
-      toast.error("Failed to allocate device.");
-      console.error("Allocation error:", err);
-    }
-  };
 
   const handleAllocateSim = async (simCardId: number) => {
     setAllocatingSim(simCardId);
@@ -143,17 +119,12 @@ export default function MobileOrderView() {
     }
   };
 
-  // Filter devices by hostname
-  const filteredDevices = devices.filter((device) =>
-    device.hostname.toLowerCase().includes(search.toLowerCase()),
-  );
-
   // Filter sim cards by phone number
   const filteredSimCards = simCards.filter((sim) =>
     sim.phoneNumber.toLowerCase().includes(simSearch.toLowerCase()),
   );
 
-  if (loading) return <Spinner />;
+  if (isLoading) return <Spinner />;
 
   if (!order) return <p className="text-center mt-10 text-red-600 font-medium">Order not found.</p>;
 
@@ -163,7 +134,11 @@ export default function MobileOrderView() {
     order.mobileDevice.simCard &&
     order.status !== "Delivered";
 
-  const isOrderReadyForSimAllocation = user?.roles.includes("Admin") && order.status == "Approved";
+  const isOrderReadyForSimAllocation =
+    user?.roles.includes("Admin") && order.status == "Approved" && order.mobileDevice;
+
+  const isOrderReadyForMobileAllocation =
+    user?.roles.includes("Admin") && order.status == "Approved";
 
   return (
     <div className="flex flex-row w-full justify-center">
@@ -245,6 +220,8 @@ export default function MobileOrderView() {
           )}
         </Table>
       </TableLayout>
+
+      {isOrderReadyForMobileAllocation && <AllocateMobileDevice order={order} />}
 
       {isOrderReadyForSimAllocation && (
         <AllocateSimCard simCards={simCards} setSimSearch={setSimSearch} simSearch={simSearch} />
