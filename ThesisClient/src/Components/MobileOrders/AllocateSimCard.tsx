@@ -1,20 +1,72 @@
 import { FaMobile } from "react-icons/fa6";
 import TableLayout from "../../Layouts/TableLayout";
-import type { SimCardResponse } from "../../Types/MobileTypes";
+import type { MobileOrderResponse, SimCardResponse } from "../../Types/MobileTypes";
 import EmptyState from "../Shared/Table/EmptyState";
 import Table from "../Shared/Table/Table";
 import Td from "../Shared/Table/Td";
 import Tr from "../Shared/Table/Tr";
+import { useAuth } from "../../Auth/AuthContext";
+import { useEffect, useState } from "react";
+import { GetSimCardsForAllocation } from "../../Services/SimCardServices";
+import { toast } from "react-toastify";
+import Spinner from "../Shared/Spinner";
+import Button from "../Shared/Button";
+import { AllocateSimCardToOrder } from "../../Services/MobileOrderServices";
 
-export default function AllocateSimCard({
-  simCards,
-  simSearch,
-  setSimSearch,
-}: {
-  simCards: SimCardResponse[];
-  simSearch: string;
-  setSimSearch: (text: string) => void;
-}) {
+export default function AllocateSimCard({ order }: { order: MobileOrderResponse }) {
+  const { user } = useAuth();
+
+  const [simCards, setSimCards] = useState<SimCardResponse[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [simSearch, setSimSearch] = useState("");
+
+  useEffect(() => {
+    if (!user || !user.token) return;
+
+    setIsLoading(true);
+
+    const fetchSimCards = async () => {
+      try {
+        const res = await GetSimCardsForAllocation(order.simCallControlGroup.id, user);
+
+        setSimCards(res.data);
+      } catch (err) {
+        console.error("Error loading mobile orders:", err);
+
+        toast.error("Failed to load mobile orders.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSimCards();
+  }, [order, user]);
+
+  const handleAllocateSim = async (simCardId: number) => {
+    setIsLoading(true);
+    try {
+      await AllocateSimCardToOrder({ orderId: order.id, simCardId: simCardId });
+
+      toast.success("Sim card allocated successfully!");
+
+      setSimCards((prev) => prev.filter((s) => s.id !== simCardId));
+    } catch (err) {
+      toast.error("Failed to allocate sim card.");
+
+      console.error("Sim allocation error:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  const filteredSimCards = simCards.filter((sim) =>
+    sim.phoneNumber.toLowerCase().includes(simSearch.toLowerCase()),
+  );
+
   return (
     <TableLayout title="Allocate SIM card" subtitle="Select a SIM card for this order">
       {simCards.length === 0 ? (
@@ -36,43 +88,27 @@ export default function AllocateSimCard({
               />
             </Td>
           </Tr>
-          <Tr>
-            <Td>Hello world</Td>
-          </Tr>
+          {filteredSimCards.map((simCard) => (
+            <>
+              <Tr key={simCard.phoneNumber}>
+                <Td>Phone number</Td>
+                <Td>{simCard.phoneNumber}</Td>
+              </Tr>
+              <Tr key={simCard.simCallControlGroup.name}>
+                <Td>Call control group</Td>
+                <Td>{simCard.simCallControlGroup.name}</Td>
+              </Tr>
+              <Td>
+                <Button
+                  color="green"
+                  label="Allocate"
+                  handleClick={() => handleAllocateSim(simCard.id)}
+                />
+              </Td>
+            </>
+          ))}
         </Table>
       )}
     </TableLayout>
   );
 }
-
-//                   <div className="rounded-lg bg-white p-3 shadow space-y-2">
-//                     {filteredSimCards.length === 0 ? (
-//                       <p className="text-neutral-500">No sim cards available for allocation.</p>
-//                     ) : (
-//                       <ul className="space-y-2">
-//                         {filteredSimCards.map((sim) => (
-//                           <li
-//                             key={sim.id}
-//                             className="flex flex-col rounded border border-neutral-200 p-2"
-//                           >
-//                             <strong>{sim.phoneNumber}</strong>
-//                             <span>Call Control Group: {sim.simCallControlGroup.name}</span>
-//                             <span>
-//                               Data Enabled: {sim.simCallControlGroup.isDataEnabled ? "Yes" : "No"}
-//                             </span>
-//                             <span>Status: {sim.status}</span>
-//                             <button
-//                               disabled={allocatingSim === sim.id}
-//                               onClick={() => handleAllocateSim(sim.id)}
-//                               className="
-//                               mt-2 self-end rounded-md bg-green-600 px-3 py-1 text-white text-sm
-//                               hover:bg-green-500 transition disabled:opacity-60 disabled:cursor-not-allowed
-//                             "
-//                             >
-//                               {allocatingSim === sim.id ? "Allocating..." : "Allocate"}
-//                             </button>
-//                           </li>
-//                         ))}
-//                       </ul>
-//                     )}
-//                   </div>

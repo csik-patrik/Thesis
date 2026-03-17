@@ -38,7 +38,7 @@ export default function AllocateMobileDevice({ order }: { order: MobileOrderResp
   const handleAllocateMobileDevice = async (deviceId: number) => {
     setIsLoading(true);
     try {
-      await AllocateMobileDeviceToOrder({ orderId: Number(order.id), mobileDeviceId: deviceId });
+      await AllocateMobileDeviceToOrder({ orderId: order.id, mobileDeviceId: deviceId });
 
       toast.success("Device allocated successfully!");
 

@@ -4,14 +4,12 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
 import Spinner from "../Shared/Spinner";
 
-import type { MobileOrderResponse, SimCardResponse } from "../../Types/MobileTypes";
+import type { MobileOrderResponse } from "../../Types/MobileTypes";
 import {
-  AllocateSimCardToOrder,
   DeliverOrder,
   GetOrderById,
   MakeDecisionAsApprover,
 } from "../../Services/MobileOrderServices";
-import { GetSimCardsForAllocation } from "../../Services/SimCardServices";
 import TableLayout from "../../Layouts/TableLayout";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
@@ -26,10 +24,6 @@ export default function MobileOrderView() {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<MobileOrderResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  const [simCards, setSimCards] = useState<SimCardResponse[]>([]);
-  const [allocatingSim, setAllocatingSim] = useState<number | null>(null);
-  const [simSearch, setSimSearch] = useState("");
 
   useEffect(() => {
     if (!user || !user.token) return;
@@ -50,45 +44,6 @@ export default function MobileOrderView() {
 
     fetchOrder();
   }, [id, user]);
-
-  useEffect(() => {
-    if (!user || !user.token) return;
-    if (!order || !order.mobileDevice || order.mobileDevice.simCard) return;
-
-    setIsLoading(true);
-
-    const fetchSimCards = async () => {
-      try {
-        const res = await GetSimCardsForAllocation(order.simCallControlGroup.id, user);
-
-        setSimCards(res.data);
-      } catch (err) {
-        console.error("Error loading mobile orders:", err);
-
-        toast.error("Failed to load mobile orders.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSimCards();
-  }, [order, user]);
-
-  const handleAllocateSim = async (simCardId: number) => {
-    setAllocatingSim(simCardId);
-    try {
-      await AllocateSimCardToOrder({ orderId: Number(id), simCardId: simCardId });
-
-      toast.success("Sim card allocated successfully!");
-
-      setSimCards((prev) => prev.filter((s) => s.id !== simCardId));
-    } catch (err) {
-      toast.error("Failed to allocate sim card.");
-      console.error("Sim allocation error:", err);
-    } finally {
-      setAllocatingSim(null);
-    }
-  };
 
   const handleDeliver = async () => {
     try {
@@ -118,11 +73,6 @@ export default function MobileOrderView() {
       toast.error(message);
     }
   };
-
-  // Filter sim cards by phone number
-  const filteredSimCards = simCards.filter((sim) =>
-    sim.phoneNumber.toLowerCase().includes(simSearch.toLowerCase()),
-  );
 
   if (isLoading) return <Spinner />;
 
@@ -223,113 +173,7 @@ export default function MobileOrderView() {
 
       {isOrderReadyForMobileAllocation && <AllocateMobileDevice order={order} />}
 
-      {isOrderReadyForSimAllocation && (
-        <AllocateSimCard simCards={simCards} setSimSearch={setSimSearch} simSearch={simSearch} />
-      )}
+      {isOrderReadyForSimAllocation && <AllocateSimCard order={order} />}
     </div>
   );
 }
-
-//         {/* Device / Sim Allocation Section */}
-//         {user?.roles.includes("Admin") && (
-//           <div className="md:w-80 shrink-0 space-y-6">
-//             {/* Allocated Device */}
-//             {order.mobileDevice ? (
-//               <>
-//                 <h2 className="text-lg font-semibold text-neutral-800">Allocated Device</h2>
-//                 <div className="rounded-lg bg-white p-4 shadow">
-//                   <ul className="space-y-2">
-//                     <li>
-//                       <strong>Hostname:</strong> {order.mobileDevice.hostname}
-//                     </li>
-//                     <li>
-//                       <strong>Category:</strong> {order.mobileDevice.mobileDeviceCategory.name}
-//                     </li>
-//                     <li>
-//                       <strong>IMEI:</strong> {order.mobileDevice.imeiNumber}
-//                     </li>
-//                     <li>
-//                       <strong>Serial:</strong> {order.mobileDevice.serialNumber}
-//                     </li>
-//                   </ul>
-//                 </div>
-//               </>
-//             ) : (
-//               <>
-//                 <h2 className="text-lg font-semibold text-neutral-800">Allocate Device</h2>
-//                 <input
-//                   type="text"
-//                   placeholder="Search by hostname..."
-//                   value={search}
-//                   onChange={(e) => setSearch(e.target.value)}
-//                   className="w-full rounded-md border border-neutral-300 px-3 py-2 mb-3 focus:outline-none focus:ring-1 focus:ring-neutral-500"
-//                 />
-//                 <div className="rounded-lg bg-white p-3 shadow space-y-2">
-//                   {filteredDevices.length === 0 ? (
-//                     <p className="text-neutral-500">No devices available for allocation.</p>
-//                   ) : (
-//                     <ul className="space-y-2">
-//                       {filteredDevices.map((device) => (
-//                         <li
-//                           key={device.id}
-//                           className="flex flex-col rounded border border-neutral-200 p-2"
-//                         >
-//                           <strong>{device.hostname}</strong>
-//                           <span>Category: {device.mobileDeviceCategory.name}</span>
-//                           <span>IMEI: {device.imeiNumber}</span>
-//                           <span>Serial: {device.serialNumber}</span>
-//                           <span>Status: {device.status}</span>
-//                           <button
-//                             disabled={allocating === device.id}
-//                             onClick={() => handleAllocateMobileDevice(device.id)}
-//                             className="
-//                             mt-2 self-end rounded-md bg-green-600 px-3 py-1 text-white text-sm
-//                             hover:bg-green-500 transition disabled:opacity-60 disabled:cursor-not-allowed
-//                           "
-//                           >
-//                             {allocating === device.id ? "Allocating..." : "Allocate"}
-//                           </button>
-//                         </li>
-//                       ))}
-//                     </ul>
-//                   )}
-//                 </div>
-//               </>
-//             )}
-
-//             {/* Allocated Sim Card */}
-//             {order.mobileDevice &&
-//               (order.mobileDevice.simCard ? (
-//                 <>
-//                   <h2 className="text-lg font-semibold text-neutral-800 mt-4">
-//                     Allocated Sim Card
-//                   </h2>
-//                   <div className="rounded-lg bg-white p-4 shadow space-y-2">
-//                     <ul className="space-y-1">
-//                       <li>
-//                         <strong>Phone Number:</strong> {order.mobileDevice.simCard.phoneNumber}
-//                       </li>
-//                       <li>
-//                         <strong>Call Control Group:</strong>{" "}
-//                         {order.mobileDevice.simCard.simCallControlGroup.name}
-//                       </li>
-//                       <li>
-//                         <strong>Data Enabled:</strong>{" "}
-//                         {order.mobileDevice.simCard.simCallControlGroup.isDataEnabled
-//                           ? "Yes"
-//                           : "No"}
-//                       </li>
-//                     </ul>
-//                   </div>
-//                 </>
-//               ) : (
-//                 <>
-//
-//                 </>
-//               ))}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
