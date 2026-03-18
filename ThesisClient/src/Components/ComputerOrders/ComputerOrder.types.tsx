@@ -10,6 +10,11 @@ export type ComputerOrderState = {
   groupLeaders: UserResponse[];
 };
 
+export type AllocateComputerRequest = {
+  orderId: number;
+  computerId: number;
+};
+
 export type ComputerOrderAction =
   | {
       type: "SET_FIELD";
