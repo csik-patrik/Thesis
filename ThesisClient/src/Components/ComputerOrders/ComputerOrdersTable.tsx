@@ -6,10 +6,7 @@ import { useAuth } from "../../Auth/AuthContext";
 import Spinner from "../Shared/Spinner";
 import StatusBadge from "../Shared/StatusBadge";
 import { FaComputer } from "react-icons/fa6";
-import {
-  DeleteComputerOrder,
-  GetComputerOrders,
-} from "../../Services/ComputerOrderServices";
+import { DeleteComputerOrder, GetComputerOrders } from "../../Services/ComputerOrderServices";
 import TableLayout from "../../Layouts/TableLayout";
 import CustomLink2 from "../Shared/CustomLink2";
 import EmptyState from "../Shared/Table/EmptyState";
@@ -65,31 +62,21 @@ export default function ComputerOrdersTable() {
 
   const statuses = Array.from(new Set(orders.map((order) => order.status)));
   const filteredData =
-    statusFilter === "All"
-      ? orders
-      : orders.filter((order) => order.status === statusFilter);
+    statusFilter === "All" ? orders : orders.filter((order) => order.status === statusFilter);
 
   if (isLoading) {
     return <Spinner />;
   }
 
   return (
-    <TableLayout
-      title="Computer Orders"
-      subtitle="Track and manage computer requests"
-    >
+    <TableLayout title="Computer Orders" subtitle="Track and manage computer requests">
       {orders.length === 0 ? (
         <EmptyState
           icon={<FaComputer />}
           title="No orders yet"
           description="You haven't submitted any mobile device requests. Create your
                 first one to get started."
-          action={
-            <CustomLink2
-              to="/mobile-orders/create"
-              label="Create your first order"
-            />
-          }
+          action={<CustomLink2 to="/computer-orders/create" label="Create your first order" />}
         />
       ) : (
         <>
@@ -101,14 +88,7 @@ export default function ComputerOrdersTable() {
           />
           <Table>
             <Thead
-              headers={[
-                "Id",
-                "Customer",
-                "Device type",
-                "Pickup location",
-                "Status",
-                "Actions",
-              ]}
+              headers={["Id", "Customer", "Device type", "Pickup location", "Status", "Actions"]}
             />
             <tbody>
               {filteredData.map((d) => (
