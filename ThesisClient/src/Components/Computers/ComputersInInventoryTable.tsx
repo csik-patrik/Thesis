@@ -7,10 +7,7 @@ import type { ModalHandle } from "../Shared/Modal";
 import Modal from "../Shared/Modal";
 import StatusBadge from "../Shared/StatusBadge";
 import Button from "../Shared/Button";
-import {
-  DeleteComputer,
-  GetComputersInInventory,
-} from "../../Services/ComputerServices";
+import { DeleteComputer, GetComputersInInventory } from "../../Services/ComputerServices";
 import TableLayout from "../../Layouts/TableLayout";
 import EmptyState from "../Shared/Table/EmptyState";
 import { FaComputer } from "react-icons/fa6";
@@ -26,7 +23,7 @@ export default function ComputersInInventoryTable() {
   const [selectedComputerId, setSelectedComputerId] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("All");
 
   const dialog = useRef<ModalHandle>(null);
 
@@ -71,17 +68,11 @@ export default function ComputersInInventoryTable() {
     dialog.current?.open();
   }
 
-  const categories = Array.from(
-    new Set(computers.map((device) => device.computerCategory.name)),
-  );
-
-  const filteredData = computers.filter((device) => {
-    const categoryMatch = categoryFilter
-      ? device.computerCategory.name === categoryFilter
-      : true;
-
-    return categoryMatch;
-  });
+  const categories = Array.from(new Set(computers.map((device) => device.computerCategory.name)));
+  const filteredData =
+    categoryFilter === "All"
+      ? computers
+      : computers.filter((computer) => computer.computerCategory.name === categoryFilter);
 
   if (isLoading) {
     return <Spinner />;
