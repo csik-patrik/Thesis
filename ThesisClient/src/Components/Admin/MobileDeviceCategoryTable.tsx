@@ -10,20 +10,35 @@ import Table from "../Shared/Table/Table";
 import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
+import Spinner from "../Shared/Spinner";
 
 export default function MobileDeviceCategoryTable() {
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
     MobileDeviceCategoryResponse[]
   >([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
-    GetMobileDeviceCategories()
-      .then((response) => setMobileDeviceCategories(response.data))
-      .catch((error) => {
-        toast.error("Error fetching categories");
-        console.error("Error fetching categories:", error);
-      });
+    setIsLoading(true);
+
+    const fetchCategories = async () => {
+      try {
+        const res = await GetMobileDeviceCategories();
+        setMobileDeviceCategories(res.data);
+      } catch (err) {
+        console.error("Error loading mobile categories:", err);
+
+        toast.error("Failed to load mobile categories.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
   }, []);
+
+  if (isLoading) return <Spinner fullPage />;
 
   return (
     <TableLayout

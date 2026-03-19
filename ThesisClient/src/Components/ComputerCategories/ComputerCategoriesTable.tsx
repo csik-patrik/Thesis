@@ -10,20 +10,34 @@ import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
 import { GetComputerCategories } from "../../Services/ComputerOrderServices";
+import Spinner from "../Shared/Spinner";
 
 export default function ComputerCategoriesTable() {
-  const [computerCategories, setComputerCategories] = useState<
-    ComputerCategoryResponse[]
-  >([]);
+  const [computerCategories, setComputerCategories] = useState<ComputerCategoryResponse[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    GetComputerCategories()
-      .then((response) => setComputerCategories(response.data))
-      .catch((error) => {
-        toast.error("Error fetching categories");
-        console.error("Error fetching categories:", error);
-      });
+    setIsLoading(true);
+
+    const fetchCategories = async () => {
+      try {
+        const res = await GetComputerCategories();
+        setComputerCategories(res.data);
+      } catch (err) {
+        console.error("Error loading computer categories:", err);
+
+        toast.error("Failed to load computer categories.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
   }, []);
+
+  if (isLoading) {
+    return <Spinner fullPage />;
+  }
 
   return (
     <>

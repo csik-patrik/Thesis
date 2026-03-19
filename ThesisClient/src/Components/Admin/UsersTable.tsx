@@ -9,16 +9,31 @@ import Table from "../Shared/Table/Table";
 import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
+import Spinner from "../Shared/Spinner";
 
 export default function Users() {
   const [users, setUsers] = useState<UserResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(0);
   const dialog = useRef<ModalHandle>(null);
 
   useEffect(() => {
-    GetUsers()
-      .then((res) => setUsers(res.data))
-      .catch((err) => console.log(err));
+    setIsLoading(true);
+
+    const fetchUsers = async () => {
+      try {
+        const res = await GetUsers();
+        setUsers(res.data);
+      } catch (err) {
+        console.error("Error loading users:", err);
+
+        toast.error("Failed to load users.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   const handleDelete = async (id: number) => {
@@ -36,6 +51,8 @@ export default function Users() {
     setSelectedUserId(id);
     dialog.current?.open();
   }
+
+  if (isLoading) return <Spinner fullPage />;
 
   return (
     <>
