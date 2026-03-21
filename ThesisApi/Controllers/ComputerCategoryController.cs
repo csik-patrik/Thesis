@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.ComputerCategories;
 using ThesisApi.Contracts.Responses.ComputerCategories;
@@ -9,6 +10,7 @@ namespace ThesisApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class ComputerCategoryController : ControllerBase
     {
         private readonly IComputerCategoryRepository _computerCategoryRepository;

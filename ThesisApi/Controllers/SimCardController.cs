@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.SimCards;
 using ThesisApi.Contracts.Responses.SimCards;
@@ -9,6 +10,7 @@ namespace ThesisApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class SimCardController : ControllerBase
     {
         private readonly ISimCardRepository _simCardRepository;

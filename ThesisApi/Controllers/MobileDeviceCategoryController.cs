@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.MobileDeviceCategories;
 using ThesisApi.Contracts.Responses.MobileDeviceCategories;
@@ -9,6 +10,7 @@ namespace ThesisApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class MobileDeviceCategoryController : ControllerBase
     {
         private readonly IMobileDeviceCategoryRepository _mobileDeviceCategoryRepository;

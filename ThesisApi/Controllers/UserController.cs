@@ -8,11 +8,13 @@ using ThesisApi.Models;
 using AutoMapper;
 using ThesisApi.Interfaces;
 using ThesisApi.Contracts.Responses.Users;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ThesisApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -36,6 +38,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var user = await _context.Users.Include(x => x.UserRoles).FirstOrDefaultAsync(u => u.Email == request.Email);
