@@ -10,19 +10,26 @@ import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
 import Spinner from "../Shared/Spinner";
+import { useAuth } from "../../Auth/AuthContext";
 
-export default function Users() {
+export default function UsersTable() {
+  const { user } = useAuth();
+
   const [users, setUsers] = useState<UserResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
   const [selectedUserId, setSelectedUserId] = useState(0);
+
   const dialog = useRef<ModalHandle>(null);
 
   useEffect(() => {
+    if (!user || !user.token) return;
+
     setIsLoading(true);
 
     const fetchUsers = async () => {
       try {
-        const res = await GetUsers();
+        const res = await GetUsers(user);
         setUsers(res.data);
       } catch (err) {
         console.error("Error loading users:", err);
@@ -38,8 +45,12 @@ export default function Users() {
 
   const handleDelete = async (id: number) => {
     try {
-      DeleteUser(id);
+      if (!user || !user.token) return;
+
+      DeleteUser(id, user);
+
       setUsers((prev) => prev.filter((item) => item.id !== id));
+
       toast.success("User deleted successfully!");
     } catch (err) {
       console.error("Error deleting user:", err);

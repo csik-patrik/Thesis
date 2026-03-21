@@ -35,9 +35,21 @@ export default function ComputerOrderCreate() {
   }, [user]);
 
   useEffect(() => {
-    GetGroupLeaders()
-      .then((res) => dispatch({ type: "SET_GROUP_LEADERS", payload: res.data }))
-      .catch(() => toast.error("Failed to fetch approvers"));
+    if (!user?.token) return;
+
+    const fetchGroupLeaders = async () => {
+      try {
+        await GetGroupLeaders(user)
+          .then((res) =>
+            dispatch({ type: "SET_GROUP_LEADERS", payload: res.data }),
+          )
+          .catch(() => toast.error("Failed to fetch approvers"));
+      } catch (err) {
+        console.error("Failed to fetch approvers", err);
+      }
+    };
+
+    fetchGroupLeaders();
   }, [user]);
 
   useEffect(() => {
