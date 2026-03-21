@@ -10,6 +10,7 @@ import type {
 import { useAuth } from "../../Auth/AuthContext";
 
 export default function MobileDeviceCreateBulk() {
+  const { user } = useAuth();
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
     MobileDeviceCategoryResponse[]
   >([]);
@@ -19,12 +20,12 @@ export default function MobileDeviceCreateBulk() {
   const [devices, setDevices] = useState<CreateMobileDeviceRequest[]>([]);
 
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   console.log(user);
 
   useEffect(() => {
-    GetMobileDeviceCategories()
+    if (!user?.token) return;
+    GetMobileDeviceCategories(user)
       .then((response) => setMobileDeviceCategories(response.data))
       .catch((error) => {
         console.error("Error fetching categories:", error);

@@ -6,13 +6,19 @@ import type {
 } from "../Types/MobileTypes";
 import type { User } from "../Types/UserTypes";
 
-export async function GetMobileDeviceCategories() {
+export async function GetMobileDeviceCategories(user: User) {
   return await axios.get<MobileDeviceCategoryResponse[]>(
     "http://localhost:5268/mobile-device-categories",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
   );
 }
 
-export async function CreateNewMobileOrder(formData: CreateMobileOrderRequest, user: User) {
+export async function CreateNewMobileOrder(
+  formData: CreateMobileOrderRequest,
+  user: User,
+) {
   return await axios.post("http://localhost:5268/mobile-orders", formData, {
     headers: { Authorization: `Bearer ${user.token}` },
   });

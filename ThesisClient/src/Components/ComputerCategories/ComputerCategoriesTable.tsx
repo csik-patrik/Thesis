@@ -11,17 +11,22 @@ import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
 import { GetComputerCategories } from "../../Services/ComputerOrderServices";
 import Spinner from "../Shared/Spinner";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function ComputerCategoriesTable() {
-  const [computerCategories, setComputerCategories] = useState<ComputerCategoryResponse[]>([]);
+  const { user } = useAuth();
+  const [computerCategories, setComputerCategories] = useState<
+    ComputerCategoryResponse[]
+  >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setIsLoading(true);
 
     const fetchCategories = async () => {
+      if (!user?.token) return;
       try {
-        const res = await GetComputerCategories();
+        const res = await GetComputerCategories(user);
         setComputerCategories(res.data);
       } catch (err) {
         console.error("Error loading computer categories:", err);

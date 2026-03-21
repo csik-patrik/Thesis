@@ -29,7 +29,8 @@ export default function ComputerOrderCreate() {
   const { formData, computerCategories, groupLeaders } = state;
 
   useEffect(() => {
-    GetComputerCategories()
+    if (!user?.token) return;
+    GetComputerCategories(user)
       .then((res) => dispatch({ type: "SET_CATEGORIES", payload: res.data }))
       .catch(() => toast.error("Failed to fetch computer categories"));
   }, [user]);

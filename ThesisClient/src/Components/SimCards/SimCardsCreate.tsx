@@ -12,19 +12,32 @@ import {
   CreateSimCard,
   GetSimCallControlGroups,
 } from "../../Services/SimCardServices";
+import { useAuth } from "../../Auth/AuthContext";
 
-function SimCardsCreate() {
+export default function SimCardsCreate() {
+  const { user } = useAuth();
+
   const [simCallControlGroups, setSimCallControlGroups] = useState<
     SimCallControlGroupResponse[]
   >([]);
 
   useEffect(() => {
-    GetSimCallControlGroups()
-      .then((response) => setSimCallControlGroups(response.data))
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
-      });
-  }, []);
+    if (!user?.token) return;
+
+    const fetchSimCardCallControlGroups = async () => {
+      try {
+        await GetSimCallControlGroups(user)
+          .then((response) => setSimCallControlGroups(response.data))
+          .catch((error) => {
+            console.error("Error fetching categories:", error);
+          });
+      } catch (err) {
+        toast.error("Error fetching categories");
+      }
+    };
+
+    fetchSimCardCallControlGroups();
+  }, [user]);
 
   const [formData, setFormData] = useState<CreateSimCardRequest>({
     phoneNumber: "",
@@ -51,9 +64,10 @@ function SimCardsCreate() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user?.token) return;
 
     try {
-      await CreateSimCard(formData);
+      await CreateSimCard(formData, user);
       toast.success("Sim card created successfully!");
       navigate("/sim-cards");
     } catch (err) {
@@ -91,5 +105,3 @@ function SimCardsCreate() {
     </Form>
   );
 }
-
-export default SimCardsCreate;

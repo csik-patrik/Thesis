@@ -6,25 +6,40 @@ import type {
 } from "../Types/MobileTypes";
 import type { User } from "../Types/UserTypes";
 
-export async function GetSimCardsInInventory() {
-  return await axios.get<SimCardResponse[]>("http://localhost:5268/sim-cards");
+export async function GetSimCardsInInventory(user: User) {
+  return await axios.get<SimCardResponse[]>("http://localhost:5268/sim-cards", {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
 }
 
-export async function DeleteSimCard(id: number) {
-  return await axios.delete(`http://localhost:5268/sim-cards/${id}`);
+export async function DeleteSimCard(id: number, user: User) {
+  return await axios.delete(`http://localhost:5268/sim-cards/${id}`, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
 }
 
-export async function GetSimCallControlGroups() {
+export async function GetSimCallControlGroups(user: User) {
   return await axios.get<SimCallControlGroupResponse[]>(
     "http://localhost:5268/sim-call-control-groups",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
   );
 }
 
-export async function CreateSimCard(formData: CreateSimCardRequest) {
-  return await axios.post("http://localhost:5268/sim-cards", formData);
+export async function CreateSimCard(
+  formData: CreateSimCardRequest,
+  user: User,
+) {
+  return await axios.post("http://localhost:5268/sim-cards", formData, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
 }
 
-export async function GetSimCardsForAllocation(simCallControlGroupId: number, user: User) {
+export async function GetSimCardsForAllocation(
+  simCallControlGroupId: number,
+  user: User,
+) {
   return await axios.get<SimCardResponse[]>(
     `http://localhost:5268/sim-cards/allocation/${simCallControlGroupId}`,
     {

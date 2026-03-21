@@ -11,8 +11,11 @@ import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
 import Spinner from "../Shared/Spinner";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function MobileDeviceCategoryTable() {
+  const { user } = useAuth();
+
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
     MobileDeviceCategoryResponse[]
   >([]);
@@ -20,11 +23,12 @@ export default function MobileDeviceCategoryTable() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (!user?.token) return;
     setIsLoading(true);
 
     const fetchCategories = async () => {
       try {
-        const res = await GetMobileDeviceCategories();
+        const res = await GetMobileDeviceCategories(user);
         setMobileDeviceCategories(res.data);
       } catch (err) {
         console.error("Error loading mobile categories:", err);
@@ -44,7 +48,12 @@ export default function MobileDeviceCategoryTable() {
     <TableLayout
       title="Mobile device categories"
       subtitle="Manage mobile device categories"
-      links={[{ to: "/admin/mobile-device-categories/create", label: "Create new category" }]}
+      links={[
+        {
+          to: "/admin/mobile-device-categories/create",
+          label: "Create new category",
+        },
+      ]}
     >
       {mobileDeviceCategories.length === 0 ? (
         <EmptyState

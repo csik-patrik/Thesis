@@ -23,7 +23,8 @@ export default function MobileDeviceCreate() {
   const { user } = useAuth();
 
   useEffect(() => {
-    GetMobileDeviceCategories()
+    if (!user?.token) return;
+    GetMobileDeviceCategories(user)
       .then((response) => {
         dispatch({
           type: "SET_CATEGORIES",

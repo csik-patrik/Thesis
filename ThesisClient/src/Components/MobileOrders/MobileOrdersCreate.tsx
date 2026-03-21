@@ -34,13 +34,15 @@ export default function MobileOrdersCreate() {
   } = state;
 
   useEffect(() => {
-    GetMobileDeviceCategories()
+    if (!user?.token) return;
+    GetMobileDeviceCategories(user)
       .then((res) => dispatch({ type: "SET_CATEGORIES", payload: res.data }))
       .catch(() => toast.error("Error fetching device categories"));
   }, [user]);
 
   useEffect(() => {
-    GetSimCallControlGroups()
+    if (!user?.token) return;
+    GetSimCallControlGroups(user)
       .then((res) => dispatch({ type: "SET_SIM_GROUPS", payload: res.data }))
       .catch(() => toast.error("Error fetching SIM call control groups"));
   }, [user]);

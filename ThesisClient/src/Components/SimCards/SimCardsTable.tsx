@@ -19,8 +19,11 @@ import Table from "../Shared/Table/Table";
 import Thead from "../Shared/Table/Thead";
 import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function SimCardsTable() {
+  const { user } = useAuth();
+
   const [simCards, setSimCards] = useState<SimCardResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -36,8 +39,9 @@ export default function SimCardsTable() {
     setIsLoading(true);
 
     const fetchSimCards = async () => {
+      if (!user?.token) return;
       try {
-        const res = await GetSimCardsInInventory();
+        const res = await GetSimCardsInInventory(user);
         setSimCards(res.data);
       } catch (err) {
         console.error("Failed to fetch sim cards:", err);
@@ -49,11 +53,13 @@ export default function SimCardsTable() {
     };
 
     fetchSimCards();
-  }, []);
+  }, [user]);
 
   const handleDelete = async (id: number) => {
+    if (!user?.token) return;
+
     try {
-      await DeleteSimCard(id);
+      await DeleteSimCard(id, user);
       setSimCards((prev) => prev.filter((item) => item.id !== id));
       toast.success("Sim card deleted successfully!");
     } catch (err) {
