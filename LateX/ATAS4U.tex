@@ -36,11 +36,11 @@
 
 \section{A téma aktualitása és célja}
 
-A modern vállalati környezetben az informatikai eszközök -- mint például számítógépek, mobiltelefonok, nyomtatók vagy SIM-kártyák -- kulcsfontosságú szerepet töltenek be a mindennapi munkavégzésben. A digitalizáció térnyerésével és a távmunka elterjedésével az eszközök száma, valamint azok nyilvántartásának bonyolultsága is jelentősen megnőtt. Egy közepes méretű cég esetében akár több száz különböző eszköz mozgását, státuszát és felelősét kell naprakészen kezelni, ami manuálisan, például Excel-táblák segítségével, már nehezen megvalósítható (Microsoft, 2023).
+A modern vállalati környezetben az informatikai eszközök -- mint például számítógépek, mobiltelefonok, nyomtatók vagy SIM-kártyák -- kulcsfontosságú szerepet töltenek be a mindennapi munkavégzésben. A digitalizáció térnyerésével és a távmunka elterjedésével az eszközök száma, valamint azok nyilvántartásának bonyolultsága is jelentősen megnőtt. Egy közepes méretű cég esetében akár több száz különböző eszköz mozgását, státuszát és felelősét kell naprakészen kezelni, ami manuálisan, például Excel-táblák segítségével, már nehezen megvalósítható.
 
 A szakdolgozat célja egy olyan webalkalmazás fejlesztése, amely átlátható és automatizált módon kezeli az informatikai eszközök nyilvántartását és kiadását. A rendszer segítségével a felhasználók egyszerűen igényelhetnek eszközöket, a jóváhagyás és a kiadás folyamata pedig digitálisan nyomon követhetővé válik. Ezáltal csökken az adminisztrációs teher, és minimalizálható az emberi hibákból eredő adateltérés.
 
-A megoldás technológiai alapját a .NET 8 Web API adja, amely egy korszerű, gyors és biztonságos szerveroldali keretrendszer, ideális vállalati szintű alkalmazások fejlesztéséhez (Microsoft Docs, 2024). A felhasználói felület React alapokra épül, amely a modern JavaScript-ökoszisztéma egyik legnépszerűbb könyvtára, dinamikus és reszponzív webes felületek készítéséhez (Meta Open Source, 2023).
+A megoldás technológiai alapját a .NET 8 Web API adja, amely egy korszerű, gyors és biztonságos szerveroldali keretrendszer, ideális vállalati szintű alkalmazások fejlesztéséhez. A felhasználói felület React alapokra épül, amely a modern JavaScript-ökoszisztéma egyik legnépszerűbb könyvtára, dinamikus és reszponzív webes felületek készítéséhez.
 
 A fejlesztés célkitűzései közé tartozik:
 
@@ -55,25 +55,25 @@ valamint a jóváhagyási folyamat beépítése a rendelési rendszerbe.
 Egy ilyen rendszer bevezetése növeli a vállalat átláthatóságát, támogatja az eszközgazdálkodás tervezhetőségét, és hosszú távon csökkenti az üzemeltetési költségeket. A fejlesztés személyes célja továbbá az, hogy elmélyítsem ismereteit a modern webfejlesztési technológiákban és az alkalmazásfejlesztés vállalati szintű gyakorlatában.
 
 \section{A használt technológiák bemutatása}
-Az alkalmazás fejlesztése során a cél egy olyan modern, megbízható és hosszú távon fenntartható technológiai alap kialakítása volt, amely illeszkedik a jelenlegi iparági trendekhez és a vállalati fejlesztési környezetek elvárásaihoz. A választott technológiák — .NET 8 Web API a backend oldalon, valamint React a frontend oldalon — egyaránt támogatják a gyors fejlesztést, a biztonságos működést és a jó bővíthetőséget.
+Az alkalmazás fejlesztése során a cél egy olyan modern, megbízható és hosszú távon fenntartható technológiai alap kialakítása volt, amely illeszkedik a jelenlegi iparági trendekhez és a vállalati fejlesztési környezetek elvárásaihoz. A választott technológiák — .NET 8 Web API a backend oldalon, valamint React a frontend oldalon — egyaránt támogatják a gyors fejlesztést, a biztonságos működést és az egyszerű bővíthetőséget.
 
 \subsection{.NET 8 Web API}
 
-A szerveroldali logika megvalósításához a .NET 8 Web API keretrendszert alkalmaztam, amely a Microsoft által fejlesztett, nyílt forráskódú platform legfrissebb verziója.A .NET 8 előnye, hogy támogatja a minimal API-k használatát, így egyszerű, mégis hatékony módon lehet REST alapú végpontokat létrehozni (Microsoft Docs, 2024). A rendszer architektúrája rétegzett felépítést követ: az adat-hozzáférési réteg (Repository pattern) kezeli az adatbázissal való kommunikációt, míg az API réteg felel a kliensoldali kérések kiszolgálásáért. Az alkalmazásban az Entity Framework Core (EF Core) ORM (Object-Relational Mapping) keretrendszer gondoskodik az adatbázis műveletek egyszerű és biztonságos kezeléséről. Az EF Core segítségével LINQ lekérdezések segítségével lehet az adatokhoz hozzáférni, ezáltal a kód átláthatóbb és karbantarthatóbb (Microsoft Learn, 2023). Az adatok tárolása Microsoft SQL Server adatbázisban történik, amely jól integrálható a .NET ökoszisztémával és alkalmas nagyvállalati környezetben való használatra is. A felhasználók azonosítását és jogosultságkezelését JWT (JSON Web Token) alapú autentikáció biztosítja, amely a kliens és a szerver között biztonságos módon kezeli a bejelentkezési adatokat.
+A szerveroldali logika megvalósításához a .NET 8 Web API keretrendszert alkalmaztam, amely a Microsoft által fejlesztett, nyílt forráskódú platform legfrissebb verziója. A .NET 8 előnye, hogy támogatja a minimal API-k használatát, így egyszerű, mégis hatékony módon lehet REST alapú végpontokat létrehozni. A rendszer architektúrája rétegzett felépítést követ: az adat-hozzáférési réteg (Repository pattern) kezeli az adatbázissal való kommunikációt, míg az API réteg felel a kliensoldali kérések kiszolgálásáért. Az alkalmazásban az Entity Framework Core (EF Core) ORM (Object-Relational Mapping) keretrendszer gondoskodik az adatbázis műveletek egyszerű és biztonságos kezeléséről. Az EF Core segítségével LINQ lekérdezések használatával lehet az adatokhoz hozzáférni, ezáltal a kód átláthatóbb és karbantarthatóbb (Microsoft Learn, 2023). Az adatok tárolása Microsoft SQL Server adatbázisban történik, amely jól integrálható a .NET ökoszisztémával és alkalmas nagyvállalati környezetben való használatra is. A felhasználók azonosítását és jogosultságkezelését JWT (JSON Web Token) alapú autentikáció biztosítja, amely a kliens és a szerver között biztonságos módon kezeli a bejelentkezési adatokat.
 
 \subsection{React Frontend}
 
-A kliensoldali felület React segítségével készült, amely a Meta (Facebook) által fejlesztett JavaScript-könyvtár, és jelenleg a legelterjedtebb frontend-technológiák közé tartozik (Stack Overflow Developer Survey, 2024). A React komponensalapú megközelítése lehetővé teszi, hogy az alkalmazás logikailag jól szeparált, újrahasznosítható elemekből épüljön fel, így a fejlesztés és a karbantartás is hatékonyabbá válik. Az alkalmazásban React Router gondoskodik a kliensoldali navigációról, míg az Axios könyvtár biztosítja az API-hívásokat a backend felé. A fejlesztés során külön figyelmet fordítottam a felhasználói élményre és az ergonómiára, ezért a frontend kialakításához Bootstrap 5 keretrendszert használtam, amely modern, reszponzív és mobilbarát megjelenést biztosít.
+A kliensoldali felület React segítségével készült, amely a Meta (Facebook) által fejlesztett JavaScript-könyvtár, és jelenleg a legelterjedtebb frontend-technológiák közé tartozik (Stack Overflow Developer Survey, 2024). A React komponensalapú megközelítése lehetővé teszi, hogy az alkalmazás logikailag jól szeparált, újrahasznosítható elemekből épüljön fel, így a fejlesztés és a karbantartás is hatékonyabbá válik. Az alkalmazásban React Router gondoskodik a kliensoldali navigációról, míg az Axios könyvtár biztosítja az API-hívásokat a backend felé. A fejlesztés során külön figyelmet fordítottam a felhasználói élményre és az ergonómiára, ezért a frontend kialakításához Tailwind keretrendszert használtam, amely modern, reszponzív és mobilbarát megjelenést biztosít.
 
 \subsection{Fejlesztési környezet és eszközök}
-A fejlesztés Visual Studio 2022 és Visual Studio Code környezetben zajlott, amelyek hatékony támogatást nyújtanak a .NET és JavaScript alapú projektekhez. A verziókezeléshez Git rendszert használtam, a forráskódot pedig GitHub tárhelyen tároltam. A hibakeresést és tesztelést Postman és Insomnia eszközökkel végeztem, melyek megkönnyítik a REST API végpontok ellenőrzését és a válaszok tesztelését.
+A fejlesztés Visual Studio 2022 és Visual Studio Code környezetben zajlott, amelyek hatékony támogatást nyújtanak a .NET és JavaScript alapú projektekhez. A verziókezeléshez Git rendszert használtam, a forráskódot pedig GitHub tárhelyen tároltam.
 
 \section{A rendszer célja és funkcionális követelményei}
 
 Az informatikai eszközök nyilvántartására és kiadásának kezelésére tervezett rendszer célja, hogy \textbf{átlátható, digitálisan kezelhető folyamatot} biztosítson a vállalati IT-eszközök kezeléséhez. 
 A fejlesztés során fontos szempont volt, hogy az alkalmazás \textbf{egyszerűen használható, biztonságos és könnyen bővíthető} legyen, valamint hogy a napi adminisztrációs feladatokból minél többet automatizáljon.
 
-A vállalatoknál jellemző probléma, hogy az eszköznyilvántartás különböző táblázatokban, dokumentumokban, sőt gyakran személyes emlékezet alapján történik. 
+A vállalatoknál jellemző probléma, hogy az eszköznyilvántartás különböző táblázatokban, dokumentumokban történik. 
 Ez könnyen vezethet \textbf{adatvesztéshez, átláthatatlan folyamatokhoz és hibás eszköz-hozzárendelésekhez}. 
 A készített webalkalmazás ezekre a nehézségekre kínál \textbf{strukturált, digitális megoldást}, amely egységesíti a nyilvántartási és jóváhagyási folyamatokat.
 
@@ -88,11 +88,11 @@ Ennek érdekében a fejlesztés során három fő célkitűzést határoztam meg
 	Az eszközök státusza, helye és felelőse valós időben követhető.
 	
 	\item \textbf{Automatizált eszközrendelési és -jóváhagyási folyamat kialakítása}  
-	A dolgozók online rendelhetnek új eszközöket, amelyeket a felettesük vagy az adott csoportvezető hagyhat jóvá. 
+	A dolgozók online rendelhetnek új eszközöket, amelyeket a kiválasztott vezető hagyhat jóvá.
 	Ez a digitális folyamat helyettesíti a korábbi e-mailes vagy szóbeli engedélyezéseket.
 	
 	\item \textbf{Karbantartható és biztonságos rendszer fejlesztése}  
-	A jogosultságkezelés több szintű: a rendszer különbözik a \textit{felhasználó}, a \textit{csoportvezető (Group Leader)} és az \textit{adminisztrátor} szerepkörök között.  
+	A jogosultságkezelés több szintű: a rendszer megkülönbözteti a \textit{felhasználó}, a \textit{csoportvezető} és az \textit{adminisztrátor} szerepköröket.  
 	Minden felhasználó csak a saját jogosultsági körébe tartozó funkciókat érheti el.
 \end{enumerate}
 
@@ -110,20 +110,18 @@ A fejlesztés során az alábbi fő funkciók kerültek megvalósításra:
 	\item Az eszköz visszaadásának vagy cseréjének kezdeményezése.
 \end{itemize}
 
-\paragraph{Csoportvezetői funkciók (Group Leader szerepkör)}
+\paragraph{Csoportvezetői funkciók}
 \begin{itemize}
 	\item A beosztottak által létrehozott eszközrendelések megtekintése.
 	\item A rendelések \textbf{jóváhagyása vagy elutasítása}.
-	\item A csoporton belüli eszközmozgások és státuszok figyelemmel kísérése.
 \end{itemize}
 
 \paragraph{Adminisztrátori funkciók}
 \begin{itemize}
 	\item Az összes eszköz, rendelés és felhasználó teljes körű kezelése.
-	\item Új eszközök felvitele az adatbázisba, kategóriák és státuszok karbantartása.
-	\item Rendelések kezelése (eszközök kiosztása, visszavétele, státuszok módosítása).
-	\item Felhasználók szerepköreinek kezelése.
-	\item Részletes riportok és statisztikák megtekintése az eszközhasználatról.
+	\item Új eszközök felvétele az adatbázisba, kategóriák és státuszok karbantartása.
+	\item Rendelések kezelése (eszközök kiadása, visszavétele, státuszok módosítása).
+	\item Felhasználók kezelése.
 \end{itemize}
 
 \subsection{Nem-funkcionális követelmények}
