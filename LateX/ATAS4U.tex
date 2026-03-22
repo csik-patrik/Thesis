@@ -11,7 +11,8 @@
 \usepackage[T1]{fontenc}
 \PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
 \usepackage[magyar]{babel}
-\usepackage{mathtools,amssymb,amsthm,pdfpages}
+\usepackage{mathtools,amssymb,amsthm,pdfpages, biblatex}
+\addbibresource{references.bib}
 \footnotestyle{rule=fourth}
 
 \newtheorem{tetel}{Tétel}[chapter]
@@ -36,63 +37,116 @@
 
 \section{A téma aktualitása és célja}
 
-A modern vállalati környezetben az informatikai eszközök -- mint például számítógépek, mobiltelefonok, nyomtatók vagy SIM-kártyák -- kulcsfontosságú szerepet töltenek be a mindennapi munkavégzésben. A digitalizáció térnyerésével és a távmunka elterjedésével az eszközök száma, valamint azok nyilvántartásának bonyolultsága is jelentősen megnőtt. Egy közepes méretű cég esetében akár több száz különböző eszköz mozgását, státuszát és felelősét kell naprakészen kezelni, ami manuálisan, például Excel-táblák segítségével, már nehezen megvalósítható.
+Kis és középvállalatoknál végzett szakmai munkáim során gyakran azt tapasztaltam, hogy a cégnél használt IT eszközök (például számítógépek, laptopok, mobiltelefonok stb.) nem megfelelő nyilvántartása megnehezíti a mindennapi feladatok elvégzését az IT osztályon belül és esetlegesen anyagi károk is jelenthet a munkaadó számára.
 
-A szakdolgozat célja egy olyan webalkalmazás fejlesztése, amely átlátható és automatizált módon kezeli az informatikai eszközök nyilvántartását és kiadását. A rendszer segítségével a felhasználók egyszerűen igényelhetnek eszközöket, a jóváhagyás és a kiadás folyamata pedig digitálisan nyomon követhetővé válik. Ezáltal csökken az adminisztrációs teher, és minimalizálható az emberi hibákból eredő adateltérés.
+A digitalizáció a mai munkaerőpiacon alapkövetelménynek tekintető, ennek következtében az intézményekben használt korábban említett eszközök darabszáma is drasztikusan megnőtt. Az igények folyamatos változása és a használatban lévő eszközök darabszámának növekedése miatt ezeknek az IT eszközöknek a nyilvántartása létfontosságú a vállalati életben.
 
-A megoldás technológiai alapját a .NET 8 Web API adja, amely egy korszerű, gyors és biztonságos szerveroldali keretrendszer, ideális vállalati szintű alkalmazások fejlesztéséhez. A felhasználói felület React alapokra épül, amely a modern JavaScript-ökoszisztéma egyik legnépszerűbb könyvtára, dinamikus és reszponzív webes felületek készítéséhez.
+Tapasztalataim alapján jellemző a különböző táblázatkezelő alkalmazások használata (például Microsoft Excel), melyeknek hátránya, hogy az adott felhasználó minden adatot szabadon tud szerkeszteni, a meglévő adatstruktúrát módosíthatja. Egy közepes méretű cég esetén ez akár több száz különböző eszközt is jelenthet, amiknek a mozgását, státuszát és felelősét nyilvántartani egy táblázatkezelőben nem fenntartható hosszú távon. Az ilyen megoldások alkalmazásakor gyakori az adatvesztés, idővel a struktúra teljes összeomlása és az "Egyéb" mezők rendszeres megjelenése az "adatbázisban".
 
-A fejlesztés célkitűzései közé tartozik:
+Szakdolgozatom célja, egy olyan webalkalmazás fejlesztése ami a korábban említett problémákra biztosít egy lehetséges megoldást.
+A program egy olyan környezetet szolgáltat a felhasználóknak és az IT munkatársaknak amin keresztül a felhasználók egyszerűen tudnak új eszközöket igényelni, megtekinthetik a jelenlegi eszközeiket és állapotukat, a vezetők jóváhagyási folyamaton keresztül tudják felülvizsgálni az alkalmazottak igényeit, az adminisztrátorok pedig teljes körű rálátást kapnak a telephelyen lévő összes eszközre.
 
-az informatikai eszközök (pl. számítógépek, mobiltelefonok) nyilvántartásának központi kezelése,
+Az alkalmazásom által az eszközök teljes életciklusa digitálisan nyomon követhetővé válik, ezáltal csökken az adminisztrációs teher és minimalizálható az emberi hibákból eredő adatvesztés.
 
-a kiadási és visszavételi folyamatok digitalizálása,
+A tervezés során az alábbi célokat tűztem ki:
 
-a felhasználói és vezetői jogosultságok kezelése,
+\begin{itemize}
+	\item Eszközök (számítógépek, telefonok, SIM kártyát) kezelése
+	\item Igénylési folyamat megvalósítása
+	\item Jóváhagyási folyamat megvalósítása
+	\item Igénylés feldolgozásának megvalósítása
+	\item Átadási / Átvételi dokumentum digitalizációja
+	\item Használatban lévő eszközök életciklusának követhetősége
+	\item Felhasználó és jogosultság kezelés
+\end{itemize}
 
-valamint a jóváhagyási folyamat beépítése a rendelési rendszerbe.
-
-Egy ilyen rendszer bevezetése növeli a vállalat átláthatóságát, támogatja az eszközgazdálkodás tervezhetőségét, és hosszú távon csökkenti az üzemeltetési költségeket. A fejlesztés személyes célja továbbá az, hogy elmélyítsem ismereteit a modern webfejlesztési technológiákban és az alkalmazásfejlesztés vállalati szintű gyakorlatában.
+Célom, hogy az alkalmazásom bevezetésével növelem az átláthatóságot és hosszú távon csökkenthetem az üzemeltetésre, adminisztrációra fordítót kapacitás mennyiségét.
+A fejlesztés során személyes célom, hogy elmélyítsem a tudásom a piacképes technológiák használatában és az alkalmazásfejlesztés vállalati szintű gyakorlatában.
 
 \section{A használt technológiák bemutatása}
-Az alkalmazás fejlesztése során a cél egy olyan modern, megbízható és hosszú távon fenntartható technológiai alap kialakítása volt, amely illeszkedik a jelenlegi iparági trendekhez és a vállalati fejlesztési környezetek elvárásaihoz. A választott technológiák — .NET 8 Web API a backend oldalon, valamint React a frontend oldalon — egyaránt támogatják a gyors fejlesztést, a biztonságos működést és az egyszerű bővíthetőséget.
+A munkám során szerettem volna olyan technológia eszközöket alkalmazni, melyek illeszkednek a jelenlegi iparági trendekhez és megfelelnek a vállalati fejlesztési eszközök elvárásainak.
 
-\subsection{.NET 8 Web API}
+Ennek következtében a választott technológiáim:
+\begin{itemize}
+	\item Microsoft .NET 8 Web API
+	\item React 19.2
+	\item Microsoft SQL Server 2022
+\end{itemize}
 
-A szerveroldali logika megvalósításához a .NET 8 Web API keretrendszert alkalmaztam, amely a Microsoft által fejlesztett, nyílt forráskódú platform legfrissebb verziója. A .NET 8 előnye, hogy támogatja a minimal API-k használatát, így egyszerű, mégis hatékony módon lehet REST alapú végpontokat létrehozni. A rendszer architektúrája rétegzett felépítést követ: az adat-hozzáférési réteg (Repository pattern) kezeli az adatbázissal való kommunikációt, míg az API réteg felel a kliensoldali kérések kiszolgálásáért. Az alkalmazásban az Entity Framework Core (EF Core) ORM (Object-Relational Mapping) keretrendszer gondoskodik az adatbázis műveletek egyszerű és biztonságos kezeléséről. Az EF Core segítségével LINQ lekérdezések használatával lehet az adatokhoz hozzáférni, ezáltal a kód átláthatóbb és karbantarthatóbb (Microsoft Learn, 2023). Az adatok tárolása Microsoft SQL Server adatbázisban történik, amely jól integrálható a .NET ökoszisztémával és alkalmas nagyvállalati környezetben való használatra is. A felhasználók azonosítását és jogosultságkezelését JWT (JSON Web Token) alapú autentikáció biztosítja, amely a kliens és a szerver között biztonságos módon kezeli a bejelentkezési adatokat.
+\subsection{Microsoft .NET 8 Web API}
 
-\subsection{React Frontend}
+A szerveroldali logika megvalósításához a .NET 8 Web API keretrendszert alkalmaztam.
+1. FORRÁS
+A .NET egy ingyenes, platformfüggetlen, nyílt forráskódú fejlesztői platform, amely különféle alkalmazások építésére nyújt lehetőséget. 
+A nagy teljesítményű futtatókörnyezetre támaszkodik, amelyet számos nagy léptékű alkalmazás használ éles környezetben.
+A .NET platform a termelékenység, a teljesítmény, a biztonság és a megbízhatóság biztosításához készült. 
 
-A kliensoldali felület React segítségével készült, amely a Meta (Facebook) által fejlesztett JavaScript-könyvtár, és jelenleg a legelterjedtebb frontend-technológiák közé tartozik (Stack Overflow Developer Survey, 2024). A React komponensalapú megközelítése lehetővé teszi, hogy az alkalmazás logikailag jól szeparált, újrahasznosítható elemekből épüljön fel, így a fejlesztés és a karbantartás is hatékonyabbá válik. Az alkalmazásban React Router gondoskodik a kliensoldali navigációról, míg az Axios könyvtár biztosítja az API-hívásokat a backend felé. A fejlesztés során külön figyelmet fordítottam a felhasználói élményre és az ergonómiára, ezért a frontend kialakításához Tailwind keretrendszert használtam, amely modern, reszponzív és mobilbarát megjelenést biztosít.
+Az alkalmazásban az Entity Framework Core (EF Core) ORM (Object-Relational Mapping) keretrendszer használatával valósítottam meg az adatbázis műveletek egyszerű és biztonságos kezelését.
 
-\subsection{Fejlesztési környezet és eszközök}
-A fejlesztés Visual Studio 2022 és Visual Studio Code környezetben zajlott, amelyek hatékony támogatást nyújtanak a .NET és JavaScript alapú projektekhez. A verziókezeléshez Git rendszert használtam, a forráskódot pedig GitHub tárhelyen tároltam.
+2. FORRÁS
+Az Entity Framework (EF) Core a népszerű Entity Framework adatelérési technológia egyszerűsített, bővíthető, nyílt forráskódú és platformfüggetlen verziója.
 
-\section{A rendszer célja és funkcionális követelményei}
+Az EF Core objektum-relációs leképezőként (O/RM) szolgálhat, amely:
 
-Az informatikai eszközök nyilvántartására és kiadásának kezelésére tervezett rendszer célja, hogy \textbf{átlátható, digitálisan kezelhető folyamatot} biztosítson a vállalati IT-eszközök kezeléséhez. 
-A fejlesztés során fontos szempont volt, hogy az alkalmazás \textbf{egyszerűen használható, biztonságos és könnyen bővíthető} legyen, valamint hogy a napi adminisztrációs feladatokból minél többet automatizáljon.
+\begin{enumerate}
+	\item Lehetővé teszi, hogy a .NET-fejlesztők .NET-objektumokkal dolgozzanak egy adatbázissal.
+	\item Kiküszöböli az általában írandó adatelérési kódok többségének szükségességét.
+\end{enumerate}
 
-A vállalatoknál jellemző probléma, hogy az eszköznyilvántartás különböző táblázatokban, dokumentumokban történik. 
-Ez könnyen vezethet \textbf{adatvesztéshez, átláthatatlan folyamatokhoz és hibás eszköz-hozzárendelésekhez}. 
-A készített webalkalmazás ezekre a nehézségekre kínál \textbf{strukturált, digitális megoldást}, amely egységesíti a nyilvántartási és jóváhagyási folyamatokat.
+Az EF Core használatával az adathozzáférés egy modell használatával történik. A modell entitásosztályokból és környezeti objektumból áll, amelyek az adatbázissal való munkamenetet jelölik. A környezeti objektum lehetővé teszi az adatok lekérdezését és mentését.
+
+\subsection{Microsoft SQL Server}
+Az adatok tárolására a Microsoft SQL Server adatbázist választottam, mivel könnyen integrálható a .NET ökoszisztémával és alkalmas a nagyvállalati környezetben való használatra is.
+
++FORRÁS?
+
+\subsection{React}
+
+A kliensoldali felületet React keretrendszer használatával valósítottam meg.
+A React a Meta (Facebook) által fejlesztett JavaScript könyvtár és az egyik legelterjedtebb kliensoldali technológiák közé tartozik. FORRÁS?
+A komponensalapú megközelítés lehetővé teszi, hogy a jól szeparált, újrahasznosítható elemekből épüljön fel az alkalmazás így a fejlesztés és karbantartás is hatékonnyá válik.
+
+A fejlesztés során kiemelten fontos volt számomra a felhasználói élmény és a megjelenés, ezért a felületek kialakításához Tailwind keretrendszert használtam.
+
+A Tailwind keretrendszer lehetővé teszi az előre definiált CSS osztályok használatával, a dinamikus felületek létrehozását.
+Így gyorsan és strukturáltan tudtam rugalmas felületeket létrehozni.
+
+
+\subsection{Fejlesztői környezet és eszközök}
+A fejlesztés során a Visual Studio Code integrált fejlesztői környezetet használtam.
+FORRÁS? WIKI?
+A verziókezeléshez Git rendszert alkalmaztam, a forráskódot pedig GitHub tárhelyen tároltam.
+
+\chapter{A rendszer célja és funkcionális követelményei}
+
+Az alkalmazásom célja, hogy a vállalati környezetben használt informatikai eszközöknek (jelenleg számítógépek, laptopok, telefonok, SIM kártyák) biztosítson egy átlátható és könnyen karbantartható felületet.
+
+A megvalósítás során fontos szempont volt, hogy az alkalmazás egyszerűen használható, a jövőbeli igényeknek megfelelően bővíthető legyen.
+
+Elvárt követelmény, hogy az alkalmazás bevezetése után a felhasználók adminisztrációs feladatait csökkenti, kapacitást szabadít fel.
 
 \subsection{A rendszer célja}
 
-A rendszer alapvető célja, hogy \textbf{digitalizálja és automatizálja az informatikai eszközök kezelését}, valamint megkönnyítse a különböző szerepkörű felhasználók munkáját.  
-Ennek érdekében a fejlesztés során három fő célkitűzést határoztam meg:
+A rendszer alapvető célja, hogy \textbf{digitalizálja és automatizálja az informatikai eszközök nyilvántartását}, valamint megkönnyítse a felhasználók munkáját.
+Ennek érdekében a fejlesztés során az alábbi célokat határoztam meg:
 
 \begin{enumerate}
-	\item \textbf{Egységes eszköznyilvántartás létrehozása}  
-	Az összes informatikai eszköz (számítógépek, mobiltelefonok, SIM-kártyák stb.) adatai egy központi adatbázisban kerülnek tárolásra. 
-	Az eszközök státusza, helye és felelőse valós időben követhető.
+	\item Egységes eszköznyilvántartás létrehozása
 	
-	\item \textbf{Automatizált eszközrendelési és -jóváhagyási folyamat kialakítása}  
-	A dolgozók online rendelhetnek új eszközöket, amelyeket a kiválasztott vezető hagyhat jóvá.
-	Ez a digitális folyamat helyettesíti a korábbi e-mailes vagy szóbeli engedélyezéseket.
+	Az összes informatikai eszköz adatai egy központi adatbázisban kerülnek tárolásra.
+	Az eszközről tárolt információ, jelenlegi állapota és felelőse valós időben követhető.
 	
-	\item \textbf{Karbantartható és biztonságos rendszer fejlesztése}  
-	A jogosultságkezelés több szintű: a rendszer megkülönbözteti a \textit{felhasználó}, a \textit{csoportvezető} és az \textit{adminisztrátor} szerepköröket.  
+	\item Eszközrendelési és jóváhagyási folyamat kialakítása 
+	
+	A dolgozók az alkalmazáson keresztül adhatják le új eszköz igényüket, amelyet a kiválasztott vezető bírál el.
+	A rendelések feldolgozását az adminisztrátorok végzik.
+	A rendelés feldolgozásához szükséges információkat és eszközöket egy felületen érnek el.
+	Ez a digitális folyamat helyettesíti a korábbi E-mailes vagy szóbeli engedélyezéseket.
+	
+	\item Karbantartható és biztonságos rendszer fejlesztése
+	
+	A jogosultságkezelés több szintű: a rendszer megkülönbözteti a \textit{felhasználó}, a \textit{csoportvezető} és az \textit{adminisztrátor} szerepköröket.
+	
 	Minden felhasználó csak a saját jogosultsági körébe tartozó funkciókat érheti el.
 \end{enumerate}
 
@@ -141,57 +195,278 @@ A rendszer nem-funkcionális követelményei közé tartoznak azok a jellemzők,
 A fejlesztett alkalmazás célja, hogy egy \textbf{modern, biztonságos és felhasználóbarát rendszer} segítségével támogassa a vállalat informatikai eszközeinek kezelését.  
 Az automatizált folyamatok és az egyértelmű szerepkörök révén a rendszer \textbf{csökkenti az adminisztrációs terheket}, miközben \textbf{növeli az átláthatóságot és a hatékonyságot} a szervezeten belül.
 
-
-\section{Use case forgatókönyvek}
-% Felhasználói történetek, példák a rendszer használatára.
-
-%------------------------------------------------
 \chapter{Tervezés}
 % Rendszerterv, architektúra, adatbázis, API és frontend struktúra
 
 \section{Rendszerarchitektúra}
-% Írd le a .NET Web API és a React közti kapcsolatot, és hogyan épül fel a rendszer.
+A fejlesztett alkalmazás egy klasszikus háromrétegű (three-tier) architektúrát követ, amely jól elkülöníti a megjelenítési, az üzleti logikai és az adatkezelési rétegeket. Ez a felépítés biztosítja a rendszer átláthatóságát, karbantarthatóságát és bővíthetőségét.
+
+A rendszer fő komponensei a következők:
+\begin{itemize}
+	\item Frontend (kliensoldal): A felhasználói felület React alapokon valósul meg. A frontend feladata a felhasználói interakciók kezelése, az adatok megjelenítése, valamint az API hívások indítása a backend felé.
+	
+	\item Backend (szerveroldal): A szerveroldali logikát .NET 8 Web API biztosítja. Ez a réteg kezeli az üzleti logikát, feldolgozza a kliens kéréseit, valamint kommunikál az adatbázissal.
+	
+	\item Adatbázis: Az adatok tárolása Microsoft SQL Server adatbázisban történik, amely strukturált és megbízható adattárolást biztosít.
+	
+	\item A frontend és a backend közötti kommunikáció REST API-n keresztül valósul meg HTTP protokoll segítségével. Az adatcsere JSON formátumban történik, amely könnyen feldolgozható mindkét oldalon.
+\end{itemize}
+
+Az architektúra egyik fontos előnye, hogy a frontend és a backend egymástól függetlenül fejleszthető és skálázható. Ez lehetővé teszi a rendszer későbbi bővítését vagy akár más kliensalkalmazások (pl. mobilalkalmazás) integrálását is.
 
 \section{Adatbázis-tervezés}
-% ER-diagram, táblák, kulcsok, kapcsolatok.
+A rendszer működésének alapját egy relációs adatbázis képezi, amely biztosítja az adatok strukturált és konzisztens tárolását. Az adatbázis tervezése során a cél az volt, hogy az eszközök, felhasználók és rendelések közötti kapcsolatok egyértelműen és hatékonyan reprezentálhatók legyenek.
+
+A főbb táblák a következők:
+
+Felhasználók:
+\begin{itemize}
+	\item Azonosító 
+	\item Felhasználónév 
+	\item Teljes név 
+	\item E-mail cím
+	\item Osztály
+	\item Költséghely
+	\item Jelszó (hash-elve tárolva)
+\end{itemize}
+
+további táblák leírása...
+
+A táblák között relációk vannak kialakítva, például:
+
+Egy felhasználó több rendelést is létrehozhat (1 kapcsolat). Egy eszköz egy adott időpontban egy felhasználóhoz tartozhat. A felhasználók egy szerepkörhöz tartoznak.
+
+Az adatbázis tervezése során fontos szempont volt a normalizáció, amely csökkenti az adatredundanciát és biztosítja az adatok integritását.
 
 \section{Backend tervezése}
-% Controller, Service, Repository rétegek, endpoint-ok.
+A backend réteg a .NET 8 Web API keretrendszerre épül, és rétegzett architektúrát követ. A rendszer főbb komponensei:
+
+\begin{itemize}
+	\item Controller réteg:
+	A HTTP kérések fogadásáért és a válaszok visszaküldéséért felelős. Minden erőforráshoz külön controller tartozik (pl. DeviceController, OrderController).
+	
+	\item Service réteg:
+	Az üzleti logika itt kerül megvalósításra. Ez a réteg végzi az adatok feldolgozását, ellenőrzését és a műveletek koordinálását.
+	
+	\item Repository réteg:
+	Az adatbázissal való kommunikációért felel. A Repository pattern alkalmazásával az adatkezelési logika elkülönül az üzleti logikától, így a rendszer könnyebben tesztelhető és karbantartható.
+\end{itemize}
+
+Az alkalmazás az Entity Framework Core ORM-et használja, amely lehetővé teszi az objektum-orientált adatkezelést és az SQL lekérdezések absztrakcióját.
+
+A backend kialakítása során fontos szempont volt a tiszta kód (clean code) elvek követése és a jól strukturált, moduláris felépítés.
 
 \section{Frontend tervezése}
-% React komponensek, oldalak, felhasználói felület terve.
+A frontend alkalmazás React alapokon épül fel, komponensalapú architektúrát követve. Ez lehetővé teszi az alkalmazás logikai egységekre bontását és az újrahasznosítható komponensek használatát.
+
+A főbb felületi elemek:
+\begin{itemize}
+	\item bejelentkezési oldal
+	\item főoldal (dashboard)
+	\item eszközlista
+	\item rendelési felület
+	\item adminisztrációs felület
+\end{itemize}
+
+A navigációt React Router biztosítja, amely lehetővé teszi az egyoldalas alkalmazás (SPA) működést.
+
+Az állapotkezelés a React beépített hook-jaival (pl. useState, useEffect) történik. Az API kommunikáció Axios könyvtár segítségével valósul meg.
+
+A felhasználói felület kialakításakor fontos szempont volt a reszponzív megjelenés, amelyet Tailwind CSS keretrendszer segítségével valósítottam meg.
 
 \section{Autentikáció és jogosultságkezelés}
-% Azure AD, JWT vagy más megoldás leírása.
+A rendszer biztonságos működésének érdekében JWT (JSON Web Token) alapú autentikáció került bevezetésre.
 
-%------------------------------------------------
+A bejelentkezés folyamata a következő:
+
+A felhasználó megadja az e-mail címét és jelszavát. A backend ellenőrzi az adatokat. Sikeres hitelesítés esetén a szerver egy JWT tokent generál. A kliens ezt a tokent eltárolja, és minden további kérésnél elküldi.
+
+A jogosultságkezelés szerepkör alapú (role-based access control). A rendszer különböző felhasználói szerepköröket különböztet meg:
+
+\begin{itemize}
+	\item Felhasználó
+	\item Csoportvezető
+	\item Adminisztrátor
+\end{itemize}
+
+Minden szerepkör eltérő jogosultságokkal rendelkezik, amelyeket a backend oldalon ellenőriz a rendszer. Ez biztosítja, hogy a felhasználók csak a számukra engedélyezett műveleteket hajthassák végre.
+
+A biztonság növelése érdekében a jelszavak titkosított (hash-elt) formában kerülnek tárolásra, és az API végpontok védettek jogosultság ellenőrzéssel.
+
 \chapter{Fejlesztés és megvalósítás}
-% A fejlesztés környezete, eszközök, technológiák
 
 \section{Fejlesztési környezet}
-% .NET 8, React, TypeScript, SQL Server, Git, stb.
+A fejlesztés során modern és széles körben használt eszközöket alkalmaztam a hatékony munkavégzés érdekében. A backend fejlesztése Microsoft Visual Studio 2022 környezetben történt, amely teljes körű támogatást nyújt a .NET alapú alkalmazások fejlesztéséhez. A frontend fejlesztés Visual Studio Code szerkesztőben zajlott, amely könnyű, gyors és kiválóan alkalmas JavaScript alapú projektek kezelésére.
+
+A verziókezeléshez Git rendszert használtam, amely lehetővé tette a fejlesztési folyamat követését, valamint a kód biztonságos tárolását. A forráskód GitHub platformon került tárolásra.
+
+Az alkalmazás futtatásához és teszteléséhez Postman eszközt is használtam az API végpontok ellenőrzésére.
 
 \section{Backend fejlesztés}
-% API endpointok, adatkezelés, hibakezelés.
+A backend megvalósítása .NET 8 Web API keretrendszer segítségével történt. Az alkalmazás REST alapú szolgáltatásokat biztosít, amelyek HTTP kéréseken keresztül érhetők el.
+
+A rendszer több különálló vezérlőt (controller) tartalmaz, amelyek az egyes erőforrások kezeléséért felelősek. Ilyenek például:
+
+\begin{itemize}
+	\item DeviceController – eszközök kezelése
+	\item OrderController – rendelések kezelése
+	\item AuthController – felhasználói hitelesítés
+\end{itemize}
+
+A backend működésének alapja a rétegzett architektúra, amelyben a controller réteg a kérések fogadásáért, míg a repository réteg az adatbázis műveletekért felel.
+
+Egy tipikus működési folyamat a következő:
+
+\begin{enumerate}
+	\item A kliens HTTP kérést küld egy adott végpontra.
+	\item A controller fogadja a kérést és továbbítja a megfelelő szolgáltatásnak.
+	\item A repository réteg lekérdezi vagy módosítja az adatokat az adatbázisban.
+	\item A backend JSON formátumban visszaküldi a választ a kliensnek.
+\end{enumerate}
+
+Az adatkezeléshez Entity Framework Core keretrendszert használtam, amely lehetővé teszi az objektum-orientált adatbázis-kezelést. A lekérdezések LINQ segítségével valósulnak meg.
+
+A biztonság érdekében a felhasználók hitelesítése JWT tokenekkel történik, és az API végpontok védettek jogosultságellenőrzéssel.
 
 \section{Frontend fejlesztés}
-% React komponensek, adatlekérés, felhasználói interakciók.
+A frontend fejlesztése React könyvtár segítségével történt. Az alkalmazás egy egyoldalas alkalmazásként (Single Page Application, SPA) működik, amely dinamikusan tölti be az adatokat a backend API-ból.
+
+A felület komponensalapú felépítésű, amely lehetővé teszi az egyes elemek újrafelhasználását és egyszerű karbantartását. A főbb komponensek közé tartoznak:
+
+\begin{itemize}
+	\item bejelentkezési felület
+	\item eszközlista megjelenítő komponens
+	\item rendelési űrlap
+	\item adminisztrációs felület
+\end{itemize}
+
+A navigációt React Router biztosítja, amely lehetővé teszi az oldalak közötti gyors váltást újratöltés nélkül.
+
+Az API hívások Axios könyvtáron keresztül történnek. A frontend a backend által biztosított REST végpontokat használja az adatok lekérésére és módosítására.
+
+Az állapotkezelés a React hook-jain keresztül valósul meg, például useState és useEffect használatával. Ezek segítségével a felhasználói interakciók és az adatok változásai hatékonyan kezelhetők.
+
+A felhasználói felület kialakításakor fontos szempont volt az egyszerű kezelhetőség és az átlátható megjelenés, amelyet Tailwind CSS segítségével valósítottam meg.
 
 \section{Integráció}
-% API és frontend összekapcsolása, adatáramlás, kommunikáció.
+A frontend és a backend közötti integráció REST API-n keresztül valósul meg. A kliensoldali alkalmazás HTTP kéréseket küld a backend végpontjai felé, amelyek feldolgozzák a kéréseket és visszaküldik a szükséges adatokat.
+
+Az autentikáció során a frontend eltárolja a bejelentkezéskor kapott JWT tokent, majd minden további API hívás során elküldi azt az Authorization fejlécben.
+
+A rendszer biztosítja a hibakezelést is: amennyiben egy API hívás sikertelen, a frontend megfelelő visszajelzést ad a felhasználónak.
+
+Az integráció során külön figyelmet fordítottam arra, hogy a frontend és backend közötti adatcsere egységes és jól strukturált legyen.
 
 \section{Biztonság és naplózás}
-% Hitelesítés, jogosultságkezelés, auditálás.
+A rendszer biztonságos működése érdekében több védelmi mechanizmust alkalmaztam.
 
-%------------------------------------------------
+A felhasználók hitelesítése JWT token alapú megoldással történik, amely biztosítja, hogy csak jogosult felhasználók férhessenek hozzá az API végpontokhoz.
+
+A jelszavak nem kerülnek tárolásra nyílt formában, hanem titkosított (hash-elt) módon kerülnek az adatbázisba. Ez jelentősen növeli az adatok biztonságát.
+
+A rendszer tartalmaz alapvető hibakezelést is, amely biztosítja, hogy a váratlan hibák ne okozzanak rendszerleállást.
+
+A naplózás (logging) lehetővé teszi a rendszer működésének nyomon követését, valamint a hibák későbbi elemzését. A naplózott események közé tartozhatnak például a bejelentkezések, hibák és fontosabb műveletek.
+
 \chapter{Tesztelés}
-% Tesztelési stratégia és eredmények
 
 \section{Tesztelési módszertan}
-% Egységtesztek, integrációs tesztek, manuális tesztelés.
+A fejlesztett rendszer megfelelő működésének biztosítása érdekében különböző tesztelési módszereket alkalmaztam. A tesztelés célja az volt, hogy ellenőrizzem az alkalmazás funkcionalitását, megbízhatóságát és stabilitását.
+
+A tesztelés során elsősorban manuális tesztelést végeztem, amely során a rendszer különböző funkcióit valós felhasználói szemszögből próbáltam ki. Emellett az API végpontok működését külön is ellenőriztem Postman segítségével.
+
+Az alábbi tesztelési típusokat alkalmaztam:
+
+\begin{itemize}
+	\item Funkcionális tesztelés:
+	Annak ellenőrzése, hogy az egyes funkciók (pl. bejelentkezés, eszköz rendelés, jóváhagyás) megfelelően működnek-e.
+	\item Integrációs tesztelés:
+	A frontend és a backend közötti kommunikáció vizsgálata, különös tekintettel az API hívások helyes működésére.
+	\item Hibakezelés tesztelése:
+	Annak ellenőrzése, hogy a rendszer hogyan reagál hibás bemenetekre vagy sikertelen műveletekre.
+	\item Jogosultság tesztelése:
+	A különböző szerepkörök (felhasználó, vezető, adminisztrátor) jogosultságainak ellenőrzése.
+\end{itemize}
+
+A tesztelés során törekedtem arra, hogy minden fontos funkciót több különböző esettel is lefedjek.
 
 \section{Tesztesetek és eredmények}
-% Példák: eszköz létrehozása, módosítása, törlése, hibás adat kezelése.
+A rendszer működésének ellenőrzésére több tesztesetet definiáltam, amelyek lefedik az alkalmazás fő funkcióit.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|p{4cm}|p{5cm}|c|}
+		\hline
+		\textbf{Teszteset} & \textbf{Leírás} & \textbf{Várt eredmény} & \textbf{Eredmény} \\
+		\hline
+		T1 & Helyes e-mail és jelszó megadása & Sikeres bejelentkezés, JWT token visszaadása & Megfelelt \\
+		\hline
+		T2 & Hibás jelszó megadása & Hibaüzenet jelenik meg & Megfelelt \\
+		\hline
+		T3 & Nem létező felhasználó megadása & Hibaüzenet jelenik meg & Megfelelt \\
+		\hline
+	\end{tabular}
+	\caption{Bejelentkezési funkció tesztelése}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|p{4cm}|p{5cm}|c|}
+		\hline
+		\textbf{Teszteset} & \textbf{Leírás} & \textbf{Várt eredmény} & \textbf{Eredmény} \\
+		\hline
+		T4 & Új eszközrendelés létrehozása érvényes adatokkal & A rendelés mentésre kerül az adatbázisban & Megfelelt \\
+		\hline
+		T5 & Rendelés létrehozása hiányos adatokkal & Hibaüzenet jelenik meg & Megfelelt \\
+		\hline
+		T6 & Saját rendelések lekérdezése & A felhasználó rendelései helyesen megjelennek & Megfelelt \\
+		\hline
+	\end{tabular}
+	\caption{Eszközrendelési funkció tesztelése}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|p{4cm}|p{5cm}|c|}
+		\hline
+		\textbf{Teszteset} & \textbf{Leírás} & \textbf{Várt eredmény} & \textbf{Eredmény} \\
+		\hline
+		T7 & Vezető jóváhagy egy rendelést & A rendelés státusza „jóváhagyva” lesz & Megfelelt \\
+		\hline
+		T8 & Vezető elutasít egy rendelést & A rendelés státusza „elutasítva” lesz & Megfelelt \\
+		\hline
+	\end{tabular}
+	\caption{Jóváhagyási folyamat tesztelése}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|p{4cm}|p{5cm}|c|}
+		\hline
+		\textbf{Teszteset} & \textbf{Leírás} & \textbf{Várt eredmény} & \textbf{Eredmény} \\
+		\hline
+		T9 & Normál felhasználó admin felület elérése & Hozzáférés megtagadva & Megfelelt \\
+		\hline
+		T10 & Adminisztrátor új eszközt hoz létre & Az eszköz sikeresen mentésre kerül & Megfelelt \\
+		\hline
+	\end{tabular}
+	\caption{Jogosultságkezelés tesztelése}
+\end{table}
+
+\section{API tesztelés (Postman)}
+Az API végpontok külön tesztelésre kerültek Postman segítségével. Az ellenőrzések során az alábbiakat vizsgáltam:
+\begin{itemize}
+	\item helyes HTTP státuszkódok (200, 400, 401, 404)
+	\item megfelelő JSON válaszformátum
+	\item autentikáció működése (token szükségessége)
+\end{itemize}
+
+A tesztek alapján az API végpontok megbízhatóan működnek, és megfelelően kezelik a hibás kéréseket is.
+
+\section{Összegzés}
+A tesztelési folyamat során a rendszer minden fő funkcióját sikeresen ellenőriztem. A tesztek eredményei alapján az alkalmazás stabilan működik, és megfelel a korábban meghatározott követelményeknek.
+
+A feltárt kisebb hibák javításra kerültek a fejlesztési folyamat során, így a végleges rendszer egy megbízható és jól használható megoldást nyújt az informatikai eszközök kezelésére.
 
 %------------------------------------------------
 \chapter{Eredmények és értékelés}
@@ -226,11 +501,6 @@ Az automatizált folyamatok és az egyértelmű szerepkörök révén a rendszer
 % Forráskód részletek, adatbázis diagram, API dokumentáció, képernyőképek
 
 \begin{thebibliography}{2}
-\addcontentsline{toc}{chapter}{\bibname}
-\bibitem{Fazekas}
-\textsc{Fazekas István}: \emph{Valószínűségszámítás}, Debreceni Egyetem, Debrecen, 2004.
-\bibitem{Tomacs}
-\textsc{Tómács Tibor}: \emph{A valószínűségszámítás alapjai}, Líceum Kiadó, Eger, 2005.
 \end{thebibliography}
 
 % Aláírt, szkennelt nyilatkozat beillesztése a szakdolgozat végére
