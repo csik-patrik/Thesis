@@ -125,7 +125,7 @@ A megvalósítás során fontos szempont volt, hogy az alkalmazás egyszerűen h
 
 Elvárt követelmény, hogy az alkalmazás bevezetése után a felhasználók adminisztrációs feladatait csökkenti, kapacitást szabadít fel.
 
-\subsection{A rendszer célja}
+\section{A rendszer célja}
 
 A rendszer alapvető célja, hogy \textbf{digitalizálja és automatizálja az informatikai eszközök nyilvántartását}, valamint megkönnyítse a felhasználók munkáját.
 Ennek érdekében a fejlesztés során az alábbi célokat határoztam meg:
@@ -141,46 +141,173 @@ Ennek érdekében a fejlesztés során az alábbi célokat határoztam meg:
 	A dolgozók az alkalmazáson keresztül adhatják le új eszköz igényüket, amelyet a kiválasztott vezető bírál el.
 	A rendelések feldolgozását az adminisztrátorok végzik.
 	A rendelés feldolgozásához szükséges információkat és eszközöket egy felületen érnek el.
-	Ez a digitális folyamat helyettesíti a korábbi E-mailes vagy szóbeli engedélyezéseket.
+	Ez a digitális folyamat helyettesíti a korábbi e-mailes vagy szóbeli engedélyezéseket.
 	
 	\item Karbantartható és biztonságos rendszer fejlesztése
 	
-	A jogosultságkezelés több szintű: a rendszer megkülönbözteti a \textit{felhasználó}, a \textit{csoportvezető} és az \textit{adminisztrátor} szerepköröket.
+	A jogosultságkezelés több szintű: a rendszer megkülönbözteti a \textit{felhasználó}, a \textit{vezető} és az \textit{adminisztrátor} szerepköröket.
 	
 	Minden felhasználó csak a saját jogosultsági körébe tartozó funkciókat érheti el.
 \end{enumerate}
 
-\subsection{Funkcionális követelmények}
+\section{Funkcionális követelmények}
 
-A funkcionális követelmények az alkalmazás azon szolgáltatásait írják le, amelyek a felhasználók számára közvetlenül elérhetők.  
-A fejlesztés során az alábbi fő funkciók kerültek megvalósításra:
+A tervezés során az alábbi funkcionális követelményeket határoztam meg szerepkörökre bontva:
 
-\paragraph{Felhasználói funkciók}
+Bejelentkezés és hitelesítés TODO
+
+\subsection{Felhasználó}
+
 \begin{itemize}
-	\item Bejelentkezés az alkalmazásba (JWT token alapú hitelesítés).
-	\item Saját adatok és eszközök megtekintése.
-	\item Új eszközrendelés létrehozása (pl. számítógép, mobiltelefon, SIM-kártya).
-	\item Saját rendelések állapotának nyomon követése.
-	\item Az eszköz visszaadásának vagy cseréjének kezdeményezése.
+	\item Eszköz rendelés létrehozása
+	
+	A dolgozók a számukra elérhető felületeken adhatnak le új igénylést.
+	A számítógép, laptop és a mobil készülék rendelésére két eltérő felületet szükséges létrehozni.
+	
+	Az űrlapon az alábbi mezők kitöltése szükséges rendelés létrehozásához:
+	
+	\begin{itemize}
+		\item Eszköz kategóriája:
+			
+		A felhasználó lenyíló listából választhatja ki az igényelni kívánt eszköz kategóriáját, melyeket az adminisztrátorok hoznak létre és módosíthatnak.
+		
+		Az eszköz kategóriája definiálja a készülék típusát is.
+		
+		\item Ügyféltípus:
+		
+		Mobil rendelés esetén választható érték az adminisztrátorok által definiált értékek közül.
+		a különböző ügyféltípusok eltérő előfizetői csomagokat tartalmaznak.
+		
+		\item Átvétel helye:
+		
+		Az eszköz átvételének helye. Választható mező az elérhető telephelyeket tartalmazza.
+		
+		\item Megjegyzés:
+		
+		A felhasználó megjegyzést fűzhet a rendeléséhez. Nem kötelezően kitöltendő mező.
+		
+		\item Jóváhagyó:
+		
+		A vezetői jogosultsággal rendelkező felhasználók listáját tartalmazza, választható mező.
+		
+	\end{itemize}
+	
+	Rendelés létrehozása után a felhasználó visszajelzést kap a képernyőn, illetve létrejön egy értesítés az igénylő és a kiválasztott jóváhagyó számára is az új megrendelésről.
+	
+	\item Rendelések nyomon követése
+	
+	A felhasználók a számukra elérhető felületen ellenőrizhetik a leadott rendeléseik adatait és nyomon követhetik az igénylések státuszát.
+	
+	A számítógépek, laptopok és mobil készülékek rendeléseit két különböző felületen különítettem el.
+	
+	A nyitófelületen táblázatos formátumban érhetőek el a leadott rendelések az alábbi fő adatokat megjelenítve:
+	
+	\begin{itemize}
+		\item Rendelési azonosító
+		
+		Minden megrendelés egyedi azonosítóval rendelkezik, ami megkönnyíti az igénylésekre való hivatkozást.
+		
+		\item Eszköz típusa
+		
+		Az igényelt eszköz típusa
+		
+		\item Átvétel helye
+		
+		Az igénylés során kiválasztott telephely
+		
+		\item Státusz
+		
+		Az igénylés jelenlegi státusza
+		
+		\item Részletek megtekintése gomb
+		
+		Megjeleníti a rendelés további részleteit, amik a táblázatos formátumban nem láthatóak
+		
+		\item Törlés gomb
+		
+		Amennyiben a megrendelés feldolgozása még nem kezdődött meg az adminisztrátorok által, akkor a megrendelés törölhető a felhasználó által is.
+	\end{itemize}
+	
+	\item Értesítések megtekintése
+	
+	A navigációs sávon található menüpontot keresztül a felhasználók elérik az új és korábbi értesítéseiket. A még olvasottnak nem jelölt értesítések számát láthatják a felhasználók a navigációs sávon is. A menüpont megnyitásával listában láthatóak az értesítések, az új események kiemelésével.
+	
+	A felhasználók az alábbi eseményekről kapnak értesítést:
+	
+	\begin{enumerate}
+		\item Sikeres rendelés létrehozás
+		\item Rendelés jóváhagyásra vár (vezetők részére)
+		\item Rendelés elbírálásra került vezető által (jóváhagyás / elutasítás)
+		\item Rendelés feldolgozása megkezdődött az adminisztrátorok által
+		\item Rendelés feldolgozásra megtörtént, a készülék átvehető
+		\item Az igényelt készülék átadásra került
+	\end{enumerate}
+	
+	\item Saját eszközök megjelenítése 
+	
+	A felhasználóknak elérhető eszköz típusonként megkülönböztetett felület, ahol a saját eszköz nyilvántartásuk érhetik el.
+	
+	Táblázatos formátumban tekinthetik meg a készülékekhez tartozó legfontosabb adatokat:
+	
+	\begin{enumerate}
+		\item Egyedi azonosító
+		
+		A készülék egyedi azonosítója, igény szerint fizikailag a készüléken is megtalálható
+		
+		\item Kategória
+		
+		Az eszköz kategóriája
+		
+		\item Modell
+		
+		Az eszköz modell gyártója által megadott modell megnevezése
+		
+		\item Sorozatszám
+		
+		\item Státusz
+		
+		Az eszköz jelenlegi státusza
+		
+		\item Státusz indoklása
+	\end{enumerate}
+	
+	A felületen megjelenített eszközökre igényelhetik a felhasználók a csere folyamat megkezdését, vagy amennyiben nincs a továbbiakban szüksége a készülékre kezdeményezheti a leadási folyamatot. 
+	
 \end{itemize}
 
-\paragraph{Csoportvezetői funkciók}
+\subsection{Vezető}
+
+A vezető szerepkörrel rendelkező felhasználóknak minden felhasználói funkciókkal rendelkeznie kell, illetve a jóváhagyási folyamattal kapcsolatos funkciók megvalósítása szükséges. 
+
+A jóváhagyási funkciókat a navigációs sávon megjelenő menüpontból érheti el. Ez a menüpont kizárólag a vezetői jogosultsággal rendelkező felhasználónak lehet elérhető.
+
+A lenyíló menüpont alatt a korábban említett két eszköztípushoz tartozó igényléseket tekintheti meg táblázatos formátumban. Kizárólag azokat a megrendeléseket, hol ő került kiválasztásra mint jóváhagyó.
+
+A táblázatban a korábban említett adatok jelennek meg és a részletek megtekintéséhez szükséges menüpont.
+
+A részletek megtekintése nézetben a vezető elbírálhatja a megrendelést jóváhagyással vagy elutasítással.
+
+A döntésről az igénylő értesítést kap, majd az igénylést átkerül az adminisztráció részére.
+
+\subsection{Adminisztrátor}
+
+Az adminisztrátori jogosultsággal rendelkező felhasználók a navigációs sávon található menüpontokon keresztül érhetik el a számukra szükséges funkciókat.
+Ez a menüpont kizárólag a jogosultsággal rendelkező felhasználóknak elérhető.
+
 \begin{itemize}
-	\item A beosztottak által létrehozott eszközrendelések megtekintése.
-	\item A rendelések \textbf{jóváhagyása vagy elutasítása}.
+	\item Felhasználók kezelése
+	
+	Az adminisztrátorok feladata az alkalmazáshoz hozzáférő felhasználók létrehozása és kezelése.
+	
+	
+	\item Eszköz nyilvántartás karbantartása
+	\item Igényelhető kategóriák módosítása, törlése
+	\item Rendelések feldolgozása (eszközök kiadása, visszavétele, státuszok módosítása)
 \end{itemize}
 
-\paragraph{Adminisztrátori funkciók}
-\begin{itemize}
-	\item Az összes eszköz, rendelés és felhasználó teljes körű kezelése.
-	\item Új eszközök felvétele az adatbázisba, kategóriák és státuszok karbantartása.
-	\item Rendelések kezelése (eszközök kiadása, visszavétele, státuszok módosítása).
-	\item Felhasználók kezelése.
-\end{itemize}
+\subsection{Nem funkcionális követelmények}
 
-\subsection{Nem-funkcionális követelmények}
-
-A rendszer nem-funkcionális követelményei közé tartoznak azok a jellemzők, amelyek a működés minőségét biztosítják:
+A rendszer biztonságának és könnyen karbantarthatóságának érdekében az alábbi követelményeket határoztam meg:
 
 \begin{itemize}
 	\item \textbf{Biztonság:} A kommunikáció JWT token alapú hitelesítéssel történik, ezzel biztosítva az adatokhoz való hozzáférés korlátozását.
@@ -193,7 +320,7 @@ A rendszer nem-funkcionális követelményei közé tartoznak azok a jellemzők,
 \subsection{Összegzés}
 
 A fejlesztett alkalmazás célja, hogy egy \textbf{modern, biztonságos és felhasználóbarát rendszer} segítségével támogassa a vállalat informatikai eszközeinek kezelését.  
-Az automatizált folyamatok és az egyértelmű szerepkörök révén a rendszer \textbf{csökkenti az adminisztrációs terheket}, miközben \textbf{növeli az átláthatóságot és a hatékonyságot} a szervezeten belül.
+Az egységesített folyamatok és az egyértelmű szerepkörök révén a rendszer \textbf{csökkenti az adminisztrációs terheket}, miközben \textbf{növeli az átláthatóságot és a hatékonyságot} a szervezeten belül.
 
 \chapter{Tervezés}
 % Rendszerterv, architektúra, adatbázis, API és frontend struktúra
@@ -285,7 +412,7 @@ A jogosultságkezelés szerepkör alapú (role-based access control). A rendszer
 
 \begin{itemize}
 	\item Felhasználó
-	\item Csoportvezető
+	\item Vezető
 	\item Adminisztrátor
 \end{itemize}
 
