@@ -1,18 +1,17 @@
-%
-% Szakdolgozatminta az Eszterházy Károly Katolikus Egyetem
-% matematika illetve informatika szakos hallgatóinak.
-%
 
 \documentclass[
 % opciók nélkül: egyoldalas nyomtatás, elektronikus verzió
 % twoside,     % kétoldalas nyomtatás
 % tocnopagenum,% oldalszámozás a tartalomjegyzék után kezdődik
 ]{thesis-ekf}
+
 \usepackage[T1]{fontenc}
 \PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
 \usepackage[magyar]{babel}
-\usepackage{mathtools,amssymb,amsthm,pdfpages, biblatex}
+\usepackage{mathtools,amssymb,amsthm,pdfpages, biblatex, csquotes, graphicx}
+\usepackage{float}
 \addbibresource{references.bib}
+\DeclareQuoteStyle{magyar}{,,}{''}{>>}{<<}
 \footnotestyle{rule=fourth}
 
 \newtheorem{tetel}{Tétel}[chapter]
@@ -22,7 +21,6 @@
 \newtheorem{megjegyzes}[tetel]{Megjegyzés}
 
 \begin{document}
-
 \institute{Matematikai és Informatikai Intézet}
 \title{Informatikai eszközök nyilvántartására, eszközkiadás kezelésére tervezett alkalmazás készítése}
 \author{Csik Patrik\\Programtervező informatikus}
@@ -76,14 +74,13 @@ Ennek következtében a választott technológiáim:
 \subsection{Microsoft .NET 8 Web API}
 
 A szerveroldali logika megvalósításához a .NET 8 Web API keretrendszert alkalmaztam.
-1. FORRÁS
+
 A .NET egy ingyenes, platformfüggetlen, nyílt forráskódú fejlesztői platform, amely különféle alkalmazások építésére nyújt lehetőséget. 
 A nagy teljesítményű futtatókörnyezetre támaszkodik, amelyet számos nagy léptékű alkalmazás használ éles környezetben.
-A .NET platform a termelékenység, a teljesítmény, a biztonság és a megbízhatóság biztosításához készült. 
+A .NET platform a termelékenység, a teljesítmény, a biztonság és a megbízhatóság biztosításához készült. \cite{DotnetBevezetés}
 
 Az alkalmazásban az Entity Framework Core (EF Core) ORM (Object-Relational Mapping) keretrendszer használatával valósítottam meg az adatbázis műveletek egyszerű és biztonságos kezelését.
 
-2. FORRÁS
 Az Entity Framework (EF) Core a népszerű Entity Framework adatelérési technológia egyszerűsített, bővíthető, nyílt forráskódú és platformfüggetlen verziója.
 
 Az EF Core objektum-relációs leképezőként (O/RM) szolgálhat, amely:
@@ -94,11 +91,14 @@ Az EF Core objektum-relációs leképezőként (O/RM) szolgálhat, amely:
 \end{enumerate}
 
 Az EF Core használatával az adathozzáférés egy modell használatával történik. A modell entitásosztályokból és környezeti objektumból áll, amelyek az adatbázissal való munkamenetet jelölik. A környezeti objektum lehetővé teszi az adatok lekérdezését és mentését.
+\cite{EntityFrameworkCore}
 
 \subsection{Microsoft SQL Server}
-Az adatok tárolására a Microsoft SQL Server adatbázist választottam, mivel könnyen integrálható a .NET ökoszisztémával és alkalmas a nagyvállalati környezetben való használatra is.
+Az adatok tárolására Microsoft SQL Szerver adatbázist választottam, mivel könnyen integrálható a .NET ökoszisztémával és alkalmas a nagyvállalati környezetben való használatra is.
 
-+FORRÁS?
+A Microsoft SQL Server a Microsoft által fejlesztett, zárt forráskódú relációs adatbázis-kezelő rendszer, amely a Structured Query Language (SQL) nyelvet használja. Adatbázis-szerverként működve elsődleges feladata az adatok tárolása és lekérdezése más szoftveralkalmazások kérésére. Ezek az alkalmazások futhatnak ugyanazon a számítógépen, vagy hálózaton keresztül -- beleértve az internetet is -- más számítógépeken.
+
+\cite{SQLServer}
 
 \subsection{React}
 
@@ -152,157 +152,158 @@ Ennek érdekében a fejlesztés során az alábbi célokat határoztam meg:
 
 \section{Funkcionális követelmények}
 
-A tervezés során az alábbi funkcionális követelményeket határoztam meg szerepkörökre bontva:
+A tervezés során az alábbi funkcionális követelmények kerültek meghatározásra, szerepkörök szerint csoportosítva.
 
-Bejelentkezés és hitelesítés TODO
+\subsection{Bejelentkezés és hitelesítés}
+
+A rendszer használata kizárólag hitelesített felhasználók számára engedélyezett. Ennek megfelelően az alkalmazás minden funkciója csak bejelentkezést követően érhető el.
+
+A felhasználók a bejelentkezési felületen e-mail címük és jelszavuk megadásával azonosítják magukat. A megadott adatok ellenőrzését a szerver végzi.
+
+Sikeres hitelesítés esetén a rendszer hozzáférést biztosít a felhasználó számára a jogosultsági szintjének megfelelő funkciókhoz. Sikertelen bejelentkezés esetén a rendszer hibaüzenetet jelenít meg, és nem engedélyezi a további műveletek végrehajtását.
+
+A bejelentkezési folyamat biztosítja, hogy az alkalmazás funkciói kizárólag jogosult felhasználók számára legyenek elérhetők.
 
 \subsection{Felhasználó}
 
 \begin{itemize}
-	\item Eszköz rendelés létrehozása
+	\item Eszközigénylés létrehozása
 	
-	A dolgozók a számukra elérhető felületeken adhatnak le új igénylést.
-	A számítógép, laptop és a mobil készülék rendelésére két eltérő felületet szükséges létrehozni.
+	A felhasználók a rendelkezésükre álló felületeken keresztül új igényléseket adhatnak le. A számítógépek, laptopok és mobilkészülékek igényléséhez két különálló felület került kialakításra.
 	
-	Az űrlapon az alábbi mezők kitöltése szükséges rendelés létrehozásához:
+	Az igénylés rögzítéséhez az alábbi mezők kitöltése szükséges:
 	
 	\begin{itemize}
-		\item Eszköz kategóriája:
+		\item Eszközkategória:
 			
-		A felhasználó lenyíló listából választhatja ki az igényelni kívánt eszköz kategóriáját, melyeket az adminisztrátorok hoznak létre és módosíthatnak.
-		
-		Az eszköz kategóriája definiálja a készülék típusát is.
+		A felhasználó legördülő listából választhatja ki a kívánt eszközkategóriát, amelyeket az adminisztrátorok hoznak létre és tartanak karban. A kiválasztott kategória meghatározza az eszköz típusát.
 		
 		\item Ügyféltípus:
 		
-		Mobil rendelés esetén választható érték az adminisztrátorok által definiált értékek közül.
-		a különböző ügyféltípusok eltérő előfizetői csomagokat tartalmaznak.
+		Mobil eszköz igénylése esetén választható mező, amely az adminisztrátorok által definiált értékeket tartalmazza. Az egyes ügyféltípusok eltérő előfizetési csomagokat jelentenek.
 		
 		\item Átvétel helye:
 		
-		Az eszköz átvételének helye. Választható mező az elérhető telephelyeket tartalmazza.
+		Az eszköz átvételének helyszíne, amely az elérhető telephelyek közül választható ki.
 		
 		\item Megjegyzés:
 		
-		A felhasználó megjegyzést fűzhet a rendeléséhez. Nem kötelezően kitöltendő mező.
+		Opcionálisan kitölthető mező, amely lehetőséget biztosít további információk megadására.
 		
 		\item Jóváhagyó:
 		
-		A vezetői jogosultsággal rendelkező felhasználók listáját tartalmazza, választható mező.
+		A vezetői jogosultsággal rendelkező felhasználók listáját tartalmazó választható mező.
 		
 	\end{itemize}
 	
-	Rendelés létrehozása után a felhasználó visszajelzést kap a képernyőn, illetve létrejön egy értesítés az igénylő és a kiválasztott jóváhagyó számára is az új megrendelésről.
+	Az igénylés rögzítését követően a felhasználó visszajelzést kap a felületen, továbbá értesítés kerül kiküldésre az igénylő és a kijelölt jóváhagyó részére.
 	
-	\item Rendelések nyomon követése
+	\item Igénylések nyomon követése
 	
-	A felhasználók a számukra elérhető felületen ellenőrizhetik a leadott rendeléseik adatait és nyomon követhetik az igénylések státuszát.
+	A felhasználók a számukra elérhető felületen ellenőrizhetik a korábban leadott igénylések adatait, valamint azok aktuális státuszát.
 	
-	A számítógépek, laptopok és mobil készülékek rendeléseit két különböző felületen különítettem el.
+	A különböző eszköztípusokhoz tartozó igénylések elkülönített felületeken jelennek meg.
 	
-	A nyitófelületen táblázatos formátumban érhetőek el a leadott rendelések az alábbi fő adatokat megjelenítve:
+	A főoldalon a leadott igénylések táblázatos formában, az alábbi adatokkal kerülnek megjelenítésre:
 	
 	\begin{itemize}
-		\item Rendelési azonosító
+		\item Igénylés azonosító
 		
-		Minden megrendelés egyedi azonosítóval rendelkezik, ami megkönnyíti az igénylésekre való hivatkozást.
+		Minden igénylés egyedi azonosítóval rendelkezik.
 		
 		\item Eszköz típusa
 		
-		Az igényelt eszköz típusa
-		
 		\item Átvétel helye
-		
-		Az igénylés során kiválasztott telephely
 		
 		\item Státusz
 		
-		Az igénylés jelenlegi státusza
-		
 		\item Részletek megtekintése gomb
 		
-		Megjeleníti a rendelés további részleteit, amik a táblázatos formátumban nem láthatóak
+		Az adott igénylés részletes adatainak megjelenítése.
 		
 		\item Törlés gomb
 		
-		Amennyiben a megrendelés feldolgozása még nem kezdődött meg az adminisztrátorok által, akkor a megrendelés törölhető a felhasználó által is.
+		Amennyiben a feldolgozás még nem kezdődött meg, az igénylés törölhető.
 	\end{itemize}
 	
 	\item Értesítések megtekintése
 	
-	A navigációs sávon található menüpontot keresztül a felhasználók elérik az új és korábbi értesítéseiket. A még olvasottnak nem jelölt értesítések számát láthatják a felhasználók a navigációs sávon is. A menüpont megnyitásával listában láthatóak az értesítések, az új események kiemelésével.
+	A felhasználók a navigációs sáv megfelelő menüpontján keresztül érhetik el értesítéseiket. Az olvasatlan értesítések száma a felületen külön jelölésre kerül.
 	
-	A felhasználók az alábbi eseményekről kapnak értesítést:
+	Az értesítések listában jelennek meg, ahol az új elemek kiemelten láthatók.
+	
+	Értesítés az alábbi eseményekről történik:
 	
 	\begin{enumerate}
-		\item Sikeres rendelés létrehozás
-		\item Rendelés jóváhagyásra vár (vezetők részére)
-		\item Rendelés elbírálásra került vezető által (jóváhagyás / elutasítás)
-		\item Rendelés feldolgozása megkezdődött az adminisztrátorok által
-		\item Rendelés feldolgozásra megtörtént, a készülék átvehető
-		\item Az igényelt készülék átadásra került
+		\item Igénylés sikeres rögzítése
+		\item Igénylés jóváhagyásra vár
+		\item Igénylés elbírálása (jóváhagyás vagy elutasítás)
+		\item Feldolgozás megkezdése
+		\item Feldolgozás befejezése, eszköz átvehető
+		\item Eszköz átadása
 	\end{enumerate}
 	
 	\item Saját eszközök megjelenítése 
 	
-	A felhasználóknak elérhető eszköz típusonként megkülönböztetett felület, ahol a saját eszköz nyilvántartásuk érhetik el.
+	A felhasználók számára elérhető egy eszköztípusonként strukturált felület, ahol saját eszközeik nyilvántartását tekinthetik meg.
 	
-	Táblázatos formátumban tekinthetik meg a készülékekhez tartozó legfontosabb adatokat:
+	A megjelenítés táblázatos formában történik, az alábbi adatokkal:
 	
 	\begin{enumerate}
 		\item Egyedi azonosító
-		
-		A készülék egyedi azonosítója, igény szerint fizikailag a készüléken is megtalálható
-		
 		\item Kategória
-		
-		Az eszköz kategóriája
-		
 		\item Modell
-		
-		Az eszköz modell gyártója által megadott modell megnevezése
-		
 		\item Sorozatszám
-		
 		\item Státusz
-		
-		Az eszköz jelenlegi státusza
-		
 		\item Státusz indoklása
 	\end{enumerate}
 	
-	A felületen megjelenített eszközökre igényelhetik a felhasználók a csere folyamat megkezdését, vagy amennyiben nincs a továbbiakban szüksége a készülékre kezdeményezheti a leadási folyamatot. 
+	A felületen lehetőség van cserefolyamat kezdeményezésére, illetve az eszköz leadásának indítására.
 	
 \end{itemize}
 
 \subsection{Vezető}
 
-A vezető szerepkörrel rendelkező felhasználóknak minden felhasználói funkciókkal rendelkeznie kell, illetve a jóváhagyási folyamattal kapcsolatos funkciók megvalósítása szükséges. 
+A vezetői szerepkörrel rendelkező felhasználók minden felhasználói funkcióval rendelkeznek, továbbá jogosultak a jóváhagyási folyamat kezelésére.
 
-A jóváhagyási funkciókat a navigációs sávon megjelenő menüpontból érheti el. Ez a menüpont kizárólag a vezetői jogosultsággal rendelkező felhasználónak lehet elérhető.
+A jóváhagyási funkciók a navigációs sáv megfelelő menüpontján keresztül érhetők el, amely kizárólag ezen szerepkör számára látható.
 
-A lenyíló menüpont alatt a korábban említett két eszköztípushoz tartozó igényléseket tekintheti meg táblázatos formátumban. Kizárólag azokat a megrendeléseket, hol ő került kiválasztásra mint jóváhagyó.
+A vezető kizárólag azokat az igényléseket tekintheti meg, amelyek esetében jóváhagyóként került kijelölésre.
 
-A táblázatban a korábban említett adatok jelennek meg és a részletek megtekintéséhez szükséges menüpont.
+A lista táblázatos formában jelenik meg, és tartalmazza a szükséges adatokat, valamint a részletes nézet elérését biztosító lehetőséget.
 
-A részletek megtekintése nézetben a vezető elbírálhatja a megrendelést jóváhagyással vagy elutasítással.
-
-A döntésről az igénylő értesítést kap, majd az igénylést átkerül az adminisztráció részére.
+A részletes nézetben az igénylés jóváhagyható vagy elutasítható.
+A döntésről az igénylő értesítést kap.
+Jóváhagyás esetén az igénylés az adminisztrációs folyamatba kerül.
 
 \subsection{Adminisztrátor}
 
-Az adminisztrátori jogosultsággal rendelkező felhasználók a navigációs sávon található menüpontokon keresztül érhetik el a számukra szükséges funkciókat.
-Ez a menüpont kizárólag a jogosultsággal rendelkező felhasználóknak elérhető.
+Az adminisztrátori jogosultsággal rendelkező felhasználók a navigációs sáv menüpontjain keresztül érhetik el funkcióikat, amelyek kizárólag számukra elérhetők.
 
 \begin{itemize}
 	\item Felhasználók kezelése
 	
-	Az adminisztrátorok feladata az alkalmazáshoz hozzáférő felhasználók létrehozása és kezelése.
+	Felhasználói fiókok létrehozása és karbantartása.
+	
+	\item Eszköznyilvántartás kezelése
+	
+	A készleten lévő eszközök rögzítése, valamint adataik és státuszuk naprakészen tartása.
+	
+	\item Eszközkategóriák kezelése
+	
+	Az igénylés során választható kategóriák létrehozása, módosítása és törlése.
+	
+	\item Igénylések feldolgozása
+	
+	Az adminisztrátor feladata a jóváhagyott igénylések feldolgozása.
+	
+	A feldolgozás során az adminisztrátor kiválaszt egy megfelelő, készleten lévő eszközt, majd azt hozzárendeli az adott igényléshez. Mobil eszköz esetén a készülék mellett SIM-kártya hozzárendelése is szükséges.
+	
+	A hozzárendelést követően az igénylés státusza „Átvehető” értékre módosul, és a felhasználó értesítést kap.
+	
+	Az eszköz átvételét követően az adminisztrátor lezárja az igénylést, amelynek státusza „Kész” értékre változik. Ettől a ponttól kezdve az eszközért a felhasználó felel.
 	
 	
-	\item Eszköz nyilvántartás karbantartása
-	\item Igényelhető kategóriák módosítása, törlése
-	\item Rendelések feldolgozása (eszközök kiadása, visszavétele, státuszok módosítása)
 \end{itemize}
 
 \subsection{Nem funkcionális követelmények}
@@ -326,11 +327,15 @@ Az egységesített folyamatok és az egyértelmű szerepkörök révén a rendsz
 % Rendszerterv, architektúra, adatbázis, API és frontend struktúra
 
 \section{Rendszerarchitektúra}
-A fejlesztett alkalmazás egy klasszikus háromrétegű (three-tier) architektúrát követ, amely jól elkülöníti a megjelenítési, az üzleti logikai és az adatkezelési rétegeket. Ez a felépítés biztosítja a rendszer átláthatóságát, karbantarthatóságát és bővíthetőségét.
+A fejlesztett alkalmazás háromrétegű architektúrát követ, amely jól elkülöníti a megjelenítési, az üzleti logikai és az adatkezelési rétegeket
+
+A modell legnagyobb előnye, hogy lehetővé teszi az egyes rétegek egymástól függetlenül történő fejlesztését, sőt, akár teljes cseréjét is, lépést tartva így a folyamatosan változó követelményekkel és az egyre újabb technológiákkal.
+Ez biztonságosan megtehető, mert egy réteg módosítása nincs hatással a többi réteg működésére. Egymástól független modulokként tartalmazza a felhasználói felületet, az üzleti logikát és az adatbázist a szükséges hozzáférési műveletekkel. \cite{HáromrétegűArchitektúra}
 
 A rendszer fő komponensei a következők:
+
 \begin{itemize}
-	\item Frontend (kliensoldal): A felhasználói felület React alapokon valósul meg. A frontend feladata a felhasználói interakciók kezelése, az adatok megjelenítése, valamint az API hívások indítása a backend felé.
+	\item Frontend (kliensoldal): A felhasználói felület React keretrendszer használatával készült. A frontend feladata az interakciók kezelése, az adatok megjelenítése, valamint az API hívások indítása a backend felé.
 	
 	\item Backend (szerveroldal): A szerveroldali logikát .NET 8 Web API biztosítja. Ez a réteg kezeli az üzleti logikát, feldolgozza a kliens kéréseit, valamint kommunikál az adatbázissal.
 	
@@ -344,38 +349,32 @@ Az architektúra egyik fontos előnye, hogy a frontend és a backend egymástól
 \section{Adatbázis-tervezés}
 A rendszer működésének alapját egy relációs adatbázis képezi, amely biztosítja az adatok strukturált és konzisztens tárolását. Az adatbázis tervezése során a cél az volt, hogy az eszközök, felhasználók és rendelések közötti kapcsolatok egyértelműen és hatékonyan reprezentálhatók legyenek.
 
-A főbb táblák a következők:
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{dbplan.png}
+	\caption{Adatbázis terv}
+	\label{fig:arch}
+\end{figure}
 
-Felhasználók:
-\begin{itemize}
-	\item Azonosító 
-	\item Felhasználónév 
-	\item Teljes név 
-	\item E-mail cím
-	\item Osztály
-	\item Költséghely
-	\item Jelszó (hash-elve tárolva)
-\end{itemize}
+A táblák között az alábbi relációk vannak kialakítva:
 
-további táblák leírása...
-
-A táblák között relációk vannak kialakítva, például:
-
-Egy felhasználó több rendelést is létrehozhat (1 kapcsolat). Egy eszköz egy adott időpontban egy felhasználóhoz tartozhat. A felhasználók egy szerepkörhöz tartoznak.
+Egy felhasználó több rendelést is létrehozhat. Egy eszköz egy adott időpontban egy felhasználóhoz tartozhat. Egy felhasználó több eszközzel is rendelkezhet. A felhasználók több szerepkörrel rendelkezhetnek.
 
 Az adatbázis tervezése során fontos szempont volt a normalizáció, amely csökkenti az adatredundanciát és biztosítja az adatok integritását.
 
 \section{Backend tervezése}
-A backend réteg a .NET 8 Web API keretrendszerre épül, és rétegzett architektúrát követ. A rendszer főbb komponensei:
+A backend réteg a .NET 8 Web API keretrendszerre épül, és rétegzett architektúrát követ.
+
+A rendszer főbb komponensei:
 
 \begin{itemize}
-	\item Controller réteg:
-	A HTTP kérések fogadásáért és a válaszok visszaküldéséért felelős. Minden erőforráshoz külön controller tartozik (pl. DeviceController, OrderController).
+	\item Kontroller réteg:
+	A HTTP kérések fogadásáért és a válaszok visszaküldéséért felelős. Minden erőforráshoz külön kontroller tartozik.
 	
-	\item Service réteg:
-	Az üzleti logika itt kerül megvalósításra. Ez a réteg végzi az adatok feldolgozását, ellenőrzését és a műveletek koordinálását.
+	\item Szolgáltatás réteg:
+	Az üzleti logika itt kerül megvalósításra. Ez a réteg végzi az adatok feldolgozását, ellenőrzését és a műveletek végrehajtását.
 	
-	\item Repository réteg:
+	\item Adatkezelési réteg:
 	Az adatbázissal való kommunikációért felel. A Repository pattern alkalmazásával az adatkezelési logika elkülönül az üzleti logikától, így a rendszer könnyebben tesztelhető és karbantartható.
 \end{itemize}
 
@@ -384,15 +383,15 @@ Az alkalmazás az Entity Framework Core ORM-et használja, amely lehetővé tesz
 A backend kialakítása során fontos szempont volt a tiszta kód (clean code) elvek követése és a jól strukturált, moduláris felépítés.
 
 \section{Frontend tervezése}
-A frontend alkalmazás React alapokon épül fel, komponensalapú architektúrát követve. Ez lehetővé teszi az alkalmazás logikai egységekre bontását és az újrahasznosítható komponensek használatát.
+A frontend alkalmazás React keretrendszer használatával, komponensalapú architektúrát követve készült el. Ez lehetővé teszi az alkalmazás logikai egységekre bontását és az újrahasznosítható komponensek használatát.
 
 A főbb felületi elemek:
 \begin{itemize}
-	\item bejelentkezési oldal
-	\item főoldal (dashboard)
-	\item eszközlista
-	\item rendelési felület
-	\item adminisztrációs felület
+	\item Bejelentkezési oldal
+	\item Főoldal
+	\item Eszközlista
+	\item Rendelési felületek
+	\item Adminisztrációs felületek
 \end{itemize}
 
 A navigációt React Router biztosítja, amely lehetővé teszi az egyoldalas alkalmazás (SPA) működést.
@@ -520,7 +519,7 @@ A tesztelés során törekedtem arra, hogy minden fontos funkciót több külön
 \section{Tesztesetek és eredmények}
 A rendszer működésének ellenőrzésére több tesztesetet definiáltam, amelyek lefedik az alkalmazás fő funkcióit.
 
-\begin{table}[h]
+\begin{table}[H]
 	\centering
 	\begin{tabular}{|c|p{4cm}|p{5cm}|c|}
 		\hline
@@ -536,7 +535,7 @@ A rendszer működésének ellenőrzésére több tesztesetet definiáltam, amel
 	\caption{Bejelentkezési funkció tesztelése}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 	\centering
 	\begin{tabular}{|c|p{4cm}|p{5cm}|c|}
 		\hline
@@ -552,7 +551,7 @@ A rendszer működésének ellenőrzésére több tesztesetet definiáltam, amel
 	\caption{Eszközrendelési funkció tesztelése}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 	\centering
 	\begin{tabular}{|c|p{4cm}|p{5cm}|c|}
 		\hline
@@ -566,7 +565,7 @@ A rendszer működésének ellenőrzésére több tesztesetet definiáltam, amel
 	\caption{Jóváhagyási folyamat tesztelése}
 \end{table}
 
-\begin{table}[h]
+\begin{table}[H]
 	\centering
 	\begin{tabular}{|c|p{4cm}|p{5cm}|c|}
 		\hline
@@ -595,41 +594,20 @@ A tesztelési folyamat során a rendszer minden fő funkcióját sikeresen ellen
 
 A feltárt kisebb hibák javításra kerültek a fejlesztési folyamat során, így a végleges rendszer egy megbízható és jól használható megoldást nyújt az informatikai eszközök kezelésére.
 
-%------------------------------------------------
+\chapter{Képernyőképek}
+
 \chapter{Eredmények és értékelés}
-% A rendszer céljainak teljesülése és értékelése
 
 \section{A fejlesztett rendszer funkciói}
-% Fő funkciók összefoglalása, képernyőképek.
 
 \section{A célok teljesülése}
-% Mennyiben valósult meg az eredeti cél.
 
-\section{A rendszer előnyei és korlátai}
-% Milyen problémákat old meg, és mik a fejlesztés korlátai.
-
-%------------------------------------------------
 \chapter{További fejlesztési lehetőségek}
-% Fejlesztési irányok, jövőbeli bővítések
 
-%------------------------------------------------
 \chapter{Összefoglalás}
-% A dolgozat főbb eredményeinek összegzése, személyes tanulságok
 
-%------------------------------------------------
-\chapter*{Irodalomjegyzék}
-% \begin{thebibliography}{99}
-	% \bibitem{pelda} Szerző, Cím, Kiadó, Év.
-	% \end{thebibliography}
+\printbibliography
+\nocite{*}
 
-%------------------------------------------------
-\appendix
-\chapter{Mellékletek}
-% Forráskód részletek, adatbázis diagram, API dokumentáció, képernyőképek
-
-\begin{thebibliography}{2}
-\end{thebibliography}
-
-% Aláírt, szkennelt nyilatkozat beillesztése a szakdolgozat végére
 \includepdf{nyilatkozat/nyilatkozat.pdf}
 \end{document}
