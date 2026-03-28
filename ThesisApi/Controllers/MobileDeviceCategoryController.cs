@@ -25,15 +25,17 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/mobile-device-categories")]
-        public async Task<IActionResult> Create(CreateMobileDeviceCategoryRequest request)
+        public async Task<ActionResult<MobileDeviceCategoryResponse>> Create(CreateMobileDeviceCategoryRequest request)
         {
             try
             {
-                var mobileDeviceCategory = MobileDeviceCategory.Create(request);
+                var newMobileDeviceCategory = MobileDeviceCategory.Create(request);
 
-                await _mobileDeviceCategoryRepository.AddAsync(mobileDeviceCategory);
+                await _mobileDeviceCategoryRepository.AddAsync(newMobileDeviceCategory);
 
-                return Ok();
+                var response = _mapper.Map<MobileDeviceCategoryResponse>(newMobileDeviceCategory);
+
+                return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
             catch (Exception e)
             {
@@ -42,7 +44,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-device-categories")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<MobileDeviceCategoryResponse>>> GetAll()
         {
             try
             {
@@ -59,7 +61,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-device-categories/{id:int}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<ActionResult<MobileDeviceCategoryResponse>> GetById([FromRoute] int id)
         {
             try
             {

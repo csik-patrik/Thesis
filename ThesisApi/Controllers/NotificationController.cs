@@ -18,7 +18,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/notifications")]
-        public async Task<IActionResult> GetMyNotifications()
+        public async Task<ActionResult<IEnumerable<NotificationResponse>>> GetMyNotifications()
         {
             try
             {

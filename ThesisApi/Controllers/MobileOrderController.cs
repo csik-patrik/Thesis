@@ -43,7 +43,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/mobile-orders")]
-        public async Task<IActionResult> Create([FromBody] CreateMobileOrderRequest request)
+        public async Task<ActionResult<MobileOrderResponse>> Create([FromBody] CreateMobileOrderRequest request)
         {
             try
             {
@@ -59,7 +59,9 @@ namespace ThesisApi.Controllers
                     order.ApproverId,
                     $"New mobile order from {order.Customer.DisplayName} is waiting for your approval.");
 
-                return Ok();
+                var response = _mapper.Map<MobileOrderResponse>(order);
+
+                return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
             catch (Exception e)
             {
@@ -68,7 +70,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-orders")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<MobileOrderResponse>>> GetAll()
         {
             try
             {
@@ -85,7 +87,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-orders/{id:int}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<ActionResult<MobileOrderResponse>> GetById([FromRoute] int id)
         {
             try
             {
@@ -104,7 +106,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-orders/my-orders")]
-        public async Task<IActionResult> GetByCustomerId()
+        public async Task<ActionResult<IEnumerable<MobileOrderResponse>>> GetByCustomerId()
         {
             try
             {
@@ -233,7 +235,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-orders/approval")]
-        public async Task<IActionResult> GetAllForApproval()
+        public async Task<ActionResult<IEnumerable<MobileOrderResponse>>> GetAllForApproval()
         {
             try
             {

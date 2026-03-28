@@ -25,7 +25,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/sim-cards")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<SimCardResponse>>> GetAll()
         {
             try
             {
@@ -42,7 +42,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/sim-cards")]
-        public async Task<IActionResult> Create([FromBody] CreateSimCardRequest request)
+        public async Task<ActionResult<SimCardResponse>> Create([FromBody] CreateSimCardRequest request)
         {
             var simCard = await SimCard.Create(request, _simCallControlGroupRepository);
 
@@ -50,12 +50,12 @@ namespace ThesisApi.Controllers
 
             var response = _mapper.Map<SimCardResponse>(newSimCard);
 
-            return Ok(response);
+            return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
 
         }
 
         [HttpGet("/sim-cards/{id:int}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<ActionResult<SimCardResponse>> GetById([FromRoute] int id)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/sim-cards/allocation/{simCallControlGroupId:int}")]
-        public async Task<IActionResult> GetAllForAllocation([FromRoute] int simCallControlGroupId)
+        public async Task<ActionResult<IEnumerable<SimCardResponse>>> GetAllForAllocation([FromRoute] int simCallControlGroupId)
         {
             try
             {

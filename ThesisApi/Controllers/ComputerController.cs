@@ -28,15 +28,17 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/computers")]
-        public async Task<IActionResult> Create([FromBody] CreateComputerRequest request)
+        public async Task<ActionResult<ComputerResponse>> Create([FromBody] CreateComputerRequest request)
         {
             try
             {
-                var computer = await Computer.Create(request, _computerCategoryRepository);
+                var newComputer = await Computer.Create(request, _computerCategoryRepository);
 
-                await _computerRepository.AddAsync(computer);
+                await _computerRepository.AddAsync(newComputer);
 
-                return Ok();
+                var response = _mapper.Map<ComputerResponse>(newComputer);
+
+                return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
             catch (Exception e)
             {
@@ -45,18 +47,20 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/computers/bulk")]
-        public async Task<IActionResult> CreateBulk([FromBody] List<CreateComputerRequest> request)
+        public async Task<ActionResult<IEnumerable<ComputerResponse>>> CreateBulk([FromBody] List<CreateComputerRequest> request)
         {
             try
             {
-                var mobiles = await Computer.CreateBulk(request, _computerCategoryRepository);
+                var newComputers = await Computer.CreateBulk(request, _computerCategoryRepository);
 
-                if (mobiles == null || !mobiles.Any())
+                if (newComputers == null || newComputers.Count == 0)
                     return BadRequest("Error while creating devices!");
 
-                await _computerRepository.AddBulkAsync(mobiles);
+                await _computerRepository.AddBulkAsync(newComputers);
 
-                return Ok();
+                var response = newComputers.Select(_mapper.Map<ComputerResponse>).ToList();
+
+                return Created("", response);
             }
             catch (Exception e)
             {
@@ -65,7 +69,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<ComputerResponse>>> GetAll()
         {
             try
             {
@@ -82,7 +86,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers/inventory")]
-        public async Task<IActionResult> GetAllInInventory()
+        public async Task<ActionResult<IEnumerable<ComputerInInventoryResponse>>> GetAllInInventory()
         {
             try
             {
@@ -99,7 +103,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers/{id:int}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<ActionResult<ComputerResponse>> GetById([FromRoute] int id)
         {
             try
             {
@@ -119,7 +123,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers/allocation/{categoryId:int}")]
-        public async Task<IActionResult> GetAllForAllocation([FromRoute] int categoryId)
+        public async Task<ActionResult<IEnumerable<ComputerResponse>>> GetAllForAllocation([FromRoute] int categoryId)
         {
             try
             {
@@ -141,13 +145,13 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers/deployed")]
-        public async Task<IActionResult> GetAllDeployed()
+        public async Task<ActionResult<IEnumerable<ComputerResponse>>> GetAllDeployed()
         {
             try
             {
-                var mobileDevices = await _computerRepository.GetAllDeployedAsync();
+                var computers = await _computerRepository.GetAllDeployedAsync();
 
-                var response = mobileDevices.Select(_mapper.Map<ComputerResponse>).ToList();
+                var response = computers.Select(_mapper.Map<ComputerResponse>).ToList();
 
                 return Ok(response);
             }
@@ -158,7 +162,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers/my-devices")]
-        public async Task<IActionResult> GetMyDevices()
+        public async Task<ActionResult<IEnumerable<ComputerResponse>>> GetMyDevices()
         {
             try
             {
@@ -169,9 +173,9 @@ namespace ThesisApi.Controllers
                     return Unauthorized("User is not logged in.");
                 }
 
-                var mobiles = await _computerRepository.GetAllByUserAsync(username);
+                var computers = await _computerRepository.GetAllByUserAsync(username);
 
-                var response = mobiles.Select(_mapper.Map<ComputerResponse>).ToList();
+                var response = computers.Select(_mapper.Map<ComputerResponse>).ToList();
 
                 return Ok(response);
             }
@@ -194,7 +198,7 @@ namespace ThesisApi.Controllers
                 if (computer.Status != "Deployed")
                     return BadRequest("Only deployed computers can be returned.");
 
-                var updatedMobileDevice = await _computerRepository.ReturnDeviceAsync(computer, request.Status, request.StatusReason);
+                var updatedComputer = await _computerRepository.ReturnDeviceAsync(computer, request.Status, request.StatusReason);
 
                 return Ok();
             }

@@ -23,15 +23,17 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/sim-call-control-groups")]
-        public async Task<IActionResult> Create(CreateSimCallControlGroupRequest request)
+        public async Task<ActionResult<SimCallControlGroupResponse>> Create(CreateSimCallControlGroupRequest request)
         {
             try
             {
-                var simCallControlGroup = SimCallControlGroup.Create(request);
+                var newSimCallControlGroup = SimCallControlGroup.Create(request);
 
-                await _simCallControlGroupRepository.AddAsync(simCallControlGroup);
+                await _simCallControlGroupRepository.AddAsync(newSimCallControlGroup);
 
-                return Ok();
+                var response = _mapper.Map<SimCallControlGroupResponse>(newSimCallControlGroup);
+
+                return CreatedAtAction("", response);
             }
             catch (Exception e)
             {
@@ -40,7 +42,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/sim-call-control-groups")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<SimCallControlGroupResponse>>> GetAll()
         {
             try
             {

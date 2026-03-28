@@ -60,7 +60,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/users")]
-        public async Task<IActionResult> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserResponse>>> GetUsers()
         {
             try
             {
@@ -77,7 +77,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/users/{id:int}")]
-        public async Task<IActionResult> GetUserById([FromRoute] int id)
+        public async Task<ActionResult<UserResponse>> GetUserById([FromRoute] int id)
         {
             try
             {
@@ -97,25 +97,25 @@ namespace ThesisApi.Controllers
         }
 
 
-        [HttpGet("/users/{name}")]
-        public async Task<IActionResult> GetUsersByDisplayName([FromRoute] string name)
-        {
-            try
-            {
-                var users = await _userRepository.GetByDisplayNameAsync(name);
+        // [HttpGet("/users/{name}")]
+        // public async Task<IActionResult> GetUsersByDisplayName([FromRoute] string name)
+        // {
+        //     try
+        //     {
+        //         var users = await _userRepository.GetByDisplayNameAsync(name);
 
-                var response = users.Select(_mapper.Map<UserResponse>).ToList();
+        //         var response = users.Select(_mapper.Map<UserResponse>).ToList();
 
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        //         return Ok(response);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         return BadRequest(e.Message);
+        //     }
+        // }
 
         [HttpPost("/users")]
-        public async Task<IActionResult> CreateUser(CreateUserRequest request)
+        public async Task<ActionResult<UserResponse>> CreateUser(CreateUserRequest request)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace ThesisApi.Controllers
 
                 var response = _mapper.Map<UserResponse>(user);
 
-                return Ok(response);
+                return CreatedAtAction("", response);
             }
             catch (Exception e)
             {
@@ -151,7 +151,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/users")]
-        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
+        public async Task<ActionResult<UserResponse>> UpdateUser([FromBody] UpdateUserRequest request)
         {
             try
             {
@@ -197,7 +197,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/roles")]
-        public async Task<IActionResult> GetRoles()
+        public async Task<ActionResult<IEnumerable<UserRoleResponse>>> GetRoles()
         {
             try
             {
@@ -214,7 +214,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/users/group-leader")]
-        public async Task<IActionResult> GetGroupLeaders()
+        public async Task<ActionResult<IEnumerable<UserResponse>>> GetGroupLeaders()
         {
             try
             {

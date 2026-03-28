@@ -22,15 +22,17 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/computer-categories")]
-        public async Task<IActionResult> Create([FromBody] CreateComputerCategoryRequest request)
+        public async Task<ActionResult<ComputerCategoryResponse>> Create([FromBody] CreateComputerCategoryRequest request)
         {
             try
             {
-                var model = ComputerCategory.Create(request);
+                var newComputerCategory = ComputerCategory.Create(request);
 
-                await _computerCategoryRepository.AddAsync(model);
+                await _computerCategoryRepository.AddAsync(newComputerCategory);
 
-                return Ok();
+                var response = _mapper.Map<ComputerCategoryResponse>(newComputerCategory);
+
+                return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
             catch (Exception e)
             {
@@ -39,7 +41,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computer-categories")]
-        public async Task<IActionResult> GetComputerCategories()
+        public async Task<ActionResult<IEnumerable<ComputerCategoryResponse>>> GetComputerCategories()
         {
             try
             {
@@ -56,7 +58,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computer-categories/{id:int}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<ActionResult<ComputerCategoryResponse>> GetById([FromRoute] int id)
         {
             try
             {

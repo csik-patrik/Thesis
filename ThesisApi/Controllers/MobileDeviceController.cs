@@ -19,7 +19,6 @@ namespace ThesisApi.Controllers
         public MobileDeviceController(
             IMobileDeviceRepository mobileDeviceRepository,
             IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
-            IMobileOrderRepository mobileOrderRepository,
             IMapper mapper)
         {
             _mobileDeviceRepository = mobileDeviceRepository;
@@ -28,7 +27,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/mobile-devices")]
-        public async Task<IActionResult> Create([FromBody] CreateMobileDeviceRequest request)
+        public async Task<ActionResult<MobileDeviceResponse>> Create([FromBody] CreateMobileDeviceRequest request)
         {
             try
             {
@@ -38,7 +37,7 @@ namespace ThesisApi.Controllers
 
                 var response = _mapper.Map<MobileDeviceResponse>(newMobileDevice);
 
-                return Ok(response);
+                return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
             catch (Exception e)
             {
@@ -47,18 +46,20 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/mobile-devices/bulk")]
-        public async Task<IActionResult> CreateBulk([FromBody] List<CreateMobileDeviceRequest> request)
+        public async Task<ActionResult<IEnumerable<MobileDeviceResponse>>> CreateBulk([FromBody] List<CreateMobileDeviceRequest> request)
         {
             try
             {
-                var mobiles = await MobileDevice.CreateBulk(request, _mobileDeviceCategoryRepository);
+                var newMobiles = await MobileDevice.CreateBulk(request, _mobileDeviceCategoryRepository);
 
-                if (mobiles == null || !mobiles.Any())
+                if (newMobiles == null || !newMobiles.Any())
                     return BadRequest("Error while creating devices!");
 
-                await _mobileDeviceRepository.AddBulkAsync(mobiles);
+                await _mobileDeviceRepository.AddBulkAsync(newMobiles);
 
-                return Ok();
+                var response = newMobiles.Select(_mapper.Map<MobileDeviceResponse>).ToList();
+
+                return Created("", response);
             }
             catch (Exception e)
             {
@@ -67,7 +68,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-devices")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<MobileDeviceResponse>>> GetAll()
         {
             try
             {
@@ -84,7 +85,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-devices/{id:int}")]
-        public async Task<IActionResult> GetById([FromRoute] int id)
+        public async Task<ActionResult<MobileDeviceResponse>> GetById([FromRoute] int id)
         {
             try
             {
@@ -104,7 +105,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-devices/allocation/{categoryId:int}")]
-        public async Task<IActionResult> GetAllForAllocation([FromRoute] int categoryId)
+        public async Task<ActionResult<IEnumerable<MobileDeviceResponse>>> GetAllForAllocation([FromRoute] int categoryId)
         {
             try
             {
@@ -121,7 +122,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-devices/deployed")]
-        public async Task<IActionResult> GetAllDeployed()
+        public async Task<ActionResult<IEnumerable<MobileDeviceResponse>>> GetAllDeployed()
         {
             try
             {
@@ -138,7 +139,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-devices/my-devices")]
-        public async Task<IActionResult> GetMyDevices()
+        public async Task<ActionResult<IEnumerable<MobileDeviceResponse>>> GetMyDevices()
         {
             try
             {
