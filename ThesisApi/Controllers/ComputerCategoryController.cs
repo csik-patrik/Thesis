@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.ComputerCategories;
 using ThesisApi.Contracts.Responses.ComputerCategories;
+using ThesisApi.ExtensionServices;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -14,11 +15,9 @@ namespace ThesisApi.Controllers
     public class ComputerCategoryController : ControllerBase
     {
         private readonly IComputerCategoryRepository _computerCategoryRepository;
-        private readonly IMapper _mapper;
-        public ComputerCategoryController(IComputerCategoryRepository computerCategoryRepository, IMapper mapper)
+        public ComputerCategoryController(IComputerCategoryRepository computerCategoryRepository)
         {
             _computerCategoryRepository = computerCategoryRepository;
-            _mapper = mapper;
         }
 
         [HttpPost("/computer-categories")]
@@ -30,7 +29,7 @@ namespace ThesisApi.Controllers
 
                 await _computerCategoryRepository.AddAsync(newComputerCategory);
 
-                var response = _mapper.Map<ComputerCategoryResponse>(newComputerCategory);
+                var response = newComputerCategory.ToResponse();
 
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
@@ -47,7 +46,7 @@ namespace ThesisApi.Controllers
             {
                 var models = await _computerCategoryRepository.GetAllAsync();
 
-                var response = models.Select(_mapper.Map<ComputerCategoryResponse>).ToList();
+                var response = models.Select((category) => category.ToResponse()).ToList();
 
                 return Ok(response);
             }
@@ -67,7 +66,7 @@ namespace ThesisApi.Controllers
                 if (model == null)
                     return NotFound();
 
-                var response = _mapper.Map<ComputerCategoryResponse>(model);
+                var response = model.ToResponse();
 
                 return Ok(response);
             }
