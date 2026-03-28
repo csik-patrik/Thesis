@@ -3,7 +3,6 @@ using ThesisApi.Contracts.Requests.Users;
 using ThesisApi.Contracts.Responses.ComputerCategories;
 using ThesisApi.Contracts.Responses.ComputerOrders;
 using ThesisApi.Contracts.Responses.Computers;
-using ThesisApi.Contracts.Responses.MobileDeviceCategories;
 using ThesisApi.Contracts.Responses.MobileDevices;
 using ThesisApi.Contracts.Responses.MobileOrders;
 using ThesisApi.Contracts.Responses.SimCards;
@@ -21,8 +20,6 @@ namespace ThesisApi.Data
             CreateMap<MobileDevice, MobileDeviceResponse>();
 
             CreateMap<MobileDevice, MobileDeviceResponse>();
-
-            CreateMap<MobileDeviceCategory, MobileDeviceCategoryResponse>();
 
             CreateMap<SimCard, SimCardResponse>();
 

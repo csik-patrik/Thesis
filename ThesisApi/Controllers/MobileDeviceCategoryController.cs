@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.MobileDeviceCategories;
 using ThesisApi.Contracts.Responses.MobileDeviceCategories;
+using ThesisApi.ExtensionServices;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -14,14 +15,11 @@ namespace ThesisApi.Controllers
     public class MobileDeviceCategoryController : ControllerBase
     {
         private readonly IMobileDeviceCategoryRepository _mobileDeviceCategoryRepository;
-        private readonly IMapper _mapper;
 
         public MobileDeviceCategoryController(
-            IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
-            IMapper mapper)
+            IMobileDeviceCategoryRepository mobileDeviceCategoryRepository)
         {
             _mobileDeviceCategoryRepository = mobileDeviceCategoryRepository;
-            _mapper = mapper;
         }
 
         [HttpPost("/mobile-device-categories")]
@@ -33,7 +31,7 @@ namespace ThesisApi.Controllers
 
                 await _mobileDeviceCategoryRepository.AddAsync(newMobileDeviceCategory);
 
-                var response = _mapper.Map<MobileDeviceCategoryResponse>(newMobileDeviceCategory);
+                var response = newMobileDeviceCategory.ToResponse();
 
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
@@ -50,7 +48,7 @@ namespace ThesisApi.Controllers
             {
                 var categories = await _mobileDeviceCategoryRepository.GetAllAsync();
 
-                var responses = categories.Select(_mapper.Map<MobileDeviceCategoryResponse>).ToList();
+                var responses = categories.Select((category) => category.ToResponse()).ToList();
 
                 return Ok(responses);
             }
@@ -67,7 +65,10 @@ namespace ThesisApi.Controllers
             {
                 var category = await _mobileDeviceCategoryRepository.GetByIdAsync(id);
 
-                var response = _mapper.Map<MobileDeviceCategoryResponse>(category);
+                if (category == null)
+                    return NotFound();
+
+                var response = category.ToResponse();
 
                 return Ok(response);
             }
