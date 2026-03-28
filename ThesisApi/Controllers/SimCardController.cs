@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.SimCards;
 using ThesisApi.Contracts.Responses.SimCards;
+using ThesisApi.ExtensionServices;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -15,13 +16,11 @@ namespace ThesisApi.Controllers
     {
         private readonly ISimCardRepository _simCardRepository;
         private readonly ISimCallControlGroupRepository _simCallControlGroupRepository;
-        private readonly IMapper _mapper;
 
-        public SimCardController(ISimCardRepository simCardRepository, IMapper mapper, ISimCallControlGroupRepository simCallControlGroupRepository)
+        public SimCardController(ISimCardRepository simCardRepository, ISimCallControlGroupRepository simCallControlGroupRepository)
         {
             _simCardRepository = simCardRepository;
             _simCallControlGroupRepository = simCallControlGroupRepository;
-            _mapper = mapper;
         }
 
         [HttpGet("/sim-cards")]
@@ -31,7 +30,7 @@ namespace ThesisApi.Controllers
             {
                 var simCards = await _simCardRepository.GetAllAsync();
 
-                var response = simCards.Select(_mapper.Map<SimCardResponse>).ToList();
+                var response = simCards.Select((simCard) => simCard.ToResponse()).ToList();
 
                 return Ok(response);
             }
@@ -48,7 +47,7 @@ namespace ThesisApi.Controllers
 
             var newSimCard = await _simCardRepository.AddAsync(simCard);
 
-            var response = _mapper.Map<SimCardResponse>(newSimCard);
+            var response = simCard.ToResponse();
 
             return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
 
@@ -64,7 +63,7 @@ namespace ThesisApi.Controllers
                 if (simCard == null)
                     return NotFound();
 
-                var response = _mapper.Map<SimCardResponse>(simCard);
+                var response = simCard.ToResponse();
 
                 return Ok(response);
             }
@@ -81,7 +80,7 @@ namespace ThesisApi.Controllers
             {
                 var simCards = await _simCardRepository.GetAllForAllocationAsync(simCallControlGroupId);
 
-                var response = simCards.Select(_mapper.Map<SimCardResponse>).ToList();
+                var response = simCards.Select((simCard) => simCard.ToResponse()).ToList();
 
                 return Ok(response);
             }

@@ -20,8 +20,6 @@ namespace ThesisApi.Data
 
             CreateMap<MobileDevice, MobileDeviceResponse>();
 
-            CreateMap<SimCard, SimCardResponse>();
-
             CreateMap<Computer, ComputerResponse>();
 
             CreateMap<Computer, ComputerInInventoryResponse>();
