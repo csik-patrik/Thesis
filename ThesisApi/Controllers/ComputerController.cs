@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.Computers;
 using ThesisApi.Contracts.Responses.Computers;
+using ThesisApi.ExtensionServices;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -15,16 +16,13 @@ namespace ThesisApi.Controllers
     {
         private readonly IComputerRepository _computerRepository;
         private readonly IComputerCategoryRepository _computerCategoryRepository;
-        private readonly IMapper _mapper;
 
         public ComputerController(
             IComputerRepository computerRepository,
-            IComputerCategoryRepository computerCategoryRepository,
-            IMapper mapper)
+            IComputerCategoryRepository computerCategoryRepository)
         {
             _computerRepository = computerRepository;
             _computerCategoryRepository = computerCategoryRepository;
-            _mapper = mapper;
         }
 
         [HttpPost("/computers")]
@@ -36,7 +34,7 @@ namespace ThesisApi.Controllers
 
                 await _computerRepository.AddAsync(newComputer);
 
-                var response = _mapper.Map<ComputerResponse>(newComputer);
+                var response = newComputer.ToResponse();
 
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
@@ -58,7 +56,7 @@ namespace ThesisApi.Controllers
 
                 await _computerRepository.AddBulkAsync(newComputers);
 
-                var response = newComputers.Select(_mapper.Map<ComputerResponse>).ToList();
+                var response = newComputers.Select((computer) => computer.ToResponse()).ToList();
 
                 return Created("", response);
             }
@@ -75,7 +73,7 @@ namespace ThesisApi.Controllers
             {
                 var models = await _computerRepository.GetAllAsync();
 
-                var response = models.Select(_mapper.Map<ComputerResponse>).ToList();
+                var response = models.Select((computer) => computer.ToResponse()).ToList();
 
                 return Ok(response);
             }
@@ -92,7 +90,7 @@ namespace ThesisApi.Controllers
             {
                 var models = await _computerRepository.GetAllInInventoryAsync();
 
-                var response = models.Select(_mapper.Map<ComputerInInventoryResponse>).ToList();
+                var response = models.Select((computer) => computer.ToInInventoryResponse()).ToList();
 
                 return Ok(response);
             }
@@ -112,7 +110,7 @@ namespace ThesisApi.Controllers
                 if (model == null)
                     return NotFound();
 
-                var response = _mapper.Map<ComputerResponse>(model);
+                var response = model.ToResponse();
 
                 return Ok(response);
             }
@@ -134,7 +132,7 @@ namespace ThesisApi.Controllers
 
                 var models = await _computerRepository.GetAllForAllocationAsync(categoryId);
 
-                var response = models.Select(_mapper.Map<ComputerResponse>).ToList();
+                var response = models.Select((computer) => computer.ToResponse()).ToList();
 
                 return Ok(response);
             }
@@ -151,7 +149,7 @@ namespace ThesisApi.Controllers
             {
                 var computers = await _computerRepository.GetAllDeployedAsync();
 
-                var response = computers.Select(_mapper.Map<ComputerResponse>).ToList();
+                var response = computers.Select((computer) => computer.ToResponse()).ToList();
 
                 return Ok(response);
             }
@@ -175,7 +173,7 @@ namespace ThesisApi.Controllers
 
                 var computers = await _computerRepository.GetAllByUserAsync(username);
 
-                var response = computers.Select(_mapper.Map<ComputerResponse>).ToList();
+                var response = computers.Select((computer) => computer.ToResponse()).ToList();
 
                 return Ok(response);
             }

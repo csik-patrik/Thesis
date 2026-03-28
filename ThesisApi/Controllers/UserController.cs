@@ -9,6 +9,7 @@ using AutoMapper;
 using ThesisApi.Interfaces;
 using ThesisApi.Contracts.Responses.Users;
 using Microsoft.AspNetCore.Authorization;
+using ThesisApi.ExtensionServices;
 
 namespace ThesisApi.Controllers
 {
@@ -66,7 +67,7 @@ namespace ThesisApi.Controllers
             {
                 var users = await _userRepository.GetAllAsync();
 
-                var response = users.Select(_mapper.Map<UserResponse>).ToList();
+                var response = users.Select((user) => user.ToResponse()).ToList();
 
                 return Ok(response);
             }
@@ -86,7 +87,7 @@ namespace ThesisApi.Controllers
                 if (user == null)
                     return NotFound();
 
-                var response = _mapper.Map<UserResponse>(user);
+                var response = user.ToResponse();
 
                 return Ok(response);
             }
@@ -140,7 +141,7 @@ namespace ThesisApi.Controllers
 
                 await _userRepository.CreateAsync(user);
 
-                var response = _mapper.Map<UserResponse>(user);
+                var response = user.ToResponse();
 
                 return CreatedAtAction("", response);
             }
@@ -162,7 +163,7 @@ namespace ThesisApi.Controllers
 
                 var updatedUser = await _userRepository.UpdateUserAsync(user, request);
 
-                var response = _mapper.Map<UserResponse>(updatedUser);
+                var response = user.ToResponse();
 
                 return Ok(response);
             }
@@ -203,7 +204,7 @@ namespace ThesisApi.Controllers
             {
                 var roles = await _userRoleRepository.GetUserRolesAsync();
 
-                var response = roles.Select(_mapper.Map<UserRoleResponse>).ToList();
+                var response = roles.Select((role) => role.ToResponse()).ToList();
 
                 return Ok(response);
             }
@@ -220,7 +221,7 @@ namespace ThesisApi.Controllers
             {
                 var users = await _userRepository.GetGroupLeadersAsync();
 
-                var response = users.Select(_mapper.Map<UserResponse>).ToList();
+                var response = users.Select((user) => user.ToResponse()).ToList();
 
                 return Ok(response);
             }
