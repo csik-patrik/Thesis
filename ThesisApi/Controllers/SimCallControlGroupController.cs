@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.SimCallControlGroups;
 using ThesisApi.Contracts.Responses.SimCards;
+using ThesisApi.ExtensionServices;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -14,12 +15,10 @@ namespace ThesisApi.Controllers
     public class SimCallControlGroupController : ControllerBase
     {
         private readonly ISimCallControlGroupRepository _simCallControlGroupRepository;
-        private readonly IMapper _mapper;
 
-        public SimCallControlGroupController(ISimCallControlGroupRepository simCallControlGroupRepository, IMapper mapper)
+        public SimCallControlGroupController(ISimCallControlGroupRepository simCallControlGroupRepository)
         {
             _simCallControlGroupRepository = simCallControlGroupRepository;
-            _mapper = mapper;
         }
 
         [HttpPost("/sim-call-control-groups")]
@@ -31,7 +30,7 @@ namespace ThesisApi.Controllers
 
                 await _simCallControlGroupRepository.AddAsync(newSimCallControlGroup);
 
-                var response = _mapper.Map<SimCallControlGroupResponse>(newSimCallControlGroup);
+                var response = newSimCallControlGroup.ToResponse();
 
                 return CreatedAtAction("", response);
             }
@@ -48,7 +47,7 @@ namespace ThesisApi.Controllers
             {
                 var simCallControlGroups = await _simCallControlGroupRepository.GetAllAsync();
 
-                var response = simCallControlGroups.Select(_mapper.Map<SimCallControlGroupResponse>).ToList();
+                var response = simCallControlGroups.Select((simCallControlGroup) => simCallControlGroup.ToResponse()).ToList();
 
                 return Ok(response);
             }

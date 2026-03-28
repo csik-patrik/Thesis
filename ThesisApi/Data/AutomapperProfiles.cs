@@ -22,8 +22,6 @@ namespace ThesisApi.Data
 
             CreateMap<SimCard, SimCardResponse>();
 
-            CreateMap<SimCallControlGroup, SimCallControlGroupResponse>();
-
             CreateMap<Computer, ComputerResponse>();
 
             CreateMap<Computer, ComputerInInventoryResponse>();
