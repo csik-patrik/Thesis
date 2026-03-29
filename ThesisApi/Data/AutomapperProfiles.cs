@@ -1,8 +1,6 @@
 using AutoMapper;
 using ThesisApi.Contracts.Requests.Users;
 using ThesisApi.Contracts.Responses.ComputerOrders;
-using ThesisApi.Contracts.Responses.MobileDevices;
-using ThesisApi.Contracts.Responses.MobileOrders;
 using ThesisApi.Models;
 
 namespace ThesisApi.Data
@@ -11,11 +9,6 @@ namespace ThesisApi.Data
     {
         public AutomapperProfiles()
         {
-            CreateMap<MobileOrder, MobileOrderResponse>();
-
-            CreateMap<MobileDevice, MobileDeviceResponse>();
-
-            CreateMap<MobileDevice, MobileDeviceResponse>();
 
             CreateMap<ComputerOrder, ComputerOrderResponse>();
 

@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.MobileOrders;
 using ThesisApi.Contracts.Responses.MobileOrders;
+using ThesisApi.ExtensionServices;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -21,7 +21,6 @@ namespace ThesisApi.Controllers
         private readonly ISimCallControlGroupRepository _simCallControlGroupRepository;
         private readonly ISimCardRepository _simCardRepository;
         private readonly INotificationService _notificationService;
-        private readonly IMapper _mapper;
         public MobileOrderController(
             IUserRepository userRepository,
             IMobileOrderRepository mobileOrderRepository,
@@ -29,8 +28,7 @@ namespace ThesisApi.Controllers
             IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
             ISimCallControlGroupRepository simCallControlGroupRepository,
             ISimCardRepository simCardRepository,
-            INotificationService notificationService,
-            IMapper mapper)
+            INotificationService notificationService)
         {
             _userRepository = userRepository;
             _mobileOrderRepository = mobileOrderRepository;
@@ -39,7 +37,6 @@ namespace ThesisApi.Controllers
             _simCallControlGroupRepository = simCallControlGroupRepository;
             _simCardRepository = simCardRepository;
             _notificationService = notificationService;
-            _mapper = mapper;
         }
 
         [HttpPost("/mobile-orders")]
@@ -59,7 +56,7 @@ namespace ThesisApi.Controllers
                     order.ApproverId,
                     $"New mobile order from {order.Customer.DisplayName} is waiting for your approval.");
 
-                var response = _mapper.Map<MobileOrderResponse>(order);
+                var response = order.ToResponse();
 
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
@@ -76,7 +73,7 @@ namespace ThesisApi.Controllers
             {
                 var orders = await _mobileOrderRepository.GetAllAsync();
 
-                var responses = orders.Select(_mapper.Map<MobileOrderResponse>).ToList();
+                var responses = orders.Select((order) => order.ToResponse()).ToList();
 
                 return Ok(responses);
             }
@@ -95,7 +92,7 @@ namespace ThesisApi.Controllers
                 if (order == null)
                     return NotFound();
 
-                var response = _mapper.Map<MobileOrderResponse>(order);
+                var response = order.ToResponse();
 
                 return Ok(response);
             }
@@ -116,9 +113,13 @@ namespace ThesisApi.Controllers
 
                 var orders = await _mobileOrderRepository.GetByUsernameAsync(username);
 
-                var response = orders.Select(_mapper.Map<MobileOrderResponse>).ToList();
+                if (orders != null)
+                {
+                    var response = orders.Select((order) => order.ToResponse()).ToList();
 
-                return Ok(response);
+                    return Ok(response);
+                }
+                return Ok();
             }
             catch (Exception e)
             {
@@ -246,9 +247,13 @@ namespace ThesisApi.Controllers
 
                 var orders = await _mobileOrderRepository.GetAllForApprovalAsync(username);
 
-                var response = orders.Select(_mapper.Map<MobileOrderResponse>).ToList();
+                if (orders != null)
+                {
+                    var response = orders.Select((order) => order.ToResponse()).ToList();
 
-                return Ok(response);
+                    return Ok(response);
+                }
+                return Ok();
             }
             catch (Exception e)
             {
