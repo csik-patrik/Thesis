@@ -33,7 +33,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.MobileDeviceCategory)
                 .Include(x => x.User)
                 .Include(x => x.SimCard)
-                .ThenInclude(x => x.SimCallControlGroup)
+                .ThenInclude(x => x!.SimCallControlGroup)
                 .AsNoTracking()
                 .AsSplitQuery()
                 .ToListAsync();
@@ -45,7 +45,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.MobileDeviceCategory)
                 .Include(x => x.User)
                 .Include(x => x.SimCard)
-                .ThenInclude(x => x.SimCallControlGroup)
+                .ThenInclude(x => x!.SimCallControlGroup)
                 .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
@@ -57,7 +57,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.MobileDeviceCategory)
                 .Include(x => x.User)
                 .Include(x => x.SimCard)
-                .ThenInclude(x => x.SimCallControlGroup)
+                .ThenInclude(x => x!.SimCallControlGroup)
                 .AsNoTracking()
                 .AsSplitQuery()
                 .Where(x => x.MobileDeviceCategoryId == mobileDeviceCategoryId
@@ -72,7 +72,7 @@ namespace ThesisApi.Repositories
                 .Include(x => x.MobileDeviceCategory)
                 .Include(x => x.User)
                 .Include(x => x.SimCard)
-                .ThenInclude(x => x.SimCallControlGroup)
+                .ThenInclude(x => x!.SimCallControlGroup)
                 .Where(x => x.Status == "Deployed" && x.StatusReason == "Productive")
                 .ToListAsync();
         }
