@@ -39,7 +39,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computer-categories")]
-        public async Task<ActionResult<IEnumerable<ComputerCategoryResponse>>> GetComputerCategories()
+        public async Task<ActionResult<IEnumerable<ComputerCategoryResponse>>> GetAll()
         {
             try
             {
