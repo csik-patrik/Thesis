@@ -131,5 +131,90 @@ namespace ThesisApi.Tests.Controllers
             // Assert
             Assert.Equal(200, (result.Result as OkObjectResult)?.StatusCode);
         }
+
+        [Fact]
+        public async Task GetComputerCategoryById_Returns_Category_When_Found()
+        {
+            // Arrange
+            var repo = A.Fake<IComputerCategoryRepository>();
+
+            var category = ComputerCategory.Create(
+                new CreateComputerCategoryRequest { Name = "TestCategory" });
+
+            A.CallTo(() => repo.GetByIdAsync(1))
+                .Returns(Task.FromResult(category));
+
+            var controller = new ComputerCategoryController(repo);
+
+            // Act
+            var result = await controller.GetById(1);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+
+            var response = Assert.IsType<ComputerCategoryResponse>(okResult.Value);
+
+            Assert.Equal("TestCategory", response.Name);
+        }
+
+        [Fact]
+        public async Task GetComputerCategoryById_Returns_NotFound_When_Not_Exists()
+        {
+            // Arrange
+            var repo = A.Fake<IComputerCategoryRepository>();
+
+            A.CallTo(() => repo.GetByIdAsync(1))
+                .Returns(Task.FromResult<ComputerCategory>(null));
+
+            var controller = new ComputerCategoryController(repo);
+
+            // Act
+            var result = await controller.GetById(1);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+
+        [Fact]
+        public async Task GetComputerCategoryById_Returns_BadRequest_On_Exception()
+        {
+            // Arrange
+            var repo = A.Fake<IComputerCategoryRepository>();
+
+            A.CallTo(() => repo.GetByIdAsync(A<int>._))
+                .Throws(new Exception("Database error"));
+
+            var controller = new ComputerCategoryController(repo);
+
+            // Act
+            var result = await controller.GetById(1);
+
+            // Assert
+            var badRequest = Assert.IsType<BadRequestObjectResult>(result.Result);
+
+            Assert.Equal("Database error", badRequest.Value);
+        }
+
+        [Fact]
+        public async Task GetComputerCategoryById_Calls_Repository_Once()
+        {
+            // Arrange
+            var repo = A.Fake<IComputerCategoryRepository>();
+
+            var category = ComputerCategory.Create(
+                new CreateComputerCategoryRequest { Name = "Test" });
+
+            A.CallTo(() => repo.GetByIdAsync(1))
+                .Returns(category);
+
+            var controller = new ComputerCategoryController(repo);
+
+            // Act
+            await controller.GetById(1);
+
+            // Assert
+            A.CallTo(() => repo.GetByIdAsync(1))
+                .MustHaveHappenedOnceExactly();
+        }
     }
 }
