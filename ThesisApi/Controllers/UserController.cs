@@ -5,7 +5,6 @@ using ThesisApi.Data;
 using ThesisApi.Services;
 using Microsoft.AspNetCore.Identity;
 using ThesisApi.Models;
-using AutoMapper;
 using ThesisApi.Interfaces;
 using ThesisApi.Contracts.Responses.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -22,20 +21,17 @@ namespace ThesisApi.Controllers
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly TokenGenerator _tokenGenerator;
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
 
         public UserController(
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
             TokenGenerator tokenGenerator,
-            ApplicationDbContext context,
-            IMapper mapper)
+            ApplicationDbContext context)
         {
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _tokenGenerator = tokenGenerator;
             _context = context;
-            _mapper = mapper;
         }
 
         [HttpPost("/login")]
@@ -52,7 +48,7 @@ namespace ThesisApi.Controllers
             if (result == PasswordVerificationResult.Failed)
                 return Unauthorized("Invalid password!");
 
-            var newTokenRequest = _mapper.Map<NewTokenRequest>(user);
+            var newTokenRequest = user.ToNewTokenRequest();
 
             var access_token = _tokenGenerator.GenerateToken(newTokenRequest);
 

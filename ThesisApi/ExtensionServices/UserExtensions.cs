@@ -1,3 +1,4 @@
+using ThesisApi.Contracts.Requests.Users;
 using ThesisApi.Contracts.Responses.Users;
 using ThesisApi.Models;
 
@@ -38,6 +39,20 @@ namespace ThesisApi.ExtensionServices
             {
                 Id = userRole.Id,
                 Name = userRole.Name
+            };
+        }
+
+        public static NewTokenRequest ToNewTokenRequest(this User user)
+        {
+            return new NewTokenRequest()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Displayname = user.DisplayName,
+                Email = user.Email,
+                Department = user.Department,
+                CostCenter = user.CostCenter,
+                UserRoles = user.UserRoles.Select((role) => role.ToResponse()).ToList()
             };
         }
     }

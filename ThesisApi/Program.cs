@@ -52,8 +52,6 @@ builder.Services.AddSignalR();
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddAutoMapper(typeof(AutomapperProfiles));
-
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
