@@ -10,13 +10,13 @@ namespace ThesisApi.ExtensionServices
             return new MobileOrderResponse()
             {
                 Id = order.Id,
-                Customer = order.Customer.ToUserOrderResponse(),
+                Customer = order.Customer.ToOrderResponse(),
                 MobileDeviceCategory = order.MobileDeviceCategory.ToResponse(),
                 SimCallControlGroup = order.SimCallControlGroup.ToResponse(),
                 PickupLocation = order.PickupLocation,
                 MobileDevice = order.MobileDevice?.ToResponse(),
                 Note = order.Note,
-                Approver = order.Approver.ToUserOrderResponse(),
+                Approver = order.Approver.ToOrderResponse(),
                 Status = order.Status
             };
         }

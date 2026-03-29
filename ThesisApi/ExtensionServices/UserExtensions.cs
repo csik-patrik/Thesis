@@ -19,7 +19,7 @@ namespace ThesisApi.ExtensionServices
             };
         }
 
-        public static UserOrderResponse ToUserOrderResponse(this User user)
+        public static UserOrderResponse ToOrderResponse(this User user)
         {
             return new UserOrderResponse()
             {

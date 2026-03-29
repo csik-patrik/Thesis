@@ -14,7 +14,7 @@ namespace ThesisApi.ExtensionServices
                 MobileDeviceCategory = mobileDevice.MobileDeviceCategory.ToResponse(),
                 ImeiNumber = mobileDevice.ImeiNumber,
                 SerialNumber = mobileDevice.SerialNumber,
-                User = mobileDevice.User?.ToUserOrderResponse(),
+                User = mobileDevice.User?.ToOrderResponse(),
                 SimCard = mobileDevice.SimCard?.ToResponse(),
                 Status = mobileDevice.Status,
                 StatusReason = mobileDevice.StatusReason

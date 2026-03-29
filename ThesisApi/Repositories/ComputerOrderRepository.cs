@@ -42,7 +42,7 @@ namespace ThesisApi.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<ComputerOrder?>> GetByUsernameAsync(string username)
+        public async Task<IEnumerable<ComputerOrder>?> GetByUsernameAsync(string username)
         {
             return await _context.ComputerOrders
                 .Include(x => x.Customer)
@@ -89,7 +89,7 @@ namespace ThesisApi.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<ComputerOrder?>> GetAllForApprovalAsync(string username)
+        public async Task<IEnumerable<ComputerOrder>?> GetAllForApprovalAsync(string username)
         {
             return await _context.ComputerOrders
                 .Include(x => x.Customer)

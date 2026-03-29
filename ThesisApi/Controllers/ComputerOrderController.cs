@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.ComputerOrders;
 using ThesisApi.Contracts.Responses.ComputerOrders;
+using ThesisApi.ExtensionServices;
 using ThesisApi.Interfaces;
 using ThesisApi.Models;
 
@@ -19,15 +20,13 @@ namespace ThesisApi.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IComputerCategoryRepository _computerCategoryRepository;
         private readonly INotificationService _notificationService;
-        private readonly IMapper _mapper;
 
         public ComputerOrderController(
             IComputerRepository computerRepository,
             IComputerOrderRepository computerOrderRepository,
             IUserRepository userRepository,
             IComputerCategoryRepository computerCategoryRepository,
-            INotificationService notificationService,
-            IMapper mapper
+            INotificationService notificationService
         )
         {
             _computerRepository = computerRepository;
@@ -35,7 +34,6 @@ namespace ThesisApi.Controllers
             _userRepository = userRepository;
             _computerCategoryRepository = computerCategoryRepository;
             _notificationService = notificationService;
-            _mapper = mapper;
         }
 
         [HttpPost("/computer-orders")]
@@ -54,7 +52,7 @@ namespace ThesisApi.Controllers
                     order.ApproverId,
                     $"New computer order from {order.Customer.DisplayName} is waiting for your approval.");
 
-                var response = _mapper.Map<ComputerOrderResponse>(order);
+                var response = order.ToResponse();
 
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
@@ -71,7 +69,7 @@ namespace ThesisApi.Controllers
             {
                 var orders = await _computerOrderRepository.GetAllAsync();
 
-                var responses = orders.Select(_mapper.Map<ComputerOrderResponse>).ToList();
+                var responses = orders.Select((order) => order.ToResponse()).ToList();
 
                 return Ok(responses);
             }
@@ -90,7 +88,7 @@ namespace ThesisApi.Controllers
                 if (order == null)
                     return NotFound();
 
-                var response = _mapper.Map<ComputerOrderResponse>(order);
+                var response = order.ToResponse();
 
                 return Ok(response);
             }
@@ -111,9 +109,14 @@ namespace ThesisApi.Controllers
 
                 var orders = await _computerOrderRepository.GetByUsernameAsync(username);
 
-                var response = orders.Select(_mapper.Map<ComputerOrderResponse>).ToList();
+                if (orders != null)
+                {
+                    var response = orders.Select((order) => order.ToResponse()).ToList();
 
-                return Ok(response);
+                    return Ok(response);
+                }
+                return Ok();
+
             }
             catch (Exception e)
             {
@@ -133,9 +136,14 @@ namespace ThesisApi.Controllers
 
                 var orders = await _computerOrderRepository.GetAllForApprovalAsync(username);
 
-                var response = orders.Select(_mapper.Map<ComputerOrderResponse>).ToList();
+                if (orders != null)
+                {
+                    var response = orders.Select((order) => order.ToResponse()).ToList();
 
-                return Ok(response);
+                    return Ok(response);
+                }
+
+                return Ok();
             }
             catch (Exception e)
             {

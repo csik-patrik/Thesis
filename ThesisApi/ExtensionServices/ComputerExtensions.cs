@@ -14,7 +14,7 @@ namespace ThesisApi.ExtensionServices
                 ComputerCategory = computer.ComputerCategory.ToResponse(),
                 Model = computer.Model,
                 SerialNumber = computer.SerialNumber,
-                User = computer.User?.ToUserOrderResponse(),
+                User = computer.User?.ToOrderResponse(),
                 Status = computer.Status,
                 StatusReason = computer.StatusReason
             };
