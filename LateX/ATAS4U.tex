@@ -419,6 +419,26 @@ Minden szerepkör eltérő jogosultságokkal rendelkezik, amelyeket a backend ol
 
 A biztonság növelése érdekében a jelszavak titkosított (hash-elt) formában kerülnek tárolásra, és az API végpontok védettek jogosultság ellenőrzéssel.
 
+\section{JSON Web Token működése}
+
+A JSON Web Token (JWT) egy nyílt szabvány (RFC 7519), amely kompakt, önmagát tartalmazó módot biztosít a felek közötti biztonságos információcserére JSON objektumként. Gyakran használják modern, állapot nélküli (stateless) webes alkalmazásokban hitelesítésre (authentication) és engedélyezésre (authorization), mivel a token magában hordozza a felhasználói adatokat, aláírása révén pedig hamisíthatatlan. \cite{JWT} 
+
+A token felépítése:
+\begin{itemize}
+	\item Header
+	
+	A header rész általában két elemet tartalmaz, a token típusát és az alkalmazott aláírási algoritmust például HMAC SHA256 vagy RSA.
+		
+	\item Payload
+	
+	A token második része a payload, amely az úgynevezett állításokat (claims) tartalmazza. Az állítások egy adott entitásra -- jellemzően a felhasználóra -- vonatkozó információkat, valamint további adatokat foglalnak magukba. Az állítások három fő típusa különböztethető meg: regisztrált (registered), nyilvános (public) és privát (private) állítások.
+	
+	\item Signature
+	
+	Az aláírás létrehozásához a titkosított fejlécet, a titkosított payloadot, egy titkos kulcsot, valamint a fejlécben megadott algoritmust kell felhasználni, majd ezek alapján történik az aláírás generálása.
+	
+\end{itemize}
+
 \chapter{Fejlesztés és megvalósítás}
 
 \section{Fejlesztési környezet}
