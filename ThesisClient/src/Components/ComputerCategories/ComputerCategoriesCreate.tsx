@@ -5,8 +5,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Input from "../Form/Input";
 import Form from "../Form/Form";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function ComputerCategoriesCreate() {
+  const { user } = useAuth();
+
   const [formData, setFormData] = useState<CreateComputerCategoryRequest>({
     name: "",
   });
@@ -27,11 +30,18 @@ export default function ComputerCategoriesCreate() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!user || !user.token) return;
+
     try {
       await axios.post(
         "http://localhost:5268/computer-categories",
         { name: formData.name },
-        { headers: { "Content-Type": "application/json" } },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        },
       );
       toast.success("Category created successfully!");
       navigate("/admin/computers/categories");
