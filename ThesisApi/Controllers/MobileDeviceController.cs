@@ -24,6 +24,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/mobile-devices")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<MobileDeviceResponse>> Create([FromBody] CreateMobileDeviceRequest request)
         {
             try
@@ -43,6 +44,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/mobile-devices/bulk")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<MobileDeviceResponse>>> CreateBulk([FromBody] List<CreateMobileDeviceRequest> request)
         {
             try
@@ -65,6 +67,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-devices")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<MobileDeviceResponse>>> GetAll()
         {
             try
@@ -82,6 +85,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-devices/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<MobileDeviceResponse>> GetById([FromRoute] int id)
         {
             try
@@ -102,6 +106,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-devices/allocation/{categoryId:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<MobileDeviceResponse>>> GetAllForAllocation([FromRoute] int categoryId)
         {
             try
@@ -119,6 +124,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-devices/deployed")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<MobileDeviceResponse>>> GetAllDeployed()
         {
             try
@@ -160,6 +166,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/mobile-devices/return/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ReturnMobileDevice([FromRoute] int id, [FromBody] ReturnMobileDeviceRequest request)
         {
             try
@@ -182,28 +189,8 @@ namespace ThesisApi.Controllers
             }
         }
 
-        [HttpPut("/mobile-devices/update/status-reason/{id:int}")]
-        public async Task<IActionResult> UpdateStatusReason([FromRoute] int id, [FromBody] string statusReason)
-        {
-            try
-            {
-                var mobileDevice = await _mobileDeviceRepository.GetByIdAsync(id);
-
-                if (mobileDevice == null)
-                    return NotFound("Mobile device is not found.");
-
-
-                await _mobileDeviceRepository.UpdateStatusReasonAsync(mobileDevice, statusReason);
-
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
         [HttpDelete("/mobile-devices/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try

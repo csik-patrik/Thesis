@@ -57,6 +57,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/users")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserResponse>>> GetUsers()
         {
             try
@@ -74,6 +75,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/users/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserResponse>> GetUserById([FromRoute] int id)
         {
             try
@@ -112,6 +114,7 @@ namespace ThesisApi.Controllers
         // }
 
         [HttpPost("/users")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserResponse>> CreateUser(CreateUserRequest request)
         {
             try
@@ -148,6 +151,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/users")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserResponse>> UpdateUser([FromBody] UpdateUserRequest request)
         {
             try
@@ -170,6 +174,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpDelete("/users/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
             try
@@ -194,6 +199,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/roles")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserRoleResponse>>> GetRoles()
         {
             try
@@ -211,6 +217,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/users/group-leader")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserResponse>>> GetGroupLeaders()
         {
             try

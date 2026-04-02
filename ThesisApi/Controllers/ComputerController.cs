@@ -25,6 +25,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/computers")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ComputerResponse>> Create([FromBody] CreateComputerRequest request)
         {
             try
@@ -44,6 +45,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/computers/bulk")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ComputerResponse>>> CreateBulk([FromBody] List<CreateComputerRequest> request)
         {
             try
@@ -66,6 +68,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ComputerResponse>>> GetAll()
         {
             try
@@ -83,6 +86,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers/inventory")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ComputerInInventoryResponse>>> GetAllInInventory()
         {
             try
@@ -100,6 +104,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers/{id:int}")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult<ComputerResponse>> GetById([FromRoute] int id)
         {
             try
@@ -120,6 +125,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers/allocation/{categoryId:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ComputerResponse>>> GetAllForAllocation([FromRoute] int categoryId)
         {
             try
@@ -142,6 +148,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers/deployed")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ComputerResponse>>> GetAllDeployed()
         {
             try
@@ -159,6 +166,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computers/my-devices")]
+        [Authorize(Roles = "Admin, User, Group leader")]
         public async Task<ActionResult<IEnumerable<ComputerResponse>>> GetMyDevices()
         {
             try
@@ -183,6 +191,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/computers/return/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ReturnComputer([FromRoute] int id, [FromBody] ReturnComputerRequest request)
         {
             try
@@ -206,6 +215,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpDelete("/computers/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteById([FromRoute] int id)
         {
             try

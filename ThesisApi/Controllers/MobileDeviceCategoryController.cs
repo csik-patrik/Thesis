@@ -22,6 +22,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/mobile-device-categories")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<MobileDeviceCategoryResponse>> Create(CreateMobileDeviceCategoryRequest request)
         {
             try
@@ -41,6 +42,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-device-categories")]
+        [Authorize(Roles = "Admin, User, Group leader")]
         public async Task<ActionResult<IEnumerable<MobileDeviceCategoryResponse>>> GetAll()
         {
             try

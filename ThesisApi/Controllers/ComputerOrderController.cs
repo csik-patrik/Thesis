@@ -36,6 +36,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/computer-orders")]
+        [Authorize(Roles = "User, Group leader")]
         public async Task<ActionResult<ComputerOrderResponse>> Create([FromBody] CreateComputerOrderRequest request)
         {
             try
@@ -62,6 +63,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computer-orders")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ComputerOrderResponse>>> GetAll()
         {
             try
@@ -79,6 +81,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computer-orders/{id:int}")]
+        [Authorize(Roles = "Admin, User, Group leader")]
         public async Task<ActionResult<ComputerOrderResponse>> GetById([FromRoute] int id)
         {
             try
@@ -98,6 +101,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computer-orders/my-orders")]
+        [Authorize(Roles = "User, Group leader")]
         public async Task<ActionResult<IEnumerable<ComputerOrderResponse>>> GetByCustomerId()
         {
             try
@@ -124,6 +128,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computer-orders/approval")]
+        [Authorize(Roles = "Group leader")]
         public async Task<ActionResult<IEnumerable<ComputerOrderResponse>>> GetAllForApproval()
         {
             try
@@ -151,6 +156,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/computer-orders/approval/{id:int}")]
+        [Authorize(Roles = "Group leader")]
         public async Task<IActionResult> MakeDecisionAsGroupLeader([FromRoute] int id, [FromBody] bool decision)
         {
             try
@@ -187,6 +193,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/computer-orders/allocate")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AllocateMobileDevice([FromBody] AllocateComputerToOrderRequest request)
         {
             try
@@ -217,6 +224,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/computer-orders/deliver/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeliverOrder([FromRoute] int id)
         {
             try
@@ -243,6 +251,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpDelete("/computer-orders/{id:int}")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try

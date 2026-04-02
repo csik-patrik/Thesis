@@ -23,6 +23,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/sim-cards")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<SimCardResponse>>> GetAll()
         {
             try
@@ -40,6 +41,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/sim-cards")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<SimCardResponse>> Create([FromBody] CreateSimCardRequest request)
         {
             var simCard = await SimCard.Create(request, _simCallControlGroupRepository);
@@ -53,6 +55,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/sim-cards/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<SimCardResponse>> GetById([FromRoute] int id)
         {
             try
@@ -73,6 +76,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/sim-cards/allocation/{simCallControlGroupId:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<SimCardResponse>>> GetAllForAllocation([FromRoute] int simCallControlGroupId)
         {
             try
@@ -90,6 +94,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpDelete("/sim-cards/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             try

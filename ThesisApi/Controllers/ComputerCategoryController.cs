@@ -20,6 +20,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/computer-categories")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ComputerCategoryResponse>> Create([FromBody] CreateComputerCategoryRequest request)
         {
             try

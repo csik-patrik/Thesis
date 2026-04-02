@@ -67,6 +67,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-orders")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<MobileOrderResponse>>> GetAll()
         {
             try
@@ -128,6 +129,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/mobile-orders/allocate/device")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AllocateMobileDevice([FromBody] AllocateMobileDeviceToOrderRequest request)
         {
             try
@@ -158,6 +160,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/mobile-orders/allocate/sim-card")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AllocateSimCard([FromBody] AllocateSimCardToOrderRequest request)
         {
             try
@@ -187,6 +190,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/mobile-orders/deliver/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeliverOrder([FromRoute] int id)
         {
             try
@@ -236,6 +240,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/mobile-orders/approval")]
+        [Authorize(Roles = "Group leader")]
         public async Task<ActionResult<IEnumerable<MobileOrderResponse>>> GetAllForApproval()
         {
             try
@@ -262,6 +267,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPut("/mobile-orders/approval/{id:int}")]
+        [Authorize(Roles = "Group leader")]
         public async Task<IActionResult> MakeDecisionAsGroupLeader([FromRoute] int id, [FromBody] bool decision)
         {
             try

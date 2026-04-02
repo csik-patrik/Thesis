@@ -21,6 +21,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/sim-call-control-groups")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<SimCallControlGroupResponse>> Create(CreateSimCallControlGroupRequest request)
         {
             try
