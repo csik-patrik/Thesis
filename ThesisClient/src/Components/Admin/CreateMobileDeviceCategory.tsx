@@ -5,8 +5,10 @@ import { toast } from "react-toastify";
 import Form from "../Form/Form";
 import Input from "../Form/Input";
 import type { CreateMobileDeviceCategoryRequest } from "../../Types/MobileTypes";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function CreateMobileDeviceCategory() {
+  const { user } = useAuth();
   const [formData, setFormData] = useState<CreateMobileDeviceCategoryRequest>({
     name: "",
   });
@@ -26,12 +28,17 @@ export default function CreateMobileDeviceCategory() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!user || !user.token) return;
     try {
       await axios.post(
         "http://localhost:5268/mobile-device-categories",
         { name: formData.name },
-        { headers: { "Content-Type": "application/json" } },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        },
       );
       toast.success("Category created successfully!");
       navigate("/admin/mobile-device-categories");

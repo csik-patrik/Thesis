@@ -217,7 +217,6 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/users/group-leader")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserResponse>>> GetGroupLeaders()
         {
             try

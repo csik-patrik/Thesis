@@ -9,13 +9,18 @@ import type {
   CreateUserRequest,
   UserRoleResponse,
 } from "../../Types/UserTypes";
+import { useAuth } from "../../Auth/AuthContext";
 
 export default function UserCreate() {
+  const { user } = useAuth();
   const [userRoles, setUserRoles] = useState<UserRoleResponse[]>([]);
 
   useEffect(() => {
+    if (!user || !user.token) return;
     axios
-      .get<UserRoleResponse[]>("http://localhost:5268/roles")
+      .get<UserRoleResponse[]>("http://localhost:5268/roles", {
+        headers: { Authorization: `Bearer ${user.token}` },
+      })
       .then((response) => {
         setUserRoles(response.data);
       })
