@@ -8,7 +8,7 @@
 \usepackage[T1]{fontenc}
 \PassOptionsToPackage{defaults=hu-min}{magyar.ldf}
 \usepackage[magyar]{babel}
-\usepackage{mathtools,amssymb,amsthm,pdfpages, biblatex, csquotes, graphicx}
+\usepackage{mathtools,amssymb,amsthm,pdfpages, biblatex, csquotes, graphicx, listings, caption, xcolor}
 \usepackage{float}
 \addbibresource{references.bib}
 \DeclareQuoteStyle{magyar}{,,}{''}{>>}{<<}
@@ -20,13 +20,29 @@
 \theoremstyle{remark}
 \newtheorem{megjegyzes}[tetel]{Megjegyzés}
 
+\renewcommand{\lstlistingname}{kód}
+
+\lstdefinestyle{backend}{
+	language=[Sharp]C,
+	inputencoding=utf8,
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	showstringspaces=false,
+	breaklines=true,
+	frame=single,
+	numbers=left,
+	backgroundcolor=\color{gray!30}
+}
+
 \begin{document}
 \institute{Matematikai és Informatikai Intézet}
 \title{Informatikai eszközök nyilvántartására, eszközkiadás kezelésére tervezett alkalmazás készítése}
 \author{Csik Patrik\\Programtervező informatikus}
 \supervisor{Dr. Király Roland\\Egyetemi docens}
 \city{Eger}
-\date{2025}
+\date{2026}
 \maketitle
 
 \tableofcontents
@@ -39,7 +55,7 @@ Kis és középvállalatoknál végzett szakmai munkáim során gyakran azt tapa
 
 A digitalizáció a mai munkaerőpiacon alapkövetelménynek tekintető, ennek következtében az intézményekben használt korábban említett eszközök darabszáma is drasztikusan megnőtt. Az igények folyamatos változása és a használatban lévő eszközök darabszámának növekedése miatt ezeknek az IT eszközöknek a nyilvántartása létfontosságú a vállalati életben.
 
-Tapasztalataim alapján jellemző a különböző táblázatkezelő alkalmazások használata (például Microsoft Excel), melyeknek hátránya, hogy az adott felhasználó minden adatot szabadon tud szerkeszteni, a meglévő adatstruktúrát módosíthatja. Egy közepes méretű cég esetén ez akár több száz különböző eszközt is jelenthet, amiknek a mozgását, státuszát és felelősét nyilvántartani egy táblázatkezelőben nem fenntartható hosszú távon. Az ilyen megoldások alkalmazásakor gyakori az adatvesztés, idővel a struktúra teljes összeomlása és az "Egyéb" mezők rendszeres megjelenése az "adatbázisban".
+Tapasztalataim alapján jellemző a különböző táblázatkezelő alkalmazások használata (például Microsoft Excel), melyeknek hátránya, hogy az adott felhasználó minden adatot szabadon tud szerkeszteni, a meglévő adatstruktúrát módosíthatja. Egy közepes méretű cég esetén ez akár több száz különböző eszközt is jelenthet, amiknek a mozgását, státuszát és felelősét nyilvántartani egy táblázatkezelőben nem fenntartható hosszú távon. Az ilyen megoldások alkalmazásakor gyakori az adatvesztés, idővel a struktúra teljes összeomlása és az ,,Egyéb'' mezők rendszeres megjelenése az ,,adatbázisban''.
 
 Szakdolgozatom célja, egy olyan webalkalmazás fejlesztése ami a korábban említett problémákra biztosít egy lehetséges megoldást.
 A program egy olyan környezetet szolgáltat a felhasználóknak és az IT munkatársaknak amin keresztül a felhasználók egyszerűen tudnak új eszközöket igényelni, megtekinthetik a jelenlegi eszközeiket és állapotukat, a vezetők jóváhagyási folyamaton keresztül tudják felülvizsgálni az alkalmazottak igényeit, az adminisztrátorok pedig teljes körű rálátást kapnak a telephelyen lévő összes eszközre.
@@ -79,11 +95,11 @@ A .NET egy ingyenes, platformfüggetlen, nyílt forráskódú fejlesztői platfo
 A nagy teljesítményű futtatókörnyezetre támaszkodik, amelyet számos nagy léptékű alkalmazás használ éles környezetben.
 A .NET platform a termelékenység, a teljesítmény, a biztonság és a megbízhatóság biztosításához készült. \cite{DotnetBevezetés}
 
-Az alkalmazásban az Entity Framework Core (EF Core) ORM (Object-Relational Mapping) keretrendszer használatával valósítottam meg az adatbázis műveletek egyszerű és biztonságos kezelését.
+Az alkalmazásban az Entity Framework Core (EF Core) ORM (Object--Relational Mapping) keretrendszer használatával valósítottam meg az adatbázis műveletek egyszerű és biztonságos kezelését.
 
 Az Entity Framework (EF) Core a népszerű Entity Framework adatelérési technológia egyszerűsített, bővíthető, nyílt forráskódú és platformfüggetlen verziója.
 
-Az EF Core objektum-relációs leképezőként (O/RM) szolgálhat, amely:
+Az EF Core objektum--relációs leképezőként (O/RM) szolgálhat, amely:
 
 \begin{enumerate}
 	\item Lehetővé teszi, hogy a .NET-fejlesztők .NET-objektumokkal dolgozzanak egy adatbázissal.
@@ -349,7 +365,7 @@ Az architektúra egyik fontos előnye, hogy a frontend és a backend egymástól
 \section{Adatbázis-tervezés}
 A rendszer működésének alapját egy relációs adatbázis képezi, amely biztosítja az adatok strukturált és konzisztens tárolását. Az adatbázis tervezése során a cél az volt, hogy az eszközök, felhasználók és rendelések közötti kapcsolatok egyértelműen és hatékonyan reprezentálhatók legyenek.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 	\centering
 	\includegraphics[width=0.8\textwidth]{dbplan.png}
 	\caption{Adatbázis terv}
@@ -419,6 +435,8 @@ Minden szerepkör eltérő jogosultságokkal rendelkezik, amelyeket a backend ol
 
 A biztonság növelése érdekében a jelszavak titkosított (hash-elt) formában kerülnek tárolásra, és az API végpontok védettek jogosultság ellenőrzéssel.
 
+\lstinputlisting[style=backend,caption={Bejelentkezés, hitelesítés}]{login.cs}
+
 \section{JSON Web Token működése}
 
 A JSON Web Token (JWT) egy nyílt szabvány (RFC 7519), amely kompakt, önmagát tartalmazó módot biztosít a felek közötti biztonságos információcserére JSON objektumként. Gyakran használják modern, állapot nélküli (stateless) webes alkalmazásokban hitelesítésre (authentication) és engedélyezésre (authorization), mivel a token magában hordozza a felhasználói adatokat, aláírása révén pedig hamisíthatatlan. \cite{JWT} 
@@ -472,7 +490,16 @@ Egy tipikus működési folyamat a következő:
 
 Az adatkezeléshez Entity Framework Core keretrendszert használtam, amely lehetővé teszi az objektum-orientált adatbázis-kezelést. A lekérdezések LINQ segítségével valósulnak meg.
 
-A biztonság érdekében a felhasználók hitelesítése JWT tokenekkel történik, és az API végpontok védettek jogosultságellenőrzéssel.
+A biztonság érdekében a felhasználók hitelesítése JWT tokenekkel történik, és az API végpontok védettek jogosultság ellenőrzéssel.
+
+\lstinputlisting[style=backend,caption={Számítógép rendelés létrehozása végpont}]{createOrder.cs}
+
+\lstinputlisting[style=backend,caption={Számítógép rendelés model létrehozása}]{createOrderModel.cs}
+
+\pagebreak
+
+\lstinputlisting[style=backend,caption={Számítógép rendelés mentése az adatbázisba}]{computerOrderrepository.cs}
+
 
 \section{Frontend fejlesztés}
 A frontend fejlesztése React keretrendszer segítségével történt. Az alkalmazás egy egyoldalas alkalmazásként (Single Page Application, SPA) működik, amely dinamikusan tölti be az adatokat a backend API-ból.
