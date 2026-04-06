@@ -38,22 +38,31 @@ namespace ThesisApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest request)
         {
-            var user = await _context.Users.Include(x => x.UserRoles).FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (user == null)
-                return Unauthorized("Invalid email!");
+            try
+            {
+                var user = await _context.Users
+                    .Include(x => x.UserRoles)
+                    .FirstOrDefaultAsync(u => u.Email == request.Email);
 
-            var passwordHasher = new PasswordHasher<User>();
-            var result = passwordHasher.VerifyHashedPassword(user, user.Password, request.Password);
+                if (user == null)
+                    return Unauthorized();
 
-            if (result == PasswordVerificationResult.Failed)
-                return Unauthorized("Invalid password!");
+                var passwordHasher = new PasswordHasher<User>();
+                var result = passwordHasher.VerifyHashedPassword(user, user.Password, request.Password);
 
-            var newTokenRequest = user.ToNewTokenRequest();
+                if (result == PasswordVerificationResult.Failed)
+                    return Unauthorized();
 
-            var access_token = _tokenGenerator.GenerateToken(newTokenRequest);
+                var newTokenRequest = user.ToNewTokenRequest();
 
-            return Ok(access_token);
+                var access_token = _tokenGenerator.GenerateToken(newTokenRequest);
 
+                return Ok(access_token);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("/users")]
