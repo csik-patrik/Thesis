@@ -1,22 +1,22 @@
-import { useEffect, useRef, useState } from "react";
-import type { ComputerResponse } from "../../Types/ComputerTypes";
-import { useAuth } from "../../Auth/AuthContext";
-import { toast } from "react-toastify";
-import Button from "../Shared/Button";
-import type { ModalHandle } from "../Shared/Modal";
-import Modal from "../Shared/Modal";
-import Spinner from "../Shared/Spinner";
-import { FaComputer } from "react-icons/fa6";
+import { useEffect, useRef, useState } from 'react';
+import type { ComputerResponse } from '../../Types/ComputerTypes';
+import { useAuth } from '../../Auth/AuthContext';
+import { toast } from 'react-toastify';
+import Button from '../Shared/Button';
+import type { ModalHandle } from '../Shared/Modal';
+import Modal from '../Shared/Modal';
+import Spinner from '../Shared/Spinner';
+import { FaComputer } from 'react-icons/fa6';
 import {
   GetDeployedComputers,
   ReturnComputer,
-} from "../../Services/ComputerServices";
-import TableLayout from "../../Layouts/TableLayout";
-import EmptyState from "../Shared/Table/EmptyState";
-import Table from "../Shared/Table/Table";
-import Thead from "../Shared/Table/Thead";
-import Tr from "../Shared/Table/Tr";
-import Td from "../Shared/Table/Td";
+} from '../../Services/ComputerServices';
+import TableLayout from '../../Layouts/TableLayout';
+import EmptyState from '../Shared/Table/EmptyState';
+import Table from '../Shared/Table/Table';
+import Thead from '../Shared/Table/Thead';
+import Tr from '../Shared/Table/Tr';
+import Td from '../Shared/Table/Td';
 
 export default function ComputersDeployedTable() {
   const { user } = useAuth();
@@ -26,13 +26,13 @@ export default function ComputersDeployedTable() {
   const [selectedComputerId, setSelectedComputerId] = useState(0);
 
   const [returnData, setReturnData] = useState({
-    status: "In inventory",
-    statusReason: "In inventory",
+    status: 'In inventory',
+    statusReason: 'In inventory',
   });
 
   const returnDialog = useRef<ModalHandle>(null);
 
-  const [search, setSearch] = useState<string>("");
+  const [search, _setSearch] = useState<string>('');
 
   function showModal(id: number) {
     setSelectedComputerId(id);
@@ -47,9 +47,9 @@ export default function ComputersDeployedTable() {
         const res = await GetDeployedComputers(user);
         setComputers(res.data);
       } catch (err) {
-        console.error("Error loading deployed computers:", err);
+        console.error('Error loading deployed computers:', err);
 
-        toast.error("Failed to load deployed computers.");
+        toast.error('Failed to load deployed computers.');
       } finally {
         setIsLoading(false);
       }
@@ -71,7 +71,7 @@ export default function ComputersDeployedTable() {
     statusReason: string,
   ) => {
     if (!user?.token) {
-      toast.error("Unauthorized — please log in again.");
+      toast.error('Unauthorized — please log in again.');
       return;
     }
 
@@ -82,8 +82,8 @@ export default function ComputersDeployedTable() {
 
       setComputers((prev) => prev.filter((d) => d.id !== deviceId));
     } catch (err) {
-      console.error("Return error:", err);
-      toast.error("Failed to return device.");
+      console.error('Return error:', err);
+      toast.error('Failed to return device.');
     }
   };
 
@@ -118,7 +118,7 @@ export default function ComputersDeployedTable() {
               }))
             }
           >
-            <option value={"In inventory"}>In inventory</option>
+            <option value={'In inventory'}>In inventory</option>
           </select>
           <label className="block font-semibold mb-1">Status reason</label>
           <select
@@ -131,7 +131,7 @@ export default function ComputersDeployedTable() {
               }))
             }
           >
-            <option value={"In inventory"}>In inventory</option>
+            <option value={'In inventory'}>In inventory</option>
           </select>
         </div>
       </Modal>
@@ -150,13 +150,13 @@ export default function ComputersDeployedTable() {
             <Table>
               <Thead
                 headers={[
-                  "Id",
-                  "Hostname",
-                  "Category",
-                  "Model",
-                  "Serial number",
-                  "User",
-                  "Actions",
+                  'Id',
+                  'Hostname',
+                  'Category',
+                  'Model',
+                  'Serial number',
+                  'User',
+                  'Actions',
                 ]}
               />
               <tbody>

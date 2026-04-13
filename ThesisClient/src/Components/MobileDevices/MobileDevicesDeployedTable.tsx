@@ -1,22 +1,22 @@
-import { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import { useAuth } from "../../Auth/AuthContext";
-import type { MobileDeviceResponse } from "../../Types/MobileTypes";
-import type { ModalHandle } from "../Shared/Modal";
-import Modal from "../Shared/Modal";
-import Spinner from "../Shared/Spinner";
-import Button from "../Shared/Button";
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import { useAuth } from '../../Auth/AuthContext';
+import type { MobileDeviceResponse } from '../../Types/MobileTypes';
+import type { ModalHandle } from '../Shared/Modal';
+import Modal from '../Shared/Modal';
+import Spinner from '../Shared/Spinner';
+import Button from '../Shared/Button';
 import {
   GetDeployedMobileDevices,
   ReturnMobileDevice,
-} from "../../Services/MobileServices";
-import TableLayout from "../../Layouts/TableLayout";
-import EmptyState from "../Shared/Table/EmptyState";
-import { FaMobile } from "react-icons/fa6";
-import Table from "../Shared/Table/Table";
-import Thead from "../Shared/Table/Thead";
-import Tr from "../Shared/Table/Tr";
-import Td from "../Shared/Table/Td";
+} from '../../Services/MobileServices';
+import TableLayout from '../../Layouts/TableLayout';
+import EmptyState from '../Shared/Table/EmptyState';
+import { FaMobile } from 'react-icons/fa6';
+import Table from '../Shared/Table/Table';
+import Thead from '../Shared/Table/Thead';
+import Tr from '../Shared/Table/Tr';
+import Td from '../Shared/Table/Td';
 
 export default function MobileDevicesDeployedTable() {
   const { user } = useAuth();
@@ -26,8 +26,8 @@ export default function MobileDevicesDeployedTable() {
   const [selectedMobileId, setSelectedMobileId] = useState(0);
 
   const [returnData, setReturnData] = useState({
-    status: "In inventory",
-    statusReason: "In inventory",
+    status: 'In inventory',
+    statusReason: 'In inventory',
   });
 
   const returnDialog = useRef<ModalHandle>(null);
@@ -37,7 +37,7 @@ export default function MobileDevicesDeployedTable() {
     returnDialog.current?.open();
   }
 
-  const [search, setSearch] = useState<string>("");
+  const [search, _setSearch] = useState<string>('');
 
   useEffect(() => {
     if (!user || !user.token) return;
@@ -50,9 +50,9 @@ export default function MobileDevicesDeployedTable() {
 
         setMobiles(res.data);
       } catch (err) {
-        console.error("Error loading mobile devices:", err);
+        console.error('Error loading mobile devices:', err);
 
-        toast.error("Failed to load mobile devices.");
+        toast.error('Failed to load mobile devices.');
       } finally {
         setIsLoading(false);
       }
@@ -74,7 +74,7 @@ export default function MobileDevicesDeployedTable() {
     statusReason: string,
   ) => {
     if (!user?.token) {
-      toast.error("Unauthorized — please log in again.");
+      toast.error('Unauthorized — please log in again.');
       return;
     }
 
@@ -85,8 +85,8 @@ export default function MobileDevicesDeployedTable() {
 
       setMobiles((prev) => prev.filter((mobile) => mobile.id !== deviceId));
     } catch (err) {
-      console.error("Return error:", err);
-      toast.error("Failed to return device.");
+      console.error('Return error:', err);
+      toast.error('Failed to return device.');
     }
   };
 
@@ -121,7 +121,7 @@ export default function MobileDevicesDeployedTable() {
               }))
             }
           >
-            <option value={"In inventory"}>In inventory</option>
+            <option value={'In inventory'}>In inventory</option>
           </select>
           <label className="block font-semibold mb-1">Status reason</label>
           <select
@@ -134,7 +134,7 @@ export default function MobileDevicesDeployedTable() {
               }))
             }
           >
-            <option value={"In inventory"}>In inventory</option>
+            <option value={'In inventory'}>In inventory</option>
           </select>
         </div>
       </Modal>
@@ -153,16 +153,16 @@ export default function MobileDevicesDeployedTable() {
             <Table>
               <Thead
                 headers={[
-                  "Id",
-                  "Hostname",
-                  "Category",
-                  "IMEI number",
-                  "Serial number",
-                  "User",
-                  "Phone number",
-                  "Call control group",
-                  "Data enabled",
-                  "Actions",
+                  'Id',
+                  'Hostname',
+                  'Category',
+                  'IMEI number',
+                  'Serial number',
+                  'User',
+                  'Phone number',
+                  'Call control group',
+                  'Data enabled',
+                  'Actions',
                 ]}
               />
               <tbody>
@@ -178,8 +178,8 @@ export default function MobileDevicesDeployedTable() {
                     <Td>{d.simCard.simCallControlGroup.name}</Td>
                     <Td>
                       {d.simCard?.simCallControlGroup.isDataEnabled
-                        ? "True"
-                        : "False"}
+                        ? 'True'
+                        : 'False'}
                     </Td>
                     <Td>
                       <div className="flex items-center gap-3">

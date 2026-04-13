@@ -48,6 +48,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddHealthChecks();
+
 builder.Services.AddSignalR();
 
 builder.Services.AddAuthorization();
@@ -58,6 +60,8 @@ JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 var app = builder.Build();
 
 app.UseCors("ApiCorsPolicy");
+
+app.MapHealthChecks("/health");
 
 app.UseAuthentication();  // must come before UseAuthorization
 app.UseAuthorization();
