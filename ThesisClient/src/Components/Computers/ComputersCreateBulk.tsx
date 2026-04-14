@@ -8,6 +8,8 @@ import { useAuth } from '../../Auth/AuthContext';
 import axios from 'axios';
 
 export default function ComputersCreateBulk() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const [computerCategories, setComputerCategories] = useState<
     ComputerCategoryResponse[]
   >([]);
@@ -23,7 +25,7 @@ export default function ComputersCreateBulk() {
     const fetchComputerCategories = async () => {
       try {
         const res = await axios.get<ComputerCategoryResponse[]>(
-          'http://localhost:5000/computer-categories',
+          `${API_URL}/computer-categories`,
           {
             headers: { Authorization: `Bearer ${user.token}` },
           },
@@ -71,7 +73,7 @@ export default function ComputersCreateBulk() {
   //   if (!user || !user.token) return;
 
   //   try {
-  //     await axios.post("http://localhost:5000/computers/bulk", devices, {
+  //     await axios.post(`${API_URL}//computers/bulk`, devices, {
   //       headers: {
   //         Authorization: `Bearer ${user.token}`,
   //       },

@@ -8,6 +8,7 @@ import type { CreateMobileDeviceCategoryRequest } from '../../Types/MobileTypes'
 import { useAuth } from '../../Auth/AuthContext';
 
 export default function CreateMobileDeviceCategory() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const { user } = useAuth();
   const [formData, setFormData] = useState<CreateMobileDeviceCategoryRequest>({
     name: '',
@@ -31,7 +32,7 @@ export default function CreateMobileDeviceCategory() {
     if (!user || !user.token) return;
     try {
       await axios.post(
-        'http://localhost:5000/mobile-device-categories',
+        `${API_URL}/mobile-device-categories`,
         { name: formData.name },
         {
           headers: {

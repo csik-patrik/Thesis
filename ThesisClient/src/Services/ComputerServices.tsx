@@ -2,14 +2,12 @@ import axios from 'axios';
 import type { ComputerResponse } from '../Types/ComputerTypes';
 import type { User } from '../Types/UserTypes';
 import type { AllocateComputerRequest } from '../Components/ComputerOrders/ComputerOrder.types';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function GetDeployedComputers(user: User) {
-  return await axios.get<ComputerResponse[]>(
-    'http://localhost:5000/computers/deployed',
-    {
-      headers: { Authorization: `Bearer ${user.token}` },
-    },
-  );
+  return await axios.get<ComputerResponse[]>(`${API_URL}/computers/deployed`, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
 }
 
 export async function ReturnComputer(
@@ -19,7 +17,7 @@ export async function ReturnComputer(
   user: User,
 ) {
   return await axios.put(
-    `http://localhost:5000/computers/return/${id}`,
+    `${API_URL}/computers/return/${id}`,
     { status, statusReason },
     {
       headers: {
@@ -31,23 +29,20 @@ export async function ReturnComputer(
 }
 
 export async function GetComputersInInventory(user: User) {
-  return await axios.get<ComputerResponse[]>(
-    'http://localhost:5000/computers/inventory',
-    {
-      headers: { Authorization: `Bearer ${user.token}` },
-    },
-  );
+  return await axios.get<ComputerResponse[]>(`${API_URL}/computers/inventory`, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
 }
 
 export async function DeleteComputer(id: number, user: User) {
-  return await axios.delete(`http://localhost:5000/computers/${id}`, {
+  return await axios.delete(`${API_URL}/computers/${id}`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
 
 export async function GetMyComputers(user: User) {
   return await axios.get<ComputerResponse[]>(
-    'http://localhost:5000/computers/my-devices',
+    `${API_URL}/computers/my-devices`,
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -59,7 +54,7 @@ export async function GetComputersForAllocation(
   user: User,
 ) {
   return await axios.get<ComputerResponse[]>(
-    `http://localhost:5000/computers/allocation/${computerCategoryId}`,
+    `${API_URL}/computers/allocation/${computerCategoryId}`,
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -71,7 +66,7 @@ export async function AllocateComputerToOrder(
   user: User,
 ) {
   return await axios.put(
-    `http://localhost:5000/computer-orders/allocate`,
+    `${API_URL}/computer-orders/allocate`,
     {
       orderId: request.orderId,
       computerId: request.computerId,

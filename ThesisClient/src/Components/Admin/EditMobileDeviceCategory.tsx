@@ -12,6 +12,8 @@ interface CreateMobileDeviceCategory {
 }
 
 export default function EditMobileDeviceCategory() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const { id } = useParams<{ id: string }>();
   const [category, setCategory] = useState<MobileDeviceCategory | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,7 +28,7 @@ export default function EditMobileDeviceCategory() {
     const fetch = async () => {
       try {
         const res = await axios.get<MobileDeviceCategory>(
-          `http://localhost:5000/api/admin/mobile-device-categories/${id}`,
+          `${API_URL}/admin/mobile-device-categories/${id}`,
         );
         setCategory(res.data);
         setFormData({
@@ -57,7 +59,7 @@ export default function EditMobileDeviceCategory() {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/admin/mobile-device-categories/${id}`,
+        `${API_URL}/admin/mobile-device-categories/${id}`,
         JSON.stringify(formData.name),
         { headers: { 'Content-Type': 'application/json' } },
       );

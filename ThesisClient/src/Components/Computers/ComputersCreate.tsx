@@ -12,6 +12,8 @@ import Select from '../Form/Select';
 import Form from '../Form/Form';
 
 export default function ComputersCreate() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const { user } = useAuth();
 
   const [computerCategories, setComputerCategories] = useState<
@@ -32,7 +34,7 @@ export default function ComputersCreate() {
     const fetchComputerCategories = async () => {
       try {
         const res = await axios.get<ComputerCategoryResponse[]>(
-          'http://localhost:5000/computer-categories',
+          `${API_URL}/computer-categories`,
           {
             headers: { Authorization: `Bearer ${user.token}` },
           },
@@ -62,7 +64,7 @@ export default function ComputersCreate() {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:5000/computers', formData, {
+      await axios.post(`${API_URL}/computers`, formData, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
 

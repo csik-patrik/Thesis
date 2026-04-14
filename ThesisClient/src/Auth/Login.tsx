@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../Auth/AuthContext';
 
 export default function Login() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -25,7 +26,7 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post('http://localhost:5000/login', formData);
+      const res = await axios.post(`${API_URL}/login`, formData);
 
       login(res.data);
 
@@ -45,7 +46,7 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post('http://localhost:5000/login', {
+      const res = await axios.post(`${API_URL}/login`, {
         email: 'demo.user1@demo.com',
         password: 'PasswordDev01',
       });
@@ -68,7 +69,7 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post('http://localhost:5000/login', {
+      const res = await axios.post(`${API_URL}/login`, {
         email: 'demo.user2@demo.com',
         password: 'PasswordDev02',
       });
@@ -91,7 +92,7 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post('http://91.236.195.159:5000/login', {
+      const res = await axios.post(`${API_URL}/login`, {
         email: 'demo.user3@demo.com',
         password: 'PasswordDev03',
       });

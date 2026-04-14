@@ -12,6 +12,8 @@ import { mobileDeviceReducer } from './MobileDevice.reducer';
 import { mobileDeviceInitialState } from './MobileDevice.initialState';
 
 export default function MobileDeviceCreate() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const [state, dispatch] = useReducer(
     mobileDeviceReducer,
     mobileDeviceInitialState,
@@ -57,7 +59,7 @@ export default function MobileDeviceCreate() {
     }
 
     try {
-      await axios.post('http://localhost:5000/mobile-devices', formData, {
+      await axios.post(`${API_URL}/mobile-devices`, formData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

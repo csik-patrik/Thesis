@@ -7,9 +7,11 @@ import type {
   CreateSimCardAllocationRequest,
 } from '../Components/MobileOrders/MobileOrder.types';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export async function FetchMyMobileOrders(user: User) {
   return await axios.get<MobileOrderResponse[]>(
-    'http://localhost:5000/mobile-orders/my-orders',
+    `${API_URL}/mobile-orders/my-orders`,
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -17,23 +19,20 @@ export async function FetchMyMobileOrders(user: User) {
 }
 
 export async function DeleteMobileOrder(id: number, user: User) {
-  return await axios.delete(`http://localhost:5000/mobile-orders/${id}`, {
+  return await axios.delete(`${API_URL}/mobile-orders/${id}`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
 
 export async function FetchMobileOrders(user: User) {
-  return await axios.get<MobileOrderResponse[]>(
-    'http://localhost:5000/mobile-orders',
-    {
-      headers: { Authorization: `Bearer ${user.token}` },
-    },
-  );
+  return await axios.get<MobileOrderResponse[]>(`${API_URL}/mobile-orders`, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
 }
 
 export async function GetMobileOrdersWaitingForApproval(user: User) {
   return await axios.get<MobileOrderResponse[]>(
-    'http://localhost:5000/mobile-orders/approval',
+    `${API_URL}/mobile-orders/approval`,
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -42,7 +41,7 @@ export async function GetMobileOrdersWaitingForApproval(user: User) {
 
 export async function GetOrderById(id: number, user: User) {
   return await axios.get<MobileOrderResponse>(
-    `http://localhost:5000/mobile-orders/${id}`,
+    `${API_URL}/mobile-orders/${id}`,
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -54,7 +53,7 @@ export async function AllocateMobileDeviceToOrder(
   user: User,
 ) {
   return await axios.put(
-    `http://localhost:5000/mobile-orders/allocate/device/`,
+    `${API_URL}/mobile-orders/allocate/device/`,
     {
       orderId: request.orderId,
       mobileDeviceId: request.mobileDeviceId,
@@ -73,7 +72,7 @@ export async function AllocateSimCardToOrder(
   user: User,
 ) {
   return await axios.put(
-    `http://localhost:5000/mobile-orders/allocate/sim-card`,
+    `${API_URL}/mobile-orders/allocate/sim-card`,
     {
       orderId: request.orderId,
       simCardId: request.simCardId,
@@ -88,7 +87,7 @@ export async function AllocateSimCardToOrder(
 }
 
 export async function DeliverOrder(id: number, user: User) {
-  return await axios.put(`http://localhost:5000/mobile-orders/deliver/${id}`, {
+  return await axios.put(`${API_URL}/mobile-orders/deliver/${id}`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
@@ -98,7 +97,7 @@ export async function MakeDecisionAsApprover(
   user: User,
 ) {
   return await axios.put(
-    `http://localhost:5000/mobile-orders/approval/${request.orderId}`,
+    `${API_URL}/mobile-orders/approval/${request.orderId}`,
     request.decision,
     {
       headers: {

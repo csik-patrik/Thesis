@@ -13,6 +13,8 @@ import Input from '../Form/Input';
 import SelectMultiple from '../Form/SelectMultiple';
 
 export default function UsersEdit() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [userRoles, setUserRoles] = useState<UserRoleResponse[]>([]);
@@ -33,14 +35,11 @@ export default function UsersEdit() {
       setIsLoading(true);
       try {
         if (!user || !user.token) return;
-        const res = await axios.get<UserResponse>(
-          `http://localhost:5000/users/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
+        const res = await axios.get<UserResponse>(`${API_URL}/users/${id}`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
           },
-        );
+        });
 
         setFormData({
           id: res.data.id,
@@ -65,7 +64,7 @@ export default function UsersEdit() {
     const fetchRoles = async () => {
       try {
         const response = await axios.get<UserRoleResponse[]>(
-          'http://localhost:5000/roles',
+          `${API_URL}/roles`,
         );
         setUserRoles(response.data);
       } catch (error) {
@@ -96,7 +95,7 @@ export default function UsersEdit() {
         return;
       }
 
-      await axios.put('http://localhost:5000/users/', formData, {
+      await axios.put(`${API_URL}/users/`, formData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

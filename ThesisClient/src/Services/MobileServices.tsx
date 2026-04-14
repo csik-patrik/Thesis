@@ -1,10 +1,11 @@
 import axios from 'axios';
 import type { MobileDeviceResponse } from '../Types/MobileTypes';
 import type { User } from '../Types/UserTypes';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function GetDeployedMobileDevices(user: User) {
   return await axios.get<MobileDeviceResponse[]>(
-    'http://localhost:5000/mobile-devices/deployed',
+    `${API_URL}/mobile-devices/deployed`,
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -18,7 +19,7 @@ export async function ReturnMobileDevice(
   user: User,
 ) {
   return await axios.put(
-    `http://localhost:5000/mobile-devices/return/${id}`,
+    `${API_URL}/mobile-devices/return/${id}`,
     { status, statusReason },
     {
       headers: {
@@ -30,16 +31,13 @@ export async function ReturnMobileDevice(
 }
 
 export async function GetMobileDevices(user: User) {
-  return await axios.get<MobileDeviceResponse[]>(
-    'http://localhost:5000/mobile-devices/',
-    {
-      headers: { Authorization: `Bearer ${user.token}` },
-    },
-  );
+  return await axios.get<MobileDeviceResponse[]>(`${API_URL}/mobile-devices/`, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
 }
 
 export async function DeleteMobileDevice(id: number, user: User) {
-  return await axios.delete(`http://localhost:5000/mobile-devices/${id}`, {
+  return await axios.delete(`${API_URL}/mobile-devices/${id}`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }

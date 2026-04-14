@@ -12,13 +12,15 @@ import type {
 import { useAuth } from '../../Auth/AuthContext';
 
 export default function UserCreate() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const { user } = useAuth();
   const [userRoles, setUserRoles] = useState<UserRoleResponse[]>([]);
 
   useEffect(() => {
     if (!user || !user.token) return;
     axios
-      .get<UserRoleResponse[]>('http://localhost:5000/roles', {
+      .get<UserRoleResponse[]>(`${API_URL}/roles`, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((response) => {
@@ -58,7 +60,7 @@ export default function UserCreate() {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:5000/users', formData);
+      await axios.post(`${API_URL}/users`, formData);
       toast.success('User created successfully!');
       navigate('/admin/users');
     } catch (err) {

@@ -10,6 +10,8 @@ import type {
 import { useAuth } from '../../Auth/AuthContext';
 
 export default function MobileDeviceCreateBulk() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const { user } = useAuth();
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
     MobileDeviceCategoryResponse[]
@@ -63,7 +65,7 @@ export default function MobileDeviceCreateBulk() {
   // const handleSubmit = async (e: React.FormEvent) => {
   //   e.preventDefault();
   //   try {
-  //     await axios.post("http://localhost:5000/mobile-devices/bulk", devices);
+  //     await axios.post(`${API_URL}/mobile-devices/bulk`, devices);
   //     toast.success("Mobile devices created successfully!");
   //     navigate("/mobiles");
   //   } catch (err) {
@@ -81,7 +83,7 @@ export default function MobileDeviceCreateBulk() {
     }
 
     try {
-      await axios.post('http://localhost:5000/mobile-devices/bulk', devices, {
+      await axios.post(`${API_URL}/mobile-devices/bulk`, devices, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

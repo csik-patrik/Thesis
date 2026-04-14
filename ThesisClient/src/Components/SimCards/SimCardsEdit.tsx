@@ -26,6 +26,8 @@ interface UpdateSimCardRequest {
 }
 
 export default function SimCardsEdit() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const { id } = useParams<{ id: string }>(); // get ID from URL
   const [simCard, setSimCard] = useState<SimCard | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,9 +44,7 @@ export default function SimCardsEdit() {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await axios.get<SimCard>(
-          `http://localhost:5000/api/sim-cards/${id}`,
-        );
+        const res = await axios.get<SimCard>(`${API_URL}/api/sim-cards/${id}`);
         setSimCard(res.data);
         setFormData({
           department: res.data.department,
@@ -80,7 +80,7 @@ export default function SimCardsEdit() {
     e.preventDefault();
 
     try {
-      await axios.put(`http://localhost:5000/api/sim-cards/${id}`, formData);
+      await axios.put(`${API_URL}/api/sim-cards/${id}`, formData);
       toast.success('Sim card updated successfully!');
       navigate('/sim-cards');
     } catch (err) {

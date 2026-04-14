@@ -25,6 +25,7 @@ const NotificationContext = createContext<NotificationContextType | undefined>(
 );
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
+  const API_URL = import.meta.env.VITE_API_URL;
   const { user } = useAuth();
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const connectionRef = useRef<HubConnection | null>(null);
@@ -35,7 +36,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     if (!user?.token) return;
     try {
       const res = await axios.get<NotificationType[]>(
-        'http://localhost:5000/notifications',
+        `${API_URL}/notifications`,
         { headers: { Authorization: `Bearer ${user.token}` } },
       );
       setNotifications(res.data);
@@ -53,7 +54,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     }
 
     const connection = new HubConnectionBuilder()
-      .withUrl('http://localhost:5000/hubs/notifications')
+      .withUrl(`${API_URL}/hubs/notifications`)
       .withAutomaticReconnect()
       .build();
 
@@ -82,7 +83,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       if (!user?.token) return;
       try {
         await axios.put(
-          `http://localhost:5000/notifications/${id}/read`,
+          `${API_URL}/notifications/${id}/read`,
           {},
           { headers: { Authorization: `Bearer ${user.token}` } },
         );
@@ -100,7 +101,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     if (!user?.token) return;
     try {
       await axios.put(
-        'http://localhost:5000/notifications/read-all',
+        `${API_URL}/notifications/read-all`,
         {},
         { headers: { Authorization: `Bearer ${user.token}` } },
       );

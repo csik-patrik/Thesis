@@ -8,6 +8,8 @@ import Form from '../Form/Form';
 import { useAuth } from '../../Auth/AuthContext';
 
 export default function ComputerCategoriesCreate() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const { user } = useAuth();
 
   const [formData, setFormData] = useState<CreateComputerCategoryRequest>({
@@ -34,7 +36,7 @@ export default function ComputerCategoriesCreate() {
 
     try {
       await axios.post(
-        'http://localhost:5000/computer-categories',
+        `${API_URL}/computer-categories`,
         { name: formData.name },
         {
           headers: {
