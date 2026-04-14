@@ -80,6 +80,23 @@ namespace ThesisApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ComputerCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Standard"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Enhanced"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Professional"
+                        });
                 });
 
             modelBuilder.Entity("ThesisApi.Models.ComputerOrder", b =>
@@ -189,6 +206,23 @@ namespace ThesisApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MobileDeviceCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Feature phone"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Standard smartphone"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Enhanced smartphone"
+                        });
                 });
 
             modelBuilder.Entity("ThesisApi.Models.MobileOrder", b =>
@@ -359,6 +393,38 @@ namespace ThesisApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CostCenter = "000001",
+                            Department = "Demo department",
+                            DisplayName = "Demo User1",
+                            Email = "demo.user1@demo.com",
+                            Password = "AQAAAAIAAYagAAAAECz6RUU/Xc9H9QwB0DJhf5kXqwWVw9wEhlgR48pNE28mp+5wY+qzLqoYsH2mW2oYxQ==",
+                            Username = "user1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CostCenter = "000001",
+                            Department = "Demo department",
+                            DisplayName = "Demo User2",
+                            Email = "demo.user2@demo.com",
+                            Password = "AQAAAAIAAYagAAAAEKQyl5xwymUK928U9RYrzGZs1VZADbwFhh8WawPXDpFJ+hXUfkEbThjZPYFmtFjiVg==",
+                            Username = "user2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CostCenter = "000001",
+                            Department = "Demo department",
+                            DisplayName = "Demo User3",
+                            Email = "demo.user3@demo.com",
+                            Password = "AQAAAAIAAYagAAAAEGWIGMJ2/ljmbfUjrxGwYS5j2f+BjcWZRY4Fl6zEqGUsaCxUdRsNK4c6+o0lZJvIcA==",
+                            Username = "user3"
+                        });
                 });
 
             modelBuilder.Entity("ThesisApi.Models.UserRole", b =>
@@ -408,6 +474,23 @@ namespace ThesisApi.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("UserUserRole");
+
+                    b.HasData(
+                        new
+                        {
+                            UserRolesId = 1,
+                            UsersId = 1
+                        },
+                        new
+                        {
+                            UserRolesId = 2,
+                            UsersId = 2
+                        },
+                        new
+                        {
+                            UserRolesId = 3,
+                            UsersId = 3
+                        });
                 });
 
             modelBuilder.Entity("ThesisApi.Models.Computer", b =>

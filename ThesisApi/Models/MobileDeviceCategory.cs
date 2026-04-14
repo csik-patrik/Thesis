@@ -4,7 +4,7 @@ namespace ThesisApi.Models
 {
     public class MobileDeviceCategory
     {
-        private MobileDeviceCategory() { }
+        public MobileDeviceCategory() { }
         public int Id { get; set; }
         public required string Name { get; set; }
 

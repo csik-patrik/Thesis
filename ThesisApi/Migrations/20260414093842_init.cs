@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,11 +8,24 @@
 namespace ThesisApi.Migrations
 {
     /// <inheritdoc />
-    public partial class Init2 : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "ComputerCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComputerCategories", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "MobileDeviceCategories",
                 columns: table => new
@@ -77,7 +91,6 @@ namespace ThesisApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Department = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SimCallControlGroupId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -90,6 +103,58 @@ namespace ThesisApi.Migrations
                         principalTable: "SimCallControlGroups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Computers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Hostname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ComputerCategoryId = table.Column<int>(type: "int", nullable: false),
+                    Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusReason = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Computers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Computers_ComputerCategories_ComputerCategoryId",
+                        column: x => x.ComputerCategoryId,
+                        principalTable: "ComputerCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Computers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notifications_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -153,6 +218,48 @@ namespace ThesisApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ComputerOrders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    ComputerCategoryId = table.Column<int>(type: "int", nullable: false),
+                    PickupLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ApproverId = table.Column<int>(type: "int", nullable: false),
+                    ComputerId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComputerOrders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ComputerOrders_ComputerCategories_ComputerCategoryId",
+                        column: x => x.ComputerCategoryId,
+                        principalTable: "ComputerCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ComputerOrders_Computers_ComputerId",
+                        column: x => x.ComputerId,
+                        principalTable: "Computers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ComputerOrders_Users_ApproverId",
+                        column: x => x.ApproverId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ComputerOrders_Users_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MobileOrders",
                 columns: table => new
                 {
@@ -163,9 +270,11 @@ namespace ThesisApi.Migrations
                     SimCallControlGroupId = table.Column<int>(type: "int", nullable: false),
                     PickupLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ApproverId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MobileDeviceId = table.Column<int>(type: "int", nullable: true),
                     SimCardId = table.Column<int>(type: "int", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -193,11 +302,32 @@ namespace ThesisApi.Migrations
                         principalTable: "SimCards",
                         principalColumn: "Id");
                     table.ForeignKey(
+                        name: "FK_MobileOrders_Users_ApproverId",
+                        column: x => x.ApproverId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_MobileOrders_Users_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MobileOrders_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                table: "ComputerCategories",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Standard" },
+                    { 2, "Enhanced" },
+                    { 3, "Professional" }
                 });
 
             migrationBuilder.InsertData(
@@ -205,9 +335,9 @@ namespace ThesisApi.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Standard smartphone" },
-                    { 2, "Enhanced smartphone" },
-                    { 3, "Feature phone" }
+                    { 1, "Feature phone" },
+                    { 2, "Standard smartphone" },
+                    { 3, "Enhanced smartphone" }
                 });
 
             migrationBuilder.InsertData(
@@ -216,8 +346,59 @@ namespace ThesisApi.Migrations
                 values: new object[,]
                 {
                     { 1, "User" },
-                    { 2, "Admin" }
+                    { 2, "Admin" },
+                    { 3, "Group leader" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "CostCenter", "Department", "DisplayName", "Email", "Password", "Username" },
+                values: new object[,]
+                {
+                    { 1, "000001", "Demo department", "Demo User1", "demo.user1@demo.com", "AQAAAAIAAYagAAAAECz6RUU/Xc9H9QwB0DJhf5kXqwWVw9wEhlgR48pNE28mp+5wY+qzLqoYsH2mW2oYxQ==", "user1" },
+                    { 2, "000001", "Demo department", "Demo User2", "demo.user2@demo.com", "AQAAAAIAAYagAAAAEKQyl5xwymUK928U9RYrzGZs1VZADbwFhh8WawPXDpFJ+hXUfkEbThjZPYFmtFjiVg==", "user2" },
+                    { 3, "000001", "Demo department", "Demo User3", "demo.user3@demo.com", "AQAAAAIAAYagAAAAEGWIGMJ2/ljmbfUjrxGwYS5j2f+BjcWZRY4Fl6zEqGUsaCxUdRsNK4c6+o0lZJvIcA==", "user3" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserUserRole",
+                columns: new[] { "UserRolesId", "UsersId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 2 },
+                    { 3, 3 }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComputerOrders_ApproverId",
+                table: "ComputerOrders",
+                column: "ApproverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComputerOrders_ComputerCategoryId",
+                table: "ComputerOrders",
+                column: "ComputerCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComputerOrders_ComputerId",
+                table: "ComputerOrders",
+                column: "ComputerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComputerOrders_CustomerId",
+                table: "ComputerOrders",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Computers_ComputerCategoryId",
+                table: "Computers",
+                column: "ComputerCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Computers_UserId",
+                table: "Computers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MobileDevices_MobileDeviceCategoryId",
@@ -235,6 +416,11 @@ namespace ThesisApi.Migrations
                 name: "IX_MobileDevices_UserId",
                 table: "MobileDevices",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MobileOrders_ApproverId",
+                table: "MobileOrders",
+                column: "ApproverId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MobileOrders_CustomerId",
@@ -262,6 +448,16 @@ namespace ThesisApi.Migrations
                 column: "SimCardId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MobileOrders_UserId",
+                table: "MobileOrders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_UserId",
+                table: "Notifications",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SimCards_SimCallControlGroupId",
                 table: "SimCards",
                 column: "SimCallControlGroupId");
@@ -276,16 +472,28 @@ namespace ThesisApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ComputerOrders");
+
+            migrationBuilder.DropTable(
                 name: "MobileOrders");
 
             migrationBuilder.DropTable(
+                name: "Notifications");
+
+            migrationBuilder.DropTable(
                 name: "UserUserRole");
+
+            migrationBuilder.DropTable(
+                name: "Computers");
 
             migrationBuilder.DropTable(
                 name: "MobileDevices");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "ComputerCategories");
 
             migrationBuilder.DropTable(
                 name: "MobileDeviceCategories");
