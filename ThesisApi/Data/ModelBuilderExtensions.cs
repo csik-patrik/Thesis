@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ThesisApi.Contracts.Requests.ComputerCategories;
 using ThesisApi.Contracts.Requests.MobileDeviceCategories;
 using ThesisApi.Contracts.Requests.Users;
@@ -18,47 +19,76 @@ namespace ThesisApi.Data
             );
 
             builder.Entity<ComputerCategory>().HasData(
-                ComputerCategory.Create(new CreateComputerCategoryRequest() { Name = "Standard" }),
-                ComputerCategory.Create(new CreateComputerCategoryRequest() { Name = "Enhanced" }),
-                ComputerCategory.Create(new CreateComputerCategoryRequest() { Name = "Professional" })
+                new ComputerCategory() { Id = 1, Name = "Standard" },
+                new ComputerCategory() { Id = 2, Name = "Enhanced" },
+                new ComputerCategory() { Id = 3, Name = "Professional" }
             );
 
             builder.Entity<MobileDeviceCategory>().HasData(
-                MobileDeviceCategory.Create(new CreateMobileDeviceCategoryRequest() { Name = "Feature phone" }),
-                MobileDeviceCategory.Create(new CreateMobileDeviceCategoryRequest() { Name = "Standard smartphone" }),
-                MobileDeviceCategory.Create(new CreateMobileDeviceCategoryRequest() { Name = "Enhanced smartphone" })
-            );
-
-            builder.Entity<MobileDeviceCategory>().HasData(
-                MobileDeviceCategory.Create(new CreateMobileDeviceCategoryRequest() { Name = "Feature phone" }),
-                MobileDeviceCategory.Create(new CreateMobileDeviceCategoryRequest() { Name = "Standard smartphone" }),
-                MobileDeviceCategory.Create(new CreateMobileDeviceCategoryRequest() { Name = "Enhanced smartphone" })
+                new MobileDeviceCategory() { Id = 1, Name = "Feature phone" },
+                new MobileDeviceCategory() { Id = 2, Name = "Standard smartphone" },
+                new MobileDeviceCategory() { Id = 3, Name = "Enhanced smartphone" }
             );
 
             builder.Entity<User>().HasData(
-                CreateUser(new CreateUserRequest() { Username = "user1", DisplayName = "Demo User1", CostCenter = "000001", Department = "Demo department", Email = "demo.user1@demo.com", Password = "PasswordDev01", UserRoleIds = [1] }, new UserRole() { Id = 1, Name = "User" }),
-                CreateUser(new CreateUserRequest() { Username = "user2", DisplayName = "Demo User2", CostCenter = "000001", Department = "Demo department", Email = "demo.user2@demo.com", Password = "PasswordDev02", UserRoleIds = [2] }, new UserRole() { Id = 2, Name = "Admin" }),
-                CreateUser(new CreateUserRequest() { Username = "user3", DisplayName = "Demo User3", CostCenter = "000001", Department = "Demo department", Email = "demo.user3@demo.com", Password = "PasswordDev03", UserRoleIds = [3] }, new UserRole() { Id = 2, Name = "Group leader" })
+                new User
+                {
+                    Id = 1,
+                    Username = "user1",
+                    DisplayName = "Demo User1",
+                    CostCenter = "000001",
+                    Department = "Demo department",
+                    Email = "demo.user1@demo.com",
+                    Password = "AQAAAAIAAYagAAAAECz6RUU/Xc9H9QwB0DJhf5kXqwWVw9wEhlgR48pNE28mp+5wY+qzLqoYsH2mW2oYxQ=="
+                },
+                new User
+                {
+                    Id = 2,
+                    Username = "user2",
+                    DisplayName = "Demo User2",
+                    CostCenter = "000001",
+                    Department = "Demo department",
+                    Email = "demo.user2@demo.com",
+                    Password = "AQAAAAIAAYagAAAAEKQyl5xwymUK928U9RYrzGZs1VZADbwFhh8WawPXDpFJ+hXUfkEbThjZPYFmtFjiVg=="
+                },
+                new User
+                {
+                    Id = 3,
+                    Username = "user3",
+                    DisplayName = "Demo User3",
+                    CostCenter = "000001",
+                    Department = "Demo department",
+                    Email = "demo.user3@demo.com",
+                    Password = "AQAAAAIAAYagAAAAEGWIGMJ2/ljmbfUjrxGwYS5j2f+BjcWZRY4Fl6zEqGUsaCxUdRsNK4c6+o0lZJvIcA=="
+                }
             );
+
+            builder.Entity<User>()
+                .HasMany(u => u.UserRoles)
+                .WithMany(r => r.Users)
+                .UsingEntity(j => j.HasData(
+                    new { UsersId = 1, UserRolesId = 1 },
+                    new { UsersId = 2, UserRolesId = 2 },
+                    new { UsersId = 3, UserRolesId = 3 }
+                ));
         }
 
-        private static User CreateUser(CreateUserRequest request, UserRole role)
+        private static User CreateUser(int id, string username, string displayName, string costCenter, string department, string email, string password)
         {
-            var passwordHasher = new PasswordHasher<User>();
-
             var user = new User()
             {
-                Username = request.Username,
-                DisplayName = request.DisplayName,
-                Email = request.Email,
-                Password = request.Password,
-                Department = request.Department,
-                CostCenter = request.CostCenter,
-                UserRoles = [role]
+                Id = id,
+                Username = username,
+                DisplayName = displayName,
+                Email = email,
+                Password = password,
+                Department = department,
+                CostCenter = costCenter,
+                // UserRoles-t NEM állítjuk be itt!
             };
 
-            user.Password = passwordHasher.HashPassword(user, user.Password);
-
+            var passwordHasher = new PasswordHasher<User>();
+            user.Password = passwordHasher.HashPassword(user, password);
             return user;
         }
     }
