@@ -3,10 +3,13 @@ import type {
   ComputerCategoryResponse,
   CreateComputerRequest,
 } from "../../Types/ComputerTypes";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Auth/AuthContext";
+import Input from "../Form/Input";
+import Select from "../Form/Select";
+import Form from "../Form/Form";
 
 export default function ComputersCreate() {
   const { user } = useAuth();
@@ -72,116 +75,48 @@ export default function ComputersCreate() {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gray-100 p-4">
-      <div className="w-full max-w-md bg-white shadow rounded-lg p-6">
-        <h1 className="text-2xl font-semibold text-center mb-6">
-          Create a new computer
-        </h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Hostname */}
-          <div>
-            <label
-              htmlFor="hostname"
-              className="block text-gray-700 font-medium mb-1"
-            >
-              Hostname
-            </label>
-            <input
-              type="text"
-              name="hostname"
-              id="hostname"
-              placeholder="HTV-C-00001"
-              value={formData.hostname}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Category */}
-          <div>
-            <label
-              htmlFor="computerCategoryId"
-              className="block text-gray-700 font-medium mb-1"
-            >
-              Category
-            </label>
-            <select
-              name="computerCategoryId"
-              id="computerCategoryId"
-              value={formData.computerCategoryId}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value={0} disabled>
-                Select category...
-              </option>
-              {computerCategories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Model */}
-          <div>
-            <label
-              htmlFor="model"
-              className="block text-gray-700 font-medium mb-1"
-            >
-              Model
-            </label>
-            <input
-              type="text"
-              name="model"
-              id="model"
-              placeholder="Lenovo T14 G2"
-              value={formData.model}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Serial Number */}
-          <div>
-            <label
-              htmlFor="serialNumber"
-              className="block text-gray-700 font-medium mb-1"
-            >
-              Serial Number
-            </label>
-            <input
-              type="text"
-              name="serialNumber"
-              id="serialNumber"
-              placeholder="SFZ213"
-              value={formData.serialNumber}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Actions */}
-          <div className="flex gap-3 mt-4">
-            <Link
-              to="/computers"
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500"
-            >
-              Back
-            </Link>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <Form
+      title="Create a new computer"
+      handleSubmit={handleSubmit}
+      returnUri="/computers"
+    >
+      <Input
+        title="Hostname"
+        fieldName="hostname"
+        type="text"
+        value={formData.hostname}
+        handleChange={handleChange}
+        placeHolder="Hostname"
+        required
+      />
+      <Select
+        title="Device category"
+        fieldName="computerCategoryId"
+        value={formData.computerCategoryId}
+        options={computerCategories.map((c) => ({
+          label: c.name,
+          value: c.id,
+        }))}
+        handleChange={handleChange}
+      />
+      <Input
+        title="Model"
+        fieldName="model"
+        type="text"
+        value={formData.model}
+        handleChange={handleChange}
+        placeHolder="Model"
+        required
+      />
+      <Input
+        title="Serial number"
+        fieldName="serialNumber"
+        type="text"
+        value={formData.serialNumber}
+        handleChange={handleChange}
+        placeHolder="Serial number"
+        required
+      />
+    </Form>
   );
 }
