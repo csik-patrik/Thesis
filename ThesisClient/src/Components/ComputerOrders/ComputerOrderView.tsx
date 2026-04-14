@@ -32,7 +32,6 @@ export default function ComputerOrderView() {
     const fetchOrder = async () => {
       try {
         const res = await GetComputerOrderById(Number(id), user);
-
         setOrder(res.data);
       } catch (err) {
         toast.error("Error fetching mobile orders.");
@@ -53,6 +52,9 @@ export default function ComputerOrderView() {
 
       await DeliverComputerOrder(Number(id), user);
 
+      const res = await GetComputerOrderById(Number(id), user);
+      setOrder(res.data);
+
       toast.success("Order marked as delivered!");
     } catch (err) {
       toast.error("Failed to deliver device.");
@@ -67,7 +69,13 @@ export default function ComputerOrderView() {
     try {
       await MakeDecisionAsApprover(id, decision, user);
 
-      toast.success(`Order ${decision ? "approved" : "rejected"} successfully!`);
+      const res = await GetComputerOrderById(Number(id), user);
+
+      setOrder(res.data);
+
+      toast.success(
+        `Order ${decision ? "approved" : "rejected"} successfully!`,
+      );
     } catch (err: any) {
       toast.error("Failed to update computer order.");
 
@@ -77,13 +85,22 @@ export default function ComputerOrderView() {
 
   if (isLoading) return <Spinner fullPage />;
 
-  if (!order) return <p className="text-center mt-10 text-red-600 font-medium">Order not found.</p>;
+  if (!order)
+    return (
+      <p className="text-center mt-10 text-red-600 font-medium">
+        Order not found.
+      </p>
+    );
 
   const isDeliveryButtonVisible =
-    order.computer && user?.roles.includes("Admin") && order.status !== "Delivered";
+    order.computer &&
+    user?.roles.includes("Admin") &&
+    order.status !== "Delivered";
 
   const isComputerAllocationVisible =
-    user?.roles.includes("Admin") && order.status == "Approved" && !order.computer;
+    user?.roles.includes("Admin") &&
+    order.status == "Approved" &&
+    !order.computer;
 
   return (
     <div className="flex flex-row w-full justify-center">
@@ -155,8 +172,12 @@ export default function ComputerOrderView() {
 
           {isDeliveryButtonVisible && (
             <Tr key="deliver">
-              <Td>
-                <Button color="green" label="Deliver Device" handleClick={handleDeliver} />
+              <Td colSpan={2}>
+                <Button
+                  color="green"
+                  label="Deliver Device"
+                  handleClick={handleDeliver}
+                />
               </Td>
             </Tr>
           )}
