@@ -40,6 +40,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/mobile-orders")]
+        [Authorize(Roles = "User, Admin, Group leader")]
         public async Task<ActionResult<MobileOrderResponse>> Create([FromBody] CreateMobileOrderRequest request)
         {
             try
