@@ -113,84 +113,88 @@ export default function MobileOrderView() {
     <div className="flex flex-row w-full justify-center">
       <TableLayout title="Mobile order details" subtitle="View order details">
         <Table>
-          <Tr key={order.id}>
-            <Td>Order Id:</Td>
-            <Td>{order.id}</Td>
-          </Tr>
-          <Tr key={order.customer.userName}>
-            <Td>Customer's username:</Td>
-            <Td>{order.customer.userName}</Td>
-          </Tr>
-          <Tr key={order.customer.displayName}>
-            <Td>Customer's displayName:</Td>
-            <Td>{order.customer.displayName}</Td>
-          </Tr>
-          <Tr key={order.customer.email}>
-            <Td>Customer's e-mail address:</Td>
-            <Td>{order.customer.email}</Td>
-          </Tr>
-          <Tr key={order.customer.costCenter}>
-            <Td>Customer's cost center:</Td>
-            <Td>{order.customer.costCenter}</Td>
-          </Tr>
-          <Tr key={order.mobileDeviceCategory.name}>
-            <Td>Requested mobile device category:</Td>
-            <Td>{order.mobileDeviceCategory.name}</Td>
-          </Tr>
-          <Tr key={order.simCallControlGroup.name}>
-            <Td>Requested call control group:</Td>
-            <Td>{order.simCallControlGroup.name}</Td>
-          </Tr>
-          <Tr key={order.pickupLocation}>
-            <Td>Requested pickup location:</Td>
-            <Td>{order.pickupLocation}</Td>
-          </Tr>
-          <Tr key={order.note}>
-            <Td>Notes from the customer:</Td>
-            <Td>{order.note}</Td>
-          </Tr>
-          <Tr key={order.approver.displayName}>
-            <Td>Approver:</Td>
-            <Td>
-              {order.approver.displayName} ({order.approver.department})
-            </Td>
-          </Tr>
-          <Tr key={order.status}>
-            <Td>Order status:</Td>
-            <Td>
-              <StatusBadge status={order.status} />
-            </Td>
-          </Tr>
-
-          {order.status === "Waiting for approval" && (
-            <Tr key="approve">
+          <tbody>
+            <Tr key={order.id}>
+              <Td>Order Id:</Td>
+              <Td>{order.id}</Td>
+            </Tr>
+            <Tr key={order.customer.userName}>
+              <Td>Customer's username:</Td>
+              <Td>{order.customer.userName}</Td>
+            </Tr>
+            <Tr key={order.customer.displayName}>
+              <Td>Customer's displayName:</Td>
+              <Td>{order.customer.displayName}</Td>
+            </Tr>
+            <Tr key={order.customer.email}>
+              <Td>Customer's e-mail address:</Td>
+              <Td>{order.customer.email}</Td>
+            </Tr>
+            <Tr key={order.customer.costCenter}>
+              <Td>Customer's cost center:</Td>
+              <Td>{order.customer.costCenter}</Td>
+            </Tr>
+            <Tr key={order.mobileDeviceCategory.name}>
+              <Td>Requested mobile device category:</Td>
+              <Td>{order.mobileDeviceCategory.name}</Td>
+            </Tr>
+            <Tr key={order.simCallControlGroup.name}>
+              <Td>Requested call control group:</Td>
+              <Td>{order.simCallControlGroup.name}</Td>
+            </Tr>
+            <Tr key={order.pickupLocation}>
+              <Td>Requested pickup location:</Td>
+              <Td>{order.pickupLocation}</Td>
+            </Tr>
+            <Tr key={order.note}>
+              <Td>Notes from the customer:</Td>
+              <Td>{order.note}</Td>
+            </Tr>
+            <Tr
+              key={order.approver.displayName + " " + order.approver.department}
+            >
+              <Td>Approver:</Td>
               <Td>
-                <div className="flex gap-2">
+                {order.approver.displayName} ({order.approver.department})
+              </Td>
+            </Tr>
+            <Tr key={order.status}>
+              <Td>Order status:</Td>
+              <Td>
+                <StatusBadge status={order.status} />
+              </Td>
+            </Tr>
+
+            {order.status === "Waiting for approval" && (
+              <Tr key="approve">
+                <Td>
+                  <div className="flex gap-2">
+                    <Button
+                      color="green"
+                      label="Approve"
+                      handleClick={() => handleDecision(order.id, true)}
+                    />
+                    <Button
+                      color="red"
+                      label="Reject"
+                      handleClick={() => handleDecision(order.id, false)}
+                    />
+                  </div>
+                </Td>
+              </Tr>
+            )}
+            {isDeliveryButtonVisible && (
+              <Tr key="deliver">
+                <Td colSpan={2}>
                   <Button
                     color="green"
-                    label="Approve"
-                    handleClick={() => handleDecision(order.id, true)}
+                    label="Deliver Device"
+                    handleClick={handleDeliver}
                   />
-                  <Button
-                    color="red"
-                    label="Reject"
-                    handleClick={() => handleDecision(order.id, false)}
-                  />
-                </div>
-              </Td>
-            </Tr>
-          )}
-          {isDeliveryButtonVisible && (
-            <Tr key="deliver">
-              <Td>
-                <Button
-                  color="green"
-                  label="Deliver Device"
-                  handleClick={handleDeliver}
-                />
-              </Td>
-            </Tr>
-          )}
+                </Td>
+              </Tr>
+            )}
+          </tbody>
         </Table>
       </TableLayout>
 
