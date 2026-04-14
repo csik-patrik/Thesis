@@ -36,7 +36,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpPost("/computer-orders")]
-        [Authorize(Roles = "User, Group leader")]
+        [Authorize(Roles = "User, Admin, Group leader")]
         public async Task<ActionResult<ComputerOrderResponse>> Create([FromBody] CreateComputerOrderRequest request)
         {
             try
