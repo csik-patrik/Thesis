@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../Auth/AuthContext";
-import type { ComputerOrderResponse, ComputerResponse } from "../../Types/ComputerTypes";
+import type {
+  ComputerOrderResponse,
+  ComputerResponse,
+} from "../../Types/ComputerTypes";
 import {
   AllocateComputerToOrder,
   GetComputersForAllocation,
@@ -15,7 +18,11 @@ import Tr from "../Shared/Table/Tr";
 import Td from "../Shared/Table/Td";
 import Button from "../Shared/Button";
 
-export default function AllocateComputer({ order }: { order: ComputerOrderResponse }) {
+export default function AllocateComputer({
+  order,
+}: {
+  order: ComputerOrderResponse;
+}) {
   const { user } = useAuth();
   const [computers, setComputers] = useState<ComputerResponse[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +35,10 @@ export default function AllocateComputer({ order }: { order: ComputerOrderRespon
 
     const fetchComputers = async () => {
       try {
-        const res = await GetComputersForAllocation(order.computerCategory.id, user);
+        const res = await GetComputersForAllocation(
+          order.computerCategory.id,
+          user,
+        );
 
         setComputers(res.data);
       } catch (err) {
@@ -51,7 +61,10 @@ export default function AllocateComputer({ order }: { order: ComputerOrderRespon
 
       setIsLoading(true);
 
-      await AllocateComputerToOrder({ orderId: order.id, computerId: computerId }, user);
+      await AllocateComputerToOrder(
+        { orderId: order.id, computerId: computerId },
+        user,
+      );
 
       toast.success("Device allocated successfully!");
     } catch (err) {
@@ -70,7 +83,10 @@ export default function AllocateComputer({ order }: { order: ComputerOrderRespon
   if (isLoading) return <Spinner />;
 
   return (
-    <TableLayout title="Allocate computer" subtitle="Select a computer for this order">
+    <TableLayout
+      title="Allocate computer"
+      subtitle="Select a computer for this order"
+    >
       {computers.length === 0 ? (
         <EmptyState
           icon={<FaComputer />}
@@ -80,37 +96,39 @@ export default function AllocateComputer({ order }: { order: ComputerOrderRespon
       ) : (
         <Table>
           <Tr key="search">
-            <Td>
+            <Td colSpan={2}>
               <input
                 type="text"
-                placeholder="Search by hostname..."
+                placeholder="Search by hostname"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full rounded-md border border-neutral-300 px-3 py-2 mb-3 focus:outline-none focus:ring-1 focus:ring-neutral-500"
               />
             </Td>
           </Tr>
-          {filteredComputers.map((computer) => (
-            <>
-              <Tr key={computer.hostname}>
-                <Td>Hostname</Td>
-                <Td>{computer.hostname}</Td>
-              </Tr>
-              <Tr key={computer.serialNumber}>
-                <Td>Serial number</Td>
-                <Td>{computer.serialNumber}</Td>
-              </Tr>
-              <Tr key={computer.id}>
-                <Td>
-                  <Button
-                    color="green"
-                    label="Allocate"
-                    handleClick={() => handleAllocateComputer(computer.id)}
-                  />
-                </Td>
-              </Tr>
-            </>
-          ))}
+          <div className="overflow-y-auto max-h-100">
+            {filteredComputers.map((computer) => (
+              <tbody key={computer.id} className="border-b-2 border-teal-600">
+                <Tr key={computer.hostname}>
+                  <Td>Hostname</Td>
+                  <Td>{computer.hostname}</Td>
+                </Tr>
+                <Tr key={computer.serialNumber}>
+                  <Td>Serial number</Td>
+                  <Td>{computer.serialNumber}</Td>
+                </Tr>
+                <Tr key={computer.id}>
+                  <Td>
+                    <Button
+                      color="green"
+                      label="Allocate"
+                      handleClick={() => handleAllocateComputer(computer.id)}
+                    />
+                  </Td>
+                </Tr>
+              </tbody>
+            ))}
+          </div>
         </Table>
       )}
     </TableLayout>
