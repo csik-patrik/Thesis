@@ -86,7 +86,7 @@ export default function ComputersCreateBulk() {
   // };
 
   return (
-    <div className="flex justify-center items-center bg-gray-100 p-4">
+    <div className="flex justify-center items-center p-4">
       <div className="w-full max-w-6xl bg-white shadow rounded-lg p-6">
         <h1 className="text-2xl font-semibold text-center mb-6">
           Bulk create computers
@@ -112,7 +112,7 @@ export default function ComputersCreateBulk() {
         {/* Devices table */}
         <div className="overflow-x-auto mb-6">
           <table className="min-w-full border border-gray-200 divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead>
               <tr>
                 <th className="px-4 py-2 text-left text-gray-600">#</th>
                 <th className="px-4 py-2 text-left text-gray-600">Hostname</th>

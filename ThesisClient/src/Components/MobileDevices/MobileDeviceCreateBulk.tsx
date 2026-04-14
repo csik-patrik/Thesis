@@ -96,8 +96,8 @@ export default function MobileDeviceCreateBulk() {
   };
 
   return (
-    <div className="flex items-center justify-center bg-gray-100 p-4">
-      <div className="w-full max-w-6xl bg-white border shadow-lg rounded-lg px-6 py-8">
+    <div className="flex items-center justify-center p-4">
+      <div className="w-full max-w-6xl bg-white shadow-lg rounded-lg px-6 py-8">
         <h1 className="text-2xl font-bold mb-6 text-center">
           Bulk Create Mobile Devices
         </h1>
@@ -116,14 +116,14 @@ export default function MobileDeviceCreateBulk() {
               value={deviceCount}
               onChange={(e) => setDeviceCount(Number(e.target.value))}
               required
-              className="w-20 px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              className="w-20 px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
             />
           </div>
 
           {/* Devices Table */}
           <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse border border-gray-300">
-              <thead className="bg-gray-200">
+            <table className="min-w-full border-collapse">
+              <thead>
                 <tr>
                   <th className="border px-3 py-2 text-left">#</th>
                   <th className="border px-3 py-2 text-left">Hostname</th>
