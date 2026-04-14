@@ -1,6 +1,9 @@
 import { FaMobile } from "react-icons/fa6";
 import TableLayout from "../../Layouts/TableLayout";
-import type { MobileDeviceResponse, MobileOrderResponse } from "../../Types/MobileTypes";
+import type {
+  MobileDeviceResponse,
+  MobileOrderResponse,
+} from "../../Types/MobileTypes";
 import EmptyState from "../Shared/Table/EmptyState";
 import Table from "../Shared/Table/Table";
 import Tr from "../Shared/Table/Tr";
@@ -13,7 +16,11 @@ import { toast } from "react-toastify";
 import { AllocateMobileDeviceToOrder } from "../../Services/MobileOrderServices";
 import Spinner from "../Shared/Spinner";
 
-export default function AllocateMobileDevice({ order }: { order: MobileOrderResponse }) {
+export default function AllocateMobileDevice({
+  order,
+}: {
+  order: MobileOrderResponse;
+}) {
   const { user } = useAuth();
   const [devices, setDevices] = useState<MobileDeviceResponse[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,7 +46,10 @@ export default function AllocateMobileDevice({ order }: { order: MobileOrderResp
     if (user == null) return;
     setIsLoading(true);
     try {
-      await AllocateMobileDeviceToOrder({ orderId: order.id, mobileDeviceId: deviceId }, user);
+      await AllocateMobileDeviceToOrder(
+        { orderId: order.id, mobileDeviceId: deviceId },
+        user,
+      );
 
       toast.success("Device allocated successfully!");
 
@@ -61,7 +71,10 @@ export default function AllocateMobileDevice({ order }: { order: MobileOrderResp
   );
 
   return (
-    <TableLayout title="Allocate mobile device" subtitle="Select a mobile device for this order">
+    <TableLayout
+      title="Allocate mobile device"
+      subtitle="Select a mobile device for this order"
+    >
       {devices.length === 0 ? (
         <EmptyState
           icon={<FaMobile />}
@@ -71,37 +84,39 @@ export default function AllocateMobileDevice({ order }: { order: MobileOrderResp
       ) : (
         <Table>
           <Tr key="search">
-            <Td>
+            <Td colSpan={2}>
               <input
                 type="text"
-                placeholder="Search by phone number..."
+                placeholder="Search by hostname"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full rounded-md border border-neutral-300 px-3 py-2 mb-3 focus:outline-none focus:ring-1 focus:ring-neutral-500"
               />
             </Td>
           </Tr>
-          {filteredDevices.map((mobile) => (
-            <>
-              <Tr key={mobile.hostname}>
-                <Td>Hostname</Td>
-                <Td>{mobile.hostname}</Td>
-              </Tr>
-              <Tr key={mobile.serialNumber}>
-                <Td>Serial number</Td>
-                <Td>{mobile.serialNumber}</Td>
-              </Tr>
-              <Tr key={mobile.id}>
-                <Td>
-                  <Button
-                    color="green"
-                    label="Allocate"
-                    handleClick={() => handleAllocateMobileDevice(mobile.id)}
-                  />
-                </Td>
-              </Tr>
-            </>
-          ))}
+          <div className="overflow-y-auto max-h-100">
+            {filteredDevices.map((mobile) => (
+              <tbody key={mobile.id} className="border-b-2 border-teal-600">
+                <Tr key={mobile.hostname}>
+                  <Td>Hostname</Td>
+                  <Td>{mobile.hostname}</Td>
+                </Tr>
+                <Tr key={mobile.serialNumber}>
+                  <Td>Serial number</Td>
+                  <Td>{mobile.serialNumber}</Td>
+                </Tr>
+                <Tr key={mobile.id}>
+                  <Td>
+                    <Button
+                      color="green"
+                      label="Allocate"
+                      handleClick={() => handleAllocateMobileDevice(mobile.id)}
+                    />
+                  </Td>
+                </Tr>
+              </tbody>
+            ))}
+          </div>
         </Table>
       )}
     </TableLayout>
