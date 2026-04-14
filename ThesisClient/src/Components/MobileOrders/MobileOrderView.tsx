@@ -64,20 +64,34 @@ export default function MobileOrderView() {
     }
 
     try {
-      await MakeDecisionAsApprover({ orderId: Number(id), decision: decision }, user);
+      await MakeDecisionAsApprover(
+        { orderId: Number(id), decision: decision },
+        user,
+      );
 
-      toast.success(`Order ${decision ? "approved" : "rejected"} successfully!`);
+      const res = await GetOrderById(Number(id), user);
+      setOrder(res.data);
+
+      toast.success(
+        `Order ${decision ? "approved" : "rejected"} successfully!`,
+      );
     } catch (err: any) {
       console.error("Error updating computer order:", err);
 
-      const message = err.response?.data?.message || "Failed to update computer order.";
+      const message =
+        err.response?.data?.message || "Failed to update computer order.";
       toast.error(message);
     }
   };
 
   if (isLoading) return <Spinner />;
 
-  if (!order) return <p className="text-center mt-10 text-red-600 font-medium">Order not found.</p>;
+  if (!order)
+    return (
+      <p className="text-center mt-10 text-red-600 font-medium">
+        Order not found.
+      </p>
+    );
 
   const isDeliveryButtonVisible =
     order.mobileDevice &&
@@ -86,10 +100,14 @@ export default function MobileOrderView() {
     order.status !== "Delivered";
 
   const isMobileAllocationVisible =
-    user?.roles.includes("Admin") && order.status == "Approved" && !order.mobileDevice;
+    user?.roles.includes("Admin") &&
+    order.status == "Approved" &&
+    !order.mobileDevice;
 
   const isSimAllocationVisible =
-    user?.roles.includes("Admin") && order.mobileDevice && !order.mobileDevice.simCard;
+    user?.roles.includes("Admin") &&
+    order.mobileDevice &&
+    !order.mobileDevice.simCard;
 
   return (
     <div className="flex flex-row w-full justify-center">
@@ -165,7 +183,11 @@ export default function MobileOrderView() {
           {isDeliveryButtonVisible && (
             <Tr key="deliver">
               <Td>
-                <Button color="green" label="Deliver Device" handleClick={handleDeliver} />
+                <Button
+                  color="green"
+                  label="Deliver Device"
+                  handleClick={handleDeliver}
+                />
               </Td>
             </Tr>
           )}
