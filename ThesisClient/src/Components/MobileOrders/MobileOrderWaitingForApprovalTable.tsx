@@ -33,6 +33,8 @@ export default function MobileOrderWaitingForApprovalTable() {
     const fetchOrders = async () => {
       try {
         const res = await GetMobileOrdersWaitingForApproval(user);
+        console.log(res);
+
         setOrdersApproved(
           res.data.filter((order) => order.status != "Waiting for approval"),
         );
@@ -108,7 +110,7 @@ export default function MobileOrderWaitingForApprovalTable() {
         title="Approved mobile orders"
         subtitle="Mobile orders which you already approved."
       >
-        {ordersWaitingForApproval.length === 0 ? (
+        {ordersApproved.length === 0 ? (
           <EmptyState
             icon={<FaMobile />}
             title="There aren't any approved orders yet."
