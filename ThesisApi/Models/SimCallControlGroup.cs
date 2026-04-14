@@ -4,7 +4,7 @@ namespace ThesisApi.Models
 {
     public class SimCallControlGroup
     {
-        private SimCallControlGroup() { }
+        public SimCallControlGroup() { }
         public int Id { get; set; }
         public required string Name { get; set; }
         public required bool IsDataEnabled { get; set; }
