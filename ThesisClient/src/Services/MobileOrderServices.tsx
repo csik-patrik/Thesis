@@ -8,9 +8,12 @@ import type {
 } from "../Components/MobileOrders/MobileOrder.types";
 
 export async function FetchMyMobileOrders(user: User) {
-  return await axios.get<MobileOrderResponse[]>("http://localhost:5268/mobile-orders/my-orders", {
-    headers: { Authorization: `Bearer ${user.token}` },
-  });
+  return await axios.get<MobileOrderResponse[]>(
+    "http://localhost:5268/mobile-orders/my-orders",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
 }
 
 export async function DeleteMobileOrder(id: number, user: User) {
@@ -20,21 +23,30 @@ export async function DeleteMobileOrder(id: number, user: User) {
 }
 
 export async function FetchMobileOrders(user: User) {
-  return await axios.get<MobileOrderResponse[]>("http://localhost:5268/mobile-orders", {
-    headers: { Authorization: `Bearer ${user.token}` },
-  });
+  return await axios.get<MobileOrderResponse[]>(
+    "http://localhost:5268/mobile-orders",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
 }
 
 export async function GetMobileOrdersWaitingForApproval(user: User) {
-  return await axios.get<MobileOrderResponse[]>("http://localhost:5268/mobile-orders/approval", {
-    headers: { Authorization: `Bearer ${user.token}` },
-  });
+  return await axios.get<MobileOrderResponse[]>(
+    "http://localhost:5268/mobile-orders/approval",
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
 }
 
 export async function GetOrderById(id: number, user: User) {
-  return await axios.get<MobileOrderResponse>(`http://localhost:5268/mobile-orders/${id}`, {
-    headers: { Authorization: `Bearer ${user.token}` },
-  });
+  return await axios.get<MobileOrderResponse>(
+    `http://localhost:5268/mobile-orders/${id}`,
+    {
+      headers: { Authorization: `Bearer ${user.token}` },
+    },
+  );
 }
 
 export async function AllocateMobileDeviceToOrder(
@@ -47,18 +59,31 @@ export async function AllocateMobileDeviceToOrder(
       orderId: request.orderId,
       mobileDeviceId: request.mobileDeviceId,
     },
-    { headers: { "Content-Type": "application/json", Authorization: `Bearer ${user.token}` } },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+    },
   );
 }
 
-export async function AllocateSimCardToOrder(request: CreateSimCardAllocationRequest, user: User) {
+export async function AllocateSimCardToOrder(
+  request: CreateSimCardAllocationRequest,
+  user: User,
+) {
   return await axios.put(
     `http://localhost:5268/mobile-orders/allocate/sim-card`,
     {
       orderId: request.orderId,
       simCardId: request.simCardId,
     },
-    { headers: { "Content-Type": "application/json", Authorization: `Bearer ${user.token}` } },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+    },
   );
 }
 
@@ -68,7 +93,10 @@ export async function DeliverOrder(id: number, user: User) {
   });
 }
 
-export async function MakeDecisionAsApprover(request: CreateOrderDecisionRequest, user: User) {
+export async function MakeDecisionAsApprover(
+  request: CreateOrderDecisionRequest,
+  user: User,
+) {
   return await axios.put(
     `http://localhost:5268/mobile-orders/approval/${request.orderId}`,
     request.decision,
