@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import type {
   ComputerCategoryResponse,
   CreateComputerRequest,
-} from "../../Types/ComputerTypes";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../Auth/AuthContext";
-import axios from "axios";
+} from '../../Types/ComputerTypes';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../Auth/AuthContext';
+import axios from 'axios';
 
 export default function ComputersCreateBulk() {
   const [computerCategories, setComputerCategories] = useState<
@@ -23,14 +23,14 @@ export default function ComputersCreateBulk() {
     const fetchComputerCategories = async () => {
       try {
         const res = await axios.get<ComputerCategoryResponse[]>(
-          "http://localhost:5268/computer-categories",
+          'http://localhost:5000/computer-categories',
           {
             headers: { Authorization: `Bearer ${user.token}` },
           },
         );
         setComputerCategories(res.data);
       } catch (err) {
-        console.error("Failed to fetch device categories:", err);
+        console.error('Failed to fetch device categories:', err);
       }
     };
 
@@ -40,10 +40,10 @@ export default function ComputersCreateBulk() {
   useEffect(() => {
     setDevices(
       Array.from({ length: deviceCount }, () => ({
-        hostname: "",
+        hostname: '',
         computerCategoryId: 0,
-        model: "",
-        serialNumber: "",
+        model: '',
+        serialNumber: '',
       })),
     );
   }, [deviceCount]);
@@ -58,7 +58,7 @@ export default function ComputersCreateBulk() {
         i === idx
           ? {
               ...dev,
-              [name]: name === "computerCategoryId" ? Number(value) : value,
+              [name]: name === 'computerCategoryId' ? Number(value) : value,
             }
           : dev,
       ),
@@ -71,7 +71,7 @@ export default function ComputersCreateBulk() {
   //   if (!user || !user.token) return;
 
   //   try {
-  //     await axios.post("http://localhost:5268/computers/bulk", devices, {
+  //     await axios.post("http://localhost:5000/computers/bulk", devices, {
   //       headers: {
   //         Authorization: `Bearer ${user.token}`,
   //       },

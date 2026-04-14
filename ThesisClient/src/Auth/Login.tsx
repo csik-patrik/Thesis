@@ -1,8 +1,8 @@
-import axios from "axios";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useAuth } from "../Auth/AuthContext";
+import axios from 'axios';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useAuth } from '../Auth/AuthContext';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,8 +16,8 @@ export default function Login() {
   }
 
   const [formData, setFormData] = useState<LoginRequest>({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,16 +25,16 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:5268/login", formData);
+      const res = await axios.post('http://localhost:5000/login', formData);
 
       login(res.data);
 
-      toast.success("Logged in successfully!");
-      navigate("/");
+      toast.success('Logged in successfully!');
+      navigate('/');
     } catch (err) {
-      console.error("Login error:", err);
-      toast.error("Login error.");
-      alert("Failed to login.");
+      console.error('Login error:', err);
+      toast.error('Login error.');
+      alert('Failed to login.');
     } finally {
       setLoading(false);
     }
@@ -45,19 +45,19 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:5268/login", {
-        email: "demo.user1@demo.com",
-        password: "PasswordDev01",
+      const res = await axios.post('http://localhost:5000/login', {
+        email: 'demo.user1@demo.com',
+        password: 'PasswordDev01',
       });
 
       login(res.data);
 
-      toast.success("Logged in successfully!");
-      navigate("/");
+      toast.success('Logged in successfully!');
+      navigate('/');
     } catch (err) {
-      console.error("Login error:", err);
-      toast.error("Login error.");
-      alert("Failed to login.");
+      console.error('Login error:', err);
+      toast.error('Login error.');
+      alert('Failed to login.');
     } finally {
       setLoading(false);
     }
@@ -68,19 +68,19 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:5268/login", {
-        email: "demo.user2@demo.com",
-        password: "PasswordDev02",
+      const res = await axios.post('http://localhost:5000/login', {
+        email: 'demo.user2@demo.com',
+        password: 'PasswordDev02',
       });
 
       login(res.data);
 
-      toast.success("Logged in successfully!");
-      navigate("/");
+      toast.success('Logged in successfully!');
+      navigate('/');
     } catch (err) {
-      console.error("Login error:", err);
-      toast.error("Login error.");
-      alert("Failed to login.");
+      console.error('Login error:', err);
+      toast.error('Login error.');
+      alert('Failed to login.');
     } finally {
       setLoading(false);
     }
@@ -91,19 +91,19 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:5268/login", {
-        email: "demo.user3@demo.com",
-        password: "PasswordDev03",
+      const res = await axios.post('http://localhost:5000/login', {
+        email: 'demo.user3@demo.com',
+        password: 'PasswordDev03',
       });
 
       login(res.data);
 
-      toast.success("Logged in successfully!");
-      navigate("/");
+      toast.success('Logged in successfully!');
+      navigate('/');
     } catch (err) {
-      console.error("Login error:", err);
-      toast.error("Login error.");
-      alert("Failed to login.");
+      console.error('Login error:', err);
+      toast.error('Login error.');
+      alert('Failed to login.');
     } finally {
       setLoading(false);
     }
@@ -178,7 +178,7 @@ export default function Login() {
             disabled:opacity-60 disabled:cursor-not-allowed
           "
             >
-              {loading ? "Signing in..." : "Login"}
+              {loading ? 'Signing in...' : 'Login'}
             </button>
           </form>
         </div>
@@ -194,7 +194,7 @@ export default function Login() {
             disabled:opacity-60 disabled:cursor-not-allowed
           "
           >
-            {loading ? "Signing in..." : "Login as demo user"}
+            {loading ? 'Signing in...' : 'Login as demo user'}
           </button>
 
           <button
@@ -206,7 +206,7 @@ export default function Login() {
             disabled:opacity-60 disabled:cursor-not-allowed
           "
           >
-            {loading ? "Signing in..." : "Login as demo admin"}
+            {loading ? 'Signing in...' : 'Login as demo admin'}
           </button>
 
           <button
@@ -218,7 +218,7 @@ export default function Login() {
             disabled:opacity-60 disabled:cursor-not-allowed
           "
           >
-            {loading ? "Signing in..." : "Login as demo approver"}
+            {loading ? 'Signing in...' : 'Login as demo approver'}
           </button>
         </div>
       </div>

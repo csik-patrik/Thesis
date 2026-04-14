@@ -1,8 +1,8 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import Spinner from "../Shared/Spinner";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Spinner from '../Shared/Spinner';
 
 interface SimCard {
   id: number;
@@ -31,10 +31,10 @@ export default function SimCardsEdit() {
   const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState<UpdateSimCardRequest>({
-    department: "",
-    callControlGroup: "",
+    department: '',
+    callControlGroup: '',
     isDataEnabled: false,
-    status: "",
+    status: '',
   });
 
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ export default function SimCardsEdit() {
     const fetch = async () => {
       try {
         const res = await axios.get<SimCard>(
-          `http://localhost:5268/api/sim-cards/${id}`
+          `http://localhost:5000/api/sim-cards/${id}`,
         );
         setSimCard(res.data);
         setFormData({
@@ -53,7 +53,7 @@ export default function SimCardsEdit() {
           status: res.data.status,
         });
       } catch (err) {
-        console.error("Error fetching sim card:", err);
+        console.error('Error fetching sim card:', err);
       } finally {
         setLoading(false);
       }
@@ -63,15 +63,15 @@ export default function SimCardsEdit() {
   }, [id]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({
       ...prev,
       [name]:
-        name === "isDataEnabled"
-          ? value === "true" // convert dropdown string -> boolean
+        name === 'isDataEnabled'
+          ? value === 'true' // convert dropdown string -> boolean
           : value,
     }));
   };
@@ -80,12 +80,12 @@ export default function SimCardsEdit() {
     e.preventDefault();
 
     try {
-      await axios.put(`http://localhost:5268/api/sim-cards/${id}`, formData);
-      toast.success("Sim card updated successfully!");
-      navigate("/sim-cards");
+      await axios.put(`http://localhost:5000/api/sim-cards/${id}`, formData);
+      toast.success('Sim card updated successfully!');
+      navigate('/sim-cards');
     } catch (err) {
-      console.error("Failed to update sim card:", err);
-      alert("Failed to update sim card.");
+      console.error('Failed to update sim card:', err);
+      alert('Failed to update sim card.');
     }
   };
 
@@ -139,7 +139,7 @@ export default function SimCardsEdit() {
             <select
               name="isDataEnabled"
               className="form-control"
-              value={formData.isDataEnabled ? "true" : "false"}
+              value={formData.isDataEnabled ? 'true' : 'false'}
               onChange={handleChange}
             >
               <option value="true">True</option>

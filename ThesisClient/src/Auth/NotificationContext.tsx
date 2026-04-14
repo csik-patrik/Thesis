@@ -6,12 +6,12 @@ import {
   useRef,
   useState,
   type ReactNode,
-} from "react";
-import { HubConnectionBuilder, type HubConnection } from "@microsoft/signalr";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { useAuth } from "./AuthContext";
-import type { NotificationType } from "../Types/NotificationTypes";
+} from 'react';
+import { HubConnectionBuilder, type HubConnection } from '@microsoft/signalr';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useAuth } from './AuthContext';
+import type { NotificationType } from '../Types/NotificationTypes';
 
 interface NotificationContextType {
   notifications: NotificationType[];
@@ -35,7 +35,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     if (!user?.token) return;
     try {
       const res = await axios.get<NotificationType[]>(
-        "http://localhost:5268/notifications",
+        'http://localhost:5000/notifications',
         { headers: { Authorization: `Bearer ${user.token}` } },
       );
       setNotifications(res.data);
@@ -53,11 +53,11 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     }
 
     const connection = new HubConnectionBuilder()
-      .withUrl("http://localhost:5268/hubs/notifications")
+      .withUrl('http://localhost:5000/hubs/notifications')
       .withAutomaticReconnect()
       .build();
 
-    connection.on("ReceiveNotification", (notification: NotificationType) => {
+    connection.on('ReceiveNotification', (notification: NotificationType) => {
       setNotifications((prev) => [notification, ...prev]);
       toast.info(notification.message);
     });
@@ -65,10 +65,10 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     connection
       .start()
       .then(() => {
-        connection.invoke("JoinUserGroup", user.id);
+        connection.invoke('JoinUserGroup', user.id);
         fetchNotifications();
       })
-      .catch((err) => console.error("SignalR connection error:", err));
+      .catch((err) => console.error('SignalR connection error:', err));
 
     connectionRef.current = connection;
 
@@ -82,7 +82,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       if (!user?.token) return;
       try {
         await axios.put(
-          `http://localhost:5268/notifications/${id}/read`,
+          `http://localhost:5000/notifications/${id}/read`,
           {},
           { headers: { Authorization: `Bearer ${user.token}` } },
         );
@@ -100,7 +100,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     if (!user?.token) return;
     try {
       await axios.put(
-        "http://localhost:5268/notifications/read-all",
+        'http://localhost:5000/notifications/read-all',
         {},
         { headers: { Authorization: `Bearer ${user.token}` } },
       );
@@ -122,6 +122,8 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 export function useNotifications() {
   const ctx = useContext(NotificationContext);
   if (!ctx)
-    throw new Error("useNotifications must be used inside NotificationProvider");
+    throw new Error(
+      'useNotifications must be used inside NotificationProvider',
+    );
   return ctx;
 }

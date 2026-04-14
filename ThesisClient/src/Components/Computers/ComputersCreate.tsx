@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import type {
   ComputerCategoryResponse,
   CreateComputerRequest,
-} from "../../Types/ComputerTypes";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { useAuth } from "../../Auth/AuthContext";
-import Input from "../Form/Input";
-import Select from "../Form/Select";
-import Form from "../Form/Form";
+} from '../../Types/ComputerTypes';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useAuth } from '../../Auth/AuthContext';
+import Input from '../Form/Input';
+import Select from '../Form/Select';
+import Form from '../Form/Form';
 
 export default function ComputersCreate() {
   const { user } = useAuth();
@@ -19,10 +19,10 @@ export default function ComputersCreate() {
   >([]);
 
   const [formData, setFormData] = useState<CreateComputerRequest>({
-    hostname: "",
+    hostname: '',
     computerCategoryId: 0,
-    model: "",
-    serialNumber: "",
+    model: '',
+    serialNumber: '',
   });
 
   const navigate = useNavigate();
@@ -32,14 +32,14 @@ export default function ComputersCreate() {
     const fetchComputerCategories = async () => {
       try {
         const res = await axios.get<ComputerCategoryResponse[]>(
-          "http://localhost:5268/computer-categories",
+          'http://localhost:5000/computer-categories',
           {
             headers: { Authorization: `Bearer ${user.token}` },
           },
         );
         setComputerCategories(res.data);
       } catch (err) {
-        console.error("Failed to fetch device categories:", err);
+        console.error('Failed to fetch device categories:', err);
       }
     };
 
@@ -52,7 +52,7 @@ export default function ComputersCreate() {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "computerCategoryId" ? Number(value) : value,
+      [name]: name === 'computerCategoryId' ? Number(value) : value,
     }));
   };
 
@@ -62,15 +62,15 @@ export default function ComputersCreate() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5268/computers", formData, {
+      await axios.post('http://localhost:5000/computers', formData, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
 
-      toast.success("Computer created successfully!");
-      navigate("/computers");
+      toast.success('Computer created successfully!');
+      navigate('/computers');
     } catch (err) {
-      console.error("Error creating computer:", err);
-      toast.error("Failed to create computer.");
+      console.error('Error creating computer:', err);
+      toast.error('Failed to create computer.');
     }
   };
 

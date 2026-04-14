@@ -1,12 +1,12 @@
-import axios from "axios";
+import axios from 'axios';
 import type {
   ComputerOrderResponse,
   CreateComputerOrderRequest,
-} from "../Types/ComputerTypes";
-import type { User } from "../Types/UserTypes";
+} from '../Types/ComputerTypes';
+import type { User } from '../Types/UserTypes';
 
 export async function GetComputerCategories(user: User) {
-  return await axios.get("http://localhost:5268/computer-categories", {
+  return await axios.get('http://localhost:5000/computer-categories', {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
@@ -15,14 +15,14 @@ export async function CreateComputerOrder(
   formData: CreateComputerOrderRequest,
   user: User,
 ) {
-  await axios.post("http://localhost:5268/computer-orders", formData, {
+  await axios.post('http://localhost:5000/computer-orders', formData, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
 
 export async function GetMyComputerOrders(user: User) {
   return await axios.get<ComputerOrderResponse[]>(
-    "http://localhost:5268/computer-orders/my-orders",
+    'http://localhost:5000/computer-orders/my-orders',
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -30,14 +30,14 @@ export async function GetMyComputerOrders(user: User) {
 }
 
 export async function DeleteComputerOrder(id: number, user: User) {
-  return await axios.delete(`http://localhost:5268/computer-orders/${id}`, {
+  return await axios.delete(`http://localhost:5000/computer-orders/${id}`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
 
 export async function GetComputerOrders(user: User) {
   return await axios.get<ComputerOrderResponse[]>(
-    "http://localhost:5268/computer-orders",
+    'http://localhost:5000/computer-orders',
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -46,7 +46,7 @@ export async function GetComputerOrders(user: User) {
 
 export async function GetComputerOrdersWaitingForApproval(user: User) {
   return await axios.get<ComputerOrderResponse[]>(
-    "http://localhost:5268/computer-orders/approval",
+    'http://localhost:5000/computer-orders/approval',
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -55,7 +55,7 @@ export async function GetComputerOrdersWaitingForApproval(user: User) {
 
 export async function GetComputerOrderById(id: number, user: User) {
   return await axios.get<ComputerOrderResponse>(
-    `http://localhost:5268/computer-orders/${id}`,
+    `http://localhost:5000/computer-orders/${id}`,
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -64,7 +64,7 @@ export async function GetComputerOrderById(id: number, user: User) {
 
 export async function DeliverComputerOrder(id: number, user: User) {
   return await axios.put(
-    `http://localhost:5268/computer-orders/deliver/${id}`,
+    `http://localhost:5000/computer-orders/deliver/${id}`,
     {},
     {
       headers: { Authorization: `Bearer ${user.token}` },
@@ -78,11 +78,11 @@ export async function MakeDecisionAsApprover(
   user: User,
 ) {
   return await axios.put(
-    `http://localhost:5268/computer-orders/approval/${id}`,
+    `http://localhost:5000/computer-orders/approval/${id}`,
     decision,
     {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${user.token}`,
       },
     },

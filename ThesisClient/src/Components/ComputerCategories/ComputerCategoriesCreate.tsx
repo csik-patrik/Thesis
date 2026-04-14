@@ -1,17 +1,17 @@
-import { useState } from "react";
-import type { CreateComputerCategoryRequest } from "../../Types/ComputerTypes";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-toastify";
-import Input from "../Form/Input";
-import Form from "../Form/Form";
-import { useAuth } from "../../Auth/AuthContext";
+import { useState } from 'react';
+import type { CreateComputerCategoryRequest } from '../../Types/ComputerTypes';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import Input from '../Form/Input';
+import Form from '../Form/Form';
+import { useAuth } from '../../Auth/AuthContext';
 
 export default function ComputerCategoriesCreate() {
   const { user } = useAuth();
 
   const [formData, setFormData] = useState<CreateComputerCategoryRequest>({
-    name: "",
+    name: '',
   });
 
   const navigate = useNavigate();
@@ -34,20 +34,20 @@ export default function ComputerCategoriesCreate() {
 
     try {
       await axios.post(
-        "http://localhost:5268/computer-categories",
+        'http://localhost:5000/computer-categories',
         { name: formData.name },
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${user.token}`,
           },
         },
       );
-      toast.success("Category created successfully!");
-      navigate("/admin/computers/categories");
+      toast.success('Category created successfully!');
+      navigate('/admin/computers/categories');
     } catch (err) {
       console.error(err);
-      toast.error("Failed to create category.");
+      toast.error('Failed to create category.');
     }
   };
 

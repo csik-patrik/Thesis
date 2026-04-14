@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import type {
   UpdateUserRequest,
   UserResponse,
   UserRoleResponse,
-} from "../../Types/UserTypes";
-import { useAuth } from "../../Auth/AuthContext";
-import axios from "axios";
-import { toast } from "react-toastify";
-import Form from "../Form/Form";
-import Input from "../Form/Input";
-import SelectMultiple from "../Form/SelectMultiple";
+} from '../../Types/UserTypes';
+import { useAuth } from '../../Auth/AuthContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import Form from '../Form/Form';
+import Input from '../Form/Input';
+import SelectMultiple from '../Form/SelectMultiple';
 
 export default function UsersEdit() {
   const { user } = useAuth();
@@ -19,11 +19,11 @@ export default function UsersEdit() {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<UpdateUserRequest>({
     id: 0,
-    username: "",
-    displayName: "",
-    email: "",
-    department: "",
-    costCenter: "",
+    username: '',
+    displayName: '',
+    email: '',
+    department: '',
+    costCenter: '',
     userRoleIds: [],
   });
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ export default function UsersEdit() {
       try {
         if (!user || !user.token) return;
         const res = await axios.get<UserResponse>(
-          `http://localhost:5268/users/${id}`,
+          `http://localhost:5000/users/${id}`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,
@@ -44,15 +44,15 @@ export default function UsersEdit() {
 
         setFormData({
           id: res.data.id,
-          username: res.data.username || "",
-          displayName: res.data.displayName || "",
-          email: res.data.email || "",
-          department: res.data.department || "",
-          costCenter: res.data.costCenter || "",
+          username: res.data.username || '',
+          displayName: res.data.displayName || '',
+          email: res.data.email || '',
+          department: res.data.department || '',
+          costCenter: res.data.costCenter || '',
           userRoleIds: res.data.userRoles?.map((r) => r.id) || [],
         });
       } catch (err) {
-        toast.error("Error fetching user data.");
+        toast.error('Error fetching user data.');
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -65,12 +65,12 @@ export default function UsersEdit() {
     const fetchRoles = async () => {
       try {
         const response = await axios.get<UserRoleResponse[]>(
-          "http://localhost:5268/roles",
+          'http://localhost:5000/roles',
         );
         setUserRoles(response.data);
       } catch (error) {
-        console.error("Error fetching roles:", error);
-        toast.error("Failed to load roles.");
+        console.error('Error fetching roles:', error);
+        toast.error('Failed to load roles.');
       }
     };
     fetchRoles();
@@ -92,21 +92,21 @@ export default function UsersEdit() {
     e.preventDefault();
     try {
       if (!user || !user.token) {
-        toast.error("Authentication required.");
+        toast.error('Authentication required.');
         return;
       }
 
-      await axios.put("http://localhost:5268/users/", formData, {
+      await axios.put('http://localhost:5000/users/', formData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
 
-      toast.success("User updated successfully!");
-      navigate("/admin/users");
+      toast.success('User updated successfully!');
+      navigate('/admin/users');
     } catch (err) {
-      console.error("Error updating user:", err);
-      toast.error("Failed to update user.");
+      console.error('Error updating user:', err);
+      toast.error('Failed to update user.');
     }
   };
 
@@ -114,7 +114,7 @@ export default function UsersEdit() {
     return <h1>User is loading...</h1>;
   }
 
-  if (formData.username == "") {
+  if (formData.username == '') {
     return <h1>User not found.</h1>;
   }
 

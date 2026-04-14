@@ -1,10 +1,10 @@
-import axios from "axios";
-import type { MobileDeviceResponse } from "../Types/MobileTypes";
-import type { User } from "../Types/UserTypes";
+import axios from 'axios';
+import type { MobileDeviceResponse } from '../Types/MobileTypes';
+import type { User } from '../Types/UserTypes';
 
 export async function GetDeployedMobileDevices(user: User) {
   return await axios.get<MobileDeviceResponse[]>(
-    "http://localhost:5268/mobile-devices/deployed",
+    'http://localhost:5000/mobile-devices/deployed',
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -18,11 +18,11 @@ export async function ReturnMobileDevice(
   user: User,
 ) {
   return await axios.put(
-    `http://localhost:5268/mobile-devices/return/${id}`,
+    `http://localhost:5000/mobile-devices/return/${id}`,
     { status, statusReason },
     {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${user.token}`,
       },
     },
@@ -31,7 +31,7 @@ export async function ReturnMobileDevice(
 
 export async function GetMobileDevices(user: User) {
   return await axios.get<MobileDeviceResponse[]>(
-    "http://localhost:5268/mobile-devices/",
+    'http://localhost:5000/mobile-devices/',
     {
       headers: { Authorization: `Bearer ${user.token}` },
     },
@@ -39,7 +39,7 @@ export async function GetMobileDevices(user: User) {
 }
 
 export async function DeleteMobileDevice(id: number, user: User) {
-  return await axios.delete(`http://localhost:5268/mobile-devices/${id}`, {
+  return await axios.delete(`http://localhost:5000/mobile-devices/${id}`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }

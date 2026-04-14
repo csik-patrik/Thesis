@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import Form from "../Form/Form";
-import Input from "../Form/Input";
-import SelectMultiple from "../Form/SelectMultiple";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Form from '../Form/Form';
+import Input from '../Form/Input';
+import SelectMultiple from '../Form/SelectMultiple';
 import type {
   CreateUserRequest,
   UserRoleResponse,
-} from "../../Types/UserTypes";
-import { useAuth } from "../../Auth/AuthContext";
+} from '../../Types/UserTypes';
+import { useAuth } from '../../Auth/AuthContext';
 
 export default function UserCreate() {
   const { user } = useAuth();
@@ -18,24 +18,24 @@ export default function UserCreate() {
   useEffect(() => {
     if (!user || !user.token) return;
     axios
-      .get<UserRoleResponse[]>("http://localhost:5268/roles", {
+      .get<UserRoleResponse[]>('http://localhost:5000/roles', {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((response) => {
         setUserRoles(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching categories:", error);
+        console.error('Error fetching categories:', error);
       });
   }, []);
 
   const [formData, setFormData] = useState<CreateUserRequest>({
-    username: "",
-    displayName: "",
-    email: "",
-    password: "",
-    department: "",
-    costCenter: "",
+    username: '',
+    displayName: '',
+    email: '',
+    password: '',
+    department: '',
+    costCenter: '',
     userRoleIds: [],
   });
 
@@ -58,12 +58,12 @@ export default function UserCreate() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5268/users", formData);
-      toast.success("User created successfully!");
-      navigate("/admin/users");
+      await axios.post('http://localhost:5000/users', formData);
+      toast.success('User created successfully!');
+      navigate('/admin/users');
     } catch (err) {
-      console.error("Error creating user:", err);
-      toast.error("Failed to create user.");
+      console.error('Error creating user:', err);
+      toast.error('Failed to create user.');
     }
   };
 

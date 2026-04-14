@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import type { MobileDeviceCategory } from "../../Types/MobileDeviceCategory";
-import axios from "axios";
-import Input from "../Form/Input";
-import { toast } from "react-toastify";
-import Spinner from "../Shared/Spinner";
-import Form from "../Form/Form";
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import type { MobileDeviceCategory } from '../../Types/MobileDeviceCategory';
+import axios from 'axios';
+import Input from '../Form/Input';
+import { toast } from 'react-toastify';
+import Spinner from '../Shared/Spinner';
+import Form from '../Form/Form';
 
 interface CreateMobileDeviceCategory {
   name: string;
@@ -17,7 +17,7 @@ export default function EditMobileDeviceCategory() {
   const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState<CreateMobileDeviceCategory>({
-    name: "",
+    name: '',
   });
 
   const navigate = useNavigate();
@@ -26,14 +26,14 @@ export default function EditMobileDeviceCategory() {
     const fetch = async () => {
       try {
         const res = await axios.get<MobileDeviceCategory>(
-          `http://localhost:5268/api/admin/mobile-device-categories/${id}`,
+          `http://localhost:5000/api/admin/mobile-device-categories/${id}`,
         );
         setCategory(res.data);
         setFormData({
           name: res.data.name,
         });
       } catch (err) {
-        console.error("Error fetching sim card:", err);
+        console.error('Error fetching sim card:', err);
       } finally {
         setLoading(false);
       }
@@ -57,15 +57,15 @@ export default function EditMobileDeviceCategory() {
 
     try {
       await axios.put(
-        `http://localhost:5268/api/admin/mobile-device-categories/${id}`,
+        `http://localhost:5000/api/admin/mobile-device-categories/${id}`,
         JSON.stringify(formData.name),
-        { headers: { "Content-Type": "application/json" } },
+        { headers: { 'Content-Type': 'application/json' } },
       );
-      toast.success("Category updated successfully!");
-      navigate("/admin/mobile-device-categories");
+      toast.success('Category updated successfully!');
+      navigate('/admin/mobile-device-categories');
     } catch (err) {
-      console.error("Failed to update category:", err);
-      alert("Failed to update category.");
+      console.error('Failed to update category:', err);
+      alert('Failed to update category.');
     }
   };
 

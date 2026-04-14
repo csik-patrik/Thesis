@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-toastify";
-import Form from "../Form/Form";
-import Input from "../Form/Input";
-import type { CreateMobileDeviceCategoryRequest } from "../../Types/MobileTypes";
-import { useAuth } from "../../Auth/AuthContext";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import Form from '../Form/Form';
+import Input from '../Form/Input';
+import type { CreateMobileDeviceCategoryRequest } from '../../Types/MobileTypes';
+import { useAuth } from '../../Auth/AuthContext';
 
 export default function CreateMobileDeviceCategory() {
   const { user } = useAuth();
   const [formData, setFormData] = useState<CreateMobileDeviceCategoryRequest>({
-    name: "",
+    name: '',
   });
 
   const navigate = useNavigate();
@@ -31,20 +31,20 @@ export default function CreateMobileDeviceCategory() {
     if (!user || !user.token) return;
     try {
       await axios.post(
-        "http://localhost:5268/mobile-device-categories",
+        'http://localhost:5000/mobile-device-categories',
         { name: formData.name },
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${user.token}`,
           },
         },
       );
-      toast.success("Category created successfully!");
-      navigate("/admin/mobile-device-categories");
+      toast.success('Category created successfully!');
+      navigate('/admin/mobile-device-categories');
     } catch (err) {
       console.error(err);
-      toast.error("Failed to create category.");
+      toast.error('Failed to create category.');
     }
   };
 
