@@ -57,6 +57,8 @@ JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
 var app = builder.Build();
 
+app.ApplyMigrations();
+
 app.UseCors("ApiCorsPolicy");
 
 app.UseAuthentication();  // must come before UseAuthorization

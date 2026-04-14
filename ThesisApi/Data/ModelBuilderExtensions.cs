@@ -79,6 +79,14 @@ namespace ThesisApi.Data
                 ));
         }
 
+    public static void ApplyMigrations(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        db.Database.Migrate();
+    }
+
         private static User CreateUser(int id, string username, string displayName, string costCenter, string department, string email, string password)
         {
             var user = new User()
