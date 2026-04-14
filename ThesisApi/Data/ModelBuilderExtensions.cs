@@ -30,6 +30,12 @@ namespace ThesisApi.Data
                 new MobileDeviceCategory() { Id = 3, Name = "Enhanced smartphone" }
             );
 
+            builder.Entity<SimCallControlGroup>().HasData(
+                new SimCallControlGroup() { Id = 1, Name = "Small", IsDataEnabled = false },
+                new SimCallControlGroup() { Id = 2, Name = "Medium", IsDataEnabled = false },
+                new SimCallControlGroup() { Id = 3, Name = "Large", IsDataEnabled = true }
+            );
+
             builder.Entity<User>().HasData(
                 new User
                 {
