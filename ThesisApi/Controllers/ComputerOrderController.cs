@@ -101,7 +101,7 @@ namespace ThesisApi.Controllers
         }
 
         [HttpGet("/computer-orders/my-orders")]
-        [Authorize(Roles = "User, Group leader")]
+        [Authorize(Roles = "User, Admin, Group leader")]
         public async Task<ActionResult<IEnumerable<ComputerOrderResponse>>> GetByCustomerId()
         {
             try
