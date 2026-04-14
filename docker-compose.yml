@@ -1,0 +1,69 @@
+services:
+  # ─── MS SQL Server ───────────────────────────────────────────
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: app-db
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: 'Y'
+      MSSQL_SA_PASSWORD: 'PasswordDev08.'
+      MSSQL_PID: 'Express' # Ingyenes Express edition; cseréld "Developer"-re dev gépen
+    ports:
+      - '1433:1433' # Töröld ki ha nem kell külső hozzáférés
+    volumes:
+      - sqldata:/var/opt/mssql # Perzisztens adattárolás
+      - ./db/init:/docker-entrypoint-initdb.d # Opcionális init scriptek
+    networks:
+      - app-network
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -No -Q ''SELECT 1'' || exit 1',
+        ]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+  # ─── .NET 9 Backend ──────────────────────────────────────────
+  backend:
+    build:
+      context: ./ThesisApi
+      dockerfile: Dockerfile
+    container_name: app-backend
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: 'Production'
+      ASPNETCORE_URLS: 'http://+:8080'
+      ConnectionStrings__DefaultConnection: 'Server=db,1433;Database=DB_App;User Id=sa;Password=PasswordDev08.;TrustServerCertificate=True;'
+    ports:
+      - '5000:8080'
+    depends_on:
+      db:
+        condition: service_healthy # Csak az egészséges DB után indul
+    networks:
+      - app-network
+
+  # ─── React Frontend (Nginx) ───────────────────────────────────
+  frontend:
+    build:
+      context: ./ThesisClient
+      dockerfile: Dockerfile
+    container_name: app-frontend
+    restart: unless-stopped
+    ports:
+      - '3000:80'
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+# ─── Volumes & Networks ──────────────────────────────────────────
+volumes:
+  sqldata:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
