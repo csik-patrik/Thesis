@@ -150,55 +150,63 @@ export default function MobileDevicesDeployedTable() {
           />
         ) : (
           <>
-            <Table>
-              <Thead
-                headers={[
-                  'Id',
-                  'Hostname',
-                  'Category',
-                  'IMEI number',
-                  'Serial number',
-                  'User',
-                  'Phone number',
-                  'Call control group',
-                  'Data enabled',
-                  'Actions',
-                ]}
-              />
-              <tbody>
-                {filteredData.map((d) => (
-                  <Tr key={d.id}>
-                    <Td>{d.id}</Td>
-                    <Td>{d.hostname}</Td>
-                    <Td>{d.mobileDeviceCategory.name}</Td>
-                    <Td>{d.imeiNumber}</Td>
-                    <Td>{d.serialNumber}</Td>
-                    <Td>{d.user.displayName}</Td>
-                    <Td>{d.simCard.phoneNumber}</Td>
-                    <Td>{d.simCard.simCallControlGroup.name}</Td>
-                    <Td>
-                      {d.simCard?.simCallControlGroup.isDataEnabled
-                        ? 'True'
-                        : 'False'}
-                    </Td>
-                    <Td>
-                      <div className="flex items-center gap-3">
-                        <Button
-                          color="yellow"
-                          handleClick={() => showModal(d.id)}
-                          label="Return"
-                        />
-                      </div>
-                    </Td>
-                  </Tr>
-                ))}
-                {filteredData.length === 0 && (
-                  <div className="py-12 text-center text-sm text-gray-400">
-                    No orders match the selected filter.
-                  </div>
-                )}
-              </tbody>
-            </Table>
+            <input
+              type="text"
+              placeholder="Search by hostname..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-md border border-neutral-300 px-3 py-2 mb-3 focus:outline-none focus:ring-1 focus:ring-neutral-500"
+            />
+            {filteredData.length > 0 ? (
+              <Table>
+                <Thead
+                  headers={[
+                    'Id',
+                    'Hostname',
+                    'Category',
+                    'IMEI number',
+                    'Serial number',
+                    'User',
+                    'Phone number',
+                    'Call control group',
+                    'Data enabled',
+                    'Actions',
+                  ]}
+                />
+                <tbody>
+                  {filteredData.map((d) => (
+                    <Tr key={d.id}>
+                      <Td>{d.id}</Td>
+                      <Td>{d.hostname}</Td>
+                      <Td>{d.mobileDeviceCategory.name}</Td>
+                      <Td>{d.imeiNumber}</Td>
+                      <Td>{d.serialNumber}</Td>
+                      <Td>{d.user.displayName}</Td>
+                      <Td>{d.simCard.phoneNumber}</Td>
+                      <Td>{d.simCard.simCallControlGroup.name}</Td>
+                      <Td>
+                        {d.simCard?.simCallControlGroup.isDataEnabled
+                          ? 'True'
+                          : 'False'}
+                      </Td>
+                      <Td>
+                        <div className="flex items-center gap-3">
+                          <Button
+                            color="yellow"
+                            handleClick={() => showModal(d.id)}
+                            label="Return"
+                          />
+                        </div>
+                      </Td>
+                    </Tr>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <div className="py-12 text-center text-sm text-gray-400">
+                No orders match the selected filter.
+              </div>
+            )}
           </>
         )}
       </TableLayout>
