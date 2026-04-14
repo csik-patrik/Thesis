@@ -165,24 +165,25 @@ export default function MobileOrderView() {
               </Td>
             </Tr>
 
-            {order.status === "Waiting for approval" && (
-              <Tr key="approve">
-                <Td>
-                  <div className="flex gap-2">
-                    <Button
-                      color="green"
-                      label="Approve"
-                      handleClick={() => handleDecision(order.id, true)}
-                    />
-                    <Button
-                      color="red"
-                      label="Reject"
-                      handleClick={() => handleDecision(order.id, false)}
-                    />
-                  </div>
-                </Td>
-              </Tr>
-            )}
+            {order.status === "Waiting for approval" &&
+              order.approver.userName == user?.username && (
+                <Tr key="approve">
+                  <Td>
+                    <div className="flex gap-2">
+                      <Button
+                        color="green"
+                        label="Approve"
+                        handleClick={() => handleDecision(order.id, true)}
+                      />
+                      <Button
+                        color="red"
+                        label="Reject"
+                        handleClick={() => handleDecision(order.id, false)}
+                      />
+                    </div>
+                  </Td>
+                </Tr>
+              )}
             {isDeliveryButtonVisible && (
               <Tr key="deliver">
                 <Td colSpan={2}>
