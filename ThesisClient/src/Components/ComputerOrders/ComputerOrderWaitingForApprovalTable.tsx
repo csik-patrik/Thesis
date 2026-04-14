@@ -103,7 +103,7 @@ export default function ComputerOrderWaitingForApprovalTable() {
         title="Approved computer orders"
         subtitle="Computer orders which you already approved."
       >
-        {ordersWaitingForApproval.length === 0 ? (
+        {ordersApproved.length === 0 ? (
           <EmptyState
             icon={<FaComputer />}
             title="There aren't any approved orders yet."
