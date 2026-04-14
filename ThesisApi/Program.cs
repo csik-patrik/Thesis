@@ -25,9 +25,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
 {
     builder
-        .WithOrigins(
-            "http://localhost:3000"
-        )
+        .SetIsOriginAllowed(origin =>
+                origin.StartsWith("http://localhost") ||
+                origin.Contains("91.236.195.159"))
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
