@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ThesisApi.Contracts.Requests.ComputerCategories;
+using ThesisApi.Contracts.Requests.MobileDeviceCategories;
 using ThesisApi.Models;
 
 namespace ThesisApi.Data
@@ -23,13 +26,7 @@ namespace ThesisApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<UserRole>().HasData(
-                new UserRole { Id = 1, Name = "User" },
-                new UserRole { Id = 2, Name = "Admin" },
-                new UserRole { Id = 3, Name = "Group leader" }
-            );
-
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Seed();
 
             // Configure Customer relationship
             modelBuilder.Entity<ComputerOrder>()
