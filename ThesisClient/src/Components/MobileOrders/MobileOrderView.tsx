@@ -195,7 +195,6 @@ export default function MobileOrderView() {
       </TableLayout>
 
       {isMobileAllocationVisible && <AllocateMobileDevice order={order} />}
-
       {isSimAllocationVisible && <AllocateSimCard order={order} />}
     </div>
   );

@@ -1,6 +1,9 @@
 import { FaMobile } from "react-icons/fa6";
 import TableLayout from "../../Layouts/TableLayout";
-import type { MobileOrderResponse, SimCardResponse } from "../../Types/MobileTypes";
+import type {
+  MobileOrderResponse,
+  SimCardResponse,
+} from "../../Types/MobileTypes";
 import EmptyState from "../Shared/Table/EmptyState";
 import Table from "../Shared/Table/Table";
 import Td from "../Shared/Table/Td";
@@ -13,7 +16,11 @@ import Spinner from "../Shared/Spinner";
 import Button from "../Shared/Button";
 import { AllocateSimCardToOrder } from "../../Services/MobileOrderServices";
 
-export default function AllocateSimCard({ order }: { order: MobileOrderResponse }) {
+export default function AllocateSimCard({
+  order,
+}: {
+  order: MobileOrderResponse;
+}) {
   const { user } = useAuth();
 
   const [simCards, setSimCards] = useState<SimCardResponse[]>([]);
@@ -27,7 +34,10 @@ export default function AllocateSimCard({ order }: { order: MobileOrderResponse 
 
     const fetchSimCards = async () => {
       try {
-        const res = await GetSimCardsForAllocation(order.simCallControlGroup.id, user);
+        const res = await GetSimCardsForAllocation(
+          order.simCallControlGroup.id,
+          user,
+        );
 
         setSimCards(res.data);
       } catch (err) {
@@ -46,7 +56,10 @@ export default function AllocateSimCard({ order }: { order: MobileOrderResponse 
     if (user == null) return;
     setIsLoading(true);
     try {
-      await AllocateSimCardToOrder({ orderId: order.id, simCardId: simCardId }, user);
+      await AllocateSimCardToOrder(
+        { orderId: order.id, simCardId: simCardId },
+        user,
+      );
 
       toast.success("Sim card allocated successfully!");
 
@@ -69,7 +82,10 @@ export default function AllocateSimCard({ order }: { order: MobileOrderResponse 
   );
 
   return (
-    <TableLayout title="Allocate SIM card" subtitle="Select a SIM card for this order">
+    <TableLayout
+      title="Allocate SIM card"
+      subtitle="Select a SIM card for this order"
+    >
       {simCards.length === 0 ? (
         <EmptyState
           icon={<FaMobile />}
@@ -79,35 +95,37 @@ export default function AllocateSimCard({ order }: { order: MobileOrderResponse 
       ) : (
         <Table>
           <Tr key="search">
-            <Td>
+            <Td colSpan={2}>
               <input
                 type="text"
-                placeholder="Search by phone number..."
+                placeholder="Search by phone number"
                 value={simSearch}
                 onChange={(e) => setSimSearch(e.target.value)}
                 className="w-full rounded-md border border-neutral-300 px-3 py-2 mb-3 focus:outline-none focus:ring-1 focus:ring-neutral-500"
               />
             </Td>
           </Tr>
-          {filteredSimCards.map((simCard) => (
-            <>
-              <Tr key={simCard.phoneNumber}>
-                <Td>Phone number</Td>
-                <Td>{simCard.phoneNumber}</Td>
-              </Tr>
-              <Tr key={simCard.simCallControlGroup.name}>
-                <Td>Call control group</Td>
-                <Td>{simCard.simCallControlGroup.name}</Td>
-              </Tr>
-              <Td>
-                <Button
-                  color="green"
-                  label="Allocate"
-                  handleClick={() => handleAllocateSim(simCard.id)}
-                />
-              </Td>
-            </>
-          ))}
+          <div className="overflow-y-auto max-h-100">
+            {filteredSimCards.map((simCard) => (
+              <tbody key={simCard.id} className="border-b-2 border-teal-600">
+                <Tr key={simCard.phoneNumber}>
+                  <Td>Phone number</Td>
+                  <Td>{simCard.phoneNumber}</Td>
+                </Tr>
+                <Tr key={simCard.simCallControlGroup.name}>
+                  <Td>Call control group</Td>
+                  <Td>{simCard.simCallControlGroup.name}</Td>
+                </Tr>
+                <Td>
+                  <Button
+                    color="green"
+                    label="Allocate"
+                    handleClick={() => handleAllocateSim(simCard.id)}
+                  />
+                </Td>
+              </tbody>
+            ))}
+          </div>
         </Table>
       )}
     </TableLayout>
