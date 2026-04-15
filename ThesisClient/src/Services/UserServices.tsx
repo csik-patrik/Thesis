@@ -46,13 +46,13 @@ export async function UpdateUser(formData: UpdateUserRequest, user: User) {
 }
 
 export async function GetGroupLeaders(user: User) {
-  return axios.get<UserResponse[]>(`${API_URL}/users/group-leader`, {
+  return await axios.get<UserResponse[]>(`${API_URL}/users/group-leader`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
 
 export async function GetUsers(user: User) {
-  return axios.get<UserResponse[]>('`${API_URL}/users', {
+  return await axios.get<UserResponse[]>('`${API_URL}/users', {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }
