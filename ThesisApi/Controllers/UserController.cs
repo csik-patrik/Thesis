@@ -147,11 +147,11 @@ namespace ThesisApi.Controllers
 
                 user.Password = passwordHasher.HashPassword(user, user.Password);
 
-                await _userRepository.CreateAsync(user);
+                var newUser = await _userRepository.CreateAsync(user);
 
-                var response = user.ToResponse();
+                var response = newUser.ToResponse();
 
-                return CreatedAtAction("", response);
+                return Ok(response);
             }
             catch (Exception e)
             {

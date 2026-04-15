@@ -17,16 +17,12 @@ export async function GetUserRoles(user: User) {
 }
 
 export async function CreateUser(formData: CreateUserRequest, user: User) {
-  await axios.post(
-    `${API_URL}/users`,
-    { formData },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${user.token}`,
-      },
+  await axios.post(`${API_URL}/users`, formData, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${user.token}`,
     },
-  );
+  });
 }
 
 export async function GetUserById(id: number, user: User) {
@@ -52,7 +48,7 @@ export async function GetGroupLeaders(user: User) {
 }
 
 export async function GetUsers(user: User) {
-  return await axios.get<UserResponse[]>('`${API_URL}/users', {
+  return await axios.get<UserResponse[]>(`${API_URL}/users`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
 }

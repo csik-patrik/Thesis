@@ -30,9 +30,7 @@ namespace ThesisApi.Controllers
 
                 await _simCallControlGroupRepository.AddAsync(newSimCallControlGroup);
 
-                var response = newSimCallControlGroup.ToResponse();
-
-                return CreatedAtAction("", response);
+                return Ok();
             }
             catch (Exception e)
             {
