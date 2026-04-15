@@ -1,8 +1,10 @@
-import axios from 'axios';
 import { useEffect, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { GetMobileDeviceCategories } from '../../Services/MobileDeviceServices';
+import {
+  CreateMobileDevice,
+  GetMobileDeviceCategories,
+} from '../../Services/MobileDeviceServices';
 import { useAuth } from '../../Auth/AuthContext';
 import Form from '../Form/Form';
 import Input from '../Form/Input';
@@ -12,7 +14,8 @@ import { mobileDeviceReducer } from './MobileDevice.reducer';
 import { mobileDeviceInitialState } from './MobileDevice.initialState';
 
 export default function MobileDeviceCreate() {
-  const API_URL = import.meta.env.VITE_API_URL;
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [state, dispatch] = useReducer(
     mobileDeviceReducer,
@@ -20,9 +23,6 @@ export default function MobileDeviceCreate() {
   );
 
   const { formData, categories } = state;
-
-  const navigate = useNavigate();
-  const { user } = useAuth();
 
   useEffect(() => {
     if (!user?.token) return;
@@ -59,11 +59,7 @@ export default function MobileDeviceCreate() {
     }
 
     try {
-      await axios.post(`${API_URL}/mobile-devices`, formData, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      await CreateMobileDevice(formData, user);
 
       toast.success('Mobile device created successfully!');
       navigate('/mobiles');

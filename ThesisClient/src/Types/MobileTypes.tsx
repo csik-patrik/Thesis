@@ -1,4 +1,4 @@
-import type { UserOrderResponse } from "./UserTypes";
+import type { UserOrderResponse } from './UserTypes';
 
 export interface CreateMobileDeviceCategoryRequest {
   name: string;
@@ -65,4 +65,25 @@ export type CreateMobileOrderRequest = {
   pickupLocation: string;
   note?: string;
   approverId: number;
+};
+
+export type SimCard = {
+  id: number;
+  phoneNumber: string;
+  department: string;
+  callControlGroup: string;
+  isDataEnabled: boolean;
+  type: string;
+  status: string;
+  createdAt: string;
+  createdBy: string;
+  modifiedAt: string;
+  modifiedBy: string;
+};
+
+export type UpdateSimCardRequest = {
+  department: string;
+  callControlGroup: string;
+  isDataEnabled: boolean;
+  status: string;
 };

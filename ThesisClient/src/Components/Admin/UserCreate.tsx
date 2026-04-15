@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Form from '../Form/Form';
@@ -10,26 +9,31 @@ import type {
   UserRoleResponse,
 } from '../../Types/UserTypes';
 import { useAuth } from '../../Auth/AuthContext';
+import { CreateUser, GetUserRoles } from '../../Services/UserServices';
+import Spinner from '../Shared/Spinner';
 
 export default function UserCreate() {
-  const API_URL = import.meta.env.VITE_API_URL;
-
   const { user } = useAuth();
   const [userRoles, setUserRoles] = useState<UserRoleResponse[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user || !user.token) return;
-    axios
-      .get<UserRoleResponse[]>(`${API_URL}/roles`, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
-      .then((response) => {
-        setUserRoles(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching categories:', error);
-      });
-  }, []);
+
+    const GetUserRolesAsync = async () => {
+      try {
+        const res = await GetUserRoles(user);
+
+        setUserRoles(res.data);
+      } catch (err) {
+        toast.error('Failed to load user roles!');
+        console.error('Failed to load user roles:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    GetUserRolesAsync();
+  }, [user]);
 
   const [formData, setFormData] = useState<CreateUserRequest>({
     username: '',
@@ -58,9 +62,10 @@ export default function UserCreate() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!user || !user.token) return;
     try {
-      await axios.post(`${API_URL}/users`, formData);
+      await CreateUser(formData, user);
+
       toast.success('User created successfully!');
       navigate('/admin/users');
     } catch (err) {
@@ -68,6 +73,8 @@ export default function UserCreate() {
       toast.error('Failed to create user.');
     }
   };
+
+  if (loading) return <Spinner />;
 
   return (
     <Form

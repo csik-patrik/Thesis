@@ -3,12 +3,15 @@ import type {
   ComputerCategoryResponse,
   CreateComputerRequest,
 } from '../../Types/ComputerTypes';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Auth/AuthContext';
-import axios from 'axios';
+import { GetComputerCategories } from '../../Services/ComputerOrderServices';
+import { toast } from 'react-toastify';
+import { CreateComputersBulk } from '../../Services/ComputerServices';
 
 export default function ComputersCreateBulk() {
-  const API_URL = import.meta.env.VITE_API_URL;
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [computerCategories, setComputerCategories] = useState<
     ComputerCategoryResponse[]
@@ -18,20 +21,14 @@ export default function ComputersCreateBulk() {
 
   const [devices, setDevices] = useState<CreateComputerRequest[]>([]);
 
-  const { user } = useAuth();
-
   useEffect(() => {
     if (!user || !user.token) return;
     const fetchComputerCategories = async () => {
       try {
-        const res = await axios.get<ComputerCategoryResponse[]>(
-          `${API_URL}/computer-categories`,
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
+        const res = await GetComputerCategories(user);
         setComputerCategories(res.data);
       } catch (err) {
+        toast.error('Failed to load computer categories!');
         console.error('Failed to fetch device categories:', err);
       }
     };
@@ -67,25 +64,21 @@ export default function ComputersCreateBulk() {
     );
   };
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  //   if (!user || !user.token) return;
+    if (!user || !user.token) return;
 
-  //   try {
-  //     await axios.post(`${API_URL}//computers/bulk`, devices, {
-  //       headers: {
-  //         Authorization: `Bearer ${user.token}`,
-  //       },
-  //     });
+    try {
+      await CreateComputersBulk(devices, user);
 
-  //     toast.success("Computers created successfully!");
-  //     navigate("/computers");
-  //   } catch (err) {
-  //     console.error("Error creating computers:", err);
-  //     toast.error("Failed to create computers.");
-  //   }
-  // };
+      toast.success('Computers created successfully!');
+      navigate('/computers');
+    } catch (err) {
+      console.error('Error creating computers:', err);
+      toast.error('Failed to create computers.');
+    }
+  };
 
   return (
     <div className="flex justify-center items-center p-4">
@@ -94,7 +87,6 @@ export default function ComputersCreateBulk() {
           Bulk create computers
         </h1>
 
-        {/* Number of devices */}
         <div className="mb-6 flex items-center gap-3">
           <label htmlFor="deviceCount" className="font-medium text-gray-700">
             Number of devices:
@@ -111,7 +103,6 @@ export default function ComputersCreateBulk() {
           />
         </div>
 
-        {/* Devices table */}
         <div className="overflow-x-auto mb-6">
           <table className="min-w-full border border-gray-200 divide-y divide-gray-200">
             <thead>
@@ -186,7 +177,6 @@ export default function ComputersCreateBulk() {
           </table>
         </div>
 
-        {/* Actions */}
         <div className="flex gap-3">
           <Link
             to="/computers"
@@ -195,7 +185,7 @@ export default function ComputersCreateBulk() {
             Back
           </Link>
           <button
-            type="submit"
+            onClick={handleSubmit}
             className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500"
           >
             Submit

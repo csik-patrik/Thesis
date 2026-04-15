@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import type { MobileDeviceCategory } from '../../Types/MobileDeviceCategory';
-import axios from 'axios';
 import Input from '../Form/Input';
 import { toast } from 'react-toastify';
 import Spinner from '../Shared/Spinner';
 import Form from '../Form/Form';
+import {
+  GetMobileDeviceCategoryById,
+  UpdateMobileDeviceCategory,
+} from '../../Services/MobileDeviceServices';
+import { useAuth } from '../../Auth/AuthContext';
 
 interface CreateMobileDeviceCategory {
   name: string;
 }
 
 export default function EditMobileDeviceCategory() {
-  const API_URL = import.meta.env.VITE_API_URL;
+  const { user } = useAuth();
 
   const { id } = useParams<{ id: string }>();
   const [category, setCategory] = useState<MobileDeviceCategory | null>(null);
@@ -25,22 +29,24 @@ export default function EditMobileDeviceCategory() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetch = async () => {
+    if (!user || !user.token) return;
+    const GetMobileDeviceCategory = async () => {
       try {
-        const res = await axios.get<MobileDeviceCategory>(
-          `${API_URL}/admin/mobile-device-categories/${id}`,
-        );
+        const res = await GetMobileDeviceCategoryById(Number(id), user);
+
         setCategory(res.data);
+
         setFormData({
           name: res.data.name,
         });
       } catch (err) {
-        console.error('Error fetching sim card:', err);
+        toast.error('Failed to load mobile device category!');
+        console.error('Failed to load mobile device cateogory:', err);
       } finally {
         setLoading(false);
       }
     };
-    fetch();
+    GetMobileDeviceCategory();
   }, [id]);
 
   const handleChange = (
@@ -56,13 +62,9 @@ export default function EditMobileDeviceCategory() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!user || !user.token) return;
     try {
-      await axios.put(
-        `${API_URL}/admin/mobile-device-categories/${id}`,
-        JSON.stringify(formData.name),
-        { headers: { 'Content-Type': 'application/json' } },
-      );
+      await UpdateMobileDeviceCategory(Number(id), formData.name, user);
       toast.success('Category updated successfully!');
       navigate('/admin/mobile-device-categories');
     } catch (err) {

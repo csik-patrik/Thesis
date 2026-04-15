@@ -1,13 +1,49 @@
 import axios from 'axios';
-import type { ComputerResponse } from '../Types/ComputerTypes';
+import type {
+  ComputerResponse,
+  CreateComputerRequest,
+} from '../Types/ComputerTypes';
 import type { User } from '../Types/UserTypes';
 import type { AllocateComputerRequest } from '../Components/ComputerOrders/ComputerOrder.types';
 const API_URL = import.meta.env.VITE_API_URL;
+
+export async function CreateComputer(
+  request: CreateComputerRequest,
+  user: User,
+) {
+  return await axios.post(`${API_URL}/computers`, request, {
+    headers: { Authorization: `Bearer ${user.token}` },
+  });
+}
+
+export async function CreateComputersBulk(
+  request: CreateComputerRequest[],
+  user: User,
+) {
+  return await await axios.post(`${API_URL}/computers/bulk`, request, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  });
+}
 
 export async function GetDeployedComputers(user: User) {
   return await axios.get<ComputerResponse[]>(`${API_URL}/computers/deployed`, {
     headers: { Authorization: `Bearer ${user.token}` },
   });
+}
+
+export async function CreateComputerCategory(name: string, user: User) {
+  return await axios.post(
+    `${API_URL}/computer-categories`,
+    { name: name },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${user.token}`,
+      },
+    },
+  );
 }
 
 export async function ReturnComputer(

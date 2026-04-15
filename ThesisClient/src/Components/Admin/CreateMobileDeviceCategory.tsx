@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import Form from '../Form/Form';
 import Input from '../Form/Input';
 import type { CreateMobileDeviceCategoryRequest } from '../../Types/MobileTypes';
 import { useAuth } from '../../Auth/AuthContext';
+import { CreateMobileDeviceCategoryService } from '../../Services/MobileDeviceServices';
 
 export default function CreateMobileDeviceCategory() {
-  const API_URL = import.meta.env.VITE_API_URL;
   const { user } = useAuth();
   const [formData, setFormData] = useState<CreateMobileDeviceCategoryRequest>({
     name: '',
@@ -31,16 +30,8 @@ export default function CreateMobileDeviceCategory() {
     e.preventDefault();
     if (!user || !user.token) return;
     try {
-      await axios.post(
-        `${API_URL}/mobile-device-categories`,
-        { name: formData.name },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user.token}`,
-          },
-        },
-      );
+      await CreateMobileDeviceCategoryService(formData.name, user);
+
       toast.success('Category created successfully!');
       navigate('/admin/mobile-device-categories');
     } catch (err) {

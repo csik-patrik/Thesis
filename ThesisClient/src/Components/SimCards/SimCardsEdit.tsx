@@ -1,32 +1,13 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Spinner from '../Shared/Spinner';
-
-interface SimCard {
-  id: number;
-  phoneNumber: string;
-  department: string;
-  callControlGroup: string;
-  isDataEnabled: boolean;
-  type: string;
-  status: string;
-  createdAt: string;
-  createdBy: string;
-  modifiedAt: string;
-  modifiedBy: string;
-}
-
-interface UpdateSimCardRequest {
-  department: string;
-  callControlGroup: string;
-  isDataEnabled: boolean;
-  status: string;
-}
+import type { SimCard, UpdateSimCardRequest } from '../../Types/MobileTypes';
+import { GetSimCardById, UpdatesSimCard } from '../../Services/SimCardServices';
+import { useAuth } from '../../Auth/AuthContext';
 
 export default function SimCardsEdit() {
-  const API_URL = import.meta.env.VITE_API_URL;
+  const { user } = useAuth();
 
   const { id } = useParams<{ id: string }>(); // get ID from URL
   const [simCard, setSimCard] = useState<SimCard | null>(null);
@@ -42,10 +23,13 @@ export default function SimCardsEdit() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user || !user.token) return;
     const fetch = async () => {
       try {
-        const res = await axios.get<SimCard>(`${API_URL}/api/sim-cards/${id}`);
+        const res = await GetSimCardById(Number(id), user);
+
         setSimCard(res.data);
+
         setFormData({
           department: res.data.department,
           callControlGroup: res.data.callControlGroup,
@@ -53,6 +37,7 @@ export default function SimCardsEdit() {
           status: res.data.status,
         });
       } catch (err) {
+        toast.error('Failed to load sim card!');
         console.error('Error fetching sim card:', err);
       } finally {
         setLoading(false);
@@ -78,14 +63,15 @@ export default function SimCardsEdit() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!user || !user.token) return;
     try {
-      await axios.put(`${API_URL}/api/sim-cards/${id}`, formData);
+      await UpdatesSimCard(Number(id), formData, user);
+
       toast.success('Sim card updated successfully!');
       navigate('/sim-cards');
     } catch (err) {
+      toast.error('Failed to update sim card!');
       console.error('Failed to update sim card:', err);
-      alert('Failed to update sim card.');
     }
   };
 

@@ -4,16 +4,15 @@ import type {
   CreateComputerRequest,
 } from '../../Types/ComputerTypes';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../Auth/AuthContext';
 import Input from '../Form/Input';
 import Select from '../Form/Select';
 import Form from '../Form/Form';
+import { GetComputerCategories } from '../../Services/ComputerOrderServices';
+import { CreateComputer } from '../../Services/ComputerServices';
 
 export default function ComputersCreate() {
-  const API_URL = import.meta.env.VITE_API_URL;
-
   const { user } = useAuth();
 
   const [computerCategories, setComputerCategories] = useState<
@@ -33,12 +32,7 @@ export default function ComputersCreate() {
     if (!user || !user.token) return;
     const fetchComputerCategories = async () => {
       try {
-        const res = await axios.get<ComputerCategoryResponse[]>(
-          `${API_URL}/computer-categories`,
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          },
-        );
+        const res = await GetComputerCategories(user);
         setComputerCategories(res.data);
       } catch (err) {
         console.error('Failed to fetch device categories:', err);
@@ -64,9 +58,7 @@ export default function ComputersCreate() {
     e.preventDefault();
 
     try {
-      await axios.post(`${API_URL}/computers`, formData, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
+      await CreateComputer(formData, user);
 
       toast.success('Computer created successfully!');
       navigate('/computers');

@@ -2,19 +2,21 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import type {
   UpdateUserRequest,
-  UserResponse,
   UserRoleResponse,
 } from '../../Types/UserTypes';
 import { useAuth } from '../../Auth/AuthContext';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import Form from '../Form/Form';
 import Input from '../Form/Input';
 import SelectMultiple from '../Form/SelectMultiple';
+import {
+  GetUserById,
+  GetUserRoles,
+  UpdateUser,
+} from '../../Services/UserServices';
+import Spinner from '../Shared/Spinner';
 
 export default function UsersEdit() {
-  const API_URL = import.meta.env.VITE_API_URL;
-
   const { user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [userRoles, setUserRoles] = useState<UserRoleResponse[]>([]);
@@ -35,11 +37,7 @@ export default function UsersEdit() {
       setIsLoading(true);
       try {
         if (!user || !user.token) return;
-        const res = await axios.get<UserResponse>(`${API_URL}/users/${id}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
+        const res = await GetUserById(Number(id), user);
 
         setFormData({
           id: res.data.id,
@@ -63,9 +61,9 @@ export default function UsersEdit() {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await axios.get<UserRoleResponse[]>(
-          `${API_URL}/roles`,
-        );
+        if (!user || !user.token) return;
+
+        const response = await GetUserRoles(user);
         setUserRoles(response.data);
       } catch (error) {
         console.error('Error fetching roles:', error);
@@ -73,7 +71,7 @@ export default function UsersEdit() {
       }
     };
     fetchRoles();
-  }, []);
+  }, [user]);
 
   const handleChange = (
     e:
@@ -95,11 +93,7 @@ export default function UsersEdit() {
         return;
       }
 
-      await axios.put(`${API_URL}/users/`, formData, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      await UpdateUser(formData, user);
 
       toast.success('User updated successfully!');
       navigate('/admin/users');
@@ -109,9 +103,7 @@ export default function UsersEdit() {
     }
   };
 
-  if (isLoading) {
-    return <h1>User is loading...</h1>;
-  }
+  if (isLoading) return <Spinner />;
 
   if (formData.username == '') {
     return <h1>User not found.</h1>;

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { GetMobileDeviceCategories } from '../../Services/MobileDeviceServices';
+import {
+  CreateMobileDevicesBulk,
+  GetMobileDeviceCategories,
+} from '../../Services/MobileDeviceServices';
 import type {
   CreateMobileDeviceRequest,
   MobileDeviceCategoryResponse,
@@ -10,9 +12,10 @@ import type {
 import { useAuth } from '../../Auth/AuthContext';
 
 export default function MobileDeviceCreateBulk() {
-  const API_URL = import.meta.env.VITE_API_URL;
-
   const { user } = useAuth();
+
+  const navigate = useNavigate();
+
   const [mobileDeviceCategories, setMobileDeviceCategories] = useState<
     MobileDeviceCategoryResponse[]
   >([]);
@@ -20,10 +23,6 @@ export default function MobileDeviceCreateBulk() {
   const [deviceCount, setDeviceCount] = useState<number>(1);
 
   const [devices, setDevices] = useState<CreateMobileDeviceRequest[]>([]);
-
-  const navigate = useNavigate();
-
-  console.log(user);
 
   useEffect(() => {
     if (!user?.token) return;
@@ -62,18 +61,6 @@ export default function MobileDeviceCreateBulk() {
     );
   };
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   try {
-  //     await axios.post(`${API_URL}/mobile-devices/bulk`, devices);
-  //     toast.success("Mobile devices created successfully!");
-  //     navigate("/mobiles");
-  //   } catch (err) {
-  //     console.error("Error creating mobile devices:", err);
-  //     toast.error("Failed to create mobile devices.");
-  //   }
-  // };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -83,11 +70,7 @@ export default function MobileDeviceCreateBulk() {
     }
 
     try {
-      await axios.post(`${API_URL}/mobile-devices/bulk`, devices, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      await CreateMobileDevicesBulk(devices, user);
 
       toast.success('Mobile devices created successfully!');
       navigate('/mobiles');
@@ -105,7 +88,6 @@ export default function MobileDeviceCreateBulk() {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Device Count */}
           <div className="flex items-center gap-2">
             <label htmlFor="deviceCount" className="text-sm font-medium">
               Number of devices:
@@ -122,7 +104,6 @@ export default function MobileDeviceCreateBulk() {
             />
           </div>
 
-          {/* Devices Table */}
           <div className="overflow-x-auto">
             <table className="min-w-full border-collapse">
               <thead>
@@ -195,7 +176,6 @@ export default function MobileDeviceCreateBulk() {
             </table>
           </div>
 
-          {/* Buttons */}
           <div className="flex flex-wrap gap-3">
             <Link
               to="/mobiles"

@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import type { CreateComputerCategoryRequest } from '../../Types/ComputerTypes';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import Input from '../Form/Input';
 import Form from '../Form/Form';
 import { useAuth } from '../../Auth/AuthContext';
+import { CreateComputerCategory } from '../../Services/ComputerServices';
 
 export default function ComputerCategoriesCreate() {
-  const API_URL = import.meta.env.VITE_API_URL;
-
   const { user } = useAuth();
 
   const [formData, setFormData] = useState<CreateComputerCategoryRequest>({
@@ -35,16 +33,8 @@ export default function ComputerCategoriesCreate() {
     if (!user || !user.token) return;
 
     try {
-      await axios.post(
-        `${API_URL}/computer-categories`,
-        { name: formData.name },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user.token}`,
-          },
-        },
-      );
+      CreateComputerCategory(formData.name, user);
+
       toast.success('Category created successfully!');
       navigate('/admin/computers/categories');
     } catch (err) {

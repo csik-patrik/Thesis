@@ -1,20 +1,20 @@
-import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../Auth/AuthContext';
+import type { LoginRequest } from '../Types/UserTypes';
+import {
+  LoginWithCreditentials,
+  LoginWithDemoAdmin,
+  LoginWithDemoApprover,
+  LoginWithDemoUser,
+} from '../Services/UserServices';
 
 export default function Login() {
-  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const [loading, setLoading] = useState(false);
-
-  interface LoginRequest {
-    email: string;
-    password: string;
-  }
 
   const [formData, setFormData] = useState<LoginRequest>({
     email: '',
@@ -26,7 +26,7 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post(`${API_URL}/login`, formData);
+      const res = await LoginWithCreditentials(formData);
 
       login(res.data);
 
@@ -35,7 +35,6 @@ export default function Login() {
     } catch (err) {
       console.error('Login error:', err);
       toast.error('Login error.');
-      alert('Failed to login.');
     } finally {
       setLoading(false);
     }
@@ -46,10 +45,7 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post(`${API_URL}/login`, {
-        email: 'demo.user1@demo.com',
-        password: 'PasswordDev01',
-      });
+      const res = await LoginWithDemoUser();
 
       login(res.data);
 
@@ -58,7 +54,6 @@ export default function Login() {
     } catch (err) {
       console.error('Login error:', err);
       toast.error('Login error.');
-      alert('Failed to login.');
     } finally {
       setLoading(false);
     }
@@ -69,10 +64,7 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post(`${API_URL}/login`, {
-        email: 'demo.user2@demo.com',
-        password: 'PasswordDev02',
-      });
+      const res = await LoginWithDemoAdmin();
 
       login(res.data);
 
@@ -81,7 +73,6 @@ export default function Login() {
     } catch (err) {
       console.error('Login error:', err);
       toast.error('Login error.');
-      alert('Failed to login.');
     } finally {
       setLoading(false);
     }
@@ -92,10 +83,7 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const res = await axios.post(`${API_URL}/login`, {
-        email: 'demo.user3@demo.com',
-        password: 'PasswordDev03',
-      });
+      const res = await LoginWithDemoApprover();
 
       login(res.data);
 
@@ -104,7 +92,6 @@ export default function Login() {
     } catch (err) {
       console.error('Login error:', err);
       toast.error('Login error.');
-      alert('Failed to login.');
     } finally {
       setLoading(false);
     }
