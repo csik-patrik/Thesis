@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import type { UserResponse } from "../../Types/UserTypes";
-import Modal, { type ModalHandle } from "../Shared/Modal";
-import { Link } from "react-router-dom";
-import { DeleteUser, GetUsers } from "../../Services/UserServices";
-import TableLayout from "../../Layouts/TableLayout";
-import Table from "../Shared/Table/Table";
-import Thead from "../Shared/Table/Thead";
-import Tr from "../Shared/Table/Tr";
-import Td from "../Shared/Table/Td";
-import Spinner from "../Shared/Spinner";
-import { useAuth } from "../../Auth/AuthContext";
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import type { UserResponse } from '../../Types/UserTypes';
+import Modal, { type ModalHandle } from '../Shared/Modal';
+import { Link } from 'react-router-dom';
+import { DeleteUser, GetUsers } from '../../Services/UserServices';
+import TableLayout from '../../Layouts/TableLayout';
+import Table from '../Shared/Table/Table';
+import Thead from '../Shared/Table/Thead';
+import Tr from '../Shared/Table/Tr';
+import Td from '../Shared/Table/Td';
+import Spinner from '../Shared/Spinner';
+import { useAuth } from '../../Auth/AuthContext';
 
 export default function UsersTable() {
   const { user } = useAuth();
@@ -32,16 +32,16 @@ export default function UsersTable() {
         const res = await GetUsers(user);
         setUsers(res.data);
       } catch (err) {
-        console.error("Error loading users:", err);
+        console.error('Error loading users:', err);
 
-        toast.error("Failed to load users.");
+        toast.error('Failed to load users.');
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [user]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -51,10 +51,10 @@ export default function UsersTable() {
 
       setUsers((prev) => prev.filter((item) => item.id !== id));
 
-      toast.success("User deleted successfully!");
+      toast.success('User deleted successfully!');
     } catch (err) {
-      console.error("Error deleting user:", err);
-      alert("Failed to delete user.");
+      console.error('Error deleting user:', err);
+      alert('Failed to delete user.');
     }
   };
 
@@ -77,19 +77,19 @@ export default function UsersTable() {
       <TableLayout
         title="Users"
         subtitle="Manage user in the system"
-        links={[{ to: "/admin/users/create", label: "Create new user" }]}
+        links={[{ to: '/admin/users/create', label: 'Create new user' }]}
       >
         <Table>
           <Thead
             headers={[
-              "Id",
-              "Username",
-              "Displayname",
-              "E-mail address",
-              "Department",
-              "Cost center",
-              "Roles",
-              "Actions",
+              'Id',
+              'Username',
+              'Displayname',
+              'E-mail address',
+              'Department',
+              'Cost center',
+              'Roles',
+              'Actions',
             ]}
           />
           <tbody>
@@ -101,7 +101,7 @@ export default function UsersTable() {
                 <Td>{user.email}</Td>
                 <Td>{user.department}</Td>
                 <Td>{user.costCenter}</Td>
-                <Td>{user.userRoles.map((role) => role.name + " ")}</Td>
+                <Td>{user.userRoles.map((role) => role.name + ' ')}</Td>
                 <Td>
                   <div className="flex items-center gap-3">
                     <Link
