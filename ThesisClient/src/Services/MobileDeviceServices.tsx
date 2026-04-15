@@ -62,7 +62,7 @@ export async function UpdateMobileDeviceCategory(
   user: User,
 ) {
   return await axios.put(
-    `${API_URL}/admin/mobile-device-categories/${id}`,
+    `${API_URL}/mobile-device-categories/${id}`,
     JSON.stringify(name),
     {
       headers: {
