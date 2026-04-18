@@ -8,7 +8,6 @@ import {
 } from "react";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 interface JwtPayload {
   sub: string;
