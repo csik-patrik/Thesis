@@ -1,5 +1,5 @@
 interface SelectProps {
-  title: string;
+  title?: string;
   fieldName: string;
   value: string | number;
   options: { label: string; value: string | number }[];
@@ -15,9 +15,15 @@ export default function Select({
 }: SelectProps) {
   return (
     <div className="flex flex-col gap-1.5 mb-4">
-      <label htmlFor={fieldName} className="text-sm font-medium text-gray-700">
-        {title}
-      </label>
+      {title ? (
+        <label
+          htmlFor={fieldName}
+          className="text-sm font-medium text-gray-700"
+        >
+          {title}
+        </label>
+      ) : null}
+
       <div className="relative">
         <select
           id={fieldName}

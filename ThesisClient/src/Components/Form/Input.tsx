@@ -1,9 +1,9 @@
 interface InputProps {
-  title: string;
+  title?: string;
   fieldName: string;
   placeHolder: string;
   type: string;
-  value: string;
+  value: string | number;
   required?: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -19,9 +19,14 @@ export default function Input({
 }: InputProps) {
   return (
     <div className="flex flex-col gap-1.5 mb-4">
-      <label htmlFor={fieldName} className="text-sm font-medium text-gray-700">
-        {title}
-      </label>
+      {title ? (
+        <label
+          htmlFor={fieldName}
+          className="text-sm font-medium text-gray-700"
+        >
+          {title}
+        </label>
+      ) : null}
       <input
         id={fieldName}
         type={type}

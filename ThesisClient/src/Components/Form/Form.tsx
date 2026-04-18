@@ -4,6 +4,7 @@ interface FormProps {
   title: string;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   returnUri: string;
+  fullWidth?: boolean;
   children?: React.ReactNode;
 }
 
@@ -11,11 +12,18 @@ export default function Form({
   title,
   handleSubmit,
   returnUri,
+  fullWidth,
   children,
 }: FormProps) {
+  let classes =
+    "w-full bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden";
+  if (!fullWidth) {
+    classes += " max-w-lg";
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-start justify-center px-4 py-10">
-      <div className="w-full max-w-lg bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className={classes}>
         {/* Card header */}
         <div className="px-8 py-5 border-b border-gray-100">
           <h1 className="text-lg font-semibold text-gray-900">{title}</h1>
