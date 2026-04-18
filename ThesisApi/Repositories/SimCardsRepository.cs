@@ -23,6 +23,15 @@ namespace ThesisApi.Repositories
             return simCard;
         }
 
+        public async Task<IEnumerable<SimCard>> AddBulkAsync(IEnumerable<SimCard> simCards)
+        {
+            await _context.SimCards.AddRangeAsync(simCards);
+
+            await _context.SaveChangesAsync();
+
+            return simCards;
+        }
+
         public async Task<IEnumerable<SimCard>> GetAllAsync()
         {
             return await _context.SimCards.Include(x => x.SimCallControlGroup).ToListAsync();

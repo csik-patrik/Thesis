@@ -54,6 +54,29 @@ namespace ThesisApi.Controllers
 
         }
 
+        [HttpPost("/sim-cards/bulk")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<SimCardResponse>>> CreateBulk([FromBody] List<CreateSimCardRequest> request)
+        {
+            try
+            {
+                var newSimCards = await SimCard.CreateBulk(request, _simCallControlGroupRepository);
+
+                if (newSimCards == null || newSimCards.Count == 0)
+                    return BadRequest("Error while creating devices!");
+
+                await _simCardRepository.AddBulkAsync(newSimCards);
+
+                var response = newSimCards.Select((computer) => computer.ToResponse()).ToList();
+
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpGet("/sim-cards/{id:int}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<SimCardResponse>> GetById([FromRoute] int id)

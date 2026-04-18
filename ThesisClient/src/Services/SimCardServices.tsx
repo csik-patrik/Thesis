@@ -1,12 +1,12 @@
-import axios from 'axios';
+import axios from "axios";
 import type {
   CreateSimCardRequest,
   SimCallControlGroupResponse,
   SimCard,
   SimCardResponse,
   UpdateSimCardRequest,
-} from '../Types/MobileTypes';
-import type { User } from '../Types/UserTypes';
+} from "../Types/MobileTypes";
+import type { User } from "../Types/UserTypes";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export async function GetSimCardById(id: number, user: User) {
@@ -56,6 +56,17 @@ export async function CreateSimCard(
 ) {
   return await axios.post(`${API_URL}/sim-cards`, formData, {
     headers: { Authorization: `Bearer ${user.token}` },
+  });
+}
+
+export async function CreateSimCardsBulk(
+  request: CreateSimCardRequest[],
+  user: User,
+) {
+  return await axios.post(`${API_URL}/sim-cards/bulk`, request, {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
   });
 }
 

@@ -29,5 +29,28 @@ namespace ThesisApi.Models
                 Status = "In inventory"
             };
         }
+
+        public static async Task<List<SimCard>> CreateBulk(List<CreateSimCardRequest> request, ISimCallControlGroupRepository simCallControlGroupRepository)
+        {
+            var simCards = new List<SimCard>();
+
+            foreach (var item in request)
+            {
+                var callControlGroup = await simCallControlGroupRepository.GetByIdAsync(item.SimCallControlGroupId);
+
+                if (callControlGroup == null)
+                    throw new Exception("Sim call control group not found!");
+
+                simCards.Add(new SimCard()
+                {
+                    PhoneNumber = item.PhoneNumber,
+                    SimCallControlGroupId = callControlGroup.Id,
+                    SimCallControlGroup = callControlGroup,
+                    Status = "In inventory"
+                });
+            }
+
+            return simCards;
+        }
     }
 }
