@@ -5,10 +5,10 @@ import {
   type ReactNode,
   useEffect,
   useCallback,
-} from 'react';
-import { jwtDecode } from 'jwt-decode';
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+} from "react";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 interface JwtPayload {
   sub: string;
@@ -45,15 +45,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Wrap logout in useCallback to stabilize the function reference
   const logout = useCallback(() => {
-    navigate('/');
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
   }, []);
 
   // Wrap login in useCallback too
@@ -61,7 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const decoded = jwtDecode<JwtPayload>(token);
 
     const rolesRaw =
-      decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ??
+      decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ??
       decoded.role ??
       [];
 
@@ -84,12 +82,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem("user", JSON.stringify(userData));
   }, []);
 
   // Restore user & auto logout on token expiry
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
 
     if (!storedUser) {
       setIsLoading(false); // ✅ Done loading
@@ -102,9 +100,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       // Check expiration
       if (decoded.exp && decoded.exp * 1000 < Date.now()) {
-        console.warn('Token expired — logging out');
+        console.warn("Token expired — logging out");
         logout();
-        toast.warning('Your session expired. Please log in again.');
+        toast.warning("Your session expired. Please log in again.");
       } else {
         setUser(parsedUser);
 
@@ -112,7 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const msUntilExpiry = decoded.exp ? decoded.exp * 1000 - Date.now() : 0;
         if (msUntilExpiry > 0) {
           const timeout = setTimeout(() => {
-            toast.warn('Your session expired. Please log in again.');
+            toast.warn("Your session expired. Please log in again.");
             logout();
           }, msUntilExpiry);
 
@@ -121,7 +119,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       }
     } catch (err) {
-      console.error('Error restoring user:', err);
+      console.error("Error restoring user:", err);
       logout();
     }
 
@@ -137,6 +135,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
   return ctx;
 };
