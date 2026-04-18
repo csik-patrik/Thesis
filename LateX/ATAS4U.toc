@@ -1,0 +1,39 @@
+\select@language {magyar} \contentsline {chapter}{\numberline {1}Bevezetés}{4}{chapter.1}%
+\select@language {magyar} \contentsline {section}{\numberline {1.1}A téma aktualitása és célja}{4}{section.1.1}%
+\select@language {magyar} \contentsline {section}{\numberline {1.2}A használt technológiák bemutatása}{6}{section.1.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {1.2.1}Microsoft .NET 8 Web API}{7}{subsection.1.2.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {1.2.2}Microsoft SQL Server}{7}{subsection.1.2.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {1.2.3}React}{8}{subsection.1.2.3}%
+\select@language {magyar} \contentsline {subsection}{\numberline {1.2.4}Fejlesztői környezet és eszközök}{9}{subsection.1.2.4}%
+\select@language {magyar} \contentsline {chapter}{\numberline {2}A rendszer célja és funkcionális követelményei}{11}{chapter.2}%
+\select@language {magyar} \contentsline {section}{\numberline {2.1}A rendszer célja}{11}{section.2.1}%
+\select@language {magyar} \contentsline {section}{\numberline {2.2}Funkcionális követelmények}{12}{section.2.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {2.2.1}Bejelentkezés és hitelesítés}{12}{subsection.2.2.1}%
+\select@language {magyar} \contentsline {subsection}{\numberline {2.2.2}Felhasználói szerepkör}{12}{subsection.2.2.2}%
+\select@language {magyar} \contentsline {subsection}{\numberline {2.2.3}Vezetői szerepkör}{14}{subsection.2.2.3}%
+\select@language {magyar} \contentsline {subsection}{\numberline {2.2.4}Adminisztrátori szerepkör}{15}{subsection.2.2.4}%
+\select@language {magyar} \contentsline {subsection}{\numberline {2.2.5}Nem funkcionális követelmények}{15}{subsection.2.2.5}%
+\select@language {magyar} \contentsline {subsection}{\numberline {2.2.6}Hasonló rendszerek bemutatása}{16}{subsection.2.2.6}%
+\select@language {magyar} \contentsline {subsection}{\numberline {2.2.7}Összegzés}{16}{subsection.2.2.7}%
+\select@language {magyar} \contentsline {chapter}{\numberline {3}Tervezés}{17}{chapter.3}%
+\select@language {magyar} \contentsline {section}{\numberline {3.1}Rendszer architektúra}{17}{section.3.1}%
+\select@language {magyar} \contentsline {section}{\numberline {3.2}Adatbázis tervezés}{18}{section.3.2}%
+\select@language {magyar} \contentsline {section}{\numberline {3.3}Backend tervezése}{19}{section.3.3}%
+\select@language {magyar} \contentsline {section}{\numberline {3.4}Frontend tervezése}{19}{section.3.4}%
+\select@language {magyar} \contentsline {section}{\numberline {3.5}Autentikáció és jogosultságkezelés}{20}{section.3.5}%
+\select@language {magyar} \contentsline {section}{\numberline {3.6}JSON Web Token működése}{22}{section.3.6}%
+\select@language {magyar} \contentsline {chapter}{\numberline {4}Fejlesztés és megvalósítás}{23}{chapter.4}%
+\select@language {magyar} \contentsline {section}{\numberline {4.1}Fejlesztési környezet}{23}{section.4.1}%
+\select@language {magyar} \contentsline {section}{\numberline {4.2}Backend fejlesztés}{23}{section.4.2}%
+\select@language {magyar} \contentsline {section}{\numberline {4.3}Frontend fejlesztés}{26}{section.4.3}%
+\select@language {magyar} \contentsline {section}{\numberline {4.4}Integráció}{28}{section.4.4}%
+\select@language {magyar} \contentsline {section}{\numberline {4.5}Biztonság és naplózás}{28}{section.4.5}%
+\select@language {magyar} \contentsline {chapter}{\numberline {5}Tesztelés}{29}{chapter.5}%
+\select@language {magyar} \contentsline {section}{\numberline {5.1}Tesztelési módszertan}{29}{section.5.1}%
+\select@language {magyar} \contentsline {section}{\numberline {5.2}Tesztesetek és eredmények}{30}{section.5.2}%
+\select@language {magyar} \contentsline {section}{\numberline {5.3}API tesztelés (Postman)}{31}{section.5.3}%
+\select@language {magyar} \contentsline {section}{\numberline {5.4}Összegzés}{31}{section.5.4}%
+\select@language {magyar} \contentsline {chapter}{\numberline {6}Képernyőképek és felhasználói felületek bemutatása}{32}{chapter.6}%
+\select@language {magyar} \contentsline {chapter}{\numberline {7}További fejlesztési lehetőségek}{35}{chapter.7}%
+\select@language {magyar} \contentsline {chapter}{\numberline {8}Összefoglalás és köszönetnyilvánítás}{36}{chapter.8}%
+\select@language {magyar} \contentsline {chapter}{\numberline {9}Forráskód és demó alkalmazás elérhetősége}{37}{chapter.9}%

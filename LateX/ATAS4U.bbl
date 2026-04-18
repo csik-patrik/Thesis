@@ -1,0 +1,220 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global/global}
+    \entry{JWT}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=31bc9add0736a1165550c9896234e3c2}{%
+           family={JWT.IO},
+           familyi={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{31bc9add0736a1165550c9896234e3c2}
+      \strng{fullhash}{31bc9add0736a1165550c9896234e3c2}
+      \strng{fullhashraw}{31bc9add0736a1165550c9896234e3c2}
+      \strng{bibnamehash}{31bc9add0736a1165550c9896234e3c2}
+      \strng{authorbibnamehash}{31bc9add0736a1165550c9896234e3c2}
+      \strng{authornamehash}{31bc9add0736a1165550c9896234e3c2}
+      \strng{authorfullhash}{31bc9add0736a1165550c9896234e3c2}
+      \strng{authorfullhashraw}{31bc9add0736a1165550c9896234e3c2}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{JSON Web Token bevezetés}
+      \verb{urlraw}
+      \verb https://www.jwt.io/introduction#what-is-json-web-token
+      \endverb
+      \verb{url}
+      \verb https://www.jwt.io/introduction#what-is-json-web-token
+      \endverb
+      \warn{\item online entry 'JWT' (references.bib): Invalid format '2026.03.28' of date field 'date' - ignoring}
+    \endentry
+    \entry{DotnetBevezetés}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=140864078aeca1c7c35b4beb33c53c34}{%
+           family={Microsoft},
+           familyi={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{fullhash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{fullhashraw}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{bibnamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorbibnamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authornamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
+      \field{extraname}{1}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Bevezetés a .NET használatába}
+      \verb{urlraw}
+      \verb https://learn.microsoft.com/hu-hu/dotnet/core/introduction?WT.mc_id=dotnet-35129-website
+      \endverb
+      \verb{url}
+      \verb https://learn.microsoft.com/hu-hu/dotnet/core/introduction?WT.mc_id=dotnet-35129-website
+      \endverb
+      \warn{\item online entry 'DotnetBevezetés' (references.bib): Invalid format '2026.03.10' of date field 'date' - ignoring}
+    \endentry
+    \entry{EntityFrameworkCore}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=140864078aeca1c7c35b4beb33c53c34}{%
+           family={Microsoft},
+           familyi={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{fullhash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{fullhashraw}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{bibnamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorbibnamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authornamehash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorfullhash}{140864078aeca1c7c35b4beb33c53c34}
+      \strng{authorfullhashraw}{140864078aeca1c7c35b4beb33c53c34}
+      \field{extraname}{2}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Entity Framework Core}
+      \verb{urlraw}
+      \verb https://learn.microsoft.com/hu-hu/ef/core/
+      \endverb
+      \verb{url}
+      \verb https://learn.microsoft.com/hu-hu/ef/core/
+      \endverb
+      \warn{\item online entry 'EntityFrameworkCore' (references.bib): Invalid format '2025.11.02' of date field 'date' - ignoring}
+    \endentry
+    \entry{TechnologyUsage}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=928a3e3d99440ed892dda5028159a3aa}{%
+           family={Overflow},
+           familyi={O\bibinitperiod},
+           given={Stack},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{928a3e3d99440ed892dda5028159a3aa}
+      \strng{fullhash}{928a3e3d99440ed892dda5028159a3aa}
+      \strng{fullhashraw}{928a3e3d99440ed892dda5028159a3aa}
+      \strng{bibnamehash}{928a3e3d99440ed892dda5028159a3aa}
+      \strng{authorbibnamehash}{928a3e3d99440ed892dda5028159a3aa}
+      \strng{authornamehash}{928a3e3d99440ed892dda5028159a3aa}
+      \strng{authorfullhash}{928a3e3d99440ed892dda5028159a3aa}
+      \strng{authorfullhashraw}{928a3e3d99440ed892dda5028159a3aa}
+      \field{sortinit}{O}
+      \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Legnépszerűbb webfejleszési technológiák}
+      \verb{urlraw}
+      \verb https://survey.stackoverflow.co/2025/technology#most-popular-technologies-language-language-prof
+      \endverb
+      \verb{url}
+      \verb https://survey.stackoverflow.co/2025/technology#most-popular-technologies-language-language-prof
+      \endverb
+      \warn{\item online entry 'TechnologyUsage' (references.bib): Invalid format '2026.03.28' of date field 'date' - ignoring}
+    \endentry
+    \entry{React}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=50ce2da63bea6a618e7578fa50690040}{%
+           family={React},
+           familyi={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{50ce2da63bea6a618e7578fa50690040}
+      \strng{fullhash}{50ce2da63bea6a618e7578fa50690040}
+      \strng{fullhashraw}{50ce2da63bea6a618e7578fa50690040}
+      \strng{bibnamehash}{50ce2da63bea6a618e7578fa50690040}
+      \strng{authorbibnamehash}{50ce2da63bea6a618e7578fa50690040}
+      \strng{authornamehash}{50ce2da63bea6a618e7578fa50690040}
+      \strng{authorfullhash}{50ce2da63bea6a618e7578fa50690040}
+      \strng{authorfullhashraw}{50ce2da63bea6a618e7578fa50690040}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{React}
+      \verb{urlraw}
+      \verb https://react.dev/
+      \endverb
+      \verb{url}
+      \verb https://react.dev/
+      \endverb
+      \warn{\item online entry 'React' (references.bib): Invalid format '2026.03.28' of date field 'date' - ignoring}
+    \endentry
+    \entry{HáromrétegűArchitektúra}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=9c677286866aad38f8e9b660f5411814}{%
+           family={Wikipedia},
+           familyi={W\bibinitperiod}}}%
+      }
+      \strng{namehash}{9c677286866aad38f8e9b660f5411814}
+      \strng{fullhash}{9c677286866aad38f8e9b660f5411814}
+      \strng{fullhashraw}{9c677286866aad38f8e9b660f5411814}
+      \strng{bibnamehash}{9c677286866aad38f8e9b660f5411814}
+      \strng{authorbibnamehash}{9c677286866aad38f8e9b660f5411814}
+      \strng{authornamehash}{9c677286866aad38f8e9b660f5411814}
+      \strng{authorfullhash}{9c677286866aad38f8e9b660f5411814}
+      \strng{authorfullhashraw}{9c677286866aad38f8e9b660f5411814}
+      \field{extraname}{1}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Háromrétegű architektúra}
+      \verb{urlraw}
+      \verb https://hu.wikipedia.org/wiki/T%C3%B6bbr%C3%A9teg%C5%B1_architekt%C3%BAra
+      \endverb
+      \verb{url}
+      \verb https://hu.wikipedia.org/wiki/T%C3%B6bbr%C3%A9teg%C5%B1_architekt%C3%BAra
+      \endverb
+      \warn{\item online entry 'HáromrétegűArchitektúra' (references.bib): Invalid format '2026.03.28' of date field 'date' - ignoring}
+    \endentry
+    \entry{SQLServer}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=9c677286866aad38f8e9b660f5411814}{%
+           family={Wikipedia},
+           familyi={W\bibinitperiod}}}%
+      }
+      \strng{namehash}{9c677286866aad38f8e9b660f5411814}
+      \strng{fullhash}{9c677286866aad38f8e9b660f5411814}
+      \strng{fullhashraw}{9c677286866aad38f8e9b660f5411814}
+      \strng{bibnamehash}{9c677286866aad38f8e9b660f5411814}
+      \strng{authorbibnamehash}{9c677286866aad38f8e9b660f5411814}
+      \strng{authornamehash}{9c677286866aad38f8e9b660f5411814}
+      \strng{authorfullhash}{9c677286866aad38f8e9b660f5411814}
+      \strng{authorfullhashraw}{9c677286866aad38f8e9b660f5411814}
+      \field{extraname}{2}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Microsoft SQL Server}
+      \verb{urlraw}
+      \verb https://en.wikipedia.org/wiki/Microsoft_SQL_Server
+      \endverb
+      \verb{url}
+      \verb https://en.wikipedia.org/wiki/Microsoft_SQL_Server
+      \endverb
+      \warn{\item online entry 'SQLServer' (references.bib): Invalid format '2026.03.28' of date field 'date' - ignoring}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

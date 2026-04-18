@@ -1,0 +1,22 @@
+[0] Config.pm:328> INFO - This is Biber 2.21
+[0] Config.pm:331> INFO - Logfile is 'ATAS4U.blg'
+[257] biber-MSWIN64:342> INFO - === 
+[363] Biber.pm:421> INFO - Reading 'ATAS4U.bcf'
+[493] Biber.pm:999> INFO - Using all citekeys in bib section 0
+[524] Biber.pm:4487> INFO - Processing section 0
+[549] Biber.pm:4678> INFO - Looking for bibtex file 'references.bib' for section 0
+[606] bibtex.pm:1713> INFO - LaTeX decoding ...
+[624] bibtex.pm:1519> INFO - Found BibTeX data source 'references.bib'
+[726] UCollate.pm:68> INFO - Overriding locale 'hu-HU' defaults 'variable = shifted' with 'variable = non-ignorable'
+[727] UCollate.pm:68> INFO - Overriding locale 'hu-HU' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[728] Biber.pm:4307> INFO - Sorting list 'nty/global//global/global/global' of type 'entry' with template 'nty' and locale 'hu-HU'
+[778] bbl.pm:676> INFO - Writing 'ATAS4U.bbl' with encoding 'UTF-8'
+[782] bbl.pm:779> INFO - Output to ATAS4U.bbl
+[782] Biber.pm:132> WARN - online entry 'JWT' (references.bib): Invalid format '2026.03.28' of date field 'date' - ignoring
+[782] Biber.pm:132> WARN - online entry 'EntityFrameworkCore' (references.bib): Invalid format '2025.11.02' of date field 'date' - ignoring
+[782] Biber.pm:132> WARN - online entry 'TechnologyUsage' (references.bib): Invalid format '2026.03.28' of date field 'date' - ignoring
+[782] Biber.pm:132> WARN - online entry 'SQLServer' (references.bib): Invalid format '2026.03.28' of date field 'date' - ignoring
+[782] Biber.pm:132> WARN - online entry 'HáromrétegűArchitektúra' (references.bib): Invalid format '2026.03.28' of date field 'date' - ignoring
+[782] Biber.pm:132> WARN - online entry 'React' (references.bib): Invalid format '2026.03.28' of date field 'date' - ignoring
+[783] Biber.pm:132> WARN - online entry 'DotnetBevezetés' (references.bib): Invalid format '2026.03.10' of date field 'date' - ignoring
+[783] Biber.pm:134> INFO - WARNINGS: 7
