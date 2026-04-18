@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import type { MobileDeviceCategory } from '../../Types/MobileDeviceCategory';
-import Input from '../Form/Input';
-import { toast } from 'react-toastify';
-import Spinner from '../Shared/Spinner';
-import Form from '../Form/Form';
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import type { MobileDeviceCategory } from "../../Types/MobileDeviceCategory";
+import Input from "../Form/Input";
+import { toast } from "react-toastify";
+import Spinner from "../Shared/Spinner";
+import Form from "../Form/Form";
 import {
   GetMobileDeviceCategoryById,
   UpdateMobileDeviceCategory,
-} from '../../Services/MobileDeviceServices';
-import { useAuth } from '../../Auth/AuthContext';
+} from "../../Services/MobileDeviceServices";
+import { useAuth } from "../../Auth/AuthContext";
 
 interface CreateMobileDeviceCategory {
   name: string;
@@ -23,7 +23,7 @@ export default function EditMobileDeviceCategory() {
   const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState<CreateMobileDeviceCategory>({
-    name: '',
+    name: "",
   });
 
   const navigate = useNavigate();
@@ -40,14 +40,14 @@ export default function EditMobileDeviceCategory() {
           name: res.data.name,
         });
       } catch (err) {
-        toast.error('Failed to load mobile device category!');
-        console.error('Failed to load mobile device cateogory:', err);
+        toast.error("Failed to load mobile device category!");
+        console.error("Failed to load mobile device cateogory:", err);
       } finally {
         setLoading(false);
       }
     };
     GetMobileDeviceCategory();
-  }, [id]);
+  }, [user, id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -65,11 +65,11 @@ export default function EditMobileDeviceCategory() {
     if (!user || !user.token) return;
     try {
       await UpdateMobileDeviceCategory(Number(id), formData.name, user);
-      toast.success('Category updated successfully!');
-      navigate('/admin/mobile-device-categories');
+      toast.success("Category updated successfully!");
+      navigate("/admin/mobile-device-categories");
     } catch (err) {
-      console.error('Failed to update category:', err);
-      alert('Failed to update category.');
+      console.error("Failed to update category:", err);
+      alert("Failed to update category.");
     }
   };
 
