@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using ThesisApi.Contracts.Requests.MobileDevices;
 using ThesisApi.Contracts.Responses.MobileDevices;
 using ThesisApi.ExtensionServices;
@@ -15,12 +16,19 @@ namespace ThesisApi.Controllers
     {
         private readonly IMobileDeviceRepository _mobileDeviceRepository;
         private readonly IMobileDeviceCategoryRepository _mobileDeviceCategoryRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IAuditLogsRepository _logRepository;
+
         public MobileDeviceController(
             IMobileDeviceRepository mobileDeviceRepository,
-            IMobileDeviceCategoryRepository mobileDeviceCategoryRepository)
+            IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
+            IUserRepository userRepository,
+            IAuditLogsRepository auditLogsRepository)
         {
             _mobileDeviceRepository = mobileDeviceRepository;
             _mobileDeviceCategoryRepository = mobileDeviceCategoryRepository;
+            _userRepository = userRepository;
+            _logRepository = auditLogsRepository;
         }
 
         [HttpPost("/mobile-devices")]
@@ -34,6 +42,10 @@ namespace ThesisApi.Controllers
                 var newMobileDevice = await _mobileDeviceRepository.AddAsync(mobileDevice);
 
                 var response = mobileDevice.ToResponse();
+
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateNewMobileDeviceLog(loggedInUser!, newMobileDevice.Id);
 
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
@@ -76,6 +88,10 @@ namespace ThesisApi.Controllers
 
                 var response = mobileDevices.Select((mobileDevice) => mobileDevice.ToResponse()).ToList();
 
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateGetMobileDevicesLog(loggedInUser!);
+
                 return Ok(response);
             }
             catch (Exception e)
@@ -96,6 +112,10 @@ namespace ThesisApi.Controllers
                     return NotFound();
 
                 var response = mobileDevice.ToResponse();
+
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateGetMobileDeviceLog(loggedInUser!, id);
 
                 return Ok(response);
             }
@@ -200,6 +220,10 @@ namespace ThesisApi.Controllers
                 if (!result)
                     return NotFound();
 
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateDeleteMobileDeviceLog(loggedInUser!, id);
+
                 return Ok();
             }
             catch (Exception e)
@@ -207,6 +231,16 @@ namespace ThesisApi.Controllers
                 return BadRequest(e.Message);
             }
 
+        }
+
+        private async Task<User?> GetLoggedInUserAsync()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return null;
+
+            return await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
         }
     }
 }

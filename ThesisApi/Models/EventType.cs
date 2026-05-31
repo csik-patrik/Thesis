@@ -6,6 +6,10 @@ namespace ThesisApi.Models
         GetUsers,
         GetUser,
         CreateUser,
-        DeleteUser
+        DeleteUser,
+        GetMobileDevices,
+        GetMobileDevice,
+        CreateMobileDevice,
+        DeleteMobileDevice
     }
 }

@@ -31,6 +31,23 @@ namespace ThesisApi.Repositories
             return newLog;
         }
 
+        public async Task<AuditLog> CreateDeleteMobileDeviceLog(User user, int mobileDeviceId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.DeleteMobileDevice.ToString(),
+                EntityName = EntityName.MobileDevice.ToString(),
+                EntityId = mobileDeviceId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
         public async Task<AuditLog> CreateNewUserLog(User user, int newUserId)
         {
             var newLog = new AuditLog()
@@ -65,6 +82,23 @@ namespace ThesisApi.Repositories
             return newLog;
         }
 
+        public async Task<AuditLog> CreateGetMobileDeviceLog(User user, int mobileDeviceId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.GetMobileDevice.ToString(),
+                EntityName = EntityName.MobileDevice.ToString(),
+                EntityId = mobileDeviceId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
         public async Task<AuditLog> CreateGetUsersLog(User user)
         {
             var newLog = new AuditLog()
@@ -72,6 +106,40 @@ namespace ThesisApi.Repositories
                 EventType = EventType.GetUsers.ToString(),
                 EntityName = EntityName.User.ToString(),
                 EntityId = user.Id,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateGetMobileDevicesLog(User user)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.GetMobileDevices.ToString(),
+                EntityName = EntityName.MobileDevice.ToString(),
+                EntityId = user.Id,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateNewMobileDeviceLog(User user, int mobileDeviceId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.CreateMobileDevice.ToString(),
+                EntityName = EntityName.MobileDevice.ToString(),
+                EntityId = mobileDeviceId,
                 Username = user.Username,
             };
 
