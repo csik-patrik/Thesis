@@ -25,7 +25,6 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
-
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -42,7 +41,6 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
-
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -59,7 +57,54 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
 
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateDeleteComputerOrderLog(User user, int computerOrderId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.DeleteComputerOrder.ToString(),
+                EntityName = EntityName.ComputerOrder.ToString(),
+                EntityId = computerOrderId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateDeleteMobileOrderLog(User user, int mobileOrderId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.DeleteMobileOrder.ToString(),
+                EntityName = EntityName.MobileOrder.ToString(),
+                EntityId = mobileOrderId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateDeleteSimCardLog(User user, int simCardId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.DeleteSimCard.ToString(),
+                EntityName = EntityName.SimCard.ToString(),
+                EntityId = simCardId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -76,7 +121,6 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
-
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -93,7 +137,6 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
-
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -110,7 +153,6 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
-
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -127,7 +169,54 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
 
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateGetComputerOrderLog(User user, int computerOrderId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.GetComputerOrder.ToString(),
+                EntityName = EntityName.ComputerOrder.ToString(),
+                EntityId = computerOrderId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateGetMobileOrderLog(User user, int mobileOrderId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.GetMobileOrder.ToString(),
+                EntityName = EntityName.MobileOrder.ToString(),
+                EntityId = mobileOrderId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateGetSimCardLog(User user, int simCardId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.GetSimCard.ToString(),
+                EntityName = EntityName.SimCard.ToString(),
+                EntityId = simCardId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -144,7 +233,6 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
-
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -161,7 +249,6 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
-
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -178,7 +265,54 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
 
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateGetComputerOrdersLog(User user)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.GetComputerOrders.ToString(),
+                EntityName = EntityName.ComputerOrder.ToString(),
+                EntityId = user.Id,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateGetMobileOrdersLog(User user)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.GetMobileOrders.ToString(),
+                EntityName = EntityName.MobileOrder.ToString(),
+                EntityId = user.Id,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateGetSimCardsLog(User user)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.GetSimCards.ToString(),
+                EntityName = EntityName.SimCard.ToString(),
+                EntityId = user.Id,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -195,7 +329,6 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
-
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -212,7 +345,54 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
 
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateNewComputerOrderLog(User user, int computerOrderId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.CreateComputerOrder.ToString(),
+                EntityName = EntityName.ComputerOrder.ToString(),
+                EntityId = computerOrderId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateNewMobileOrderLog(User user, int mobileOrderId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.CreateMobileOrder.ToString(),
+                EntityName = EntityName.MobileOrder.ToString(),
+                EntityId = mobileOrderId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateNewSimCardLog(User user, int simCardId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.CreateSimCard.ToString(),
+                EntityName = EntityName.SimCard.ToString(),
+                EntityId = simCardId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
             await _context.SaveChangesAsync();
 
             return newLog;
@@ -229,7 +409,6 @@ namespace ThesisApi.Repositories
             };
 
             await _context.AuditLogs.AddAsync(newLog);
-
             await _context.SaveChangesAsync();
 
             return newLog;

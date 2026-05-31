@@ -11,9 +11,21 @@ namespace ThesisApi.Models
         GetComputer,
         CreateComputer,
         DeleteComputer,
+        GetComputerOrders,
+        GetComputerOrder,
+        CreateComputerOrder,
+        DeleteComputerOrder,
         GetMobileDevices,
         GetMobileDevice,
         CreateMobileDevice,
-        DeleteMobileDevice
+        DeleteMobileDevice,
+        GetMobileOrders,
+        GetMobileOrder,
+        CreateMobileOrder,
+        DeleteMobileOrder,
+        GetSimCards,
+        GetSimCard,
+        CreateSimCard,
+        DeleteSimCard
     }
 }

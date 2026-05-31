@@ -4,6 +4,9 @@ namespace ThesisApi.Models
     {
         User,
         Computer,
-        MobileDevice
+        ComputerOrder,
+        MobileDevice,
+        MobileOrder,
+        SimCard
     }
 }

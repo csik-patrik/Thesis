@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThesisApi.Contracts.Requests.ComputerOrders;
@@ -19,13 +20,15 @@ namespace ThesisApi.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IComputerCategoryRepository _computerCategoryRepository;
         private readonly INotificationService _notificationService;
+        private readonly IAuditLogsRepository _logRepository;
 
         public ComputerOrderController(
             IComputerRepository computerRepository,
             IComputerOrderRepository computerOrderRepository,
             IUserRepository userRepository,
             IComputerCategoryRepository computerCategoryRepository,
-            INotificationService notificationService
+            INotificationService notificationService,
+            IAuditLogsRepository auditLogsRepository
         )
         {
             _computerRepository = computerRepository;
@@ -33,6 +36,7 @@ namespace ThesisApi.Controllers
             _userRepository = userRepository;
             _computerCategoryRepository = computerCategoryRepository;
             _notificationService = notificationService;
+            _logRepository = auditLogsRepository;
         }
 
         [HttpPost("/computer-orders")]
@@ -54,6 +58,10 @@ namespace ThesisApi.Controllers
 
                 var response = order.ToResponse();
 
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateNewComputerOrderLog(loggedInUser!, response.Id);
+
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
             catch (Exception e)
@@ -71,6 +79,10 @@ namespace ThesisApi.Controllers
                 var orders = await _computerOrderRepository.GetAllAsync();
 
                 var responses = orders.Select((order) => order.ToResponse()).ToList();
+
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateGetComputerOrdersLog(loggedInUser!);
 
                 return Ok(responses);
             }
@@ -91,6 +103,10 @@ namespace ThesisApi.Controllers
                     return NotFound();
 
                 var response = order.ToResponse();
+
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateGetComputerOrderLog(loggedInUser!, id);
 
                 return Ok(response);
             }
@@ -263,12 +279,26 @@ namespace ThesisApi.Controllers
 
                 await _computerOrderRepository.DeleteAsync(order);
 
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateDeleteComputerOrderLog(loggedInUser!, id);
+
                 return Ok();
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        private async Task<User?> GetLoggedInUserAsync()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return null;
+
+            return await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
         }
     }
 }
