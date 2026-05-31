@@ -13,6 +13,10 @@ namespace ThesisApi.Interfaces
         Task<AuditLog> CreateGetMobileDeviceLog(User user, int mobileDeviceId);
         Task<AuditLog> CreateNewMobileDeviceLog(User user, int mobileDeviceId);
         Task<AuditLog> CreateDeleteMobileDeviceLog(User user, int mobileDeviceId);
+        Task<AuditLog> CreateGetComputersLog(User user);
+        Task<AuditLog> CreateGetComputerLog(User user, int computerId);
+        Task<AuditLog> CreateNewComputerLog(User user, int computerId);
+        Task<AuditLog> CreateDeleteComputerLog(User user, int computerId);
         Task<IEnumerable<AuditLog>> GetAllAsync();
     }
 }

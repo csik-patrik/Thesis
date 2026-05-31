@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using ThesisApi.Contracts.Requests.Computers;
 using ThesisApi.Contracts.Responses.Computers;
 using ThesisApi.ExtensionServices;
@@ -15,13 +16,19 @@ namespace ThesisApi.Controllers
     {
         private readonly IComputerRepository _computerRepository;
         private readonly IComputerCategoryRepository _computerCategoryRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IAuditLogsRepository _logRepository;
 
         public ComputerController(
             IComputerRepository computerRepository,
-            IComputerCategoryRepository computerCategoryRepository)
+            IComputerCategoryRepository computerCategoryRepository,
+            IUserRepository userRepository,
+            IAuditLogsRepository auditLogsRepository)
         {
             _computerRepository = computerRepository;
             _computerCategoryRepository = computerCategoryRepository;
+            _userRepository = userRepository;
+            _logRepository = auditLogsRepository;
         }
 
         [HttpPost("/computers")]
@@ -35,6 +42,10 @@ namespace ThesisApi.Controllers
                 await _computerRepository.AddAsync(newComputer);
 
                 var response = newComputer.ToResponse();
+
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateNewComputerLog(loggedInUser!, response.Id);
 
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
@@ -77,6 +88,10 @@ namespace ThesisApi.Controllers
 
                 var response = models.Select((computer) => computer.ToResponse()).ToList();
 
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateGetComputersLog(loggedInUser!);
+
                 return Ok(response);
             }
             catch (Exception e)
@@ -115,6 +130,10 @@ namespace ThesisApi.Controllers
                     return NotFound();
 
                 var response = model.ToResponse();
+
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateGetComputerLog(loggedInUser!, id);
 
                 return Ok(response);
             }
@@ -227,12 +246,26 @@ namespace ThesisApi.Controllers
 
                 await _computerRepository.Delete(model);
 
+                var loggedInUser = await GetLoggedInUserAsync();
+
+                await _logRepository.CreateDeleteComputerLog(loggedInUser!, id);
+
                 return Ok();
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        private async Task<User?> GetLoggedInUserAsync()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return null;
+
+            return await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
         }
     }
 }

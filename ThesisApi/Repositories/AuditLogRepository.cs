@@ -48,6 +48,23 @@ namespace ThesisApi.Repositories
             return newLog;
         }
 
+        public async Task<AuditLog> CreateDeleteComputerLog(User user, int computerId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.DeleteComputer.ToString(),
+                EntityName = EntityName.Computer.ToString(),
+                EntityId = computerId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
         public async Task<AuditLog> CreateNewUserLog(User user, int newUserId)
         {
             var newLog = new AuditLog()
@@ -99,6 +116,23 @@ namespace ThesisApi.Repositories
             return newLog;
         }
 
+        public async Task<AuditLog> CreateGetComputerLog(User user, int computerId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.GetComputer.ToString(),
+                EntityName = EntityName.Computer.ToString(),
+                EntityId = computerId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
         public async Task<AuditLog> CreateGetUsersLog(User user)
         {
             var newLog = new AuditLog()
@@ -133,6 +167,23 @@ namespace ThesisApi.Repositories
             return newLog;
         }
 
+        public async Task<AuditLog> CreateGetComputersLog(User user)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.GetComputers.ToString(),
+                EntityName = EntityName.Computer.ToString(),
+                EntityId = user.Id,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
         public async Task<AuditLog> CreateNewMobileDeviceLog(User user, int mobileDeviceId)
         {
             var newLog = new AuditLog()
@@ -140,6 +191,23 @@ namespace ThesisApi.Repositories
                 EventType = EventType.CreateMobileDevice.ToString(),
                 EntityName = EntityName.MobileDevice.ToString(),
                 EntityId = mobileDeviceId,
+                Username = user.Username,
+            };
+
+            await _context.AuditLogs.AddAsync(newLog);
+
+            await _context.SaveChangesAsync();
+
+            return newLog;
+        }
+
+        public async Task<AuditLog> CreateNewComputerLog(User user, int computerId)
+        {
+            var newLog = new AuditLog()
+            {
+                EventType = EventType.CreateComputer.ToString(),
+                EntityName = EntityName.Computer.ToString(),
+                EntityId = computerId,
                 Username = user.Username,
             };
 
