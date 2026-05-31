@@ -9,6 +9,8 @@ using ThesisApi.Interfaces;
 using ThesisApi.Contracts.Responses.Users;
 using Microsoft.AspNetCore.Authorization;
 using ThesisApi.ExtensionServices;
+using ThesisApi.Repositories;
+using System.Security.Claims;
 
 namespace ThesisApi.Controllers
 {
@@ -21,17 +23,20 @@ namespace ThesisApi.Controllers
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly TokenGenerator _tokenGenerator;
         private readonly ApplicationDbContext _context;
+        private readonly AuditLogRepository _logRepository;
 
         public UserController(
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
             TokenGenerator tokenGenerator,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            AuditLogRepository auditLogRepository)
         {
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _tokenGenerator = tokenGenerator;
             _context = context;
+            _logRepository = auditLogRepository;
         }
 
         [HttpPost("/login")]
@@ -57,6 +62,8 @@ namespace ThesisApi.Controllers
 
                 var access_token = _tokenGenerator.GenerateToken(newTokenRequest);
 
+                await _logRepository.CreateLoginLog(user);
+
                 return Ok(access_token);
             }
             catch (Exception e)
@@ -74,6 +81,11 @@ namespace ThesisApi.Controllers
                 var users = await _userRepository.GetAllAsync();
 
                 var response = users.Select((user) => user.ToResponse()).ToList();
+
+                var userId = User.FindFirstValue("id");
+                var user = await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
+
+                await _logRepository.CreateGetUsersLog(user!);
 
                 return Ok(response);
             }

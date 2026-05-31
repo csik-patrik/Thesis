@@ -18,9 +18,9 @@ namespace ThesisApi.Data
         public DbSet<ComputerOrder> ComputerOrders { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
-
         public DbSet<MobileDeviceCategory> MobileDeviceCategories { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
