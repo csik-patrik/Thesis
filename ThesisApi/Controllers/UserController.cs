@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using ThesisApi.ExtensionServices;
 using ThesisApi.Repositories;
 using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ThesisApi.Controllers
 {
@@ -23,14 +24,14 @@ namespace ThesisApi.Controllers
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly TokenGenerator _tokenGenerator;
         private readonly ApplicationDbContext _context;
-        private readonly AuditLogRepository _logRepository;
+        private readonly IAuditLogsRepository _logRepository;
 
         public UserController(
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
             TokenGenerator tokenGenerator,
             ApplicationDbContext context,
-            AuditLogRepository auditLogRepository)
+            IAuditLogsRepository auditLogRepository)
         {
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
@@ -82,7 +83,7 @@ namespace ThesisApi.Controllers
 
                 var response = users.Select((user) => user.ToResponse()).ToList();
 
-                var userId = User.FindFirstValue("id");
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var user = await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
 
                 await _logRepository.CreateGetUsersLog(user!);
@@ -107,6 +108,11 @@ namespace ThesisApi.Controllers
                     return NotFound();
 
                 var response = user.ToResponse();
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var loggedInUser = await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
+
+                await _logRepository.CreateGetUserLog(loggedInUser!, id);
 
                 return Ok(response);
             }
@@ -163,6 +169,11 @@ namespace ThesisApi.Controllers
 
                 var response = newUser.ToResponse();
 
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var loggedInUser = await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
+
+                await _logRepository.CreateNewUserLog(loggedInUser!, newUser.Id);
+
                 return Ok(response);
             }
             catch (Exception e)
@@ -210,6 +221,11 @@ namespace ThesisApi.Controllers
                 {
                     return NotFound("Error while deleting");
                 }
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var loggedInUser = await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
+
+                await _logRepository.CreateDeleteUserLog(loggedInUser!, id);
 
                 return Ok();
             }

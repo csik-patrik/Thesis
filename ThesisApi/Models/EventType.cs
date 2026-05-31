@@ -3,6 +3,9 @@ namespace ThesisApi.Models
     public enum EventType
     {
         Login,
-        GetUser
+        GetUsers,
+        GetUser,
+        CreateUser,
+        DeleteUser
     }
 }
