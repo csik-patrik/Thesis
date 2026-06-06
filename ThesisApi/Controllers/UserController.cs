@@ -12,7 +12,6 @@ using ThesisApi.ExtensionServices;
 using ThesisApi.Repositories;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using ThesisApi.Contracts.Responses.Logs;
 
 namespace ThesisApi.Controllers
 {
@@ -260,62 +259,5 @@ namespace ThesisApi.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-        [HttpGet("/logs")]
-        [Authorize(Roles = "Admin")]
-        public ActionResult<IEnumerable<LogEntryResponse>> GetLogs([FromQuery] int take = 200, [FromQuery] string? contains = null)
-        {
-            try
-            {
-                var safeTake = Math.Clamp(take, 1, 1000);
-
-                var logsDirectory = Path.Combine(_hostEnvironment.ContentRootPath, "logs");
-                if (!Directory.Exists(logsDirectory))
-                {
-                    return Ok(new List<LogEntryResponse>());
-                }
-
-                var logFiles = Directory
-                    .GetFiles(logsDirectory, "app-*.log")
-                    .OrderByDescending(file => System.IO.File.GetLastWriteTimeUtc(file));
-
-                var entries = new List<LogEntryResponse>(safeTake);
-
-                foreach (var file in logFiles)
-                {
-                    foreach (var line in System.IO.File.ReadLines(file).Reverse())
-                    {
-                        if (string.IsNullOrWhiteSpace(line))
-                        {
-                            continue;
-                        }
-
-                        if (!string.IsNullOrWhiteSpace(contains) &&
-                            !line.Contains(contains, StringComparison.OrdinalIgnoreCase))
-                        {
-                            continue;
-                        }
-
-                        entries.Add(new LogEntryResponse
-                        {
-                            FileName = Path.GetFileName(file),
-                            Line = line
-                        });
-
-                        if (entries.Count >= safeTake)
-                        {
-                            return Ok(entries);
-                        }
-                    }
-                }
-
-                return Ok(entries);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
     }
 }
