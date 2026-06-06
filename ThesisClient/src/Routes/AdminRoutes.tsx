@@ -8,7 +8,6 @@ import CreateMobileDeviceCategory from "../Components/Admin/CreateMobileDeviceCa
 import UsersTable from "../Components/Admin/UsersTable.tsx";
 import UserCreate from "../Components/Admin/UserCreate.tsx";
 import UsersEdit from "../Components/Admin/UsersEdit.tsx";
-import LogsViewer from "../Components/Admin/LogsViewer.tsx";
 
 const AdminRoutes = (
   <>
@@ -73,14 +72,6 @@ const AdminRoutes = (
       element={
         <ProtectedRoute>
           <UsersEdit />
-        </ProtectedRoute>
-      }
-    />
-    <Route
-      path="/admin/logs"
-      element={
-        <ProtectedRoute>
-          <LogsViewer />
         </ProtectedRoute>
       }
     />

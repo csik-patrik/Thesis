@@ -21,7 +21,6 @@ export default function AdminItems({ mobile = false }: { mobile?: boolean }) {
         <NavItem title="Computer categories" to="/admin/computers/categories" mobile={mobile} />
         <NavItem title="Mobile Categories" to="/admin/mobile-device-categories" mobile={mobile} />
         <NavItem title="Users" to="/admin/users" mobile={mobile} />
-        <NavItem title="Logs" to="/admin/logs" mobile={mobile} />
       </DropDown>
     </>
   );
