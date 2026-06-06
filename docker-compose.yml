@@ -44,6 +44,8 @@ services:
         condition: service_healthy # Csak az egészséges DB után indul
     networks:
       - app-network
+    volumes:
+      - ./logs:/app/logs
 
   # ─── React Frontend (Nginx) ───────────────────────────────────
   frontend:
