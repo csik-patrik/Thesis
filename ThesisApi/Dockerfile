@@ -9,11 +9,14 @@ RUN dotnet publish -c Release -o /app/publish
 # ── 2. Runtime stage ─────────────────────────────────────────────
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
+
+COPY --from=build /app/publish ./
+
 RUN adduser --disabled-password --gecos "" appuser \
     && mkdir -p /app/logs \
     && chown -R appuser:appuser /app
 USER appuser
-COPY --from=build /app/publish .
+
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD wget -qO- http://localhost:8080/health || exit 1
 EXPOSE 8080
