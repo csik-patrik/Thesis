@@ -22,7 +22,6 @@ namespace ThesisApi.Controllers
         private readonly ISimCallControlGroupRepository _simCallControlGroupRepository;
         private readonly ISimCardRepository _simCardRepository;
         private readonly INotificationService _notificationService;
-        private readonly IAuditLogsRepository _logRepository;
 
         public MobileOrderController(
             IUserRepository userRepository,
@@ -31,8 +30,7 @@ namespace ThesisApi.Controllers
             IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
             ISimCallControlGroupRepository simCallControlGroupRepository,
             ISimCardRepository simCardRepository,
-            INotificationService notificationService,
-            IAuditLogsRepository auditLogsRepository)
+            INotificationService notificationService)
         {
             _userRepository = userRepository;
             _mobileOrderRepository = mobileOrderRepository;
@@ -41,7 +39,6 @@ namespace ThesisApi.Controllers
             _simCallControlGroupRepository = simCallControlGroupRepository;
             _simCardRepository = simCardRepository;
             _notificationService = notificationService;
-            _logRepository = auditLogsRepository;
         }
 
         [HttpPost("/mobile-orders")]
@@ -66,8 +63,6 @@ namespace ThesisApi.Controllers
 
                 var loggedInUser = await GetLoggedInUserAsync();
 
-                await _logRepository.CreateNewMobileOrderLog(loggedInUser!, response.Id);
-
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
             catch (Exception e)
@@ -87,8 +82,6 @@ namespace ThesisApi.Controllers
                 var responses = orders.Select((order) => order.ToResponse()).ToList();
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateGetMobileOrdersLog(loggedInUser!);
 
                 return Ok(responses);
             }
@@ -110,8 +103,6 @@ namespace ThesisApi.Controllers
                 var response = order.ToResponse();
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateGetMobileOrderLog(loggedInUser!, id);
 
                 return Ok(response);
             }
@@ -250,8 +241,6 @@ namespace ThesisApi.Controllers
                 await _mobileOrderRepository.DeleteAsync(mobileOrder);
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateDeleteMobileOrderLog(loggedInUser!, id);
 
                 return Ok();
             }

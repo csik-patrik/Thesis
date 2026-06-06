@@ -20,15 +20,13 @@ namespace ThesisApi.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IComputerCategoryRepository _computerCategoryRepository;
         private readonly INotificationService _notificationService;
-        private readonly IAuditLogsRepository _logRepository;
 
         public ComputerOrderController(
             IComputerRepository computerRepository,
             IComputerOrderRepository computerOrderRepository,
             IUserRepository userRepository,
             IComputerCategoryRepository computerCategoryRepository,
-            INotificationService notificationService,
-            IAuditLogsRepository auditLogsRepository
+            INotificationService notificationService
         )
         {
             _computerRepository = computerRepository;
@@ -36,7 +34,6 @@ namespace ThesisApi.Controllers
             _userRepository = userRepository;
             _computerCategoryRepository = computerCategoryRepository;
             _notificationService = notificationService;
-            _logRepository = auditLogsRepository;
         }
 
         [HttpPost("/computer-orders")]
@@ -60,8 +57,6 @@ namespace ThesisApi.Controllers
 
                 var loggedInUser = await GetLoggedInUserAsync();
 
-                await _logRepository.CreateNewComputerOrderLog(loggedInUser!, response.Id);
-
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
             catch (Exception e)
@@ -81,8 +76,6 @@ namespace ThesisApi.Controllers
                 var responses = orders.Select((order) => order.ToResponse()).ToList();
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateGetComputerOrdersLog(loggedInUser!);
 
                 return Ok(responses);
             }
@@ -105,8 +98,6 @@ namespace ThesisApi.Controllers
                 var response = order.ToResponse();
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateGetComputerOrderLog(loggedInUser!, id);
 
                 return Ok(response);
             }
@@ -280,8 +271,6 @@ namespace ThesisApi.Controllers
                 await _computerOrderRepository.DeleteAsync(order);
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateDeleteComputerOrderLog(loggedInUser!, id);
 
                 return Ok();
             }

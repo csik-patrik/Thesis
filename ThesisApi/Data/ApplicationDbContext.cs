@@ -20,7 +20,6 @@ namespace ThesisApi.Data
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<MobileDeviceCategory> MobileDeviceCategories { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<AuditLog> AuditLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

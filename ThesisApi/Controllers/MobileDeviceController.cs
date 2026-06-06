@@ -17,18 +17,15 @@ namespace ThesisApi.Controllers
         private readonly IMobileDeviceRepository _mobileDeviceRepository;
         private readonly IMobileDeviceCategoryRepository _mobileDeviceCategoryRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IAuditLogsRepository _logRepository;
 
         public MobileDeviceController(
             IMobileDeviceRepository mobileDeviceRepository,
             IMobileDeviceCategoryRepository mobileDeviceCategoryRepository,
-            IUserRepository userRepository,
-            IAuditLogsRepository auditLogsRepository)
+            IUserRepository userRepository)
         {
             _mobileDeviceRepository = mobileDeviceRepository;
             _mobileDeviceCategoryRepository = mobileDeviceCategoryRepository;
             _userRepository = userRepository;
-            _logRepository = auditLogsRepository;
         }
 
         [HttpPost("/mobile-devices")]
@@ -44,8 +41,6 @@ namespace ThesisApi.Controllers
                 var response = mobileDevice.ToResponse();
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateNewMobileDeviceLog(loggedInUser!, newMobileDevice.Id);
 
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
@@ -90,8 +85,6 @@ namespace ThesisApi.Controllers
 
                 var loggedInUser = await GetLoggedInUserAsync();
 
-                await _logRepository.CreateGetMobileDevicesLog(loggedInUser!);
-
                 return Ok(response);
             }
             catch (Exception e)
@@ -114,8 +107,6 @@ namespace ThesisApi.Controllers
                 var response = mobileDevice.ToResponse();
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateGetMobileDeviceLog(loggedInUser!, id);
 
                 return Ok(response);
             }
@@ -221,8 +212,6 @@ namespace ThesisApi.Controllers
                     return NotFound();
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateDeleteMobileDeviceLog(loggedInUser!, id);
 
                 return Ok();
             }

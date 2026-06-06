@@ -17,18 +17,15 @@ namespace ThesisApi.Controllers
         private readonly IComputerRepository _computerRepository;
         private readonly IComputerCategoryRepository _computerCategoryRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IAuditLogsRepository _logRepository;
 
         public ComputerController(
             IComputerRepository computerRepository,
             IComputerCategoryRepository computerCategoryRepository,
-            IUserRepository userRepository,
-            IAuditLogsRepository auditLogsRepository)
+            IUserRepository userRepository)
         {
             _computerRepository = computerRepository;
             _computerCategoryRepository = computerCategoryRepository;
             _userRepository = userRepository;
-            _logRepository = auditLogsRepository;
         }
 
         [HttpPost("/computers")]
@@ -44,8 +41,6 @@ namespace ThesisApi.Controllers
                 var response = newComputer.ToResponse();
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateNewComputerLog(loggedInUser!, response.Id);
 
                 return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
             }
@@ -90,8 +85,6 @@ namespace ThesisApi.Controllers
 
                 var loggedInUser = await GetLoggedInUserAsync();
 
-                await _logRepository.CreateGetComputersLog(loggedInUser!);
-
                 return Ok(response);
             }
             catch (Exception e)
@@ -132,8 +125,6 @@ namespace ThesisApi.Controllers
                 var response = model.ToResponse();
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateGetComputerLog(loggedInUser!, id);
 
                 return Ok(response);
             }
@@ -247,8 +238,6 @@ namespace ThesisApi.Controllers
                 await _computerRepository.Delete(model);
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateDeleteComputerLog(loggedInUser!, id);
 
                 return Ok();
             }

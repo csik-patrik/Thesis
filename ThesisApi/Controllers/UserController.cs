@@ -24,20 +24,17 @@ namespace ThesisApi.Controllers
         private readonly IUserRoleRepository _userRoleRepository;
         private readonly TokenGenerator _tokenGenerator;
         private readonly ApplicationDbContext _context;
-        private readonly IAuditLogsRepository _logRepository;
 
         public UserController(
             IUserRepository userRepository,
             IUserRoleRepository userRoleRepository,
             TokenGenerator tokenGenerator,
-            ApplicationDbContext context,
-            IAuditLogsRepository auditLogRepository)
+            ApplicationDbContext context)
         {
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _tokenGenerator = tokenGenerator;
             _context = context;
-            _logRepository = auditLogRepository;
         }
 
         [HttpPost("/login")]
@@ -63,8 +60,6 @@ namespace ThesisApi.Controllers
 
                 var access_token = _tokenGenerator.GenerateToken(newTokenRequest);
 
-                await _logRepository.CreateLoginLog(user);
-
                 return Ok(access_token);
             }
             catch (Exception e)
@@ -85,8 +80,6 @@ namespace ThesisApi.Controllers
 
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var user = await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
-
-                await _logRepository.CreateGetUsersLog(user!);
 
                 return Ok(response);
             }
@@ -111,8 +104,6 @@ namespace ThesisApi.Controllers
 
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var loggedInUser = await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
-
-                await _logRepository.CreateGetUserLog(loggedInUser!, id);
 
                 return Ok(response);
             }
@@ -172,8 +163,6 @@ namespace ThesisApi.Controllers
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var loggedInUser = await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
 
-                await _logRepository.CreateNewUserLog(loggedInUser!, newUser.Id);
-
                 return Ok(response);
             }
             catch (Exception e)
@@ -224,8 +213,6 @@ namespace ThesisApi.Controllers
 
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var loggedInUser = await _userRepository.GetByIdAsync(Convert.ToInt32(userId));
-
-                await _logRepository.CreateDeleteUserLog(loggedInUser!, id);
 
                 return Ok();
             }

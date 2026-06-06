@@ -3,79 +3,102 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using ThesisApi.Data;
 using ThesisApi.Hubs;
 using ThesisApi.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-builder.Services.AddApplication();
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+try
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
-{
-    builder
-        .SetIsOriginAllowed(origin =>
-                origin.StartsWith("http://localhost") ||
-                origin.Contains("91.236.195.159"))
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
-}));
+    builder.Host.UseSerilog((context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext());
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+    // Add services to the container.
+
+    builder.Services.AddControllers();
+    // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+    builder.Services.AddOpenApi();
+
+    builder.Services.AddApplication();
+
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
-        var key = Encoding.UTF8.GetBytes("qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123?????????");
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    });
 
-        options.TokenValidationParameters = new TokenValidationParameters
+    builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+    {
+        builder
+            .SetIsOriginAllowed(origin =>
+                    origin.StartsWith("http://localhost") ||
+                    origin.Contains("91.236.195.159"))
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    }));
+
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
         {
-            ValidateIssuer = true,
-            ValidIssuer = "Api",
-            ValidateAudience = true,
-            ValidAudience = "Users",
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ClockSkew = TimeSpan.Zero // avoids extra 5-min default tolerance
-        };
-    });
+            var key = Encoding.UTF8.GetBytes("qweertzruztjhngbdfsavrgvfrsdgfsrdtbggfrtbgfxbfdv123123123?????????");
 
-builder.Services.AddSignalR();
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = "Api",
+                ValidateAudience = true,
+                ValidAudience = "Users",
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ClockSkew = TimeSpan.Zero // avoids extra 5-min default tolerance
+            };
+        });
 
-builder.Services.AddAuthorization();
+    builder.Services.AddSignalR();
 
-JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+    builder.Services.AddAuthorization();
 
-var app = builder.Build();
+    JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+    JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
-app.ApplyMigrations();
+    var app = builder.Build();
 
-app.UseCors("ApiCorsPolicy");
+    app.ApplyMigrations();
 
-app.UseAuthentication();  // must come before UseAuthorization
-app.UseAuthorization();
+    app.UseSerilogRequestLogging();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.UseSwaggerUI(options =>
+    app.UseCors("ApiCorsPolicy");
+
+    app.UseAuthentication();  // must come before UseAuthorization
+    app.UseAuthorization();
+
+    if (app.Environment.IsDevelopment())
     {
-        options.SwaggerEndpoint("/openapi/v1.json", "ThesisApi");
-    });
-}
+        app.MapOpenApi();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/openapi/v1.json", "ThesisApi");
+        });
+    }
 
-app.MapControllers();
-app.MapHub<NotificationHub>("/hubs/notifications");
-app.Run();
+    app.MapControllers();
+    app.MapHub<NotificationHub>("/hubs/notifications");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

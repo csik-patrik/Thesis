@@ -17,18 +17,15 @@ namespace ThesisApi.Controllers
         private readonly ISimCardRepository _simCardRepository;
         private readonly ISimCallControlGroupRepository _simCallControlGroupRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IAuditLogsRepository _logRepository;
 
         public SimCardController(
             ISimCardRepository simCardRepository,
             ISimCallControlGroupRepository simCallControlGroupRepository,
-            IUserRepository userRepository,
-            IAuditLogsRepository auditLogsRepository)
+            IUserRepository userRepository)
         {
             _simCardRepository = simCardRepository;
             _simCallControlGroupRepository = simCallControlGroupRepository;
             _userRepository = userRepository;
-            _logRepository = auditLogsRepository;
         }
 
         [HttpGet("/sim-cards")]
@@ -42,8 +39,6 @@ namespace ThesisApi.Controllers
                 var response = simCards.Select((simCard) => simCard.ToResponse()).ToList();
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateGetSimCardsLog(loggedInUser!);
 
                 return Ok(response);
             }
@@ -64,8 +59,6 @@ namespace ThesisApi.Controllers
             var response = simCard.ToResponse();
 
             var loggedInUser = await GetLoggedInUserAsync();
-
-            await _logRepository.CreateNewSimCardLog(loggedInUser!, newSimCard.Id);
 
             return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
 
@@ -109,8 +102,6 @@ namespace ThesisApi.Controllers
 
                 var loggedInUser = await GetLoggedInUserAsync();
 
-                await _logRepository.CreateGetSimCardLog(loggedInUser!, id);
-
                 return Ok(response);
             }
             catch (Exception e)
@@ -151,9 +142,6 @@ namespace ThesisApi.Controllers
                 await _simCardRepository.DeleteAsync(simCard);
 
                 var loggedInUser = await GetLoggedInUserAsync();
-
-                await _logRepository.CreateDeleteSimCardLog(loggedInUser!, id);
-
 
                 return Ok();
             }
