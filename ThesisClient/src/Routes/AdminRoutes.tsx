@@ -8,40 +8,81 @@ import CreateMobileDeviceCategory from "../Components/Admin/CreateMobileDeviceCa
 import UsersTable from "../Components/Admin/UsersTable.tsx";
 import UserCreate from "../Components/Admin/UserCreate.tsx";
 import UsersEdit from "../Components/Admin/UsersEdit.tsx";
+import LogsViewer from "../Components/Admin/LogsViewer.tsx";
 
 const AdminRoutes = (
   <>
     <Route
       path="/admin/computers/categories"
-      element={<ProtectedRoute><ComputerCategoriesTable /></ProtectedRoute>}
+      element={
+        <ProtectedRoute>
+          <ComputerCategoriesTable />
+        </ProtectedRoute>
+      }
     />
     <Route
       path="/admin/computers/categories/create"
-      element={<ProtectedRoute><ComputerCategoriesCreate /></ProtectedRoute>}
+      element={
+        <ProtectedRoute>
+          <ComputerCategoriesCreate />
+        </ProtectedRoute>
+      }
     />
     <Route
       path="/admin/mobile-device-categories"
-      element={<ProtectedRoute><MobileDeviceCategoryTable /></ProtectedRoute>}
+      element={
+        <ProtectedRoute>
+          <MobileDeviceCategoryTable />
+        </ProtectedRoute>
+      }
     />
     <Route
       path="/admin/mobile-device-categories/:id"
-      element={<ProtectedRoute><EditMobileDeviceCategory /></ProtectedRoute>}
+      element={
+        <ProtectedRoute>
+          <EditMobileDeviceCategory />
+        </ProtectedRoute>
+      }
     />
     <Route
       path="/admin/mobile-device-categories/create"
-      element={<ProtectedRoute><CreateMobileDeviceCategory /></ProtectedRoute>}
+      element={
+        <ProtectedRoute>
+          <CreateMobileDeviceCategory />
+        </ProtectedRoute>
+      }
     />
     <Route
       path="/admin/users"
-      element={<ProtectedRoute><UsersTable /></ProtectedRoute>}
+      element={
+        <ProtectedRoute>
+          <UsersTable />
+        </ProtectedRoute>
+      }
     />
     <Route
       path="/admin/users/create"
-      element={<ProtectedRoute><UserCreate /></ProtectedRoute>}
+      element={
+        <ProtectedRoute>
+          <UserCreate />
+        </ProtectedRoute>
+      }
     />
     <Route
       path="/admin/users/:id"
-      element={<ProtectedRoute><UsersEdit /></ProtectedRoute>}
+      element={
+        <ProtectedRoute>
+          <UsersEdit />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/admin/logs"
+      element={
+        <ProtectedRoute>
+          <LogsViewer />
+        </ProtectedRoute>
+      }
     />
   </>
 );
